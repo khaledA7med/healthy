@@ -1,0 +1,12 @@
+[col-id="action"] {
+  overflow: visible !important;
+}
+
+.ag-row.ag-row-focus {
+  z-index: 1;
+}
+
+.ag-cell:focus {
+  border: none !important;
+  outline: none;
+}

@@ -1,0 +1,16 @@
+<!-- Start Breadcrumbs -->
+<app-breadcrumbs title="Starter" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<!-- End Breadcrumbs -->
+
+
+<div>
+    <h1>
+        {{ val3 | currency: curren : 'code' }}
+    </h1>
+    <h1>
+        {{ perc | currency: curren}}
+    </h1>
+</div>
+
+<input type="text" [formControl]="val1" [value]="val1.value | number:'1.2-2'">
+<input type="text" [formControl]="val2">
