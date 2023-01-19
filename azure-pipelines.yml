@@ -35,5 +35,5 @@ steps:
     cleanContents: true
     preservePaths: true
     trustSSL: true
-  displayName: 'Upload [tamweely]'
+  displayName: 'Upload [IBS]'
 
