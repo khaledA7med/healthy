@@ -52,6 +52,7 @@
     "ngx-csv": "^0.3.2",
     "ngx-mask": "^13.1.1",
     "ngx-nestable": "^0.9.4",
+    "perfect-scrollbar": "^1.5.5",
     "prismjs": "^1.27.0",
     "rxjs": "~6.6.0",
     "simplebar-angular": "^2.3.6",

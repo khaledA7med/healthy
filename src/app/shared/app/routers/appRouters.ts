@@ -5,17 +5,26 @@ export const AppRoutes = {
   grid: {
     index: "igrid",
   },
+  Error: {
+    base: "pages",
+    comingSoon: "pages/coming-soon",
+  },
   MasterTable: {
     insuranceClasses: "/Master/InsuranceClasses",
   },
   Client: {
-    clientRegistry: "/Clients/Registry",
+    base: "Clients",
+    clientRegistry: "Clients",
+    clientForms: "Clients/Create",
+    clientEdit: "Clients/Update/:id",
+    groups: "Clients/Groups",
+    reports: "Clients/Reports",
   },
   BusinessDevelopment: {
-    Management: "/SalesLead/Management",
+    Management: "SalesLead/Management",
     Reports: {
-      Business: "/SalesLead/BusinessReport",
-      Renewal: "/SalesLead/RenewalReport",
+      Business: "SalesLead/BusinessReport",
+      Renewal: "SalesLead/RenewalReport",
     },
   },
 };

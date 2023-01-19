@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ICellRendererParams } from "ag-grid-community";
 
 @Component({
   selector: "app-general-grid-menu",
@@ -6,9 +7,9 @@ import { Component } from "@angular/core";
   styleUrls: ["./general-grid-menu.component.scss"],
 })
 export class GeneralGridMenuComponent {
-  private params: any;
+  private params!: ICellRendererParams;
 
-  agInit(params: any) {
+  agInit(params: ICellRendererParams) {
     this.params = params;
   }
 

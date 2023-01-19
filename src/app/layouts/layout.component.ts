@@ -29,25 +29,4 @@ export class LayoutComponent implements OnInit {
       this.layoutType = layout;
     });
   }
-
-  /**
-   * Check if the vertical layout is requested
-   */
-  isVerticalLayoutRequested() {
-    return this.layoutType === LAYOUT_VERTICAL;
-  }
-
-  /**
-   * Check if the horizontal layout is requested
-   */
-  isHorizontalLayoutRequested() {
-    return this.layoutType === LAYOUT_HORIZONTAL;
-  }
-
-  /**
-   * Check if the horizontal layout is requested
-   */
-  isTwoColumnLayoutRequested() {
-    return this.layoutType === LAYOUT_TWOCOLUMN;
-  }
 }

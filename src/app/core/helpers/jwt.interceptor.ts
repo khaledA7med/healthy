@@ -26,7 +26,6 @@ export class JwtInterceptor implements HttpInterceptor {
     //     },
     //   });
     // }
-    console.log("first");
 
     return next.handle(request);
   }

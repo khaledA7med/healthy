@@ -10,7 +10,11 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
         },
         "@schematics/angular:application": {
           "strict": true
@@ -50,6 +54,7 @@
               "node_modules/@fullcalendar/common/main.css",
               "node_modules/@fullcalendar/daygrid/main.css",
               "node_modules/shepherd.js/dist/css/shepherd.css",
+              "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
               "src/styles.scss",
               "src/assets/scss/config/creative/bootstrap.scss",
               "src/assets/scss/config/creative/app.scss",

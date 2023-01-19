@@ -10,7 +10,8 @@ export const MENU: MenuItem[] = [
       {
         id: 101,
         label: "MENUITEMS.MASTERTABLE.LIST.INSURANCECLASSES",
-        link: AppRoutes.MasterTable.insuranceClasses,
+        // link: AppRoutes.MasterTable.insuranceClasses,
+        link: AppRoutes.Error.comingSoon,
         parentId: 1,
       },
     ],
@@ -24,6 +25,18 @@ export const MENU: MenuItem[] = [
         id: 201,
         label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTREGISTRY",
         link: AppRoutes.Client.clientRegistry,
+        parentId: 2,
+      },
+      {
+        id: 202,
+        label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTGROUPS",
+        link: AppRoutes.Client.groups,
+        parentId: 2,
+      },
+      {
+        id: 203,
+        label: "MENUITEMS.CLIENTREGISTRY.LIST.REPORTS",
+        link: AppRoutes.Client.reports,
         parentId: 2,
       },
     ],

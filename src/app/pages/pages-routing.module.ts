@@ -7,6 +7,11 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
+      import("./clients/clients.module").then((m) => m.ClientsModule),
+  },
+  {
+    path: "",
+    loadChildren: () =>
       import("./extrapages/extraspages.module").then(
         (m) => m.ExtraspagesModule
       ),
