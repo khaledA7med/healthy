@@ -18,7 +18,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: AppRoutes.Client.clientEdit,
+    path: AppRoutes.Client.clientEdit + ":id",
     loadChildren: () =>
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule

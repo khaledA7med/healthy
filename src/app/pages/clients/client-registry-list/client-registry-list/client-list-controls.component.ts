@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
-import { ICellRendererParams } from "ag-grid-community";
+import { Router } from "@angular/router";
 
+import { ICellRendererParams } from "ag-grid-community";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
+import { environment } from "src/environments/environment";
 @Component({
   selector: "app-client-list-controls",
   template: `
@@ -18,6 +21,9 @@ import { ICellRendererParams } from "ag-grid-community";
           <button ngbDropdownItem (click)="Edit()" class="btn btn-sm">
             Edit
           </button>
+          <button ngbDropdownItem (click)="view()" class="btn btn-sm">
+            View
+          </button>
         </div>
       </div>
     </div>
@@ -27,11 +33,15 @@ import { ICellRendererParams } from "ag-grid-community";
 export class ClientListControlsComponent {
   private params!: ICellRendererParams;
 
+  constructor(private _Router: Router) {}
+
   agInit(params: ICellRendererParams) {
     this.params = params;
   }
 
-  Edit() {}
+  Edit() {
+    this._Router.navigate([AppRoutes.Client.clientEdit, this.params.data.sNo]);
+  }
 
   view() {}
 }

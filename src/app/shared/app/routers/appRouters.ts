@@ -16,7 +16,7 @@ export const AppRoutes = {
     base: "Clients",
     clientRegistry: "Clients",
     clientForms: "Clients/Create",
-    clientEdit: "Clients/Update/:id",
+    clientEdit: "Clients/Update/",
     groups: "Clients/Groups",
     reports: "Clients/Reports",
   },

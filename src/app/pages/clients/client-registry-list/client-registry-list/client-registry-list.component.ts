@@ -23,6 +23,8 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientFilters } from "src/app/shared/app/models/Clients/iclientFilters";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { ClientFiltersComponent } from "../client-filters/client-filters.component";
 
 @Component({
   selector: "app-client-registry-list",
@@ -68,11 +70,12 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     onPaginationChanged: (e) => this.onPageChange(e),
   };
 
-  subsribes: Subscription[] = [];
+  subscribes: Subscription[] = [];
   constructor(
     private clientService: ClientsService,
     private tableRef: ElementRef,
-    private message: MessagesService
+    private message: MessagesService,
+    private offcanvasService: NgbOffcanvas
   ) {}
 
   ngOnInit(): void {}
@@ -102,7 +105,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
             this.message.popup("Oops!", err.message, "error");
           }
         );
-      this.subsribes.push(sub);
+      this.subscribes.push(sub);
     },
   };
 
@@ -168,8 +171,15 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     // this.uiState.filters = form.values
     this.gridApi.setDatasource(this.dataSource);
   }
+  openFilterOffcanvas() {
+    this.offcanvasService.open(ClientFiltersComponent, { position: "end" });
+    // this.filterClint.nativeElement.openOffcanvas();
+    // this.offcanvasService.open(this.filterClint, {
+    //   position: "end",
+    // });
+  }
 
   ngOnDestroy(): void {
-    this.subsribes && this.subsribes.forEach((s) => s.unsubscribe());
+    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }

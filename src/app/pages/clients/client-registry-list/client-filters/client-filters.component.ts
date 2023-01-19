@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 @Component({
-  selector: 'app-client-filters',
-  templateUrl: './client-filters.component.html',
-  styleUrls: ['./client-filters.component.scss']
+  selector: "app-client-filters",
+  templateUrl: "./client-filters.component.html",
+  styleUrls: ["./client-filters.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ClientFiltersComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
