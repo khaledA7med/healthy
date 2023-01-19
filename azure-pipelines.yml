@@ -18,7 +18,7 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install
-    ng build --prod --output-hashing=all
+    ng build --configuration production --output-hashing=all
   displayName: 'Build'
   
 - task: FtpUpload@2
