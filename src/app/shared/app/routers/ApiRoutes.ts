@@ -1,5 +1,8 @@
 export const ApiRoutes = {
-  Clients: {
-    search: "/ClientRegistry/Client/Search",
-  },
+	Users: {
+		login: "/Account/login",
+	},
+	Clients: {
+		search: "/ClientRegistry/Client/Search",
+	},
 };
