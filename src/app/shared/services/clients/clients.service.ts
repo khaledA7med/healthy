@@ -25,4 +25,12 @@ export class ClientsService {
       observe: "response",
     });
   }
+  getClintDetails(
+    sno: number
+  ): Observable<HttpResponse<IBaseResponse<IClient>>> {
+    return this.http.get(this.env + ApiRoutes.Clients.details, {
+      observe: "response",
+      params: { sno },
+    });
+  }
 }

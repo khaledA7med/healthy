@@ -1,3 +1,4 @@
+import { ModalForDetailsComponent } from "./../../shared/components/modal-for-details/modal-for-details.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -10,6 +11,12 @@ const routes: Routes = [
         (m) => m.ClientRegistryListModule
       ),
   },
+  {
+    path: AppRoutes.Client.clientRegistry + "/:id",
+    outlet: "details",
+    component: ModalForDetailsComponent,
+  },
+
   {
     path: AppRoutes.Client.clientForms,
     loadChildren: () =>

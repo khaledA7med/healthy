@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ClientFiltersComponent } from "./client-filters/client-filters.component";
 import { ClientRegistryListComponent } from "./client-registry-list/client-registry-list.component";
 
 import { RouterModule, Routes } from "@angular/router";
@@ -13,11 +12,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    ClientFiltersComponent,
-    ClientRegistryListComponent,
-    ClientListControlsComponent,
-  ],
+  declarations: [ClientRegistryListComponent, ClientListControlsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

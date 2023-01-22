@@ -32,6 +32,7 @@ import { environment } from "src/environments/environment";
 })
 export class ClientListControlsComponent {
   private params!: ICellRendererParams;
+  route: string = AppRoutes.Client.clientRegistry;
 
   constructor(private _Router: Router) {}
 
@@ -43,5 +44,9 @@ export class ClientListControlsComponent {
     this._Router.navigate([AppRoutes.Client.clientEdit, this.params.data.sNo]);
   }
 
-  view() {}
+  view() {
+    this._Router.navigate([
+      { outlets: { details: [this.route, this.params.data.sNo] } },
+    ]);
+  }
 }

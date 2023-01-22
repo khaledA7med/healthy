@@ -3,6 +3,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import {
@@ -24,7 +25,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientFilters } from "src/app/shared/app/models/Clients/iclientFilters";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { ClientFiltersComponent } from "../client-filters/client-filters.component";
+import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-client-registry-list",
@@ -33,9 +34,11 @@ import { ClientFiltersComponent } from "../client-filters/client-filters.compone
   encapsulation: ViewEncapsulation.None,
 })
 export class ClientRegistryListComponent implements OnInit, OnDestroy {
+  @ViewChild("filter") clintFilter!: ElementRef;
   uiState = {
     routerLink: { forms: AppRoutes.Client.clientForms },
     gridReady: false,
+    submitted: false,
     filters: {
       pageNumber: 1,
       pageSize: 50,
@@ -47,6 +50,8 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       totalPages: 0,
     },
   };
+  // filter form
+  filterForm!: FormGroup;
 
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
@@ -78,7 +83,13 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     private offcanvasService: NgbOffcanvas
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initFilterForm();
+  }
+
+  // get filterFormControl() {
+  //   return this.filterForm.controls;
+  // }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
@@ -165,18 +176,31 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       horizontal.update();
     }
   }
+  private initFilterForm(): void {
+    this.filterForm = new FormGroup({
+      fullName: new FormControl(""),
+      type: new FormControl(""),
+      branch: new FormControl(""),
+      producer: new FormControl(""),
+      commericalNo: new FormControl(""),
+      status: new FormControl([]),
+    });
+  }
+  openFilterOffcanvas(): void {
+    this.offcanvasService.open(this.clintFilter, { position: "end" });
+  }
 
-  onClientFilters() {
-    // form.values
-    // this.uiState.filters = form.values
+  onClientFilters(): void {
+    this.uiState.filters = {
+      ...this.uiState.filters,
+      ...this.filterForm.value,
+    };
+
     this.gridApi.setDatasource(this.dataSource);
   }
-  openFilterOffcanvas() {
-    this.offcanvasService.open(ClientFiltersComponent, { position: "end" });
-    // this.filterClint.nativeElement.openOffcanvas();
-    // this.offcanvasService.open(this.filterClint, {
-    //   position: "end",
-    // });
+
+  clearFilter() {
+    this.filterForm.reset();
   }
 
   ngOnDestroy(): void {
