@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { ICellRendererParams } from "ag-grid-community";
-import { ClientGroupComponent } from "./client-group.component";
+import { GroupsClientsComponent } from "./groups-clients.component";
 import { ClientsGroupsService } from "src/app/shared/services/clients/clients.groups.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from "sweetalert2";
 
 @Component({
-	selector: "app-client-Group-list-controls",
+	selector: "app-Group-Clients-list-controls",
 	template: `
 		<div class="col">
 			<div ngbDropdown class="d-inline-block">
@@ -26,9 +26,9 @@ import { SweetAlertResult } from "sweetalert2";
 	`,
 	styles: ["#actionDropdown::after {display: none}"],
 })
-export class ClientGroupListControlsComponent {
+export class GroupClientsListControlsComponent {
 	private params!: ICellRendererParams;
-	private comp!: ClientGroupComponent;
+	private comp!: GroupsClientsComponent;
 	constructor(private message: MessagesService, private groupService: ClientsGroupsService) {}
 
 	agInit(params: ICellRendererParams) {
@@ -38,9 +38,10 @@ export class ClientGroupListControlsComponent {
 
 	Delete() {
 		let sno = Number(this.params.data.sNo);
-		this.message.confirm("Delete", "Delete This Group ?", "Delete", "warning").then((e: SweetAlertResult) => {
+		// console.log(sno);
+		this.message.confirm("Delete", "Delete This Client From This Group?", "Delete", "warning").then((e: SweetAlertResult) => {
 			if (e.isConfirmed) {
-				this.groupService.deleteClientGroup(sno).subscribe(
+				this.groupService.deleteGroupClient(sno).subscribe(
 					(res) => {
 						if (res.body?.status) {
 							this.message.popup(res.body?.message!, "success");

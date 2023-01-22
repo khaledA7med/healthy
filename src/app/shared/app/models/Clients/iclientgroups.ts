@@ -1,4 +1,4 @@
 export interface IClientGroups {
-	sNo?: number;
-	groupName?: string;
+	sNo?: number | null;
+	groupName?: string | null;
 }
