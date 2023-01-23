@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 		//   this.router.navigate(["/"]);
 		// }
 		this.loginForm = this.formBuilder.group({
-			dbName: ["0", [Validators.required]],
+			dbName: [0, [Validators.required]],
 			userName: ["", [Validators.required]],
 			password: ["", [Validators.required]],
 			rememberMe: [false],

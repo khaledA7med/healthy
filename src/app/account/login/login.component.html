@@ -36,11 +36,21 @@
 
                                     <div class="mb-3">
                                         <label for="dbname" class="form-label font-weight-bold">Version</label>
+                                        <ng-select [clearable]="false" [searchable]="false" id="dbname"
+                                            formControlName="dbName" required>
+                                            <ng-option *ngFor="let name of dbNames.db"
+                                                [value]="name.id||0">{{name.name}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+
+                                    <!-- <div class="mb-3">
+                                        <label for="dbname" class="form-label font-weight-bold">Version</label>
                                         <select class="form-select" id="dbname" formControlName="dbName" required>
                                             <option *ngFor="let name of dbNames.db" [value]="name.id">{{name.name}}
                                             </option>
                                         </select>
-                                    </div>
+                                    </div> -->
 
                                     <!-- <div class="mb-3">
                                         <label class="form-label font-weight-bold" for="username">Email</label>
@@ -65,9 +75,6 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <div class="float-end">
-                                            <a routerLink="/pass-reset/basic" class="text-muted">Forgot password?</a>
-                                        </div>
                                         <label class="form-label font-weight-bold" for="password-input">Password</label>
                                         <div class="position-relative auth-pass-inputgroup mb-3">
                                             <input [type]="fieldTextType ? 'text' : 'password'"
