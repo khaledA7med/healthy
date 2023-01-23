@@ -1,22 +1,51 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewEncapsulation, TemplateRef } from "@angular/core";
+import { Component, ElementRef, OnInit, OnDestroy, ViewEncapsulation, TemplateRef, OnChanges, Input } from "@angular/core";
+import { ClientsGroupsService } from "src/app/shared/services/clients/clients.groups.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
-import { clientGroupsCols } from "src/app/shared/app/grid/clinetGroupsCols";
+import { groupClientsCols } from "src/app/shared/app/grid/clinetGroupsCols";
 import PerfectScrollbar from "perfect-scrollbar";
+import { MessagesService } from "src/app/shared/services/messages.service";
 import { Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { MessagesService } from "src/app/shared/services/messages.service";
-import { IClientGroups } from "src/app/shared/app/models/Clients/iclientgroups";
-import { ClientsGroupsService } from "src/app/shared/services/clients/clients.groups.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { IClientGroups } from "src/app/shared/app/models/Clients/iclientgroups";
+import { IClient } from "src/app/shared/app/models/Clients/iclient";
+
 @Component({
-	selector: "app-client-group",
-	templateUrl: "./client-group.component.html",
-	styleUrls: ["./client-group.component.scss"],
+	selector: "app-groups-clients",
+	templateUrl: "./groups-clients.component.html",
+	styleUrls: ["./groups-clients.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class ClientGroupComponent implements OnInit, OnDestroy {
+export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
+	@Input() group?: IClientGroups;
+	clientsList: IClient[] = [
+		{
+			sNo: 30,
+			fullName: "J.C.C.I. ",
+		},
+		{
+			sNo: 32,
+			fullName: "Dr. Bakhsh - Mina - (R.S.A)",
+		},
+		{
+			sNo: 33,
+			fullName: "Dr. Bakhsh - Sharafeyah - (R.S.A)",
+		},
+	];
+	groupsList: IClientGroups[] = [
+		{ sNo: 199, groupName: "k" },
+		{ sNo: 200, groupName: "as" },
+		{ sNo: 211, groupName: "Amir" },
+	];
+	subscribes: Subscription[] = [];
+
+	addClientModal!: NgbModalRef;
+
+	addClientToGroupForm!: FormGroup;
+	addClientToGroupFormSubmitted: boolean = false;
+
 	uiState = {
 		gridReady: false,
 		filters: {
@@ -37,7 +66,7 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: clientGroupsCols,
+		columnDefs: groupClientsCols,
 		suppressCsvExport: true,
 		context: { comp: this },
 		// paginationPageSize: this.uiState.groupsList.length,
@@ -50,36 +79,37 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
 	};
-	subscribes: Subscription[] = [];
 
-	// Forms
-	addGroupForm!: FormGroup;
-	addGroupModal!: NgbModalRef;
+	ngOnChanges(): void {
+		if (this.group == undefined) {
+			return;
+		} else {
+			this.gridApi.setDatasource(this.dataSource);
+		}
+	}
 
-	selectedGroup?: IClientGroups;
+	ngOnInit() {
+		console.log(this.addClientToGroupForm);
+	}
 
-	// Forms Submittion Checkers
-	addGroupFormSubmitted: boolean = false;
-	addClientToGroupFormSubmitted: boolean = false;
 	constructor(
-		public groupService: ClientsGroupsService,
+		private groupService: ClientsGroupsService,
+		private message: MessagesService,
 		private tableRef: ElementRef,
-		public message: MessagesService,
 		private modalService: NgbModal
 	) {
-		this.addGroupForm = new FormGroup({
+		this.addClientToGroupForm = new FormGroup({
+			clientId: new FormControl(null, Validators.required),
 			groupName: new FormControl(null, Validators.required),
 		});
 	}
-	ngOnInit(): void {}
 
-	//#region
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.groupService.getAllClientsGroups().subscribe(
-				(res: HttpResponse<IBaseResponse<IClientGroups[]>>) => {
+			let sub = this.groupService.getGroupClients(this.group?.groupName!).subscribe(
+				(res: HttpResponse<IBaseResponse<IClient[]>>) => {
 					this.uiState.group.list = res.body?.data!;
 					params.successCallback(this.uiState.group.list, this.uiState.group.list.length);
 					this.uiState.gridReady = true;
@@ -99,8 +129,6 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 				rowNodes: [params.node],
 				columns: [params.column],
 			});
-		} else if (params.column.getColId() == "groupName") {
-			this.selectedGroup = params.data;
 		} else {
 			console.log(params);
 		}
@@ -123,29 +151,33 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 			horizontal.update();
 		}
 	}
-	//#endregion
 
-	//#region Add Group Modal
 	get form() {
-		return this.addGroupForm.controls;
+		return this.addClientToGroupForm.controls;
 	}
-	openAddGroupDialoge(content: TemplateRef<any>) {
-		this.addGroupForm.reset();
-		this.addGroupModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
 
-		this.addGroupModal.hidden.subscribe(() => {
-			this.addGroupForm.reset();
-			this.addGroupFormSubmitted = false;
+	openAddClientDialoge(content: TemplateRef<any>) {
+		// this.addGroupForm.reset();
+		this.addClientModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
+
+		this.addClientModal.hidden.subscribe(() => {
+			this.addClientToGroupForm.reset();
+			this.addClientToGroupFormSubmitted = false;
 		});
 	}
 
-	submitCreateClientGroup() {
-		this.addGroupFormSubmitted = true;
-		if (!this.addGroupForm.valid) {
+	submitAddClientToGroup() {
+		this.addClientToGroupFormSubmitted = true;
+		let data = {
+			clientId: Number(this.addClientToGroupForm.value["clientId"]),
+			groupName: this.addClientToGroupForm.value["groupName"],
+		};
+		console.log(data);
+		if (!this.addClientToGroupForm.valid) {
 			return;
 		} else {
-			let gName = this.addGroupForm.value["groupName"];
-			this.groupService.createClientGroup(gName).subscribe((res) => {
+			let gName = this.addClientToGroupForm.value["groupName"];
+			this.groupService.addGroupClient(data.clientId, data.groupName).subscribe((res) => {
 				if (res.body?.status) {
 					this.message.toast(res.body?.message!, "success");
 				} else {
@@ -153,11 +185,9 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 				}
 				this.gridApi.setDatasource(this.dataSource);
 			});
-			this.addGroupModal.close();
+			this.addClientModal.close();
 		}
 	}
-
-	//#endregion
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

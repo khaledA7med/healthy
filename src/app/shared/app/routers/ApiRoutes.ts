@@ -1,6 +1,16 @@
 export const ApiRoutes = {
-  Clients: {
-    search: "/ClientRegistry/Client/Search",
-    add: "/ClientRegistry/Client/create"
-  },
+	Users: {
+		login: "/Account/login",
+	},
+	Clients: {
+		search: "/ClientRegistry/Client/Search",
+	},
+	ClientsGroups: {
+		list: "/v1/ClientRegistry/Groups/Search",
+		create: "/v1/ClientRegistry/Groups/Create",
+		delete: "/v1/ClientRegistry/Groups/Delete",
+		listGroupClients: "/v1/ClientRegistry/Groups/AllClients",
+		addGroupClient: "/v1/ClientRegistry/Groups/Join",
+		deleteGroupClient: "/v1/ClientRegistry/Groups/RemoveClient",
+	},
 };

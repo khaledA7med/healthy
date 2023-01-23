@@ -1,8 +1,4 @@
-import {
-  HttpClient,
-  HttpResponse,
-  HttpResponseBase,
-} from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -13,21 +9,15 @@ import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
 @Injectable({
-  providedIn: "root",
+	providedIn: "root",
 })
 export class ClientsService {
-  private readonly env = environment.baseURL;
-  constructor(private http: HttpClient) {}
+	private readonly env = environment.baseURL;
+	constructor(private http: HttpClient) {}
 
-  getAllClients(
-    clientFilters: IClientFilters
-  ): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
-    return this.http.post(this.env + ApiRoutes.Clients.search, clientFilters, {
-      observe: "response",
-    });
-  }
-
-  // createClient(client: iclientForms): Observable<HttpResponse<IBaseResponse>>{
-  //   return this.http.post(this.env + ApiRoutes.Clients.add, client, {observe: "response"});
-  // }
+	getAllClients(clientFilters: IClientFilters): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
+		return this.http.post(this.env + ApiRoutes.Clients.search, clientFilters, {
+			observe: "response",
+		});
+	}
 }
