@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
-import { iAddClient } from "../../app/models/Clients/iAddClient";
+import { iclientForms } from "../../app/models/Clients/iclientForms";
 import { IClient } from "../../app/models/Clients/iclient";
 import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
@@ -27,7 +27,7 @@ export class ClientsService {
     });
   }
 
-  // createClient(client: iAddClient): Observable<HttpResponse<IBaseResponse<iAddClient[]>>>{
+  // createClient(client: iclientForms): Observable<HttpResponse<IBaseResponse>>{
   //   return this.http.post(this.env + ApiRoutes.Clients.add, client, {observe: "response"});
   // }
 }
