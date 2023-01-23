@@ -24,12 +24,12 @@
       <div class="mb-3">
         <label for="clientName" class="form-label font-weight-bold">Client Name</label>
         <div class="input-group">
-          <select class="form-select" id="clientName" formControlName="clientId"
+          <ng-select class="w-100" id="clientName" formControlName="clientId"
             [ngClass]="{ 'is-invalid':addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors }"
             required>
-            <option *ngFor="let name of clientsList" [value]="name.sNo">{{name.fullName}}
-            </option>
-          </select>
+            <ng-option *ngFor="let name of clientsList" [value]="name.sNo">{{name.fullName}}
+            </ng-option>
+          </ng-select>
           <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors"
             class="invalid-feedback">
             <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors['required']">
@@ -38,15 +38,15 @@
         </div>
       </div>
 
-      <div class="mb-3">
+      <div>
         <label for="groupName" class="form-label font-weight-bold">Group Name</label>
         <div class="input-group">
-          <select class="form-select" id="groupName" formControlName="groupName"
+          <ng-select class="w-100" id="groupName" formControlName="groupName"
             [ngClass]="{ 'is-invalid': addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors }"
             required>
-            <option *ngFor="let name of groupsList" [value]="name.groupName">{{name.groupName}}
-            </option>
-          </select>
+            <ng-option *ngFor="let name of groupsList" [value]="name.groupName">{{name.groupName}}
+            </ng-option>
+          </ng-select>
           <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors"
             class="invalid-feedback">
             <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors['required']">
@@ -54,7 +54,6 @@
           </div>
         </div>
       </div>
-
 
     </div>
     <div class="modal-footer">
