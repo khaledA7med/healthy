@@ -1,0 +1,65 @@
+<div class="row my-2">
+  <div class="col-6 d-flex justify-content-start align-items-center">
+    <h4 class="card-title">Group {{group?.groupName}} Clients List</h4>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <button type="button" class="btn btn-soft-info btn-sm" (click)="openAddClientDialoge(clientContent)">
+      <i class="ri-add-fill me-1 align-bottom"></i> Add Client
+    </button>
+  </div>
+</div>
+<div class="ag-theme-alpine" appTableView>
+  <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 60vh;" [gridOptions]="gridOpts">
+  </ag-grid-angular>
+</div>
+
+<ng-template #clientContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <form [formGroup]="addClientToGroupForm" (ngSubmit)="submitAddClientToGroup()">
+    <div class="modal-body">
+
+      <div class="mb-3">
+        <label for="clientName" class="form-label font-weight-bold">Client Name</label>
+        <div class="input-group">
+          <select class="form-select" id="clientName" formControlName="clientId"
+            [ngClass]="{ 'is-invalid':addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors }"
+            required>
+            <option *ngFor="let name of clientsList" [value]="name.sNo">{{name.fullName}}
+            </option>
+          </select>
+          <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors"
+            class="invalid-feedback">
+            <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors['required']">
+              A Client is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="groupName" class="form-label font-weight-bold">Group Name</label>
+        <div class="input-group">
+          <select class="form-select" id="groupName" formControlName="groupName"
+            [ngClass]="{ 'is-invalid': addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors }"
+            required>
+            <option *ngFor="let name of groupsList" [value]="name.groupName">{{name.groupName}}
+            </option>
+          </select>
+          <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors"
+            class="invalid-feedback">
+            <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors['required']">
+              Group Name is required</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-sm btn-success" [disabled]="!addClientToGroupForm.valid">Save</button>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('cancel')">Cancel</button>
+    </div>
+  </form>
+</ng-template>

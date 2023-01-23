@@ -1,0 +1,191 @@
+<!-- details modal -->
+
+<ng-template #details let-modal>
+  <div class="modal-header py-3">
+    <h4 class="modal-title">{{ uiState.clintDetails.fullName }} Details</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body bg-light p-3">
+    <div class="row">
+      <!-- Start Clint Details Card -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title text-muted mb-0">CLIENT DETAILS</h6>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <table class="table table-borderless mb-0 fs-6">
+                <tbody>
+                  <tr>
+                    <td>Status :</td>
+                    <td>
+                      <span
+                        [ngClass]="{
+                          'bg-black': uiState.clintDetails.status == 'Blocked',
+                          'bg-success': uiState.clintDetails.status == 'Active',
+                          'bg-info':
+                            uiState.clintDetails.status == 'Pending Activation',
+                          'bg-warning':
+                            uiState.clintDetails.status == 'Prospect',
+                          'bg-danger':
+                            uiState.clintDetails.status == 'Rejected',
+                          'text-white': true,
+                          rounded: true,
+                          'p-1': true
+                        }"
+                      >
+                        {{ uiState.clintDetails.status }}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Clint Type :</td>
+                    <td>{{ uiState.clintDetails.type }}</td>
+                  </tr>
+                  <tr>
+                    <td>Branch :</td>
+                    <td>{{ uiState.clintDetails.branch }}</td>
+                  </tr>
+                  <tr>
+                    <td>Clint Name :</td>
+                    <td>{{ uiState.clintDetails.fullName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Clint Name (AR) :</td>
+                    <td>{{ uiState.clintDetails.fullNameAr }}</td>
+                  </tr>
+                  <tr>
+                    <td>Producer (Salesman) :</td>
+                    <td>{{ uiState.clintDetails.producer }}</td>
+                  </tr>
+                  <tr>
+                    <td>Business Type :</td>
+                    <td>{{ uiState.clintDetails.businessType }}</td>
+                  </tr>
+                  <tr>
+                    <td>Channel :</td>
+                    <td>{{ uiState.clintDetails.channel }}</td>
+                  </tr>
+                  <tr>
+                    <td>Interface :</td>
+                    <td>{{ uiState.clintDetails.interface }}</td>
+                  </tr>
+                  <tr>
+                    <td>Screening Result :</td>
+                    <td>{{ uiState.clintDetails.screeningResult }}</td>
+                  </tr>
+                  <tr>
+                    <td>Official Name :</td>
+                    <td>{{ uiState.clintDetails.officalName }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <!-- End Clint Details Card -->
+      <!-- Start Clint Types Details Card -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title text-muted mb-0">CLIENT TYPE DETAILS</h6>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <table class="table table-borderless mb-0 fs-6 table-card">
+                <tbody>
+                  <tr>
+                    <td>Corporate Details:</td>
+                    <td>????</td>
+                  </tr>
+                  <tr>
+                    <td>Registration Status :</td>
+                    <td>
+                      {{ uiState.clintDetails.registrationStatus }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Business Activity :</td>
+                    <td>{{ uiState.clintDetails.businessActivity }}</td>
+                  </tr>
+                  <tr>
+                    <td>Market Segment :</td>
+                    <td>??</td>
+                  </tr>
+                  <tr>
+                    <td>Date of Incorporation :</td>
+                    <td>
+                      {{
+                        uiState.clintDetails.dateOfIncorporation
+                          | date : "dd MMM y"
+                      }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Date of Incorporation (Hijri) :</td>
+                    <td>
+                      {{ uiState.clintDetails.dateOfIncorporationHijri }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Commercial Registration No. :</td>
+                    <td>{{ uiState.clintDetails.commericalNo }}</td>
+                  </tr>
+                  <tr>
+                    <td>CR Expiry Date :</td>
+                    <td>
+                      {{ uiState.clintDetails.expiryDate | date : "dd MMM y" }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>CR Expiry Date (Hijri) :</td>
+                    <td>
+                      {{ uiState.clintDetails.expiryDateHijri }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Sponsor ID :</td>
+                    <td>{{ uiState.clintDetails.sponsorID }}</td>
+                  </tr>
+                  <tr>
+                    <td>Unified No :</td>
+                    <td>{{ uiState.clintDetails.unifiedNo }}</td>
+                  </tr>
+                  <tr>
+                    <td>VAT No. :</td>
+                    <td>{{ uiState.clintDetails.vatNo }}</td>
+                  </tr>
+                  <tr>
+                    <td>Capital :</td>
+                    <td>{{ uiState.clintDetails.capital }}</td>
+                  </tr>
+                  <tr>
+                    <td>Premium :</td>
+                    <td>{{ uiState.clintDetails.premium }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <!-- End Clint Type  Details Card -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>

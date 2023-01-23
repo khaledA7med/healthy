@@ -1,1 +1,901 @@
-<p>client-registry-forms works!</p>
+<form [formGroup]="guestForm" id="ClientForm" autocomplete="off">
+
+    <div class="container-fluid my-2">
+
+        <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5,6">
+
+            <!-- Client Details -->
+            <ngb-panel id="1" title="Client Details" cardClass="open my-4">
+                <ng-template ngbPanelContent="1">
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                        <div class="container-fluid mb-3">
+                            <div class="row mb-2">
+
+                                <div class="col-lg-3 col-md-12 ">
+                                    <div class="accordion-info form-group">
+                                        <div class="lables mt-2"><label for="selectClientType">Client
+                                                Type</label>
+                                        </div>
+                                        <select name="Types" class="form-select" id="selectClientType"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+
+                                <div class="col-lg-3 col-md-12 ">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label>Client Name</label></div>
+                                        <input formControlName="fullName" id="FullName"
+                                            class="form-control form-control-sm">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class=" mt-2"><label>Client Name (Ar)</label>
+                                        </div>
+                                        <input id="FullNameAr" class="form-control form-control-sm ">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label for="Producer">Producer
+                                                (Salesman)</label>
+                                        </div>
+                                        <select class="form-select" required id="Producer"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <div class="invalid-feedback d-none">
+                                        required
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2">
+                                            <label for="relationshipStatus">Relationship Status</label>
+                                        </div>
+                                        <select class="form-select" required id="relationshipStatus"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2">
+                                            <label asp-for="BusinessType">Business Type</label>
+                                        </div>
+                                        <select asp-for="BusinessType" class="form-select" required id="businessType"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label for="Channel">Channel</label></div>
+                                        <select asp-for="Channel" class="form-select" required id="Channel"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label for="Interface">Interface</label></div>
+                                        <select class="form-select" required id="Interface"
+                                            aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label for="Result">Screening Result</label>
+                                        </div>
+
+                                        <select class="form-select" id="Result" aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+
+                                <div class="col-lg-3 col-md-12 ">
+                                    <div class="accordion-info">
+                                        <div class="lables mt-2"><label for="OfficialName">Official Name</label>
+                                        </div>
+                                        <input id="OfficialName" required class="form-control form-control-sm ">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+                            </div>
+
+                            <!--./row-->
+                            <div id="retOptions" style="display:none;"
+                                class="card ribbon-box border  shadow-none mb-lg-0">
+                                <div class="card-body">
+                                    <span class="ribbon ribbon-info round-shape"><span>Retail</span></span>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-4"><label for="IDNo">ID No</label></div>
+                                                <input type="text" id="IDNo" class="form-control form-control-sm">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-4"><label>Expiry
+                                                        Date</label>
+                                                </div>
+                                                <input id="expiryDate" type="text"
+                                                    class="form-control form-control-sm birthDate">
+                                            </div>
+                                        </div>
+                                        <!--./col-->
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-4"><label for="nationality">Nationality</label>
+                                                </div>
+                                                <ng-select class="form-control" id="nationality"
+                                                    [placeholder]="'nationality'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-4">
+                                                    <label for="sourceOfIncome">Source of Income</label>
+                                                </div>
+                                                <ng-select class="form-control" id="sourceofIncome"
+                                                    [placeholder]="'sourceofIncome'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--./row-->
+                            <div id="corpOptions" style="display:none;"
+                                class="card ribbon-box border  shadow-none mb-lg-0">
+                                <div class="card-body ">
+                                    <span class="ribbon ribbon-info round-shape">
+                                        <span>Corporate</span>
+                                    </span>
+                                    <div class="row">
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-4">
+                                                    <label for="registrationStatus">Registration Status</label>
+                                                </div>
+                                                <ng-select class="form-control" id="registrationStatus"
+                                                    [placeholder]="'registrationStatus'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+
+                                        <div class="col-lg-3 col-md-12 pt-3">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2">
+                                                    <label for="businessActivity">Business Activity</label>
+                                                </div>
+                                                <ng-select class="form-control" id="businessActivity"
+                                                    [placeholder]="'businessActivity'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+
+                                        <div class="col-lg-3 col-md-12 pt-3">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2"><label for="marketSegment">Market
+                                                        Segment</label>
+                                                </div>
+                                                <ng-select class="form-control" id="marketSegment"
+                                                    [placeholder]="'marketSegment'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12 pt-3">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2">
+                                                    <label asp-for="CommericalNo">Commercial Registration
+                                                        No.</label>
+                                                </div>
+                                                <input type="number" id="CommericalNo"
+                                                    class="form-control form-control-sm ">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12 ">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2">
+                                                    <label for="dateOfIncorporation">
+                                                        Date of
+                                                        Incorporation
+                                                    </label>
+                                                </div>
+                                                <input type="text" id="dateOfIncorporation"
+                                                    class="Incorporation-date form-control form-control-sm ">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="mt-2">
+                                                    <label for="dateOfIncorporationHijri">
+                                                        Date of Incorporation
+                                                        (Hijri)
+                                                    </label>
+                                                </div>
+
+                                                <input id="dateOfIncorporationHijri" type="text"
+                                                    class="Incorporation-date form-control form-control-sm  date">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2"><label for="crExpiryDate">CR Expiry
+                                                        Date</label>
+                                                </div>
+                                                <input required type="text" id="crExpiryDate"
+                                                    class="form-control form-control-sm crExpiry-date">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class=" mt-2">
+                                                    <label for="CRExpiryDateHijri">CR Expiry Date
+                                                        (Hijri)</label>
+                                                </div>
+                                                <input id="CRExpiryDateHijri"
+                                                    class="form-control form-control-sm crExpiry-date ">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class=" mt-2"><label for="sponsorID">Sponsor ID</label>
+                                                </div>
+                                                <input type="number" maxlength="20" minlength="20" id="sponsorID"
+                                                    class="form-control form-control-sm">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class=" mt-2"><label for="UnifiedNo">Unified No.</label>
+                                                </div>
+                                                <input id="UnifiedNo" class="form-control form-control-sm">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2"><label for="VAT-No">VAT No.</label>
+                                                </div>
+                                                <input id="VAT-No" type="number" class="form-control  form-control-sm">
+                                            </div>
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class=" mt-2"><label for="capital">Capital</label></div>
+                                                <input id="capital" class="form-control form-control-sm ">
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+
+                                        <div class="col-lg-3 col-md-12">
+                                            <div class="accordion-info">
+                                                <div class="lables mt-2"><label for="Premium">Premium</label>
+                                                </div>
+                                                <ng-select class="form-control" id="premium" [placeholder]="'premium'">
+                                                    <ng-template ng-label-tmp>
+                                                        <span>Corporate</span>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!--./accordion-info-->
+                                        </div>
+                                        <!--./col-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--./container-->
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+            <!-- National Address -->
+            <ngb-panel id="2" title="National Address" cardClass="open my-4">
+                <ng-template ngbPanelContent="2">
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                        <div class="container-fluid mb-3">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2"><label for="Building">Building No.</label></div>
+                                        <input asp-for="BuildingNo" id="Building" class="form-control form-control-sm">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2"><label for="Street">Street</label></div>
+                                        <input asp-for="StreetName" id="Street" class="form-control form-control-sm">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2"><label for="SecondaryNo">Secondary No</label></div>
+                                        <input asp-for="SecondryNo" id="SecondaryNo"
+                                            class="form-control form-control-sm ">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2 "><label for="District">District</label></div>
+                                        <input asp-for="DistrictName" id="District"
+                                            class="form-control form-control-sm ">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2 "><label for="PostalCode">Postal Code</label></div>
+                                        <input asp-for="PostalCode" id="PostalCode"
+                                            class="form-control form-control-sm ">
+
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2 lables "><label for="City">City</label></div>
+                                        <input asp-for="CityName" id="City" required
+                                            class="form-control form-control-sm ">
+                                    </div>
+                                    <div class="invalid-feedback ">
+                                        required
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                            </div>
+                            <!--./row-->
+                        </div>
+                        <!--./container-->
+
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+            <!-- Contact Details -->
+            <ngb-panel id="3" title="Contact Details" cardClass="open my-4">
+                <ng-template ngbPanelContent="3">
+                    <div id="collapseSix" class="accordion-collapse collapse show" aria-labelledby="headingSix">
+                        <div class="container-fluid mb-3">
+                            <div class="row">
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info ">
+                                        <div class="mt-2 lables"><label for="Telephone1">Telephone 1</label>
+                                        </div>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text" id="basic-addon1">+966</span>
+                                            <input asp-for="Tele" id="Telephone1" value="(+966)" type="number" required
+                                                minlength="9" maxlength="9" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            required
+                                        </div>
+                                        <div id="invalid-tele1" class="d-none ">Please enter valid phone number
+                                            "9"
+                                            digits
+                                            without "0"</div>
+
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2"><label for="Telephone2">Telephone 2</label></div>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text" id="basic-addon1">+966</span>
+                                            <input asp-for="Tele2" id="Telephone2" value="(+966)" type="number"
+                                                minlength="9" maxlength="9" class="form-control form-control-sm">
+
+                                        </div>
+                                        <span id="invalid-tele2" class="d-none ">Please enter valid phone number
+                                            "9"
+                                            digits
+                                            without "0"</span>
+
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+                                <!--./col-->
+
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="accordion-info">
+                                        <div class="mt-2"><label for="fax">Fax</label></div>
+                                        <input asp-for="Fax" id="fax" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+
+                                <div class="col-lg-3 col-md-12 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2 "><label for="Email1">Email</label></div>
+                                        <input asp-for="Email" type="email" id="Email1" name="contactEmail"
+                                            class="form-control form-control-sm validEmail">
+                                    </div>
+                                    <div class="invalid-feedback d-none"></div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-12 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2 "><label for="Website">Website</label></div>
+                                        <input asp-for="Website" type="text" id="Website"
+                                            class="form-control form-control-sm ">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--./row-->
+                        </div>
+                        <!--./container-->
+
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+            <!-- Contacts -->
+            <ngb-panel id="4" title="Contacts" cardClass="open my-4">
+                <ng-template ngbPanelContent="4">
+                    <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                        <div class="accordion-body d-flex flex-column">
+                            <button type="button" (click)="openContact(content1)"
+                                class="ms-auto btn btn-sm btn-primary mb-3  bg-gradient waves-effect waves-light"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="mdo">
+                                <i class="ri-contacts-book-2-line"></i> New Contact
+                            </button>
+                            <!-- start table -->
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Position</th>
+                                            <th scope="col">Extension</th>
+                                            <th scope="col">Mobile</th>
+                                            <th scope="col">Tele</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Branch</th>
+                                            <th scope="col">Line of Business</th>
+                                            <th scope="col">Department</th>
+                                            <th scope="col">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBodyContact">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table -->
+                            <div class="my-1 text-center text-dark fw-bold no-item-contact">
+                                No items show
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+            <!-- Contact Modal-->
+            <ng-template #content1 let-modal modal-lg>
+                <div class="modal-header  border-bottom border-info">
+                    <h5 class="modal-title mb-1" id="exampleModalLabel">Contact Details</h5>
+                    <button type="button" (click)="modal.dismiss('Cross click')" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-contact" class="needs-validation" novalidate>
+                        <div class="container-fluid mb-3">
+
+                            <div class="row">
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact">
+                                        <div class="lables mt-2">
+                                            <label for="Name">
+                                                Contact
+                                                Name
+                                            </label>
+                                        </div>
+                                        <input type="text" id="Name" class="form-control form-control-sm" required>
+                                        <div class="invalid-feedback">
+                                            required
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class=" mt-2"><label for="Position">Position</label></div>
+                                        <select class="form-select" id="Position" aria-label="form-select-sm example">
+                                            <option disabled selected> </option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+
+                                    <!--./accordion-info-->
+                                </div>
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2"><label for="Contact">Extension</label></div>
+                                        <input type="text" id="Extension" class="form-control form-control-sm ">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class="mt-2"><label for="Mobile">Mobile</label></div>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text" id="basic-addon1">+966</span>
+                                            <input type="number" value="+966" id="Mobile"
+                                                class="form-control form-control-sm  " pattern="/^$|^\d{9}$/">
+                                        </div>
+                                        <span id="invalidNumber" class="d-none ">Please enter valid phone number
+                                            "9"
+                                            digits </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class="mt-2 "><label for="Phone">Phone</label></div>
+                                        <input type="number" id="Phone" class="form-control  form-control-sm ">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact ">
+                                        <div class="mt-2 lables"><label for="Email2">Email</label></div>
+                                        <input type="email" id="Email2" class="form-control form-control-sm vaildEmail"
+                                            required>
+                                        <div class="invalid-feedback">
+                                            required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class=" mt-2"><label for="Branch">Branch</label></div>
+                                        <select class="form-select" data-col-index="0" id="Branch"
+                                            aria-label="form-select-sm example">
+                                            <option value=""></option>
+                                            <option disabled selected> </option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class=" mt-2">
+                                            <label for="Business">
+                                                Line of
+                                                Business
+                                            </label>
+                                        </div>
+                                        <select class="form-select" id="Business" aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact">
+                                        <div class=" mt-2">
+                                            <label for="Department">Department</label>
+                                        </div>
+                                        <select class="form-select" id="Department" aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+
+                            <div>
+                                <button type="submit" id="addContact" class="btn btn-success btn-sm"><i
+                                        class="ri-add-line align-bottom me-1"></i> Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+
+            <!-- Bank Accounts -->
+            <ngb-panel id="5" title="Bank Accounts" cardClass="open my-4">
+                <ng-template ngbPanelContent="5">
+                    <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
+                        <div class="accordion-body d-flex flex-column">
+                            <button type="button" (click)="openContact(content2)"
+                                class="btn btn-sm btn-primary ms-auto  mb-3" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal2" data-bs-whatever="fat">
+                                <i class=" ri-bank-line"></i> New Bank Account
+                            </button>
+
+                            <!-- start table -->
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th scope="col">Bank Name</th>
+                                            <th scope="col">Branch</th>
+                                            <th scope="col">Full Name</th>
+                                            <th scope="col">Name Arabic</th>
+                                            <th scope="col">IBAN</th>
+                                            <th scope="col">Swift Code</th>
+                                            <th scope="col">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBodyBank">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table -->
+                            <div class="my-1 text-center text-dark fw-bold no-item-bank">
+                                No items show
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+            <!-- Bank Account Modal-->
+            <ng-template #content2 let-modal modal-lg>
+                <div class="modal-header  border-bottom border-info">
+                    <h5 class="modal-title mb-1" id="exampleModalLabel">Contact Details</h5>
+                    <button type="button" (click)="modal.dismiss('Cross click')" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bank-account-form" class="needs-validation" novalidate>
+
+                        <div class="container-fluid mb-3">
+                            <div class="row">
+
+                                <div class="col-lg-6">
+                                    <div class="client-contact  has-validation">
+                                        <div class="lables mt-2">
+                                            <label for="BankName">Bank Name</label>
+                                        </div>
+                                        <select class="form-select" id="BankName" aria-label="form-select-sm example">
+                                            <option disabled selected></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div class="invalid-feedback d-none">
+                                        required
+                                    </div>
+                                    <!--./accordion-info-->
+                                </div>
+                                <!--./col-->
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact has-validation">
+                                        <div class="mt-2"><label for="BranchBank">Branch</label></div>
+                                        <input type="text" id="BranchBank" class="form-control form-control-sm ">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact ">
+                                        <div class="mt-2"><label for="NameEn">Full Name</label></div>
+                                        <input type="text" id="NameEn" class="form-control form-control-sm ">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2"><label for="NameAr"> Name Arabic</label></div>
+                                        <input type="text" id="NameAr" class="form-control form-control-sm ">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2"><label for="IBAN">IBAN</label></div>
+                                        <input type="text" id="IBAN" class="form-control form-control-sm ">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 ">
+                                    <div class="client-contact">
+                                        <div class="mt-2"><label for="SwiftCode">Swift Code</label></div>
+                                        <input type="text" id="SwiftCode" class="form-control  form-control-sm">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success btn-sm">
+                                <i class="ri-add-line align-bottom me-1"></i> Add
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+
+            <!-- Documents -->
+            <ngb-panel id="6" title="Documents" cardClass="open my-4">
+                <ng-template ngbPanelContent="6">
+                    <div class="row border border-dashed border-dark">
+                        <div class="col-lg-12">
+                            <div id="documentsBody" class="accordion-collapse collapse show px-2"
+                                aria-labelledby="documentsHead">
+                                <div class="container-fluid my-3">
+                                    <div class="filezone-container mx-auto text-center py-5">
+                                        <label for="inputDocuments" id="img-label">
+                                            <div>
+                                                <i class="ri-upload-cloud-2-fill"></i>
+                                            </div>
+                                            <div>
+                                                Drop files here or click to upload
+                                                <span class="text-black-50 mx-3 fs-14">
+                                                    <br>.csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls,
+                                                    .xlsx, .zip, image/*</span>
+                                            </div>
+                                        </label>
+                                        <input type="file" id="inputDocuments"
+                                            accept=".csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls, .xlsx, .zip, image/*"
+                                            multiple>
+                                    </div>
+                                    <div class="preview-multiple-imgs mt-2" id="preview-multiple-imgs">
+                                        <table class="table table-borderless table-nowrap">
+                                            <tbody id="display-selected-documents">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+
+        </ngb-accordion>
+
+        <!-- Buttons -->
+        <div class="my-2 d-flex justify-content-end">
+            <button type="button" id="btnSaveClient" class="btn btn-success me-2 bg-gradient waves-effect waves-light ">
+                <i class="  ri-save-2-fill"></i>
+                Save
+            </button>
+            <button type="button" id="sa-warning" class="btn btn-danger me-2 bg-gradient waves-effect waves-light ">
+                <i class="ri-delete-bin-2-line"></i>
+                Clear
+            </button>
+        </div>
+
+    </div>
+
+</form>

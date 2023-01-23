@@ -1,3 +1,4 @@
+import { IClientPreview } from "../../app/models/Clients/iclient-preview";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IClient } from "src/app/shared/app/models/Clients/iclient";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -13,13 +14,14 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
+import AppUtils from "../../app/util";
 
 @Component({
   selector: "app-modal-for-details",
-  templateUrl: "./modal-for-details.component.html",
-  styleUrls: ["./modal-for-details.component.scss"],
+  templateUrl: "./client-preview.component.html",
+  styleUrls: ["./client-preview.component.scss"],
 })
-export class ModalForDetailsComponent implements AfterViewInit, OnDestroy {
+export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
@@ -32,7 +34,7 @@ export class ModalForDetailsComponent implements AfterViewInit, OnDestroy {
 
   uiState = {
     sno: 0,
-    clintDetails: {} as IClient,
+    clintDetails: {} as IClient | any,
   };
   subscribes: Subscription[] = [];
 
@@ -45,23 +47,28 @@ export class ModalForDetailsComponent implements AfterViewInit, OnDestroy {
 
     this.getClintDetails(this.uiState.sno);
 
-    this.modalRef.hidden.subscribe(() => {
-      this.router.navigate([{ outlets: { details: null } }]);
-    });
+    this.backToMainRoute();
   }
 
   getClintDetails(sno: number) {
     let sub = this.clintService.getClintDetails(sno).subscribe({
-      next: (res: HttpResponse<IBaseResponse<IClient>>) => {
-        console.log(res);
+      next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clintDetails = res.body?.data!;
+        AppUtils.nullValues(this.uiState.clintDetails);
+        console.log(this.uiState.clintDetails);
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");
       },
     });
-
     this.subscribes.push(sub);
+  }
+
+  // To Do back to main route when close modal
+  backToMainRoute() {
+    this.modalRef.hidden.subscribe(() => {
+      this.router.navigate([{ outlets: { details: null } }]);
+    });
   }
 
   ngOnDestroy() {

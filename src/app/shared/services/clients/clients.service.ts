@@ -1,12 +1,10 @@
-import {
-  HttpClient,
-  HttpResponse,
-  HttpResponseBase,
-} from "@angular/common/http";
+import { IClientPreview } from "./../../app/models/Clients/iclient-preview";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
+import { IClientForms } from "../../app/models/Clients/iclientForms";
 import { IClient } from "../../app/models/Clients/iclient";
 import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
@@ -27,7 +25,7 @@ export class ClientsService {
   }
   getClintDetails(
     sno: number
-  ): Observable<HttpResponse<IBaseResponse<IClient>>> {
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
     return this.http.get(this.env + ApiRoutes.Clients.details, {
       observe: "response",
       params: { sno },
