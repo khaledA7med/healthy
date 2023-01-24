@@ -1,17 +1,19 @@
+import { FormControl } from "@angular/forms";
+
 export interface IClientContact {
-  sNo?: number;
-  branch?: string;
-  clientID?: number;
-  contactName?: string;
-  mobile?: string;
-  lineOfBusiness?: string;
-  department?: string;
-  extension?: string;
-  position?: string;
-  mainContact?: number;
-  tele?: string;
-  email?: string;
-  dateofBirth?: Date;
-  savedUser: string;
-  address: string;
+  sNo?: FormControl<number | null>;
+  branch?: FormControl<string | null>;
+  clientID?: FormControl<number | null>;
+  contactName?: FormControl<string | null>;
+  mobile?: FormControl<string | null>;
+  lineOfBusiness?: FormControl<string | null>;
+  department?: FormControl<string | null>;
+  extension?: FormControl<string | null>;
+  position?: FormControl<string | null>;
+  mainContact?: FormControl<number | null>;
+  tele?: FormControl<string | null>;
+  email?: FormControl<string | null>;
+  dateofBirth?: FormControl<Date | null>;
+  savedUser?: FormControl<string | null>;
+  address?: FormControl<string | null>;
 }

@@ -26,6 +26,10 @@
     min-height: 24px;
     max-height: 24px;
 }
+::ng-deep.ng-select-container {
+    min-height: calc(1.5em + 0.5rem + 1px) !important;
+    max-height: calc(1.5em + 0.5rem + 1px) !important;
+ }
 
 form {
     display: block;
@@ -34,6 +38,7 @@ form {
 
 .lables label {
     position: relative !important;
+    color: black !important;
 }
 
 .lables label::after {
