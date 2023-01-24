@@ -3,7 +3,7 @@ export const ApiRoutes = {
 		login: "/Account/login",
 	},
 	Clients: {
-		search: "/ClientRegistry/Client/Search",
+		search: "/ClientRegistry/Clients/Search",
 	},
 	ClientsGroups: {
 		list: "/v1/ClientRegistry/Groups/Search",
