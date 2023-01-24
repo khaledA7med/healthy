@@ -533,13 +533,13 @@
                             <button type="button" (click)="openContact(content1)"
                                 class="ms-auto btn btn-sm btn-primary mb-3  bg-gradient waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="mdo">
-                                <i class="ri-contacts-book-2-line"></i> New Contact
+                                <i class="ri-contacts-book-2-line"></i> Add Contact
                             </button>
                             <!-- start table -->
                             <div class="table-responsive">
-                                <table class="table table-borderless">
-                                    <thead>
-                                        <tr class="table-primary">
+                                <table class="table table-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>
                                             <th scope="col">Name</th>
                                             <th scope="col">Position</th>
                                             <th scope="col">Extension</th>
@@ -552,14 +552,15 @@
                                             <th scope="col">Delete</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tableBodyContact">
+                                    <tbody>
+                                        <tr class="my-1 text-center text-dark fw-bold no-item-contact">
+                                            <td colspan="100">No items show</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- end table -->
-                            <div class="my-1 text-center text-dark fw-bold no-item-contact">
-                                No items show
-                            </div>
+
                         </div>
                     </div>
                 </ng-template>
@@ -687,14 +688,14 @@
                         <div class="accordion-body d-flex flex-column">
                             <button type="button" (click)="addBank()" class="btn btn-sm btn-primary ms-auto  mb-3"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="fat">
-                                <i class=" ri-bank-line"></i> New Bank Account
+                                <i class=" ri-bank-line"></i> Add Bank Account
                             </button>
 
                             <!-- start table -->
                             <div class="table-responsive">
-                                <table class="table table-borderless">
-                                    <thead>
-                                        <tr class="table-primary">
+                                <table class="table table-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>
                                             <th scope="col">Bank Name</th>
                                             <th scope="col">Branch</th>
                                             <th scope="col">Full Name</th>
@@ -748,13 +749,15 @@
                                                 </td>
                                             </ng-container>
                                         </tr>
+                                        <tr *ngIf="bankControlArray.controls.length === 0"
+                                            class="my-1 text-center text-dark fw-bold no-item-contact">
+                                            <td colspan="100">No items show</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- end table -->
-                            <div class="my-1 text-center text-dark fw-bold no-item-bank">
-                                No items show
-                            </div>
+
                         </div>
                     </div>
                 </ng-template>
