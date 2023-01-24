@@ -1,4 +1,4 @@
-import { FormArray, FormControl } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { IClientContact } from "./iclientContactForm";
 import { IClientsBankAccount } from "./iclientsBankAccountForm";
 
@@ -47,7 +47,7 @@ export interface IClientForms {
   cityName?: FormControl<string | null>;
   email?: FormControl<string | null>;
   website?: FormControl<string | null>;
-  clientContacts?: FormArray<FormControl<IClientContact>>;
-  clientsBankAccounts?: FormArray<FormControl<IClientsBankAccount>>;
+  clientContacts?: FormArray<FormGroup<IClientContact>>;
+  clientsBankAccounts?: FormArray<FormGroup<IClientsBankAccount>>;
   documents?: FormControl<string[] | null>;
 }

@@ -1,4 +1,4 @@
-<form [formGroup]="clientForm" id="ClientForm" autocomplete="off">
+<form [formGroup]="clientForm" (ngSubmit)="onSubmit(clientForm)" id="ClientForm" autocomplete="off">
 
     <div class="container-fluid my-2">
 
@@ -16,7 +16,7 @@
                                         <div class="lables mt-2"><label for="selectClientType">Client
                                                 Type</label>
                                         </div>
-                                        <ng-select [multiple]="true">
+                                        <ng-select>
                                         </ng-select>
                                     </div>
                                 </div>
@@ -30,7 +30,8 @@
                                             class="form-control form-control-sm"
                                             [ngClass]="{ 'is-invalid': submitted && f['fullName']?.errors }">
                                         <div *ngIf="submitted && f['fullName']?.errors" class="invalid-feedback">
-                                            <div *ngIf="f['fullName']?.errors??['required']">Client Name is required</div>
+                                            <div *ngIf="f['fullName']?.errors??['required']">Client Name is required
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +130,8 @@
                                             class="form-control form-control-sm"
                                             [ngClass]="{ 'is-invalid': submitted && f['officalName']?.errors }">
                                         <div *ngIf="submitted && f['officalName']?.errors" class="invalid-feedback">
-                                            <div *ngIf="f['officalName']?.errors??['required']">Official Name is required
+                                            <div *ngIf="f['officalName']?.errors??['required']">Official Name is
+                                                required
                                             </div>
                                         </div>
                                     </div>
@@ -684,9 +686,8 @@
                 <ng-template ngbPanelContent="5">
                     <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
                         <div class="accordion-body d-flex flex-column">
-                            <button type="button" (click)="openContact(content2)"
-                                class="btn btn-sm btn-primary ms-auto  mb-3" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal2" data-bs-whatever="fat">
+                            <button type="button" (click)="addBank()" class="btn btn-sm btn-primary ms-auto  mb-3"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="fat">
                                 <i class=" ri-bank-line"></i> New Bank Account
                             </button>
 
@@ -704,7 +705,50 @@
                                             <th scope="col">Delete</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tableBodyBank">
+                                    <tbody id="tableBodyBank" formArrayName="clientsBankAccounts">
+                                        <tr *ngFor="let c of bankControlArray.controls; index as i">
+                                            <ng-container [formGroupName]="i">
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="bankName"
+                                                        [ngClass]="{'is-invalid':  (formControl(i, 'bankName').touched || submitted ) && formControl(i, 'bankName').invalid}">
+                                                    <div class="invalid-feedback"
+                                                        *ngIf=" (formControl(i, 'bankName').touched || submitted ) && formControl(i, 'bankName').invalid">
+                                                        Required
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="branch">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="fullName"
+                                                        [ngClass]="{'is-invalid': (formControl(i, 'fullName').touched || submitted ) && formControl(i, 'fullName').invalid }">
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="(formControl(i, 'fullName').touched || submitted ) && formControl(i, 'fullName').invalid">
+                                                        Required
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="arabicName">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="iban">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="swiftCode">
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-soft-danger"
+                                                        (click)="remove(i)"><i class="ri-delete-bin-2-line"></i>
+                                                    </button>
+                                                </td>
+                                            </ng-container>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -832,8 +876,7 @@
 
         <!-- Buttons -->
         <div class="my-2 d-flex justify-content-end">
-            <button type="button" id="btnSaveClient"
-                class="btn btn-success me-2 bg-gradient waves-effect waves-light ">
+            <button type="submit" id="btnSaveClient" class="btn btn-success me-2 bg-gradient waves-effect waves-light ">
                 <i class="ri-save-2-fill"></i>
                 Save
             </button>
