@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
 import AppUtils from "../../app/util";
+import { IClientContact } from "../../app/models/Clients/iclientContactForm";
 
 @Component({
   selector: "app-modal-for-details",
@@ -34,7 +35,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
 
   uiState = {
     sno: 0,
-    clintDetails: {} as IClient | any,
+    clientDetails: {} as IClient | any,
   };
   subscribes: Subscription[] = [];
 
@@ -46,16 +47,15 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     });
 
     this.getClintDetails(this.uiState.sno);
-
     this.backToMainRoute();
   }
 
   getClintDetails(sno: number) {
     let sub = this.clintService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
-        this.uiState.clintDetails = res.body?.data!;
-        AppUtils.nullValues(this.uiState.clintDetails);
-        console.log(this.uiState.clintDetails);
+        this.uiState.clientDetails = res.body?.data!;
+        AppUtils.nullValues(this.uiState.clientDetails);
+        console.log(this.uiState.clientDetails);
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");

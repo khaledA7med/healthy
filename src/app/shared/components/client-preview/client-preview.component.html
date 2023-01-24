@@ -1,8 +1,8 @@
-<!-- details modal -->
+<!-- Client details modal -->
 
 <ng-template #details let-modal>
   <div class="modal-header py-3">
-    <h4 class="modal-title">{{ uiState.clintDetails.fullName }} Details</h4>
+    <h4 class="modal-title">{{ uiState.clientDetails.fullName }} Details</h4>
     <button
       type="button"
       class="btn-close"
@@ -11,78 +11,81 @@
     ></button>
   </div>
   <div class="modal-body bg-light p-3">
-    <div class="row">
-      <!-- Start Clint Details Card -->
-      <div class="col-lg-4">
-        <div class="card">
+    <!-- Start Client Details & Client Types Details & National Address & Contact Details -->
+    <div class="row mb-3">
+      <!-- Start Client Details Card -->
+      <div class="col-lg-4 my-2">
+        <div class="card table-details h-100">
           <div class="card-header">
             <h6 class="card-title text-muted mb-0">CLIENT DETAILS</h6>
           </div>
           <div class="card-body">
-            <blockquote class="blockquote mb-0">
+            <blockquote class="blockquote mb-0 table-responsive table-card">
               <table class="table table-borderless mb-0 fs-6">
                 <tbody>
                   <tr>
-                    <td>Status :</td>
+                    <th>Status :</th>
                     <td>
                       <span
                         [ngClass]="{
-                          'bg-black': uiState.clintDetails.status == 'Blocked',
-                          'bg-success': uiState.clintDetails.status == 'Active',
+                          'bg-black': uiState.clientDetails.status == 'Blocked',
+                          'bg-success':
+                            uiState.clientDetails.status == 'Active',
                           'bg-info':
-                            uiState.clintDetails.status == 'Pending Activation',
+                            uiState.clientDetails.status ==
+                            'Pending Activation',
                           'bg-warning':
-                            uiState.clintDetails.status == 'Prospect',
+                            uiState.clientDetails.status == 'Prospect',
                           'bg-danger':
-                            uiState.clintDetails.status == 'Rejected',
+                            uiState.clientDetails.status == 'Rejected',
                           'text-white': true,
                           rounded: true,
                           'p-1': true
                         }"
                       >
-                        {{ uiState.clintDetails.status }}
+                        {{ uiState.clientDetails.status }}
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td>Clint Type :</td>
-                    <td>{{ uiState.clintDetails.type }}</td>
+                    <th>Client Type :</th>
+                    <td>{{ uiState.clientDetails.type }}</td>
                   </tr>
                   <tr>
-                    <td>Branch :</td>
-                    <td>{{ uiState.clintDetails.branch }}</td>
+                    <th>Branch :</th>
+                    <td>{{ uiState.clientDetails.branch }}</td>
                   </tr>
                   <tr>
-                    <td>Clint Name :</td>
-                    <td>{{ uiState.clintDetails.fullName }}</td>
+                    <th>Client Name :</th>
+                    <td>{{ uiState.clientDetails.fullName }}</td>
                   </tr>
                   <tr>
-                    <td>Clint Name (AR) :</td>
-                    <td>{{ uiState.clintDetails.fullNameAr }}</td>
+                    <th>Client Name (AR) :</th>
+                    <td>{{ uiState.clientDetails.fullNameAr }}</td>
                   </tr>
                   <tr>
-                    <td>Producer (Salesman) :</td>
-                    <td>{{ uiState.clintDetails.producer }}</td>
+                    <th>Producer (Salesman) :</th>
+                    <td>{{ uiState.clientDetails.producer }}</td>
                   </tr>
                   <tr>
-                    <td>Business Type :</td>
-                    <td>{{ uiState.clintDetails.businessType }}</td>
+                    <th>Business Type :</th>
+                    <td>{{ uiState.clientDetails.businessType }}</td>
                   </tr>
                   <tr>
-                    <td>Channel :</td>
-                    <td>{{ uiState.clintDetails.channel }}</td>
+                    <th>Channel :</th>
+                    <td>{{ uiState.clientDetails.channel }}</td>
                   </tr>
                   <tr>
-                    <td>Interface :</td>
-                    <td>{{ uiState.clintDetails.interface }}</td>
+                    <th>Interface :</th>
+                    <td>{{ uiState.clientDetails.interface }}</td>
                   </tr>
                   <tr>
-                    <td>Screening Result :</td>
-                    <td>{{ uiState.clintDetails.screeningResult }}</td>
+                    <th>Screening Result :</th>
+                    <td>{{ uiState.clientDetails.screeningResult }}</td>
                   </tr>
                   <tr>
-                    <td>Official Name :</td>
-                    <td>{{ uiState.clintDetails.officalName }}</td>
+                    <th>Official Name :</th>
+                    <td>{{ uiState.clientDetails.officalName }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -90,85 +93,85 @@
           </div>
         </div>
       </div>
-      <!-- End Clint Details Card -->
-      <!-- Start Clint Types Details Card -->
-      <div class="col-lg-4">
-        <div class="card">
+      <!-- End Client Details Card -->
+      <!-- Start Client Types Details Card -->
+      <div class="col-lg-4 my-2">
+        <div class="card table-details h-100">
           <div class="card-header">
             <h6 class="card-title text-muted mb-0">CLIENT TYPE DETAILS</h6>
           </div>
           <div class="card-body">
-            <blockquote class="blockquote mb-0">
-              <table class="table table-borderless mb-0 fs-6 table-card">
+            <blockquote class="blockquote mb-0 table-responsive table-card">
+              <table class="table table-borderless mb-0 fs-6">
                 <tbody>
                   <tr>
-                    <td>Corporate Details:</td>
+                    <th>Corporate Details:</th>
                     <td>????</td>
                   </tr>
                   <tr>
-                    <td>Registration Status :</td>
+                    <th>Registration Status :</th>
                     <td>
-                      {{ uiState.clintDetails.registrationStatus }}
+                      {{ uiState.clientDetails.registrationStatus }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Business Activity :</td>
-                    <td>{{ uiState.clintDetails.businessActivity }}</td>
+                    <th>Business Activity :</th>
+                    <td>{{ uiState.clientDetails.businessActivity }}</td>
                   </tr>
                   <tr>
-                    <td>Market Segment :</td>
+                    <th>Market Segment :</th>
                     <td>??</td>
                   </tr>
                   <tr>
-                    <td>Date of Incorporation :</td>
+                    <th>Date of Incorporation :</th>
                     <td>
                       {{
-                        uiState.clintDetails.dateOfIncorporation
+                        uiState.clientDetails.dateOfIncorporation
                           | date : "dd MMM y"
                       }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Date of Incorporation (Hijri) :</td>
+                    <th>Date of Incorporation (Hijri) :</th>
                     <td>
-                      {{ uiState.clintDetails.dateOfIncorporationHijri }}
+                      {{ uiState.clientDetails.dateOfIncorporationHijri }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Commercial Registration No. :</td>
-                    <td>{{ uiState.clintDetails.commericalNo }}</td>
+                    <th>Commercial Registration No. :</th>
+                    <td>{{ uiState.clientDetails.commericalNo }}</td>
                   </tr>
                   <tr>
-                    <td>CR Expiry Date :</td>
+                    <th>CR Expiry Date :</th>
                     <td>
-                      {{ uiState.clintDetails.expiryDate | date : "dd MMM y" }}
+                      {{ uiState.clientDetails.expiryDate | date : "dd MMM y" }}
                     </td>
                   </tr>
                   <tr>
-                    <td>CR Expiry Date (Hijri) :</td>
+                    <th>CR Expiry Date (Hijri) :</th>
                     <td>
-                      {{ uiState.clintDetails.expiryDateHijri }}
+                      {{ uiState.clientDetails.expiryDateHijri }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Sponsor ID :</td>
-                    <td>{{ uiState.clintDetails.sponsorID }}</td>
+                    <th>Sponsor ID :</th>
+                    <td>{{ uiState.clientDetails.sponsorID }}</td>
                   </tr>
                   <tr>
-                    <td>Unified No :</td>
-                    <td>{{ uiState.clintDetails.unifiedNo }}</td>
+                    <th>Unified No :</th>
+                    <td>{{ uiState.clientDetails.unifiedNo }}</td>
                   </tr>
                   <tr>
-                    <td>VAT No. :</td>
-                    <td>{{ uiState.clintDetails.vatNo }}</td>
+                    <th>VAT No. :</th>
+                    <td>{{ uiState.clientDetails.vatNo }}</td>
                   </tr>
                   <tr>
-                    <td>Capital :</td>
-                    <td>{{ uiState.clintDetails.capital }}</td>
+                    <th>Capital :</th>
+                    <td>{{ uiState.clientDetails.capital }}</td>
                   </tr>
                   <tr>
-                    <td>Premium :</td>
-                    <td>{{ uiState.clintDetails.premium }}</td>
+                    <th>Premium :</th>
+                    <td>{{ uiState.clientDetails.premium }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -176,8 +179,212 @@
           </div>
         </div>
       </div>
-      <!-- End Clint Type  Details Card -->
+      <!-- End Client Type  Details Card -->
+      <!-- Start National Address & Contact Details Card-->
+      <div class="col-lg-4 my-2">
+        <!-- Start National Address Card-->
+        <div class="card table-details h-50">
+          <div class="card-header">
+            <h6 class="card-title text-muted mb-0">National Address</h6>
+          </div>
+          <div class="card-body">
+            <blockquote
+              class="blockquote py-0 mb-0 table-responsive table-card"
+            >
+              <table class="table table-borderless mb-0 fs-6">
+                <tbody>
+                  <tr>
+                    <th>Building No :</th>
+                    <td>{{ uiState.clientDetails.buildingNo }}</td>
+                  </tr>
+                  <tr>
+                    <th>Street :</th>
+                    <td>
+                      {{ uiState.clientDetails.streetName }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Secondary No :</th>
+                    <td>{{ uiState.clientDetails.secondryNo }}</td>
+                  </tr>
+                  <tr>
+                    <th>District :</th>
+                    <td>{{ uiState.clientDetails.districtName }}</td>
+                  </tr>
+                  <tr>
+                    <th>Postal Code :</th>
+                    <td>
+                      {{ uiState.clientDetails.postalCode }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>City :</th>
+                    <td>
+                      {{ uiState.clientDetails.cityName }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </blockquote>
+          </div>
+        </div>
+        <!-- End National Address Card-->
+        <!--Start Contact Details  -->
+        <div class="card table-details h-40 pb-2 m-0">
+          <div class="card-header">
+            <h6 class="card-title text-muted mb-0">CONTACT DETAILS</h6>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0 table-responsive table-card">
+              <table class="table table-borderless mb-0 fs-6">
+                <tbody>
+                  <tr>
+                    <th>Phone No. :</th>
+                    <td>{{ uiState.clientDetails.tele }}</td>
+                  </tr>
+                  <tr>
+                    <th>Phone No 2 :</th>
+                    <td>
+                      {{ uiState.clientDetails.tele2 }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Fax No. :</th>
+                    <td>{{ uiState.clientDetails.fax }}</td>
+                  </tr>
+                  <tr>
+                    <th>Email :</th>
+                    <td>{{ uiState.clientDetails.email }}</td>
+                  </tr>
+                  <tr>
+                    <th>Website :</th>
+                    <td>
+                      {{ uiState.clientDetails.website }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </blockquote>
+          </div>
+        </div>
+        <!--End Contact Details  -->
+      </div>
+      <!-- End National Address & Contact Details Card-->
     </div>
+    <!-- End Client Details & Client Types Details & National Address & Contact Details -->
+    <!-- Start Clint Contacts -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title text-muted text-uppercase mb-0">
+              Client Contacts
+            </h6>
+          </div>
+          <div class="card-body table-responsive table-card">
+            <table class="table table-nowrap mb-0">
+              <thead class="table-light">
+                <th class="table-header">Name</th>
+                <th class="table-header">Position</th>
+                <th class="table-header">Extension</th>
+                <th class="table-header">Mobile</th>
+                <th class="table-header">Tele</th>
+                <th class="table-header">Email</th>
+                <th class="table-header">Branch</th>
+                <th class="table-header">Line Of Business</th>
+                <th class="table-header">Department</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of uiState.clientDetails.clientContacts">
+                  <td>{{ item.contactName }}</td>
+                  <td>{{ item.position }}</td>
+                  <td>{{ item.extension }}</td>
+                  <td>{{ item.mobile }}</td>
+                  <td>{{ item.tele }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.branch }}</td>
+                  <td>{{ item.lineOfBusiness }}</td>
+                  <td>{{ item.department }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Clint Contacts -->
+
+    <!-- Start Bank Accounts  -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title text-muted text-uppercase mb-0">
+              BANK ACCOUNTS
+            </h6>
+          </div>
+          <div class="card-body table-responsive table-card">
+            <table class="table table-nowrap mb-0">
+              <thead class="table-light">
+                <th class="table-header">Bank Name</th>
+                <th class="table-header">Branch</th>
+                <th class="table-header">Name</th>
+                <th class="table-header">Name (Arabic)</th>
+                <th class="table-header">IBAN</th>
+                <th class="table-header">Swift Code</th>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let item of uiState.clientDetails.clientsBankAccounts"
+                >
+                  <td>{{ item.bankName }}</td>
+                  <td>{{ item.branch }}</td>
+                  <td>{{ item.fullName }}</td>
+                  <td>{{ item.arabicName }}</td>
+                  <td>{{ item.iban }}</td>
+                  <td>{{ item.swiftCode }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Bank Accounts -->
+    <!-- Start Documents  -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title text-muted text-uppercase mb-0">DOCUMENTS</h6>
+          </div>
+          <div class="card-body table-responsive table-card">
+            <table class="table table-nowrap mb-0">
+              <thead class="table-light">
+                <th class="table-header">File Name</th>
+                <th class="table-header">Type</th>
+                <th class="table-header">Size</th>
+                <th class="table-header">Upload Date</th>
+                <th class="table-header">Action</th>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="false">
+                  <tr>
+                    <td>Name</td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="true">
+                  <tr>
+                    <td>home</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Documents -->
   </div>
   <div class="modal-footer">
     <button

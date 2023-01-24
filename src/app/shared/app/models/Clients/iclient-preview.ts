@@ -1,5 +1,7 @@
 import { IClientDocumentList } from "./iclient-documentList";
 import { IClient } from "./iclient";
+import { IClientContact } from "./iclientContactForm";
+import { IClientsBankAccount } from "./iclientsBankAccountForm";
 
 export interface IClientPreview extends IClient {
   policyType?: string;
@@ -70,6 +72,6 @@ export interface IClientPreview extends IClient {
   secondryNo?: string;
   postalCode?: string;
   documentLists?: IClientDocumentList[];
-  clientContacts?: any[];
-  clientsBankAccounts?: any[];
+  clientContacts?: IClientContact[];
+  clientsBankAccounts?: IClientsBankAccount[];
 }
