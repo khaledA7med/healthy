@@ -368,14 +368,22 @@
                 <th class="table-header">Action</th>
               </thead>
               <tbody>
-                <ng-container *ngIf="false">
+                <ng-container
+                  *ngIf="uiState.clientDetails.documentLists.length !== 0"
+                >
                   <tr>
                     <td>Name</td>
                   </tr>
                 </ng-container>
-                <ng-container *ngIf="true">
+                <ng-container
+                  *ngIf="uiState.clientDetails.documentLists.length == 0"
+                >
                   <tr>
-                    <td>home</td>
+                    <td colspan="100">
+                      <div class="alert alert-danger text-center" role="alert">
+                        No Data Found
+                      </div>
+                    </td>
                   </tr>
                 </ng-container>
               </tbody>
