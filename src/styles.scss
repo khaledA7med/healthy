@@ -3,5 +3,32 @@
 @import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 
 .groupsTable .ag-row {
-	cursor: pointer;
+  cursor: pointer;
+}
+
+// **** NG- SELECT ****//
+.ng-select-container {
+  min-height: calc(1.5em + 0.5rem + 1px) !important;
+  max-height: calc(1.5em + 0.5rem + 1px) !important;
+  background-color: var(--vz-input-bg) !important;
+  border-color: var(--vz-input-border) !important;
+}
+
+.ng-input > input,
+.ng-option-disabled,
+.ng-option {
+  color: var(--vz-body-color) !important;
+}
+.ng-option-disabled,
+.ng-option {
+  background-color: var(--vz-input-bg) !important;
+  background-color: var(--vz-input-bg) !important;
+}
+
+.ng-dropdown-panel {
+  border: 1px solid var(--vz-input-border) !important;
+}
+
+.ng-option-marked {
+  background-color: var(--vz-dropdown-link-hover-bg) !important;
 }
