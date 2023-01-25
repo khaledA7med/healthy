@@ -5,6 +5,7 @@ export const ApiRoutes = {
   Clients: {
     search: "/ClientRegistry/Clients/Search",
     details: "/ClientRegistry/Clients/Details",
+    changeStatus: "/ClientRegistry/Clients/ChangeStatus",
   },
   ClientsGroups: {
     list: "/v1/ClientRegistry/Groups/Search",
