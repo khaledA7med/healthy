@@ -1,3 +1,4 @@
+import { ClientStatus } from "../../app/models/Clients/clientUtil";
 import { IClientPreview } from "../../app/models/Clients/iclient-preview";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IClient } from "src/app/shared/app/models/Clients/iclient";
@@ -15,7 +16,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
 import AppUtils from "../../app/util";
-import { IClientContact } from "../../app/models/Clients/iclientContactForm";
 
 @Component({
   selector: "app-modal-for-details",
@@ -23,6 +23,15 @@ import { IClientContact } from "../../app/models/Clients/iclientContactForm";
   styleUrls: ["./client-preview.component.scss"],
 })
 export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
+  uiState = {
+    sno: 0,
+    clientDetails: {} as IClient | any,
+  };
+  clientStatus: typeof ClientStatus = ClientStatus;
+  subscribes: Subscription[] = [];
+  modalRef!: NgbModalRef;
+  @ViewChild("details") details!: TemplateRef<any>;
+
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
@@ -30,14 +39,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private message: MessagesService
   ) {}
-  modalRef!: NgbModalRef;
-  @ViewChild("details") details!: TemplateRef<any>;
-
-  uiState = {
-    sno: 0,
-    clientDetails: {} as IClient | any,
-  };
-  subscribes: Subscription[] = [];
 
   ngAfterViewInit(): void {
     this.modalRef = this.modalService.open(this.details, { fullscreen: true });

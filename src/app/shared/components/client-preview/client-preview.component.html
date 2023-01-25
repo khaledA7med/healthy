@@ -28,16 +28,20 @@
                     <td>
                       <span
                         [ngClass]="{
-                          'bg-black': uiState.clientDetails.status == 'Blocked',
+                          'bg-black':
+                            uiState.clientDetails.status ==
+                            clientStatus.Blocked,
                           'bg-success':
-                            uiState.clientDetails.status == 'Active',
+                            uiState.clientDetails.status == clientStatus.Active,
                           'bg-info':
                             uiState.clientDetails.status ==
-                            'Pending Activation',
+                            clientStatus.PendingActivation,
                           'bg-warning':
-                            uiState.clientDetails.status == 'Prospect',
+                            uiState.clientDetails.status ==
+                            clientStatus.Prospect,
                           'bg-danger':
-                            uiState.clientDetails.status == 'Rejected',
+                            uiState.clientDetails.status ==
+                            clientStatus.Rejected,
                           'text-white': true,
                           rounded: true,
                           'p-1': true
@@ -106,7 +110,7 @@
                 <tbody>
                   <tr>
                     <th>Corporate Details:</th>
-                    <td>????</td>
+                    <td>{{ uiState.clientDetails.placeOfIncorporation }}</td>
                   </tr>
                   <tr>
                     <th>Registration Status :</th>
@@ -120,7 +124,7 @@
                   </tr>
                   <tr>
                     <th>Market Segment :</th>
-                    <td>??</td>
+                    <td>{{ uiState.clientDetails.marketSegment }}</td>
                   </tr>
                   <tr>
                     <th>Date of Incorporation :</th>
@@ -295,17 +299,32 @@
                 <th class="table-header">Department</th>
               </thead>
               <tbody>
-                <tr *ngFor="let item of uiState.clientDetails.clientContacts">
-                  <td>{{ item.contactName }}</td>
-                  <td>{{ item.position }}</td>
-                  <td>{{ item.extension }}</td>
-                  <td>{{ item.mobile }}</td>
-                  <td>{{ item.tele }}</td>
-                  <td>{{ item.email }}</td>
-                  <td>{{ item.branch }}</td>
-                  <td>{{ item.lineOfBusiness }}</td>
-                  <td>{{ item.department }}</td>
-                </tr>
+                <ng-container
+                  *ngIf="uiState.clientDetails.clientContacts.length !== 0"
+                >
+                  <tr *ngFor="let item of uiState.clientDetails.clientContacts">
+                    <td>{{ item.contactName }}</td>
+                    <td>{{ item.position }}</td>
+                    <td>{{ item.extension }}</td>
+                    <td>{{ item.mobile }}</td>
+                    <td>{{ item.tele }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.branch }}</td>
+                    <td>{{ item.lineOfBusiness }}</td>
+                    <td>{{ item.department }}</td>
+                  </tr>
+                </ng-container>
+                <ng-container
+                  *ngIf="uiState.clientDetails.clientContacts.length == 0"
+                >
+                  <tr>
+                    <td colspan="100">
+                      <div class="alert alert-danger text-center" role="alert">
+                        No Data Found
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
@@ -334,16 +353,33 @@
                 <th class="table-header">Swift Code</th>
               </thead>
               <tbody>
-                <tr
-                  *ngFor="let item of uiState.clientDetails.clientsBankAccounts"
+                <ng-container
+                  *ngIf="uiState.clientDetails.clientsBankAccounts.length !== 0"
                 >
-                  <td>{{ item.bankName }}</td>
-                  <td>{{ item.branch }}</td>
-                  <td>{{ item.fullName }}</td>
-                  <td>{{ item.arabicName }}</td>
-                  <td>{{ item.iban }}</td>
-                  <td>{{ item.swiftCode }}</td>
-                </tr>
+                  <tr
+                    *ngFor="
+                      let item of uiState.clientDetails.clientsBankAccounts
+                    "
+                  >
+                    <td>{{ item.bankName }}</td>
+                    <td>{{ item.branch }}</td>
+                    <td>{{ item.fullName }}</td>
+                    <td>{{ item.arabicName }}</td>
+                    <td>{{ item.iban }}</td>
+                    <td>{{ item.swiftCode }}</td>
+                  </tr>
+                </ng-container>
+                <ng-container
+                  *ngIf="uiState.clientDetails.clientsBankAccounts.length == 0"
+                >
+                  <tr>
+                    <td colspan="100">
+                      <div class="alert alert-danger text-center" role="alert">
+                        No Data Found
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
