@@ -159,7 +159,9 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 	openAddClientDialoge(content: TemplateRef<any>) {
 		// this.addGroupForm.reset();
 		this.addClientModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
-
+		if (this.group) {
+			this.form["groupName"].setValue(this.group.groupName);
+		}
 		this.addClientModal.hidden.subscribe(() => {
 			this.addClientToGroupForm.reset();
 			this.addClientToGroupFormSubmitted = false;
@@ -176,15 +178,19 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		if (!this.addClientToGroupForm.valid) {
 			return;
 		} else {
-			let gName = this.addClientToGroupForm.value["groupName"];
-			this.groupService.addGroupClient(data.clientId, data.groupName).subscribe((res) => {
-				if (res.body?.status) {
-					this.message.toast(res.body?.message!, "success");
-				} else {
-					this.message.toast(res.body?.message!, "error");
+			this.groupService.addGroupClient(data.clientId, data.groupName).subscribe(
+				(res) => {
+					if (res.ok) {
+						this.message.toast(res.body?.message!, "success");
+					} else {
+						this.message.toast(res.body?.message!, "error");
+					}
+					this.gridApi.setDatasource(this.dataSource);
+				},
+				(error) => {
+					this.message.toast(error.error.message, "error");
 				}
-				this.gridApi.setDatasource(this.dataSource);
-			});
+			);
 			this.addClientModal.close();
 		}
 	}
