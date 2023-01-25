@@ -1,3 +1,4 @@
+import { HttpClient } from "@angular/common/http";
 import {
   Component,
   OnInit,
@@ -27,7 +28,7 @@ export class StarterComponent implements OnInit, OnChanges {
   perc: number = 0;
   curren: string = "SAR";
   @Input() test!: string;
-  constructor() {
+  constructor(private http: HttpClient) {
     this.val1.valueChanges.subscribe((res) => {
       this.val3 = +res! + +this.val2.value!;
       this.perc = +this.val3! * 0.15;
@@ -42,6 +43,7 @@ export class StarterComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    // this.http.get('https://localhost:44376/')
     /**
      * BreadCrumb
      */
