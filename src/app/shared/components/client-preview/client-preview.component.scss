@@ -18,3 +18,7 @@
     padding: 12px 9px;
   }
 }
+
+.dropdown-toggle::after {
+  display: none;
+}
