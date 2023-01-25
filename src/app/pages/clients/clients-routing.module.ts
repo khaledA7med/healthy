@@ -1,3 +1,4 @@
+import { ClientPreviewComponent } from "../../shared/components/client-preview/client-preview.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -11,6 +12,12 @@ const routes: Routes = [
       ),
   },
   {
+    path: AppRoutes.Client.clientRegistry + "/:id",
+    outlet: "details",
+    component: ClientPreviewComponent,
+  },
+
+  {
     path: AppRoutes.Client.clientForms,
     loadChildren: () =>
       import("./client-registry-forms/client-registry-forms.module").then(
@@ -18,7 +25,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: AppRoutes.Client.clientEdit,
+    path: AppRoutes.Client.clientEdit + ":id",
     loadChildren: () =>
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule

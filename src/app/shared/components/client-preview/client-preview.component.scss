@@ -1,0 +1,20 @@
+.table-card {
+  margin: -1rem -1rem;
+}
+.table-details {
+  .table-card {
+    height: 100% !important;
+    table {
+      height: 100% !important;
+      td:last-child,
+      th:first-child {
+        padding: 5px 16px !important;
+      }
+    }
+  }
+}
+.table-card {
+  .table-header {
+    padding: 12px 9px;
+  }
+}

@@ -1,3 +1,4 @@
+import { IClientPreview } from "./../../app/models/Clients/iclient-preview";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -9,15 +10,25 @@ import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
 @Injectable({
-	providedIn: "root",
+  providedIn: "root",
 })
 export class ClientsService {
-	private readonly env = environment.baseURL;
-	constructor(private http: HttpClient) {}
+  private readonly env = environment.baseURL;
+  constructor(private http: HttpClient) {}
 
-	getAllClients(clientFilters: IClientFilters): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
-		return this.http.post(this.env + ApiRoutes.Clients.search, clientFilters, {
-			observe: "response",
-		});
-	}
+  getAllClients(
+    clientFilters: IClientFilters
+  ): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
+    return this.http.post(this.env + ApiRoutes.Clients.search, clientFilters, {
+      observe: "response",
+    });
+  }
+  getClintDetails(
+    sno: number
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
+    return this.http.get(this.env + ApiRoutes.Clients.details, {
+      observe: "response",
+      params: { sno },
+    });
+  }
 }

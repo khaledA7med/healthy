@@ -1,23 +1,171 @@
 <div class="row justify-content-between align-items-center mb-3">
-    <div class="col-2 form-group row align-items-center">
-        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
-        <div class="col-sm-4">
-            <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
-                [(ngModel)]="uiState.filters.pageSize">
-                <ng-option [value]=25>25</ng-option>
-                <ng-option [value]=50>50</ng-option>
-                <ng-option [value]=100>100</ng-option>
-                <ng-option [value]=150>150</ng-option>
-                <ng-option [value]=200>200</ng-option>
-            </ng-select>
-        </div>
+  <div class="col-2 form-group row align-items-center">
+    <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
+    <div class="col-sm-4">
+      <ng-select
+        (change)="onPageSizeChange()"
+        [clearable]="false"
+        [searchable]="false"
+        id="pagingSizeSelect"
+        [(ngModel)]="uiState.filters.pageSize"
+      >
+        <ng-option [value]="25">25</ng-option>
+        <ng-option [value]="50">50</ng-option>
+        <ng-option [value]="100">100</ng-option>
+        <ng-option [value]="150">150</ng-option>
+        <ng-option [value]="200">200</ng-option>
+      </ng-select>
     </div>
-    <div class="col-3 d-flex justify-content-end">
-        <button class="btn btn-sm btn-info mx-2">Filters</button>
-        <a [routerLink]="'/'+uiState.routerLink.forms" class="btn btn-sm btn-success">Add Client</a>
-    </div>
+  </div>
+  <div class="col-3 d-flex justify-content-end">
+    <button class="btn btn-sm btn-info mx-2" (click)="openFilterOffcanvas()">
+      Filters
+    </button>
+    <a
+      [routerLink]="'/' + uiState.routerLink.forms"
+      class="btn btn-sm btn-success"
+      >Add Client</a
+    >
+  </div>
 </div>
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh;" [gridOptions]="gridOpts">
-    </ag-grid-angular>
+  <ag-grid-angular
+    id="gridScrollbar"
+    style="width: 100%; height: 75vh"
+    [gridOptions]="gridOpts"
+  >
+  </ag-grid-angular>
+</div>
+<!----------------------------------  --------------------
+                      Clint Filter
+-------------------------------------------------------->
+<div>
+  <ng-template #filter let-offcanvas>
+    <div class="offcanvas-header">
+      <h4 class="offcanvas-title fs-4">Filters</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="offcanvas.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="offcanvas-body">
+      <form class="row justify-content-center" [formGroup]="filterForm">
+        <!-- full Name -->
+        <div class="col-12 mb-2">
+          <label for="fullName" class="form-label">FULL NAME:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="fullName"
+            placeholder="Full Name"
+            formControlName="fullName"
+          />
+        </div>
+        <!-- user -->
+        <div class="col-12 mb-2">
+          <label for="name" class="form-label">FULL NAME:</label>
+          <input type="text" class="form-control" id="name" disabled value="" />
+        </div>
+        <!-- Type -->
+        <div class="col-12 mb-2">
+          <label for="type" class="form-label">Type:</label>
+          <ng-select
+            [clearable]="false"
+            [searchable]="true"
+            id="type"
+            formControlName="type"
+          >
+            <ng-option value="Corporate"> Corporate</ng-option>
+          </ng-select>
+        </div>
+        <!-- Branch -->
+        <div class="col-12 mb-2">
+          <label for="branch" class="form-label">Branch</label>
+          <ng-select
+            [clearable]="false"
+            [searchable]="true"
+            id="branch"
+            formControlName="branch"
+          >
+            <ng-option value="Aggregator"> Aggregator</ng-option>
+          </ng-select>
+        </div>
+        <!-- producer -->
+        <div class="col-12 mb-2">
+          <label for="producer" class="form-label">PRODUCER</label>
+          <ng-select
+            [clearable]="false"
+            [searchable]="true"
+            id="producer"
+            formControlName="producer"
+          >
+            <ng-option value="Abdulrafey Ansari"> Abdulrafey Ansari</ng-option>
+          </ng-select>
+        </div>
+        <!-- user producer -->
+        <div class="col-12 mb-2">
+          <label for="user producer" class="form-label"></label>
+          <input
+            type="text"
+            class="form-control"
+            id="user producer"
+            disabled
+            value=""
+          />
+        </div>
+
+        <!-- Commercial No -->
+        <div class="col-12 mb-2">
+          <label for="commercialNo" class="form-label">COMMERCIAL NO</label>
+          <ng-select
+            [clearable]="false"
+            [searchable]="true"
+            id="commercialNo"
+            formControlName="commericalNo"
+          >
+            <ng-option value="030034129">030034129</ng-option>
+          </ng-select>
+        </div>
+        <!-- Status -->
+
+        <div class="col-12 mb-2">
+          <label class="form-label" for="status">Status</label>
+
+          <ng-select
+            [clearable]="false"
+            [searchable]="false"
+            [multiple]="true"
+            formControlName="status"
+          >
+            <ng-option value="active">Active</ng-option>
+            <ng-option value="blocked">Blocked</ng-option>
+            <ng-option value="pending activation "
+              >Pending Activation</ng-option
+            >
+            <ng-option value="prospect">Prospect</ng-option>
+            <ng-option value="rejected">Rejected</ng-option>
+          </ng-select>
+        </div>
+        <div class="col-12 mh-100"></div>
+      </form>
+    </div>
+    <!-- submit and clear btn -->
+    <div class="offcanvas-footer border-top row m-1">
+      <div class="col-6 mt-2">
+        <button class="btn btn-light btn-sm w-100" (click)="clearFilter()">
+          Clear Filter
+        </button>
+      </div>
+      <div class="col-6 mt-2">
+        <button
+          class="btn btn-success btn-sm w-100"
+          (click)="onClientFilters()"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </ng-template>
 </div>
