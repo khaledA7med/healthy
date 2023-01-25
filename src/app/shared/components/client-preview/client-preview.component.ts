@@ -1,7 +1,6 @@
 import { ClientStatus } from "../../app/models/Clients/clientUtil";
 import { IClientPreview } from "../../app/models/Clients/iclient-preview";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { IClient } from "src/app/shared/app/models/Clients/iclient";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
@@ -25,7 +24,7 @@ import AppUtils from "../../app/util";
 export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   uiState = {
     sno: 0,
-    clientDetails: {} as IClient | any,
+    clientDetails: {} as IClientPreview,
   };
   clientStatus: typeof ClientStatus = ClientStatus;
   subscribes: Subscription[] = [];
@@ -43,8 +42,8 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.modalRef = this.modalService.open(this.details, { fullscreen: true });
 
-    this.route.params.subscribe((param) => {
-      this.uiState.sno = +param["id"];
+    this.route.paramMap.subscribe((res) => {
+      this.uiState.sno = +res.get("id")!;
     });
 
     this.getClintDetails(this.uiState.sno);
@@ -70,6 +69,13 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.modalRef.hidden.subscribe(() => {
       this.router.navigate([{ outlets: { details: null } }]);
     });
+  }
+  changeStatus(newStatus: String) {
+    let reqBody = {
+      clientId: this.uiState.sno,
+      status: newStatus,
+    };
+    // return service not Completed because response interface
   }
 
   ngOnDestroy() {

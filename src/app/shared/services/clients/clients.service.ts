@@ -8,6 +8,7 @@ import { IClientForms } from "../../app/models/Clients/iclientForms";
 import { IClient } from "../../app/models/Clients/iclient";
 import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
+import { ChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
 
 @Injectable({
   providedIn: "root",
@@ -42,6 +43,15 @@ export class ClientsService {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.editClient,
       { params: { sno: +id }, observe: "response" }
+    );
+  }
+  changeStatus(newStatus: ChangeStatusRequest) {
+    return this.http.post(
+      this.env + ApiRoutes.Clients.changeStatus,
+      newStatus,
+      {
+        observe: "response",
+      }
     );
   }
 }
