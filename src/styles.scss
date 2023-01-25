@@ -2,6 +2,14 @@
 @import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 
+label.asterisk-input {
+  position: relative;
+  &:after {
+    content: " *";
+    color: #f17171;
+  }
+}
+
 .groupsTable .ag-row {
   cursor: pointer;
 }
