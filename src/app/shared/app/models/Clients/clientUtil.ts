@@ -5,3 +5,8 @@ export enum ClientStatus {
   Prospect = "Prospect",
   Rejected = "Rejected",
 }
+
+export enum ClientType {
+  Retail = "Retail",
+  Corporate = "Corporate",
+}

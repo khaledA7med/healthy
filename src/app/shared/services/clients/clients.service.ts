@@ -20,9 +20,13 @@ export class ClientsService {
   getAllClients(
     clientFilters: IClientFilters
   ): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
-    return this.http.post(this.env + ApiRoutes.Clients.search, clientFilters, {
-      observe: "response",
-    });
+    return this.http.post<IBaseResponse<IClient[]>>(
+      this.env + ApiRoutes.Clients.search,
+      clientFilters,
+      {
+        observe: "response",
+      }
+    );
   }
   getClintDetails(
     sno: number
