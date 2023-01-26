@@ -1,9 +1,3 @@
-import { ClientStatus } from "../../app/models/Clients/clientUtil";
-import { IClientPreview } from "../../app/models/Clients/iclient-preview";
-import { MessagesService } from "src/app/shared/services/messages.service";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import {
   AfterViewInit,
   Component,
@@ -14,7 +8,14 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
+
 import AppUtils from "../../app/util";
+import { ClientStatus } from "../../app/models/Clients/clientUtil";
+import { IClientPreview } from "../../app/models/Clients/iclient-preview";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { ClientsService } from "src/app/shared/services/clients/clients.service";
 
 @Component({
   selector: "app-modal-for-details",
@@ -40,14 +41,20 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.modalRef = this.modalService.open(this.details, { fullscreen: true });
+    this.openModal();
+    this.getSNO();
+    this.getClintDetails(this.uiState.sno);
+    this.backToMainRoute();
+  }
 
+  openModal() {
+    this.modalRef = this.modalService.open(this.details, { fullscreen: true });
+  }
+
+  getSNO() {
     this.route.paramMap.subscribe((res) => {
       this.uiState.sno = +res.get("id")!;
     });
-
-    this.getClintDetails(this.uiState.sno);
-    this.backToMainRoute();
   }
 
   getClintDetails(sno: number) {
@@ -55,7 +62,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
         AppUtils.nullValues(this.uiState.clientDetails);
-        console.log(this.uiState.clientDetails);
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");
@@ -64,18 +70,19 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  // To Do back to main route when close modal
-  backToMainRoute() {
-    this.modalRef.hidden.subscribe(() => {
-      this.router.navigate([{ outlets: { details: null } }]);
-    });
-  }
   changeStatus(newStatus: String) {
     let reqBody = {
       clientId: this.uiState.sno,
       status: newStatus,
     };
     // return service not Completed because response interface
+  }
+
+  // To Do back to main route when close modal
+  backToMainRoute() {
+    this.modalRef.hidden.subscribe(() => {
+      this.router.navigate([{ outlets: { details: null } }]);
+    });
   }
 
   ngOnDestroy() {

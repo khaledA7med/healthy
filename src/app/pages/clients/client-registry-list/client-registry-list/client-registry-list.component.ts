@@ -14,18 +14,19 @@ import {
   IDatasource,
   IGetRowsParams,
 } from "ag-grid-community";
+import { FormControl, FormGroup } from "@angular/forms";
+import { Subscription } from "rxjs";
+import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+
 import PerfectScrollbar from "perfect-scrollbar";
 import { clientManageCols } from "src/app/shared/app/grid/clientCols";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
-import { Subscription } from "rxjs";
 import { IClient } from "src/app/shared/app/models/Clients/iclient";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientFilters } from "src/app/shared/app/models/Clients/iclientFilters";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-client-registry-list",
@@ -52,6 +53,8 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
   };
   // filter form
   filterForm!: FormGroup;
+  // to unSubscribe
+  subscribes: Subscription[] = [];
 
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
@@ -75,7 +78,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     onPaginationChanged: (e) => this.onPageChange(e),
   };
 
-  subscribes: Subscription[] = [];
   constructor(
     private clientService: ClientsService,
     private tableRef: ElementRef,
@@ -87,10 +89,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     this.initFilterForm();
   }
 
-  // get filterFormControl() {
-  //   return this.filterForm.controls;
-  // }
-
+  // Table Section
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
@@ -176,6 +175,11 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       horizontal.update();
     }
   }
+
+  //  filter Section
+  openFilterOffcanvas(): void {
+    this.offcanvasService.open(this.clintFilter, { position: "end" });
+  }
   private initFilterForm(): void {
     this.filterForm = new FormGroup({
       fullName: new FormControl(""),
@@ -186,16 +190,15 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       status: new FormControl([]),
     });
   }
-  openFilterOffcanvas(): void {
-    this.offcanvasService.open(this.clintFilter, { position: "end" });
-  }
-
-  onClientFilters(): void {
+  modifyFilterReq() {
     this.uiState.filters = {
       ...this.uiState.filters,
       ...this.filterForm.value,
     };
+  }
 
+  onClientFilters(): void {
+    this.modifyFilterReq();
     this.gridApi.setDatasource(this.dataSource);
   }
 
