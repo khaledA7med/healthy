@@ -440,6 +440,16 @@
     >
       Close
     </button>
+    <button
+      *ngIf="
+        uiState.clientDetails.status == clientStatus.Active &&
+        uiState.clientDetails.type == 'Retail'
+      "
+      type="submit"
+      class="btn btn-success btn-sm"
+    >
+      Add To Group
+    </button>
 
     <div
       ngbDropdown
