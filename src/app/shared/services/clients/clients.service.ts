@@ -35,4 +35,13 @@ export class ClientsService {
       params: { sno },
     });
   }
+
+  getClientById(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
+    return this.http.get<IBaseResponse<IClientPreview>>(
+      this.env + ApiRoutes.Clients.editClient,
+      { params: { sno: +id }, observe: "response" }
+    );
+  }
 }

@@ -4,7 +4,7 @@ import { EventService } from "../../core/services/event.service";
 
 //Logout
 import { AuthenticationService } from "../../core/services/auth.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TokenStorageService } from "../../core/services/token-storage.service";
 
 // Language
@@ -13,6 +13,7 @@ import { LanguageService } from "../../core/services/language.service";
 import { TranslateService } from "@ngx-translate/core";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
+import { filter, map, mergeMap } from "rxjs/operators";
 
 @Component({
   selector: "app-topbar",
@@ -29,6 +30,8 @@ export class TopbarComponent implements OnInit {
     light: reserved.lightMode,
   };
 
+  title: string = "";
+
   flagvalue: any;
   valueset: any;
   countryName: any;
@@ -43,6 +46,7 @@ export class TopbarComponent implements OnInit {
     public translate: TranslateService,
     private authService: AuthenticationService,
     private router: Router,
+    private route: ActivatedRoute,
     private TokenStorageService: TokenStorageService
   ) {}
 
@@ -64,6 +68,42 @@ export class TopbarComponent implements OnInit {
 
     this.mode = localStorage.getItem(localStorageKeys.themeMode)!;
     this.changeMode(this.mode);
+
+    this.subscribeToRouteChangeEvents();
+  }
+
+  private setTitleFromRouteData(routeData: any) {
+    if (routeData && routeData["title"]) {
+      this.title = routeData["title"];
+    } else {
+      this.title = "";
+    }
+  }
+
+  private getLatestChild(route: any) {
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route;
+  }
+
+  private subscribeToRouteChangeEvents() {
+    // Set initial title
+    const latestRoute = this.getLatestChild(this.route);
+    if (latestRoute) {
+      this.setTitleFromRouteData(latestRoute.data.getValue());
+    }
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => this.route),
+        map((route) => this.getLatestChild(route)),
+        filter((route) => route.outlet === "primary"),
+        mergeMap((route) => route.data)
+      )
+      .subscribe((event) => {
+        this.setTitleFromRouteData(event);
+      });
   }
 
   /**

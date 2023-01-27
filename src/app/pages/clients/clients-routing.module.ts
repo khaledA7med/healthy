@@ -6,6 +6,9 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 const routes: Routes = [
   {
     path: AppRoutes.Client.clientRegistry,
+    data: {
+      title: "Client Registry",
+    },
     loadChildren: () =>
       import("./client-registry-list/client-registry-list.module").then(
         (m) => m.ClientRegistryListModule
@@ -16,9 +19,11 @@ const routes: Routes = [
     outlet: "details",
     component: ClientPreviewComponent,
   },
-
   {
     path: AppRoutes.Client.clientForms,
+    data: {
+      title: "Create Client",
+    },
     loadChildren: () =>
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule
@@ -26,6 +31,9 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.Client.clientEdit + ":id",
+    data: {
+      title: "Update Client",
+    },
     loadChildren: () =>
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule
@@ -33,6 +41,9 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.Client.groups,
+    data: {
+      title: "Client Groups",
+    },
     loadChildren: () =>
       import("./client-group/client-group.module").then(
         (m) => m.ClientGroupModule

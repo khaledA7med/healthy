@@ -20,6 +20,10 @@ import {
   IBaseMasterTable,
   IGenericResponseType,
 } from "src/app/core/models/masterTableModels";
+import { ClientsService } from "src/app/shared/services/clients/clients.service";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
+import { HttpResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-client-registry-forms",
@@ -29,12 +33,12 @@ import {
 export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
   submitted = false;
-  closeResult = "";
   formData!: Observable<IBaseMasterTable>;
 
-  client: any[] = [];
+  editId!: string;
 
   uiState = {
+    formMode: false,
     clientDetails: {
       clientType: ClientType,
       retail: true,
@@ -45,22 +49,24 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
 
-  test!: string;
   subscribes: Subscription[] = [];
   constructor(
     private route: ActivatedRoute,
-    private toastMessgae: ToastService,
     private message: MessagesService,
-    private tables: MasterTableService
+    private tables: MasterTableService,
+    private clientService: ClientsService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.route.paramMap.subscribe((res) => {
-      console.log(res.get("id"));
-    });
-
     this.formData = this.tables.getBaseData(MODULES.ClientForm);
+    let sub = this.route.paramMap.subscribe((res) => {
+      if (res.get("id")) {
+        this.editId = res.get("id")!;
+        this.getClient(this.editId);
+      }
+    });
+    this.subscribes.push(sub);
   }
 
   //#region Global Configs
@@ -127,8 +133,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Client Details
-  clientTypeToggler(e: IGenericResponseType): void {
-    switch (e.name) {
+  clientTypeToggler(e: string): void {
+    switch (e) {
       case this.uiState.clientDetails.clientType.Corporate:
         this.uiState.clientDetails.corporate = false;
         this.uiState.clientDetails.retail = true;
@@ -185,9 +191,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     this.formGroup.updateValueAndValidity();
   }
-
   //#endregion
 
+  //#region Form Controls
   get f() {
     return this.formGroup.controls;
   }
@@ -208,44 +214,59 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     return this.contactControlArray.controls[i].get(control)!;
   }
 
-  addBank() {
+  addBank(data?: IClientsBankAccount) {
     if (this.f.clientsBankAccounts?.invalid) {
       this.f.clientsBankAccounts?.markAllAsTouched();
       return;
     }
     let bank = new FormGroup<IClientsBankAccount>({
-      arabicName: new FormControl(null),
-      clientID: new FormControl(null),
-      bankName: new FormControl(null, Validators.required),
-      branch: new FormControl(null),
-      iban: new FormControl(null),
-      swiftCode: new FormControl(null),
-      fullName: new FormControl(null, Validators.required),
-      stauts: new FormControl(null),
+      arabicName: new FormControl(data?.arabicName || null),
+      clientID: new FormControl(data?.clientID || null),
+      bankName: new FormControl(data?.bankName || null, Validators.required),
+      branch: new FormControl(data?.branch || null),
+      iban: new FormControl(data?.iban || null),
+      swiftCode: new FormControl(data?.swiftCode || null),
+      fullName: new FormControl(data?.fullName || null, Validators.required),
+      stauts: new FormControl(data?.stauts || null),
     });
-    bank.reset();
+
+    if (!data) bank.reset();
+    else bank.disable();
+
     this.f.clientsBankAccounts?.push(bank);
     this.bankControlArray.updateValueAndValidity();
   }
 
-  addContact() {
+  addContact(data?: IClientContact): void {
     if (this.f.clientContacts?.invalid) {
       this.f.clientContacts?.markAllAsTouched();
       return;
     }
     let contact = new FormGroup<IClientContact>({
-      contactName: new FormControl(null, Validators.required),
-      position: new FormControl(null),
-      extension: new FormControl(null),
-      mobile: new FormControl(null, Validators.pattern("[0-9]{9}")),
-      tele: new FormControl(null, Validators.pattern("[0-9]{9}")),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      clientID: new FormControl(null),
-      branch: new FormControl(null),
-      lineOfBusiness: new FormControl(null),
-      department: new FormControl(null),
+      contactName: new FormControl(
+        data?.contactName || null,
+        Validators.required
+      ),
+      position: new FormControl(data?.position || null),
+      extension: new FormControl(data?.extension || null),
+      mobile: new FormControl(
+        data?.mobile || null,
+        Validators.pattern("[0-9]{9}")
+      ),
+      tele: new FormControl(data?.tele || null, Validators.pattern("[0-9]{9}")),
+      email: new FormControl(data?.email || null, [
+        Validators.required,
+        Validators.email,
+      ]),
+      clientID: new FormControl(data?.clientID || null),
+      branch: new FormControl(data?.branch || null),
+      lineOfBusiness: new FormControl(data?.lineOfBusiness || null),
+      department: new FormControl(data?.department || null),
     });
-    contact.reset();
+
+    if (!data) contact.reset();
+    else contact.disable();
+
     this.f.clientContacts?.push(contact);
     this.contactControlArray.updateValueAndValidity();
   }
@@ -256,48 +277,76 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     else return;
   }
 
-  onSelectFiles(e: Event) {
-    const elem = e.target as HTMLInputElement;
-    let files = elem.files!;
-    let cls = this;
-    for (let i = 0; i < files.length; i++) {
-      let reader = new FileReader();
-      this.documentsToUpload.push(files[i]);
-      reader.onload = ((file) => {
-        return function (e: any) {
-          cls.documentsToDisplay.push({
-            id: Date.now(),
-            name: files[i].name,
-            size: files[i].size,
-            type: file.type,
-            data: e.target.result,
-          });
-        };
-      })(files[i]);
-      reader.readAsDataURL(files[i]);
-    }
+  enableEditingRow(i: number, type: string) {
+    if (type === "bank") this.bankControlArray.at(i).enable();
+    else if (type === "contact") this.contactControlArray.at(i).enable();
+    else return;
   }
 
-  openImage(img: string) {
-    var win = window.open();
-    win?.document.write(
-      '<iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="' +
-        img +
-        '"></iframe>'
-    );
+  //#endregion
+
+  documentsList(evt: any) {
+    console.log(evt);
   }
 
-  removeImage(item: any) {
-    this.message
-      .confirm("Sure!", "You Want To Delete ?!", "danger", "question")
-      .then((res: any) => {
-        if (res.isConfirmed) {
-          this.documentsToDisplay = this.documentsToDisplay.filter(
-            (doc) => doc.id !== item
-          );
-          this.message.toast("Delete!", "info");
+  getClient(id: string): void {
+    this.uiState.formMode = true;
+    let sub = this.clientService.getClientById(id).subscribe(
+      (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
+        if (res.body?.status) {
+          this.patchEditingClient(res.body?.data!);
         }
-      });
+      },
+      (err) => this.message.popup("Error", err.message, "error")
+    );
+    this.subscribes.push(sub);
+  }
+
+  patchEditingClient(client: IClientPreview): void {
+    this.clientTypeToggler(client.type!);
+    this.formGroup.patchValue({
+      type: client.type,
+      fullName: client.fullName,
+      fullNameAr: client.fullNameAr,
+      producer: client.producer,
+      relationshipStatus: client.relationshipStatus,
+      businessType: client.businessType,
+      channel: client.channel,
+      interface: client.interface,
+      screeningResult: client.screeningResult,
+      officalName: client.officalName,
+      idNo: client.idNo,
+      expiryDate: client.expiryDate,
+      nationality: client.nationality,
+      sourceofIncome: client.sourceofIncome,
+      registrationStatus: client.registrationStatus,
+      businessActivity: client.businessActivity,
+      marketSegment: client.marketSegment,
+      commericalNo: client.commericalNo,
+      dateOfIncorporation: client.dateOfIncorporation,
+      dateOfIncorporationHijri: client.dateOfIncorporationHijri!,
+      idExpiryDate: client.idExpiryDate,
+      expiryDateHijri: client.expiryDateHijri,
+      sponsorID: client.sponsorID,
+      unifiedNo: client.unifiedNo,
+      vatNo: client.vatNo,
+      capital: client.capital,
+      premium: client.premium,
+      buildingNo: client.buildingNo,
+      streetName: client.streetName,
+      secondryNo: client.secondryNo,
+      districtName: client.districtName,
+      postalCode: client.postalCode,
+      cityName: client.cityName,
+      tele: client.tele,
+      tele2: client.tele2,
+      fax: client.fax,
+      email: client.email,
+      website: client.website,
+    });
+
+    client.clientContacts?.map((con) => this.addContact(con));
+    client.clientsBankAccounts?.map((bank) => this.addBank(bank));
   }
 
   onSubmit(clientForm: FormGroup<IClientForms>) {
@@ -311,6 +360,10 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     document.documentElement.scrollTop = 0;
     if (this.formGroup.invalid) return false;
     return true;
+  }
+
+  resetForm(): void {
+    this.formGroup.reset();
   }
 
   ngOnDestroy(): void {

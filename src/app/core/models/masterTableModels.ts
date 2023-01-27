@@ -21,6 +21,28 @@ export enum BaseData {
   CommericalNo = "CommericalNo",
 }
 
+export interface IBaseMasterTable {
+  ClientTypes?: IGenericResponseType[];
+  Producers?: IGenericResponseType[];
+  RelationshipStatus?: IGenericResponseType[];
+  BusinessType?: IGenericResponseType[];
+  Channels?: IGenericResponseType[];
+  Interface?: IGenericResponseType[];
+  ScreeningResult?: IGenericResponseType[];
+  Nationalities?: INationality[];
+  SourceofIncome?: IGenericResponseType[];
+  RegistrationStatus?: IGenericResponseType[];
+  BusinessActivities?: IBusinessActivity[];
+  MarketSegment?: IGenericResponseType[];
+  Premium?: IGenericResponseType[];
+  Positions?: IPositions[];
+  Branch?: IGenericResponseType[];
+  ContactLineOfBusiness?: IGenericResponseType[];
+  ContactDepartment?: IGenericResponseType[];
+  Banks?: IBanks[];
+  CommericalNo?: IGenericResponseType[];
+}
+
 export interface IGenericResponseType {
   id: number;
   name: string;
@@ -49,26 +71,4 @@ export interface IBanks {
 export interface IClientTypes {
   id: number;
   name: string;
-}
-
-export interface IBaseMasterTable {
-  ClientTypes?: IGenericResponseType[];
-  Producers?: IGenericResponseType[];
-  RelationshipStatus?: IGenericResponseType[];
-  BusinessType?: IGenericResponseType[];
-  Channels?: IGenericResponseType[];
-  Interface?: IGenericResponseType[];
-  ScreeningResult?: IGenericResponseType[];
-  Nationalities?: INationality[];
-  SourceofIncome?: IGenericResponseType[];
-  RegistrationStatus?: IGenericResponseType[];
-  BusinessActivities?: IBusinessActivity[];
-  MarketSegment?: IGenericResponseType[];
-  Premium?: IGenericResponseType[];
-  Positions?: IPositions[];
-  Branch?: IGenericResponseType[];
-  ContactLineOfBusiness?: IGenericResponseType[];
-  ContactDepartment?: IGenericResponseType[];
-  Banks?: IBanks[];
-  CommericalNo?: IGenericResponseType[];
 }

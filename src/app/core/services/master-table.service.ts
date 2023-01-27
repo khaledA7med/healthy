@@ -1,11 +1,9 @@
 import { HttpClient, HttpContext } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, from, Observable, of } from "rxjs";
-import { map, shareReplay } from "rxjs/operators";
 import { MODULES, MODULE_NAME } from "src/app/shared/app/models/App/MODULES";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
-import { BaseData, IBaseMasterTable } from "../models/masterTableModels";
+import { BaseData } from "../models/masterTableModels";
 import { CachingService } from "./caching.service";
 
 @Injectable({
