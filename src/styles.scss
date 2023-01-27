@@ -57,7 +57,8 @@ div.asterisk-div {
   background-color: var(--vz-dropdown-link-hover-bg) !important;
 }
 
-.ng-select.ng-invalid.ng-touched.is-invalid .ng-select-container {
+.ng-select.ng-invalid.ng-touched.is-invalid .ng-select-container,
+.ng-select.ng-invalid.is-submitted .ng-select-container {
   border-color: #f17171 !important;
 }
 
@@ -68,75 +69,61 @@ div.asterisk-div {
   /* border: 2px dashed rgb(133 132 132 / 23%); */
   border-radius: 10px;
   height: 270px;
-}
+  table td,
+  table th {
+    vertical-align: middle;
+  }
+  input {
+    display: none;
+  }
+  #img-label {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #878a99;
+    /* color: rgb(134, 133, 133); */
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    i {
+      font-size: 80px;
+      font-weight: 400;
+    }
+    div span {
+      color: #878a99 !important;
+    }
+  }
 
-@media (max-width: 579px) {
-  .filezone-container label {
+  @media screen {
     font-size: 15px;
   }
 }
-
-.filezone-container table td,
-.filezone-container table th {
-  vertical-align: middle;
-}
-
-.filezone-container input {
-  display: none;
-}
-
-.filezone-container #img-label {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: #878a99;
-  /* color: rgb(134, 133, 133); */
-  font-size: 20px;
-  font-weight: bolder;
-  cursor: pointer;
-  height: 100%;
-  width: 100%;
-}
-
-.filezone-container #img-label i {
-  font-size: 80px;
-  font-weight: 400;
-}
-
-.filezone-container #img-label div span {
-  color: #878a99 !important;
-}
-
-.filezone-container img {
-  width: 250px;
-  margin: 0 auto;
-  display: none;
-}
-
-.filezone-container img.active {
-  display: block;
-}
-
-.preview-multiple-imgs img#file-preview {
-  width: 80px;
-  height: 80px;
-}
-
-.preview-multiple-imgs.active {
-  display: block;
-}
-
-.preview-multiple-imgs .file-output-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 35px;
-  width: 70px;
-  height: 70px;
-}
-.preview-multiple-imgs table th,
-.preview-multiple-imgs table td {
-  vertical-align: middle;
+.preview-multiple-imgs {
+  .file-output-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    width: 70px;
+    height: 70px;
+  }
+  table th,
+  table td {
+    vertical-align: middle;
+  }
+  &.active {
+    display: block;
+  }
+  img {
+    width: 250px;
+    margin: 0 auto;
+    &#file-preview {
+      width: 80px;
+      height: 80px;
+    }
+  }
 }

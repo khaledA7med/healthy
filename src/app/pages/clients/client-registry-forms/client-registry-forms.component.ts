@@ -12,8 +12,14 @@ import {
 import { IClientForms } from "src/app/shared/app/models/Clients/iclientForms";
 import { IClientsBankAccount } from "src/app/shared/app/models/Clients/iclientsBankAccountForm";
 import { ClientType } from "src/app/shared/app/models/Clients/clientUtil";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { IClientContact } from "src/app/shared/app/models/Clients/iclientContactForm";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import { MODULES } from "src/app/shared/app/models/App/MODULES";
+import {
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 
 @Component({
   selector: "app-client-registry-forms",
@@ -24,6 +30,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
   submitted = false;
   closeResult = "";
+  formData!: Observable<IBaseMasterTable>;
+
+  client: any[] = [];
 
   uiState = {
     clientDetails: {
@@ -33,15 +42,16 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     },
   };
 
-  documentsToUpload = [];
-  documentsToDisplay = [];
+  documentsToUpload: any[] = [];
+  documentsToDisplay: any[] = [];
 
   test!: string;
   subscribes: Subscription[] = [];
   constructor(
     private route: ActivatedRoute,
-    public toastMessgae: ToastService,
-    public message: MessagesService
+    private toastMessgae: ToastService,
+    private message: MessagesService,
+    private tables: MasterTableService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +59,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((res) => {
       console.log(res.get("id"));
     });
+
+    this.formData = this.tables.getBaseData(MODULES.ClientForm);
   }
 
   //#region Global Configs
@@ -115,8 +127,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Client Details
-  clientTypeToggler(e: any): void {
-    switch (e) {
+  clientTypeToggler(e: IGenericResponseType): void {
+    switch (e.name) {
       case this.uiState.clientDetails.clientType.Corporate:
         this.uiState.clientDetails.corporate = false;
         this.uiState.clientDetails.retail = true;
@@ -244,12 +256,61 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     else return;
   }
 
+  onSelectFiles(e: Event) {
+    const elem = e.target as HTMLInputElement;
+    let files = elem.files!;
+    let cls = this;
+    for (let i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      this.documentsToUpload.push(files[i]);
+      reader.onload = ((file) => {
+        return function (e: any) {
+          cls.documentsToDisplay.push({
+            id: Date.now(),
+            name: files[i].name,
+            size: files[i].size,
+            type: file.type,
+            data: e.target.result,
+          });
+        };
+      })(files[i]);
+      reader.readAsDataURL(files[i]);
+    }
+  }
+
+  openImage(img: string) {
+    var win = window.open();
+    win?.document.write(
+      '<iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="' +
+        img +
+        '"></iframe>'
+    );
+  }
+
+  removeImage(item: any) {
+    this.message
+      .confirm("Sure!", "You Want To Delete ?!", "danger", "question")
+      .then((res: any) => {
+        if (res.isConfirmed) {
+          this.documentsToDisplay = this.documentsToDisplay.filter(
+            (doc) => doc.id !== item
+          );
+          this.message.toast("Delete!", "info");
+        }
+      });
+  }
+
   onSubmit(clientForm: FormGroup<IClientForms>) {
     this.submitted = true;
-    if (!clientForm) {
-      return;
-    }
+    // this.validationChecker();
     console.log(clientForm.value);
+  }
+
+  validationChecker(): boolean {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    if (this.formGroup.invalid) return false;
+    return true;
   }
 
   ngOnDestroy(): void {

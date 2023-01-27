@@ -21,3 +21,7 @@
 .ps__rail-y {
   opacity: 0.6;
 }
+
+table.table tr td:not(:last-child) {
+  min-width: 180px;
+}
