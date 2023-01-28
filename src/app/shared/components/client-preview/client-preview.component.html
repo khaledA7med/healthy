@@ -433,6 +433,7 @@
     <!-- End Documents -->
   </div>
   <div class="modal-footer">
+    <!-- Close Btn -->
     <button
       type="button"
       class="btn btn-sm btn-light"
@@ -440,17 +441,20 @@
     >
       Close
     </button>
+
+    <!-- Add To Group Btn -->
     <button
       *ngIf="
         uiState.clientDetails.status == clientStatus.Active &&
-        uiState.clientDetails.type == 'Retail'
+        uiState.clientDetails.type == clientType.Retail
       "
       type="submit"
       class="btn btn-success btn-sm"
+      (click)="openAddClientToGroupModal(addClientToGroup)"
     >
       Add To Group
     </button>
-
+    <!-- Change status Btn -->
     <div
       ngbDropdown
       placement="top-right"
@@ -509,4 +513,64 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #addClientToGroup let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Client To Group</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <form
+    [formGroup]="addClientToGroupForm"
+    (ngSubmit)="submitAddClientToGroupForm()"
+  >
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="groupName" class="form-label font-weight-bold">Group</label>
+        <ng-select
+          id="groupName"
+          [items]="uiState.groupsNames"
+          placeholder="Select Group Name"
+          bindValue="groupName"
+          formControlName="groupName"
+          [ngClass]="{
+            'is-invalid': form['groupName'].touched && form['groupName'].errors
+          }"
+          required
+        >
+          <ng-template ng-label-tmp ng-option-tmp let-item="item">
+            <ng-option>{{ item.groupName }}</ng-option>
+          </ng-template>
+        </ng-select>
+
+        <div
+          class="invalid-feedback"
+          *ngIf="form['groupName'].touched && form['groupName'].invalid"
+        >
+          Required
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-sm btn-success"
+        [disabled]="addClientToGroupForm.invalid"
+      >
+        Add
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger"
+        (click)="modal.close('cancel')"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
 </ng-template>
