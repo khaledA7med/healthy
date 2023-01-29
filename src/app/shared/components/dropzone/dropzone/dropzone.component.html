@@ -1,0 +1,48 @@
+<div id="documentsBody" appDnd (fileDropped)="onFileDropped($event)" class="accordion-collapse collapse show px-2"
+    aria-labelledby="documentsHead">
+    <div class="container-fluid my-3">
+        <div class="filezone-container mx-auto text-center py-5">
+            <label for="inputDocuments" id="img-label">
+                <div>
+                    <i class="ri-upload-cloud-2-fill"></i>
+                </div>
+                <div>
+                    Drop files here or click to upload
+                    <span class="text-black-50 mx-3 fs-14">
+                        <br>.csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls,
+                        .xlsx, .zip, image/*</span>
+                </div>
+            </label>
+            <input type="file" id="inputDocuments" (change)="onSelectFiles($event)"
+                accept=".csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls, .xlsx, .zip, image/*" multiple>
+        </div>
+        <div class="preview-multiple-imgs mt-2" id="preview-multiple-imgs">
+            <table class="table table-borderless table-nowrap">
+                <thead class="table-light" *ngIf="documentsToDisplay.length > 0">
+                    <tr>
+                        <th></th>
+                        <th>Size</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="display-selected-documents">
+                    <tr *ngFor="let item of documentsToDisplay">
+                        <td scope="col">
+                            <img id="file-preview" [src]="item.data" class="img-fluid rounded shadow-sm"><button
+                                (click)="openImage(item.data)" type="button" class="btn btn-link">&nbsp;
+                                {{item.name}}</button>
+                        </td>
+                        <td scope="col">
+                            <div>{{formatBytes(item.size)}}</div>
+                        </td>
+                        <td scope="col" class="tableCenter">
+                            <button type="button" (click)="removeImage(item.name)"
+                                class="btn btn-soft-danger btn-icon waves-effect waves-light doc-btn"><i
+                                    class="ri-delete-bin-5-line"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

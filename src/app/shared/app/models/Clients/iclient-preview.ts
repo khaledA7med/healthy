@@ -18,10 +18,10 @@ export interface IClientPreview extends IClient {
   marketSegment?: string;
   location?: string;
   dateOfIncorporation?: Date;
-  dateOfIncorporationHijri?: string;
+  dateOfIncorporationHijri?: Date;
   placeOfIncorporation?: string;
   expiryDate?: Date;
-  expiryDateHijri?: string;
+  expiryDateHijri?: Date;
   coCountry?: string;
   registeredEntity?: string;
   email?: string;

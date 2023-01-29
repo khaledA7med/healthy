@@ -36,13 +36,13 @@ export class ClientsService {
       params: { sno },
     });
   }
-  changeStatus(newStatus: ChangeStatusRequest) {
-    return this.http.post(
-      this.env + ApiRoutes.Clients.changeStatus,
-      newStatus,
-      {
-        observe: "response",
-      }
+
+  getClientById(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
+    return this.http.get<IBaseResponse<IClientPreview>>(
+      this.env + ApiRoutes.Clients.editClient,
+      { params: { sno: +id }, observe: "response" }
     );
   }
 }
