@@ -1,3 +1,4 @@
+import { MasterTableService } from "src/app/core/services/master-table.service";
 import {
   AfterViewInit,
   Component,
@@ -9,7 +10,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import AppUtils from "../../app/util";
 import { ClientStatus, ClientType } from "../../app/models/Clients/clientUtil";
@@ -19,6 +20,8 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { IClientGroups } from "../../app/models/Clients/iclientgroups";
 import { ClientsGroupsService } from "../../services/clients/clients.groups.service";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
 
 @Component({
   selector: "app-modal-for-details",
@@ -29,7 +32,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   uiState = {
     sno: 0,
     clientDetails: {} as IClientPreview,
-    groupsNames: [] as IClientGroups[],
   };
   clientStatus: typeof ClientStatus = ClientStatus;
   clientType: typeof ClientType = ClientType;
@@ -45,14 +47,14 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private clintService: ClientsService,
     private router: Router,
     private message: MessagesService,
-    private clientsGroupService: ClientsGroupsService
+    private clientsGroupService: ClientsGroupsService,
+    private masterTableService: MasterTableService
   ) {}
 
   ngAfterViewInit(): void {
     this.openPreviewModal();
     this.getSNO();
     this.getClintDetails(this.uiState.sno);
-    this.getAllClientsGroups();
     this.initAddClientToGroupForm();
   }
 
@@ -101,16 +103,8 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  getAllClientsGroups(): void {
-    let sub = this.clientsGroupService.getAllClientsGroups().subscribe({
-      next: (res: HttpResponse<IBaseResponse<IClientGroups[]>>) => {
-        this.uiState.groupsNames = res.body?.data!;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.message.popup("Oops!", error.message, "error");
-      },
-    });
-    this.subscribes.push(sub);
+  get lookupData(): Observable<IBaseMasterTable> {
+    return this.masterTableService.getBaseData(MODULES.Client);
   }
 
   initAddClientToGroupForm(): void {
@@ -123,6 +117,8 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     return this.addClientToGroupForm.controls;
   }
   submitAddClientToGroupForm(): void {
+    console.log(this.addClientToGroupForm.invalid);
+    console.log(this.form["clientId"].value, this.form["groupName"].value);
     if (!this.addClientToGroupForm.valid) {
       return;
     } else {

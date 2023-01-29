@@ -534,17 +534,20 @@
         <label for="groupName" class="form-label font-weight-bold">Group</label>
         <ng-select
           id="groupName"
-          [items]="uiState.groupsNames"
+          [items]="(lookupData | async)?.GroupsList?.content!"
           placeholder="Select Group Name"
-          bindValue="groupName"
+          bindValue="name"
+          bindLabel="name"
+          [searchable]="true"
           formControlName="groupName"
           [ngClass]="{
             'is-invalid': form['groupName'].touched && form['groupName'].errors
           }"
+          [loading]="lookupData ? false : true"
           required
         >
           <ng-template ng-label-tmp ng-option-tmp let-item="item">
-            <ng-option>{{ item.groupName }}</ng-option>
+            <ng-option>{{ item.name }}</ng-option>
           </ng-template>
         </ng-select>
 

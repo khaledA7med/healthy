@@ -1,3 +1,4 @@
+import { Base } from "lord-icon-element/build/triggers/base";
 import { BaseData } from "src/app/core/models/masterTableModels";
 const LookUpTables = "/LookupTables/";
 
@@ -27,6 +28,7 @@ export const ApiRoutes = {
       banks: LookUpTables + BaseData.Banks,
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
       commericalNo: LookUpTables + BaseData.CommericalNo,
+      groupsList: LookUpTables + BaseData.GroupsList,
     },
   },
   Clients: {

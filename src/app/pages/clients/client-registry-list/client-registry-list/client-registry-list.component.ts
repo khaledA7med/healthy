@@ -15,7 +15,7 @@ import {
   IGetRowsParams,
 } from "ag-grid-community";
 import { FormControl, FormGroup } from "@angular/forms";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
 import PerfectScrollbar from "perfect-scrollbar";
@@ -27,6 +27,9 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientFilters } from "src/app/shared/app/models/Clients/iclientFilters";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import { MODULES } from "src/app/core/models/MODULES";
 
 @Component({
   selector: "app-client-registry-list",
@@ -55,7 +58,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
   filterForm!: FormGroup;
   // to unSubscribe
   subscribes: Subscription[] = [];
-
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
@@ -82,11 +84,13 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     private clientService: ClientsService,
     private tableRef: ElementRef,
     private message: MessagesService,
-    private offcanvasService: NgbOffcanvas
+    private offcanvasService: NgbOffcanvas,
+    private masterTableService: MasterTableService
   ) {}
 
   ngOnInit(): void {
     this.initFilterForm();
+    this.lookupData.subscribe((res) => console.log(res));
   }
 
   // Table Section
@@ -189,6 +193,9 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       commericalNo: new FormControl(""),
       status: new FormControl([]),
     });
+  }
+  get lookupData(): Observable<IBaseMasterTable> {
+    return this.masterTableService.getBaseData(MODULES.Client);
   }
   modifyFilterReq() {
     this.uiState.filters = {
