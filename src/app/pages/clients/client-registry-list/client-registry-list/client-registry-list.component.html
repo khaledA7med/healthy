@@ -54,7 +54,7 @@
       <form class="row justify-content-center" [formGroup]="filterForm">
         <!-- full Name -->
         <div class="col-12 mb-2">
-          <label for="fullName" class="form-label">FULL NAME:</label>
+          <label for="fullName" class="form-label">Full Name</label>
           <input
             type="text"
             class="form-control"
@@ -65,52 +65,75 @@
         </div>
         <!-- Type -->
         <div class="col-12 mb-2">
-          <label for="type" class="form-label">Type:</label>
+          <label for="type" class="form-label">Type</label>
           <ng-select
-            [clearable]="false"
+            [items]="(lookupData | async)?.ClientTypes?.content!"
+            [loading]="lookupData ? false : true"
+            [clearable]="true"
             [searchable]="true"
+            bindLabel="name"
+            bindValue="name"
             id="type"
             formControlName="type"
           >
-            <ng-option value="Corporate"> Corporate</ng-option>
-            <ng-option value="Retail"> Retail</ng-option>
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              <ng-option>{{ item.name }} </ng-option>
+            </ng-template>
           </ng-select>
         </div>
         <!-- Branch -->
         <div class="col-12 mb-2">
           <label for="branch" class="form-label">Branch</label>
           <ng-select
-            [clearable]="false"
+            [items]="(lookupData | async)?.Branch?.content!"
+            [loading]="lookupData ? false : true"
+            [clearable]="true"
             [searchable]="true"
+            bindLabel="name"
+            bindValue="name"
             id="branch"
             formControlName="branch"
           >
-            <ng-option value="Aggregator"> Aggregator</ng-option>
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              <ng-option>{{ item.name }} </ng-option>
+            </ng-template>
           </ng-select>
         </div>
         <!-- producer -->
         <div class="col-12 mb-2">
-          <label for="producer" class="form-label">PRODUCER</label>
+          <label for="producer" class="form-label">Producer</label>
           <ng-select
-            [clearable]="false"
+            [items]="(lookupData | async)?.Producers?.content!"
+            [loading]="lookupData ? false : true"
+            [clearable]="true"
             [searchable]="true"
+            bindLabel="name"
+            bindValue="name"
             id="producer"
             formControlName="producer"
           >
-            <ng-option value="Abdulrafey Ansari"> Abdulrafey Ansari</ng-option>
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              <ng-option>{{ item.name }} </ng-option>
+            </ng-template>
           </ng-select>
         </div>
 
         <!-- Commercial No -->
         <div class="col-12 mb-2">
-          <label for="commercialNo" class="form-label">COMMERCIAL NO</label>
+          <label for="commercialNo" class="form-label">Commercial No</label>
           <ng-select
-            [clearable]="false"
+            [items]="(lookupData | async)?.CommericalNo?.content!"
+            [loading]="lookupData ? false : true"
+            [clearable]="true"
             [searchable]="true"
+            bindLabel="name"
+            bindValue="name"
             id="commercialNo"
             formControlName="commericalNo"
           >
-            <ng-option value="030034129">030034129</ng-option>
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              <ng-option>{{ item.name }} </ng-option>
+            </ng-template>
           </ng-select>
         </div>
         <!-- Status -->

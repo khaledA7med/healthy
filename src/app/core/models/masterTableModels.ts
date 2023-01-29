@@ -19,28 +19,35 @@ export enum BaseData {
   ContactDepartment = "ContactDepartment",
   Banks = "Banks",
   CommericalNo = "CommericalNo",
+  GroupsList = "GroupsList",
 }
 
 export interface IBaseMasterTable {
-  ClientTypes?: IGenericResponseType[];
-  Producers?: IGenericResponseType[];
-  RelationshipStatus?: IGenericResponseType[];
-  BusinessType?: IGenericResponseType[];
-  Channels?: IGenericResponseType[];
-  Interface?: IGenericResponseType[];
-  ScreeningResult?: IGenericResponseType[];
-  Nationalities?: INationality[];
-  SourceofIncome?: IGenericResponseType[];
-  RegistrationStatus?: IGenericResponseType[];
-  BusinessActivities?: IBusinessActivity[];
-  MarketSegment?: IGenericResponseType[];
-  Premium?: IGenericResponseType[];
-  Positions?: IPositions[];
-  Branch?: IGenericResponseType[];
-  ContactLineOfBusiness?: IGenericResponseType[];
-  ContactDepartment?: IGenericResponseType[];
-  Banks?: IBanks[];
-  CommericalNo?: IGenericResponseType[];
+  ClientTypes?: Caching<IGenericResponseType[]>;
+  Producers?: Caching<IGenericResponseType[]>;
+  RelationshipStatus?: Caching<IGenericResponseType[]>;
+  BusinessType?: Caching<IGenericResponseType[]>;
+  Channels?: Caching<IGenericResponseType[]>;
+  Interface?: Caching<IGenericResponseType[]>;
+  ScreeningResult?: Caching<IGenericResponseType[]>;
+  Nationalities?: Caching<INationality[]>;
+  SourceofIncome?: Caching<IGenericResponseType[]>;
+  RegistrationStatus?: Caching<IGenericResponseType[]>;
+  BusinessActivities?: Caching<IBusinessActivity[]>;
+  MarketSegment?: Caching<IGenericResponseType[]>;
+  Premium?: Caching<IGenericResponseType[]>;
+  Positions?: Caching<IPositions[]>;
+  Branch?: Caching<IGenericResponseType[]>;
+  ContactLineOfBusiness?: Caching<IGenericResponseType[]>;
+  ContactDepartment?: Caching<IGenericResponseType[]>;
+  Banks?: Caching<IBanks[]>;
+  CommericalNo?: Caching<IGenericResponseType[]>;
+  GroupsList?: Caching<IGenericResponseType[]>;
+}
+
+export interface Caching<T> {
+  cacheable: boolean;
+  content: T;
 }
 
 export interface IGenericResponseType {
