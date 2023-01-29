@@ -103,4 +103,7 @@ export class DropzoneComponent implements OnInit {
       upload: this.documentsToUpload,
     });
   }
+  clearImages() {
+    console.log("first");
+  }
 }

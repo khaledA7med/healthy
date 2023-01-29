@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MODULES, MODULE_NAME } from "src/app/shared/app/models/App/MODULES";
+import { MODULES, MODULE_NAME } from "src/app/core/models/MODULES";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
 import { BaseData } from "../models/masterTableModels";

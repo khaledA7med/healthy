@@ -1,5 +1,5 @@
 import { BaseData } from "src/app/core/models/masterTableModels";
-const LoolUpTables = "/LookupTables/";
+const LookUpTables = "/LookupTables/";
 
 export const ApiRoutes = {
   Users: {
@@ -7,26 +7,26 @@ export const ApiRoutes = {
   },
   MasterTable: {
     Client: {
-      clientType: LoolUpTables + BaseData.ClientType,
-      producers: LoolUpTables + BaseData.Producers,
-      relationshipStatus: LoolUpTables + BaseData.RelationshipStatus,
-      businessType: LoolUpTables + BaseData.BusinessType,
-      channels: LoolUpTables + BaseData.Channels,
-      interface: LoolUpTables + BaseData.Interface,
-      screeningResult: LoolUpTables + BaseData.ScreeningResult,
-      nationalities: LoolUpTables + BaseData.Nationalities,
-      sourceofIncome: LoolUpTables + BaseData.SourceofIncome,
-      registrationStatus: LoolUpTables + BaseData.RegistrationStatus,
-      businessActivities: LoolUpTables + BaseData.BusinessActivities,
-      marketSegment: LoolUpTables + BaseData.MarketSegment,
-      premium: LoolUpTables + BaseData.Premium,
-      positions: LoolUpTables + BaseData.Positions,
-      branch: LoolUpTables + BaseData.Branch,
-      contactDepartment: LoolUpTables + BaseData.ContactDepartment,
-      contactLineOfBusiness: LoolUpTables + BaseData.ContactLineOfBusiness,
-      banks: LoolUpTables + BaseData.Banks,
-      lineOfBusiness: LoolUpTables + BaseData.LineOfBusiness,
-      commericalNo: LoolUpTables + BaseData.CommericalNo,
+      clientType: LookUpTables + BaseData.ClientType,
+      producers: LookUpTables + BaseData.Producers,
+      relationshipStatus: LookUpTables + BaseData.RelationshipStatus,
+      businessType: LookUpTables + BaseData.BusinessType,
+      channels: LookUpTables + BaseData.Channels,
+      interface: LookUpTables + BaseData.Interface,
+      screeningResult: LookUpTables + BaseData.ScreeningResult,
+      nationalities: LookUpTables + BaseData.Nationalities,
+      sourceofIncome: LookUpTables + BaseData.SourceofIncome,
+      registrationStatus: LookUpTables + BaseData.RegistrationStatus,
+      businessActivities: LookUpTables + BaseData.BusinessActivities,
+      marketSegment: LookUpTables + BaseData.MarketSegment,
+      premium: LookUpTables + BaseData.Premium,
+      positions: LookUpTables + BaseData.Positions,
+      branch: LookUpTables + BaseData.Branch,
+      contactDepartment: LookUpTables + BaseData.ContactDepartment,
+      contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
+      banks: LookUpTables + BaseData.Banks,
+      lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
+      commericalNo: LookUpTables + BaseData.CommericalNo,
     },
   },
   Clients: {

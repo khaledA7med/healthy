@@ -9,7 +9,7 @@ import {
 import { Observable, of } from "rxjs";
 import { CachingService } from "../services/caching.service";
 import { tap } from "rxjs/operators";
-import { MODULE_NAME } from "src/app/shared/app/models/App/MODULES";
+import { MODULE_NAME } from "src/app/core/models/MODULES";
 
 @Injectable()
 export class CachingInterceptor implements HttpInterceptor {

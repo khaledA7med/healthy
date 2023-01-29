@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ToastService } from "src/app/account/login/toast-service";
 import {
   AbstractControl,
   FormArray,
@@ -15,11 +14,8 @@ import { ClientType } from "src/app/shared/app/models/Clients/clientUtil";
 import { Observable, Subscription } from "rxjs";
 import { IClientContact } from "src/app/shared/app/models/Clients/iclientContactForm";
 import { MasterTableService } from "src/app/core/services/master-table.service";
-import { MODULES } from "src/app/shared/app/models/App/MODULES";
-import {
-  IBaseMasterTable,
-  IGenericResponseType,
-} from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
@@ -49,6 +45,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
 
+  @ViewChild("dropzone") dropzone!: any;
+
   subscribes: Subscription[] = [];
   constructor(
     private route: ActivatedRoute,
@@ -60,6 +58,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.ClientForm);
+    this.formData.subscribe((res) => console.log(res));
     let sub = this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
         this.editId = res.get("id")!;
@@ -364,6 +363,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   resetForm(): void {
     this.formGroup.reset();
+    this.clientTypeToggler("");
+    this.f.clientsBankAccounts?.clear();
+    this.f.clientContacts?.clear();
   }
 
   ngOnDestroy(): void {

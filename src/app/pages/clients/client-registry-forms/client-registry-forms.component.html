@@ -325,9 +325,11 @@
                                             <label for="dateOfIncorporationHijri">
                                                 Date of Incorporation (Hijri)
                                             </label>
-                                            <input id="dateOfIncorporationHijri" type="text"
+                                            <app-hijri-picker></app-hijri-picker>
+
+                                            <!-- <input id="dateOfIncorporationHijri" type="text"
                                                 formControlName="dateOfIncorporationHijri"
-                                                class="form-control form-control-sm ">
+                                                class="form-control form-control-sm "> -->
                                         </div>
                                         <!--./col-->
 
@@ -793,60 +795,7 @@
         <!-- Documents -->
         <ngb-panel id="6" title="Documents" cardClass="open my-4">
             <ng-template ngbPanelContent="6">
-                <!-- <div class="col-lg-12">
-                    <div id="documentsBody" class="accordion-collapse collapse show px-2"
-                        aria-labelledby="documentsHead">
-                        <div class="container-fluid my-3">
-                            <div class="filezone-container mx-auto text-center py-5">
-                                <label for="inputDocuments" id="img-label">
-                                    <div>
-                                        <i class="ri-upload-cloud-2-fill"></i>
-                                    </div>
-                                    <div>
-                                        Drop files here or click to upload
-                                        <span class="text-black-50 mx-3 fs-14">
-                                            <br>.csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls,
-                                            .xlsx, .zip, image/*</span>
-                                    </div>
-                                </label>
-                                <input type="file" id="inputDocuments" (change)="onSelectFiles($event)" drag
-                                    accept=".csv, .doc, .docx, .pdf, .ppt, .pptx, .txt, .xls, .xlsx, .zip, image/*"
-                                    multiple>
-                            </div>
-                            <div class="preview-multiple-imgs mt-2" id="preview-multiple-imgs">
-                                <table class="table table-borderless table-nowrap">
-                                    <thead class="table-light" *ngIf="documentsToDisplay.length > 0">
-                                        <tr>
-                                            <th></th>
-                                            <th>Size</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="display-selected-documents">
-                                        <tr *ngFor="let item of documentsToDisplay">
-                                            <td scope="col">
-                                                <img id="file-preview" [src]="item.data"
-                                                    class="img-fluid rounded shadow-sm"><button
-                                                    (click)="openImage(item.data)" type="button"
-                                                    class="btn btn-link">&nbsp;
-                                                    {{item.name}}</button>
-                                            </td>
-                                            <td scope="col">
-                                                <div>{{(item.size / (1024 * 1024)).toFixed(2)}} MB</div>
-                                            </td>
-                                            <td scope="col" class="tableCenter">
-                                                <button type="button" (click)="removeImage(item.id)"
-                                                    class="btn btn-soft-danger btn-icon waves-effect waves-light doc-btn"><i
-                                                        class="ri-delete-bin-5-line"></i></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <app-dropzone (files)="documentsList($event)"></app-dropzone>
+                <app-dropzone (files)="documentsList($event)" #dropzone></app-dropzone>
             </ng-template>
         </ngb-panel>
 
@@ -858,7 +807,8 @@
             <i class="ri-save-2-fill"></i>
             Save
         </button>
-        <button type="button" id="sa-warning" (click)="resetForm()" class="btn btn-sm btn-soft-danger">
+        <button type="button" id="sa-warning" (click)="resetForm(); dropzone.clearImages()"
+            class="btn btn-sm btn-soft-danger">
             <i class="ri-delete-bin-2-line"></i>
             Clear
         </button>
