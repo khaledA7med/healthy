@@ -369,11 +369,11 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.clientsBankAccounts?.clear();
     this.f.clientContacts?.clear();
   }
-  setHijriDate(e:any){
+  setHijriDate(e: any) {
     // console.log("From Client Registry",e)
-    this.hijriDateFromGregorian = e
+    this.hijriDateFromGregorian = e;
   }
-  setGregorianDate(e:any){
+  setGregorianDate(e: any) {
     this.gregorianDateFromHijri = e;
   }
 
