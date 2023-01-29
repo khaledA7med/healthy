@@ -142,10 +142,12 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 	openAddClientDialoge(content: TemplateRef<any>) {
 		// this.addGroupForm.reset();
 		let clientsSub = this.groupService.getAllClients().subscribe((res) => {
-			console.log(res);
 			if (res.body?.status) {
 				// this.message.toast(res.body?.message!, "success");
 				this.clientsList = res.body?.data!;
+				if (this.group) {
+					this.form["groupName"].setValue(this.group.groupName);
+				}
 				this.addClientModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
 				let sub = this.addClientModal.hidden.subscribe(() => {
 					this.addClientToGroupForm.reset();

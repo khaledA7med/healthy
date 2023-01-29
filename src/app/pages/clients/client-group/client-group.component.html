@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-12">
-        <div class="row my-2">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <!-- <div class="row my-2">
             <div class="col-6 d-flex justify-content-start align-items-center">
                 <h4 class="card-title">Groups List</h4>
             </div>
@@ -9,6 +9,24 @@
                     <i class="ri-add-fill me-1 align-bottom"></i> Add Group
                 </button>
             </div>
+        </div> -->
+
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center flex-wrap gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title m-0">Groups List</h4>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div class="hstack text-nowrap gap-2">
+                            <button type="button" class="btn btn-soft-info add-btn btn-sm"
+                                (click)="openAddGroupDialoge(content)">
+                                <i class="ri-add-fill me-1 align-bottom"></i> Add Group
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="ag-theme-alpine" appTableView>
             <ag-grid-angular id="gridScrollbar" class="groupsTable" style="width: 100%; height: 60vh;"
@@ -16,7 +34,7 @@
             </ag-grid-angular>
         </div>
     </div>
-    <div class="col-lg-9 col-md-6 col-sm-12">
+    <div class="col-lg-8 col-md-6 col-sm-12">
         <app-groups-clients [group]="selectedGroup" [groupsList]="uiState.group.list"></app-groups-clients>
     </div>
 
