@@ -13,8 +13,7 @@ import { ApiRoutes } from "../../app/routers/ApiRoutes";
 export class ClientsGroupsService {
 	private readonly env = environment.baseURL;
 	constructor(private http: HttpClient) {}
-
-	getAllClientsGroups(): Observable<HttpResponse<IBaseResponse<IClientGroups[]>>> {
+	getAllGroups(): Observable<HttpResponse<IBaseResponse<IClientGroups[]>>> {
 		return this.http.post(
 			this.env + ApiRoutes.ClientsGroups.list,
 			{},
@@ -23,7 +22,12 @@ export class ClientsGroupsService {
 			}
 		);
 	}
-	createClientGroup(groupName: string): Observable<HttpResponse<IBaseResponse<any>>> {
+	getAllClients(): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
+		return this.http.get(this.env + ApiRoutes.LookUpTables.allActiveClients, {
+			observe: "response",
+		});
+	}
+	createGroup(groupName: string): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.post(
 			this.env + ApiRoutes.ClientsGroups.create,
 			{ groupName },
@@ -32,7 +36,7 @@ export class ClientsGroupsService {
 			}
 		);
 	}
-	deleteClientGroup(id: number): Observable<HttpResponse<IBaseResponse<any>>> {
+	deleteGroup(id: number): Observable<HttpResponse<IBaseResponse<any>>> {
 		console.log(id);
 		return this.http.get(this.env + ApiRoutes.ClientsGroups.delete + `?id=${id}`, {
 			observe: "response",
@@ -48,17 +52,17 @@ export class ClientsGroupsService {
 			}
 		);
 	}
-	addGroupClient(clientID: number, groupName: string): Observable<HttpResponse<IBaseResponse<any>>> {
+	addClient(clientID: number, groupName: string): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.post(
-			this.env + ApiRoutes.ClientsGroups.addGroupClient,
+			this.env + ApiRoutes.ClientsGroups.addClient,
 			{ clientID, groupName },
 			{
 				observe: "response",
 			}
 		);
 	}
-	deleteGroupClient(clientID: number): Observable<HttpResponse<IBaseResponse<any>>> {
-		return this.http.get(this.env + ApiRoutes.ClientsGroups.deleteGroupClient + `?clientSno=${clientID}`, {
+	deleteClient(clientID: number): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.get(this.env + ApiRoutes.ClientsGroups.deleteClient + `?clientSno=${clientID}`, {
 			observe: "response",
 		});
 	}

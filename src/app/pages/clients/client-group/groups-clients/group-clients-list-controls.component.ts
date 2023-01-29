@@ -41,7 +41,7 @@ export class GroupClientsListControlsComponent {
 		// console.log(sno);
 		this.message.confirm("Delete", "Delete This Client From This Group?", "Delete", "warning").then((e: SweetAlertResult) => {
 			if (e.isConfirmed) {
-				this.groupService.deleteGroupClient(sno).subscribe(
+				this.groupService.deleteClient(sno).subscribe(
 					(res) => {
 						if (res.body?.status) {
 							this.message.popup(res.body?.message!, "success");
