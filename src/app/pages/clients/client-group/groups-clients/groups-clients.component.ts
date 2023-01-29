@@ -20,25 +20,9 @@ import { IClient } from "src/app/shared/app/models/Clients/iclient";
 })
 export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() group?: IClientGroups;
-	clientsList: IClient[] = [
-		{
-			sNo: 30,
-			fullName: "J.C.C.I. ",
-		},
-		{
-			sNo: 32,
-			fullName: "Dr. Bakhsh - Mina - (R.S.A)",
-		},
-		{
-			sNo: 33,
-			fullName: "Dr. Bakhsh - Sharafeyah - (R.S.A)",
-		},
-	];
-	groupsList: IClientGroups[] = [
-		{ sNo: 199, groupName: "k" },
-		{ sNo: 200, groupName: "as" },
-		{ sNo: 211, groupName: "Amir" },
-	];
+	@Input() groupsList?: IClientGroups[];
+	clientsList: IClient[] = [];
+
 	subscribes: Subscription[] = [];
 
 	addClientModal!: NgbModalRef;
@@ -88,9 +72,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		}
 	}
 
-	ngOnInit() {
-		console.log(this.addClientToGroupForm);
-	}
+	ngOnInit() {}
 
 	constructor(
 		private groupService: ClientsGroupsService,
@@ -106,20 +88,21 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
-			this.gridApi.showLoadingOverlay();
-
-			let sub = this.groupService.getGroupClients(this.group?.groupName!).subscribe(
-				(res: HttpResponse<IBaseResponse<IClient[]>>) => {
-					this.uiState.group.list = res.body?.data!;
-					params.successCallback(this.uiState.group.list, this.uiState.group.list.length);
-					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
-			this.subscribes.push(sub);
+			if (this.group) {
+				this.gridApi.showLoadingOverlay();
+				let sub = this.groupService.getGroupClients(this.group?.groupName!).subscribe(
+					(res: HttpResponse<IBaseResponse<IClient[]>>) => {
+						this.uiState.group.list = res.body?.data!;
+						params.successCallback(this.uiState.group.list, this.uiState.group.list.length);
+						this.uiState.gridReady = true;
+						this.gridApi.hideOverlay();
+					},
+					(err: HttpErrorResponse) => {
+						this.message.popup("Oops!", err.message, "error");
+					}
+				);
+				this.subscribes.push(sub);
+			}
 		},
 	};
 
@@ -158,12 +141,23 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 
 	openAddClientDialoge(content: TemplateRef<any>) {
 		// this.addGroupForm.reset();
-		this.addClientModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
-
-		this.addClientModal.hidden.subscribe(() => {
-			this.addClientToGroupForm.reset();
-			this.addClientToGroupFormSubmitted = false;
+		let clientsSub = this.groupService.getAllClients().subscribe((res) => {
+			console.log(res);
+			if (res.body?.status) {
+				// this.message.toast(res.body?.message!, "success");
+				this.clientsList = res.body?.data!;
+				this.addClientModal = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title", centered: true, backdrop: "static" });
+				let sub = this.addClientModal.hidden.subscribe(() => {
+					this.addClientToGroupForm.reset();
+					this.addClientToGroupFormSubmitted = false;
+				});
+				this.subscribes.push(sub);
+			} else {
+				this.message.toast(res.body?.message!, "error");
+			}
 		});
+
+		this.subscribes.push(clientsSub);
 	}
 
 	submitAddClientToGroup() {
@@ -176,8 +170,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		if (!this.addClientToGroupForm.valid) {
 			return;
 		} else {
-			let gName = this.addClientToGroupForm.value["groupName"];
-			this.groupService.addGroupClient(data.clientId, data.groupName).subscribe((res) => {
+			let sub = this.groupService.addClient(data.clientId, data.groupName).subscribe((res) => {
 				if (res.body?.status) {
 					this.message.toast(res.body?.message!, "success");
 				} else {
@@ -186,6 +179,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 				this.gridApi.setDatasource(this.dataSource);
 			});
 			this.addClientModal.close();
+			this.subscribes.push(sub);
 		}
 	}
 
