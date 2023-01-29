@@ -1,5 +1,5 @@
 <div class="input-group input-group-sm">
-    <input type="text" ngbDatepicker #d="ngbDatepicker" [(ngModel)]="date" placeholder="yyyy-mm-dd" class="form-control"
+    <input type="text" ngbDatepicker #d="ngbDatepicker" [(ngModel)]="date" placeholder="yyyy-mm-dd" class="form-control" (dateSelect)="onDateSelect($event)"
         readonly (click)="d.toggle()" />
     <button class="btn btn-outline-secondary ri-calendar-2-line" type="button" (click)="d.toggle()"></button>
 </div>
