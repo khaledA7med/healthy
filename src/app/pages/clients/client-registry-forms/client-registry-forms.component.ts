@@ -58,7 +58,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.ClientForm);
-    this.formData.subscribe((res) => console.log(res));
+    let enc = btoa(btoa("1441"));
+    console.log(enc);
+    console.log(atob(enc));
     let sub = this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
         this.editId = res.get("id")!;
