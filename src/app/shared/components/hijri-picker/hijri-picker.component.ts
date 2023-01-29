@@ -1,4 +1,4 @@
-import { Component, Injectable, Input, OnInit } from "@angular/core";
+import { Component, Injectable, Input, OnInit, OnChanges } from "@angular/core";
 import {
   NgbCalendar,
   NgbCalendarIslamicUmalqura,
@@ -48,13 +48,14 @@ export class IslamicI18n extends NgbDatepickerI18n {
   styleUrls: ["./hijri-picker.component.scss"],
   providers: [
     NgbInputDatepickerConfig,
+    NgbCalendarIslamicUmalqura,
     { provide: NgbCalendar, useClass: NgbCalendarIslamicUmalqura },
     { provide: NgbDatepickerI18n, useClass: IslamicI18n },
   ],
 })
-export class HijriPickerComponent implements OnInit {
+export class HijriPickerComponent implements OnInit, OnChanges {
   model!: NgbDateStruct;
-
+  @Input() gregorianDate: any;
   date!: { year: number; month: number };
 
   @Input("currentDate") currentDate!: [
@@ -62,7 +63,7 @@ export class HijriPickerComponent implements OnInit {
     month: number,
     day: number
   ];
-  constructor(config: NgbInputDatepickerConfig) {
+  constructor(config: NgbInputDatepickerConfig, public test: NgbCalendar, public test2: NgbCalendarIslamicUmalqura) {
     config.minDate = { year: 1900, month: 1, day: 1 };
     config.maxDate = { year: 2099, month: 12, day: 31 };
     config.placement = ["top-end", "top-start", "bottom-end", "bottom-start"];
@@ -71,5 +72,12 @@ export class HijriPickerComponent implements OnInit {
     // config.markDisabled = (date: NgbDate) => calendar.getWeekday(date) >= 6;
   }
 
-  ngOnInit(): void {}
+  ngOnChanges(): void {
+    // console.log(this.gregorianDate)
+    if (this.gregorianDate)
+
+      this.date = this.test2.fromGregorian(new Date(`${this.gregorianDate.year}-${this.gregorianDate.month}-${this.gregorianDate.day}`));
+  }
+
+  ngOnInit(): void { }
 }

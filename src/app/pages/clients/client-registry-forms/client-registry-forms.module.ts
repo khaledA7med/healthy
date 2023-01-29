@@ -10,6 +10,8 @@ import {
 import { NgSelectModule } from "@ng-select/ng-select";
 import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.module";
 import { HijriPickerModule } from "src/app/shared/components/hijri-picker/hijri-picker.module";
+import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
+
 
 export const routes: Routes = [
   { path: "", component: ClientRegistryFormsComponent },
@@ -26,6 +28,7 @@ export const routes: Routes = [
     NgbCollapseModule,
     DropzoneModule,
     HijriPickerModule,
+    GregorianPickerModule
   ],
 })
 export class ClientRegistryFormsModule {}

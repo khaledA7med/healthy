@@ -310,10 +310,11 @@
                                             <label for="dateOfIncorporation" class="asterisk-input">
                                                 Date of Incorporation
                                             </label>
-                                            <input id="dateOfIncorporation" type="text"
+                                            <app-gregorian-picker (dateChange)="setHijriDate($event)"></app-gregorian-picker>
+                                            <!-- <input id="dateOfIncorporation" type="text"
                                                 formControlName="dateOfIncorporation"
                                                 [ngClass]="{ 'is-invalid': (f.dateOfIncorporation?.touched || submitted ) && f.dateOfIncorporation?.invalid }"
-                                                class="form-control form-control-sm">
+                                                class="form-control form-control-sm"> -->
                                             <div class="invalid-feedback fw-bold"
                                                 *ngIf="(f.dateOfIncorporation?.touched || submitted ) && f.dateOfIncorporation?.invalid">
                                                 Required
@@ -325,7 +326,7 @@
                                             <label for="dateOfIncorporationHijri">
                                                 Date of Incorporation (Hijri)
                                             </label>
-                                            <app-hijri-picker></app-hijri-picker>
+                                            <app-hijri-picker [gregorianDate]="hijriDateFromGregorian"></app-hijri-picker>
 
                                             <!-- <input id="dateOfIncorporationHijri" type="text"
                                                 formControlName="dateOfIncorporationHijri"
