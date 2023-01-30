@@ -46,12 +46,10 @@ export class ClientsService {
     );
   }
 
-  saveClient(body: IClientPreview): Observable<any> {
-    return this.http.post(
-      this.env + ApiRoutes.Clients.save,
-      { body },
-      { observe: "response" }
-    );
+  saveClient(body: FormData): Observable<any> {
+    return this.http.post(this.env + ApiRoutes.Clients.save, body, {
+      observe: "response",
+    });
   }
 
   changeStatus(newStatus: ChangeStatusRequest) {

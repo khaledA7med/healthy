@@ -1,7 +1,16 @@
-import { Component, Injectable, Input, OnInit, OnChanges, EventEmitter, Output } from "@angular/core";
+import {
+  Component,
+  Injectable,
+  Input,
+  OnInit,
+  OnChanges,
+  EventEmitter,
+  Output,
+} from "@angular/core";
 import {
   NgbCalendar,
   NgbCalendarIslamicUmalqura,
+  NgbDate,
   NgbDatepickerI18n,
   NgbDateStruct,
   NgbInputDatepickerConfig,
@@ -53,10 +62,12 @@ export class IslamicI18n extends NgbDatepickerI18n {
     { provide: NgbDatepickerI18n, useClass: IslamicI18n },
   ],
 })
-export class HijriPickerComponent implements OnInit, OnChanges {
-  @Input() gregorianDate: any;
+export class HijriPickerComponent implements OnChanges {
   date!: NgbDateStruct;
   @Input() model!: any;
+
+  @Input() required: boolean = false;
+  @Input() submitted: boolean = false;
 
   @Input("currentDate") currentDate!: [
     year: number,
@@ -64,9 +75,12 @@ export class HijriPickerComponent implements OnInit, OnChanges {
     day: number
   ];
 
-  @Output() dateChange: EventEmitter<any> = new EventEmitter()
+  @Output() dateChange: EventEmitter<any> = new EventEmitter();
 
-  constructor(config: NgbInputDatepickerConfig, public changeDate: NgbCalendarIslamicUmalqura) {
+  constructor(
+    config: NgbInputDatepickerConfig,
+    public changeDate: NgbCalendarIslamicUmalqura
+  ) {
     config.minDate = { year: 1100, month: 1, day: 1 };
     config.maxDate = { year: 1500, month: 12, day: 31 };
     config.placement = ["top-end", "top-start", "bottom-end", "bottom-start"];
@@ -76,14 +90,20 @@ export class HijriPickerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    if(this.model){
-      this.date = this.changeDate.fromGregorian(new Date(`${this.model.year}-${this.model.month}-${this.model.day}`));
-    }
+    if (this.model) this.date = this.model;
   }
 
-  ngOnInit(): void { }
-
   onDateSelect(e: any) {
-    this.dateChange.emit(e)
+    let gonD = this.changeDate.toGregorian(e);
+    let gon = {
+      year: gonD.getFullYear(),
+      month: gonD.getMonth() + 1,
+      day: gonD.getDate(),
+    };
+    let obj = {
+      gon,
+      hijri: e,
+    };
+    this.dateChange.emit(obj);
   }
 }

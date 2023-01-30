@@ -20,6 +20,7 @@ import { ClientsService } from "src/app/shared/services/clients/clients.service"
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
 import { HttpResponse } from "@angular/common/http";
+import { NgbDate } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-client-registry-forms",
@@ -44,13 +45,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
-  // Testing Dates New Models
-  incorporationGregorianDate?: any;
-  incorporationHijriDate?: any;
-  CRExpiryGregorianDate?: any;
-  CRExpiryHijriDate?: any;
-  
-  // -------------------
 
   @ViewChild("dropzone") dropzone!: any;
 
@@ -92,9 +86,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
       // Retail Type
       idNo: new FormControl("", Validators.required),
-      expiryDate: new FormControl(null, Validators.required),
       nationality: new FormControl("", Validators.required),
       sourceofIncome: new FormControl("", Validators.required),
+      idExpiryDate: new FormControl(null, Validators.required),
 
       // Corporate Type
       registrationStatus: new FormControl("", Validators.required),
@@ -103,7 +97,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       commericalNo: new FormControl("", Validators.required),
       dateOfIncorporation: new FormControl(null, Validators.required),
       dateOfIncorporationHijri: new FormControl(null),
-      idExpiryDate: new FormControl(null, Validators.required),
+      expiryDate: new FormControl(null, Validators.required),
       expiryDateHijri: new FormControl(null),
       sponsorID: new FormControl(null, [
         Validators.minLength(20),
@@ -161,9 +155,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   retailClientType(): void {
     // Retail Type
     this.f.idNo?.setValidators(Validators.required);
-    this.f.expiryDate?.setValidators(Validators.required);
     this.f.nationality?.setValidators(Validators.required);
     this.f.sourceofIncome?.setValidators(Validators.required);
+    this.f.idExpiryDate?.setValidators(Validators.required);
 
     // Corporate Type
     this.f.registrationStatus?.clearValidators();
@@ -171,19 +165,18 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.marketSegment?.clearValidators();
     this.f.commericalNo?.clearValidators();
     this.f.dateOfIncorporation?.clearValidators();
-    this.f.idExpiryDate?.clearValidators();
     this.f.vatNo?.clearValidators();
     this.f.premium?.clearValidators();
-
+    this.f.expiryDate?.clearValidators();
     this.formGroup.updateValueAndValidity();
   }
 
   corporateClientType(): void {
     // Retail Type
     this.f.idNo?.clearValidators();
-    this.f.expiryDate?.clearValidators();
     this.f.nationality?.clearValidators();
     this.f.sourceofIncome?.clearValidators();
+    this.f.idExpiryDate?.clearValidators();
 
     // Corporate Type
     this.f.registrationStatus?.setValidators(Validators.required);
@@ -191,10 +184,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.marketSegment?.setValidators(Validators.required);
     this.f.commericalNo?.setValidators(Validators.required);
     this.f.dateOfIncorporation?.setValidators(Validators.required);
-    this.f.idExpiryDate?.setValidators(Validators.required);
     this.f.vatNo?.setValidators(Validators.required);
     this.f.premium?.setValidators(Validators.required);
-
+    this.f.expiryDate?.setValidators(Validators.required);
     this.formGroup.updateValueAndValidity();
   }
   //#endregion
@@ -365,103 +357,102 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     // PolicyType;
 
-    // formData.append('FullName', clientForm.value.fullName!)
-    // formData.append('FullNameAr', clientForm.value.fullNameAr!)
-    // formData.append('OfficalName', clientForm.value.officalName!)
-    // formData.append('RelationshipStatus', clientForm.value.relationshipStatus!)
-    // formData.append('BusinessType', clientForm.value.businessType!)
-    // formData.append('Type', clientForm.value.type!)
-    // formData.append('IDNo', clientForm.value.idNo!)
-    // formData.append('IDExpiryDate', clientForm.value.idExpiryDate!)
-    // formData.append('OfficalName', clientForm.value.officalName!)
-    // formData.append('OfficalName', clientForm.value.officalName!)
-    // formData.append('OfficalName', clientForm.value.officalName!)
+    formData.append("FullName", clientForm.value.fullName!);
+    formData.append("FullNameAr", clientForm.value.fullNameAr!);
+    formData.append("OfficalName", clientForm.value.officalName!);
+    formData.append("RelationshipStatus", clientForm.value.relationshipStatus!);
+    formData.append("BusinessType", clientForm.value.businessType!);
+    formData.append("Type", clientForm.value.type!);
+    formData.append("IDNo", clientForm.value.idNo!);
+    formData.append(
+      "IDExpiryDate",
+      this.dateFormater(clientForm.value.idExpiryDate!)
+    );
+    formData.append("Nationality", clientForm.value.nationality!);
+    formData.append("SourceofIncome", clientForm.value.sourceofIncome!);
+    formData.append("RegistrationStatus", clientForm.value.registrationStatus!);
+    formData.append("BusinessActivity", clientForm.value.businessActivity!);
+    formData.append("MarketSegment", clientForm.value.marketSegment!);
+    formData.append(
+      "DateOfIncorporation",
+      this.dateFormater(clientForm.value.dateOfIncorporation!)
+    );
+    formData.append(
+      "DateOfIncorporationHijri",
+      this.dateFormater(clientForm.value.dateOfIncorporationHijri!)
+    );
+    formData.append("CommericalNo", clientForm.value.commericalNo!);
+    formData.append(
+      "ExpiryDate",
+      this.dateFormater(clientForm.value.expiryDate!)
+    );
+    formData.append(
+      "ExpiryDateHijri",
+      this.dateFormater(clientForm.value.expiryDateHijri!)
+    );
+    formData.append("SponsorID", clientForm.value.sponsorID!);
+    formData.append("UnifiedNo", clientForm.value.unifiedNo!);
+    formData.append("VATNo", clientForm.value.vatNo!);
+    formData.append("Capital", clientForm.value.capital!);
+    formData.append("Location", clientForm.value.location!);
+    formData.append("Premium", clientForm.value.premium!);
+    formData.append("BuildingNo", clientForm.value.buildingNo!);
+    formData.append("Tele", clientForm.value.tele!);
+    formData.append("Tele2", clientForm.value.tele2!);
+    formData.append("Fax", clientForm.value.fax!);
+    formData.append("Channel", clientForm.value.channel!);
+    formData.append("Interface", clientForm.value.interface!);
+    formData.append("Producer", clientForm.value.producer!);
+    formData.append("ScreeningResult", clientForm.value.screeningResult!);
+    formData.append("Branch", clientForm.value.branch!);
+    formData.append("StreetName", clientForm.value.streetName!);
+    formData.append("SecondryNo", clientForm.value.secondryNo!);
+    formData.append("DistrictName", clientForm.value.districtName!);
+    formData.append("PostalCode", clientForm.value.postalCode!);
+    formData.append("CityName", clientForm.value.cityName!);
+    formData.append("Email", clientForm.value.email!);
+    formData.append("Website", clientForm.value.website!);
 
-    // ;
+    clientForm.value.clientContacts?.forEach((el: any) =>
+      formData.append("ClientContacts", el)
+    );
 
-    // Nationality;
+    clientForm.value.clientsBankAccounts?.forEach((el: any) => {
+      formData.append("ClientsBankAccounts", el);
+    });
+    console.log(JSON.stringify(formData.get("ClientsBankAccounts")));
+    // for (let i = 0; i < clientForm.value.clientsBankAccounts!.length; i++) {
+    //   formData.append('ClientsBankAccounts', clientForm.value.clientsBankAccounts[i])
 
-    // SourceofIncome;
-
-    // RegistrationStatus;
-
-    // BusinessActivity;
-
-    // MarketSegment;
-
-    // DateOfIncorporation;
-
-    // DateOfIncorporationHijri;
-
-    // CommericalNo;
-
-    // ExpiryDate;
-
-    // ExpiryDateHijri;
-
-    // SponsorID;
-
-    // UnifiedNo;
-
-    // VATNo;
-
-    // Capital;
-
-    // Location;
-
-    // Premium;
-
-    // BuildingNo;
+    // }
 
     // POBox;
 
-    // Tele;
-
-    // Tele2;
-
-    // Fax;
-
-    // Channel;
-
-    // Interface;
-
-    // Producer;
-
-    // ScreeningResult;
-
-    // Branch;
-
     // CreatedBy;
-
-    // StreetName;
-
-    // SecondryNo;
-
-    // DistrictName;
-
-    // PostalCode;
-
-    // CityName;
-
-    // Email;
-
-    // Website;
+    // ;
 
     // UpdatedBy;
 
-    // ClientContacts;
-    // ClientsBankAccounts;
     // Documents;
 
     // this.validationChecker();
+
     console.log(clientForm.value);
     let test: IClientPreview = {
       screeningResult: clientForm.value.screeningResult!,
     };
     let test2: IClientPreview = clientForm.value! as IClientPreview;
-    this.clientService.saveClient(test2).subscribe((res) => {
+    this.clientService.saveClient(formData).subscribe((res) => {
       console.log(res);
     });
+  }
+
+  dateFormater(dt: any) {
+    let date = "";
+    if (dt) {
+      date = new Date(`${dt.year}/${dt.month}/${dt.day}`).toLocaleDateString();
+    }
+    return date;
   }
 
   validationChecker(): boolean {
@@ -478,17 +469,19 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.clientContacts?.clear();
     this.submitted = false;
   }
-  setIncorporationHijriDate(e: any) {
-    this.incorporationHijriDate = e;
+
+  retailExpiryDate(e: { gon: any; hijri: any }): void {
+    this.f.idExpiryDate?.patchValue(e.gon);
   }
-  setIncorporationGregorianDate(e: any) {
-    this.incorporationGregorianDate = e;
+
+  coIncorporationDates(e: { gon: any; hijri: any }): void {
+    this.f.dateOfIncorporationHijri?.patchValue(e.hijri);
+    this.f.dateOfIncorporation?.patchValue(e.gon);
   }
-  seCRExpirytHijriDate(e: any) {
-    this.CRExpiryHijriDate = e;
-  }
-  setCRExpiryGregorianDate(e: any) {
-    this.CRExpiryGregorianDate = e;
+
+  coExpiryDates(e: { gon: any; hijri: any }): void {
+    this.f.expiryDateHijri?.patchValue(e.hijri);
+    this.f.expiryDate?.patchValue(e.gon);
   }
 
   ngOnDestroy(): void {

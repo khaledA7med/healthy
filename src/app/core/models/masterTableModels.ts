@@ -33,14 +33,14 @@ export interface IBaseMasterTable {
   Nationalities?: Caching<INationality[]>;
   SourceofIncome?: Caching<IGenericResponseType[]>;
   RegistrationStatus?: Caching<IGenericResponseType[]>;
-  BusinessActivities?: Caching<IBusinessActivity[]>;
+  BusinessActivities?: Caching<IGenericResponseType[]>;
   MarketSegment?: Caching<IGenericResponseType[]>;
   Premium?: Caching<IGenericResponseType[]>;
-  Positions?: Caching<IPositions[]>;
+  Positions?: Caching<IGenericResponseType[]>;
   Branch?: Caching<IGenericResponseType[]>;
   ContactLineOfBusiness?: Caching<IGenericResponseType[]>;
   ContactDepartment?: Caching<IGenericResponseType[]>;
-  Banks?: Caching<IBanks[]>;
+  Banks?: Caching<IGenericResponseType[]>;
   CommericalNo?: Caching<IGenericResponseType[]>;
   GroupsList?: Caching<IGenericResponseType[]>;
 }

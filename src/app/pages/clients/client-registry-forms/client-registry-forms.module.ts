@@ -12,7 +12,6 @@ import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.modu
 import { HijriPickerModule } from "src/app/shared/components/hijri-picker/hijri-picker.module";
 import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
 
-
 export const routes: Routes = [
   { path: "", component: ClientRegistryFormsComponent },
 ];
@@ -28,7 +27,7 @@ export const routes: Routes = [
     NgbCollapseModule,
     DropzoneModule,
     HijriPickerModule,
-    GregorianPickerModule
+    GregorianPickerModule,
   ],
 })
 export class ClientRegistryFormsModule {}
