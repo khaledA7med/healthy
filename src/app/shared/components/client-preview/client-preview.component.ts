@@ -127,7 +127,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   }
   addClientToGroupReq(): void {
     let sub = this.clientsGroupService
-      .addGroupClient(this.form["clientId"].value, this.form["groupName"].value)
+      .addClient(this.form["clientId"].value, this.form["groupName"].value)
       .subscribe({
         // no data here
         next: (res: HttpResponse<IBaseResponse<null>>) => {
