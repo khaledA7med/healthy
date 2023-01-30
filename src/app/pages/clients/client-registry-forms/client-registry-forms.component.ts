@@ -31,6 +31,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   submitted = false;
   formData!: Observable<IBaseMasterTable>;
   hijriDateFromGregorian?: any;
+  gregorianDateFromHijri?: any;
 
   editId!: string;
 
@@ -371,6 +372,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   setHijriDate(e:any){
     // console.log("From Client Registry",e)
     this.hijriDateFromGregorian = e
+  }
+  setGregorianDate(e:any){
+    this.gregorianDateFromHijri = e;
   }
 
   ngOnDestroy(): void {
