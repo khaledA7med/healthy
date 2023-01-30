@@ -54,9 +54,9 @@ export class IslamicI18n extends NgbDatepickerI18n {
   ],
 })
 export class HijriPickerComponent implements OnInit, OnChanges {
-  model!: NgbDateStruct;
   @Input() gregorianDate: any;
-  date!: { year: number; month: number };
+  date!: NgbDateStruct;
+  @Input() model!: any;
 
   @Input("currentDate") currentDate!: [
     year: number,
@@ -67,8 +67,8 @@ export class HijriPickerComponent implements OnInit, OnChanges {
   @Output() dateChange: EventEmitter<any> = new EventEmitter()
 
   constructor(config: NgbInputDatepickerConfig, public changeDate: NgbCalendarIslamicUmalqura) {
-    config.minDate = { year: 1900, month: 1, day: 1 };
-    config.maxDate = { year: 2099, month: 12, day: 31 };
+    config.minDate = { year: 1100, month: 1, day: 1 };
+    config.maxDate = { year: 1500, month: 12, day: 31 };
     config.placement = ["top-end", "top-start", "bottom-end", "bottom-start"];
 
     // weekends are disabled
@@ -76,14 +76,14 @@ export class HijriPickerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.gregorianDate)
-      this.date = this.changeDate.fromGregorian(new Date(`${this.gregorianDate.year}-${this.gregorianDate.month}-${this.gregorianDate.day}`));
+    if(this.model){
+      this.date = this.changeDate.fromGregorian(new Date(`${this.model.year}-${this.model.month}-${this.model.day}`));
+    }
   }
 
   ngOnInit(): void { }
 
   onDateSelect(e: any) {
-    console.log(e);
     this.dateChange.emit(e)
   }
 }

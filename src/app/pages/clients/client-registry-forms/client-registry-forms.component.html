@@ -346,8 +346,7 @@
                       <label for="dateOfIncorporation" class="asterisk-input">
                         Date of Incorporation
                       </label>
-                      <app-gregorian-picker (dateChange)="setHijriDate($event)"
-                        [hijriDate]="gregorianDateFromHijri"></app-gregorian-picker>
+                      <app-gregorian-picker [model]="incorporationGregorianDate" (dateChange)="setIncorporationHijriDate($event)"></app-gregorian-picker>
                       <!-- <input id="dateOfIncorporation" type="text"
                                                 formControlName="dateOfIncorporation"
                                                 [ngClass]="{ 'is-invalid': (f.dateOfIncorporation?.touched || submitted ) && f.dateOfIncorporation?.invalid }"
@@ -363,10 +362,9 @@
                       <label for="dateOfIncorporationHijri">
                         Date of Incorporation (Hijri)
                       </label>
-                      <app-hijri-picker [gregorianDate]="hijriDateFromGregorian"
-                        (dateChange)="setGregorianDate($event)"></app-hijri-picker>
+                      <app-hijri-picker [model]="incorporationHijriDate"
+                        (dateChange)="setIncorporationGregorianDate($event)"></app-hijri-picker>
 
-                      <!-- <input id="dateOfIncorporationHijri" type="text"
                       <!-- <input id="dateOfIncorporationHijri" type="text"
                                                 formControlName="dateOfIncorporationHijri"
                                                 class="form-control form-control-sm "> -->
@@ -377,11 +375,12 @@
                       <label for="crExpiryDate" class="asterisk-input">
                         CR Expiry Date
                       </label>
-                      <input id="idExpiryDate" type="text" formControlName="idExpiryDate" [ngClass]="{
+                      <!-- <input id="idExpiryDate" type="text" formControlName="idExpiryDate" [ngClass]="{
                           'is-invalid':
                             (f.idExpiryDate?.touched || submitted) &&
                             f.idExpiryDate?.invalid
-                        }" class="form-control form-control-sm" />
+                        }" class="form-control form-control-sm" /> -->
+                        <app-gregorian-picker [model]="CRExpiryGregorianDate" (dateChange)="seCRExpirytHijriDate($event)"></app-gregorian-picker>
                       <div class="invalid-feedback fw-bold" *ngIf="
                           (f.idExpiryDate?.touched || submitted) &&
                           f.idExpiryDate?.invalid
@@ -395,8 +394,10 @@
                       <label for="CRExpiryDateHijri">
                         CR Expiry Date (Hijri)
                       </label>
-                      <input id="CRExpiryDateHijri" type="text" formControlName="expiryDateHijri"
-                        class="form-control form-control-sm crExpiry-date" />
+                      <!-- <input id="CRExpiryDateHijri" type="text" formControlName="expiryDateHijri"
+                        class="form-control form-control-sm crExpiry-date" /> -->
+                        <app-hijri-picker [model]="CRExpiryHijriDate"
+                        (dateChange)="setCRExpiryGregorianDate($event)"></app-hijri-picker>
                     </div>
                     <!--./col-->
 

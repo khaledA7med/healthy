@@ -30,8 +30,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
   submitted = false;
   formData!: Observable<IBaseMasterTable>;
-  hijriDateFromGregorian?: any;
-  gregorianDateFromHijri?: any;
 
   editId!: string;
 
@@ -46,6 +44,13 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
+  // Testing Dates New Models
+  incorporationGregorianDate?: any;
+  incorporationHijriDate?: any;
+  CRExpiryGregorianDate?: any;
+  CRExpiryHijriDate?: any;
+  
+  // -------------------
 
   @ViewChild("dropzone") dropzone!: any;
 
@@ -473,12 +478,17 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.clientContacts?.clear();
     this.submitted = false;
   }
-  setHijriDate(e: any) {
-    // console.log("From Client Registry",e)
-    this.hijriDateFromGregorian = e;
+  setIncorporationHijriDate(e: any) {
+    this.incorporationHijriDate = e;
   }
-  setGregorianDate(e: any) {
-    this.gregorianDateFromHijri = e;
+  setIncorporationGregorianDate(e: any) {
+    this.incorporationGregorianDate = e;
+  }
+  seCRExpirytHijriDate(e: any) {
+    this.CRExpiryHijriDate = e;
+  }
+  setCRExpiryGregorianDate(e: any) {
+    this.CRExpiryGregorianDate = e;
   }
 
   ngOnDestroy(): void {
