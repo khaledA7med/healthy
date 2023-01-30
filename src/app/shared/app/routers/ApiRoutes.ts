@@ -34,7 +34,9 @@ export const ApiRoutes = {
   Clients: {
     search: "/ClientRegistry/Clients/Search",
     details: "/ClientRegistry/Clients/Details",
-    editClient: "/ClientRegistry/Clients/Edit",
+    save: "/ClientRegistry/Clients/Save",
+    edit: "/ClientRegistry/Clients/Edit",
+    changeStatus: "/ClientRegistry/Clients/ChangeStatus",
   },
   ClientsGroups: {
     list: "/ClientRegistry/Groups/Search",

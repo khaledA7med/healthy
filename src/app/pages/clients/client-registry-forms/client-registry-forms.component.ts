@@ -352,8 +352,111 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   onSubmit(clientForm: FormGroup<IClientForms>) {
     this.submitted = true;
+    const formData = new FormData();
+
+    // SNo;
+
+    // formData.append('Status', clientForm.value.status)
+
+    // PolicyType;
+
+    // formData.append('FullName', clientForm.value.fullName!)
+    // formData.append('FullNameAr', clientForm.value.fullNameAr!)
+    // formData.append('OfficalName', clientForm.value.officalName!)
+    // formData.append('RelationshipStatus', clientForm.value.relationshipStatus!)
+    // formData.append('BusinessType', clientForm.value.businessType!)
+    // formData.append('Type', clientForm.value.type!)
+    // formData.append('IDNo', clientForm.value.idNo!)
+    // formData.append('IDExpiryDate', clientForm.value.idExpiryDate!)
+    // formData.append('OfficalName', clientForm.value.officalName!)
+    // formData.append('OfficalName', clientForm.value.officalName!)
+    // formData.append('OfficalName', clientForm.value.officalName!)
+
+    // ;
+
+    // Nationality;
+
+    // SourceofIncome;
+
+    // RegistrationStatus;
+
+    // BusinessActivity;
+
+    // MarketSegment;
+
+    // DateOfIncorporation;
+
+    // DateOfIncorporationHijri;
+
+    // CommericalNo;
+
+    // ExpiryDate;
+
+    // ExpiryDateHijri;
+
+    // SponsorID;
+
+    // UnifiedNo;
+
+    // VATNo;
+
+    // Capital;
+
+    // Location;
+
+    // Premium;
+
+    // BuildingNo;
+
+    // POBox;
+
+    // Tele;
+
+    // Tele2;
+
+    // Fax;
+
+    // Channel;
+
+    // Interface;
+
+    // Producer;
+
+    // ScreeningResult;
+
+    // Branch;
+
+    // CreatedBy;
+
+    // StreetName;
+
+    // SecondryNo;
+
+    // DistrictName;
+
+    // PostalCode;
+
+    // CityName;
+
+    // Email;
+
+    // Website;
+
+    // UpdatedBy;
+
+    // ClientContacts;
+    // ClientsBankAccounts;
+    // Documents;
+
     // this.validationChecker();
     console.log(clientForm.value);
+    let test: IClientPreview = {
+      screeningResult: clientForm.value.screeningResult!,
+    };
+    let test2: IClientPreview = clientForm.value! as IClientPreview;
+    this.clientService.saveClient(test2).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   validationChecker(): boolean {
@@ -368,6 +471,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.clientTypeToggler("");
     this.f.clientsBankAccounts?.clear();
     this.f.clientContacts?.clear();
+    this.submitted = false;
   }
   setHijriDate(e: any) {
     // console.log("From Client Registry",e)
