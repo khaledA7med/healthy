@@ -142,25 +142,25 @@
           <label class="form-label" for="status">Status</label>
 
           <ng-select
-            [clearable]="false"
-            [searchable]="false"
+            [items]="(lookupData | async)?.ClientStatus?.content!"
+            [loading]="lookupData ? false : true"
+            [clearable]="true"
+            [searchable]="true"
             [multiple]="true"
+            bindLabel="name"
+            bindValue="name"
             formControlName="status"
           >
-            <ng-option value="active">Active</ng-option>
-            <ng-option value="blocked">Blocked</ng-option>
-            <ng-option value="pending activation "
-              >Pending Activation</ng-option
-            >
-            <ng-option value="prospect">Prospect</ng-option>
-            <ng-option value="rejected">Rejected</ng-option>
+            <ng-template ng-label-tmp ng-option-tmp let-item="item">
+              <ng-option class="p-2">{{ item.name }} </ng-option>
+            </ng-template>
           </ng-select>
         </div>
         <div class="col-12 mh-100"></div>
       </form>
     </div>
     <!-- submit and clear btn -->
-    <div class="offcanvas-footer border-top row m-1">
+    <div class="offcanvas-footer border-top row mb-3 mx-1">
       <div class="col-6 mt-2">
         <button class="btn btn-light btn-sm w-100" (click)="clearFilter()">
           Clear Filter

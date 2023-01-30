@@ -18,10 +18,12 @@ import { IClientPreview } from "../../app/models/Clients/iclient-preview";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
-import { IClientGroups } from "../../app/models/Clients/iclientgroups";
 import { ClientsGroupsService } from "../../services/clients/clients.groups.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
+import Swal from "sweetalert2";
+import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
+import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
 @Component({
   selector: "app-modal-for-details",
@@ -32,6 +34,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   uiState = {
     sno: 0,
     clientDetails: {} as IClientPreview,
+    updatedState: false,
   };
   clientStatus: typeof ClientStatus = ClientStatus;
   clientType: typeof ClientType = ClientType;
@@ -40,11 +43,10 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   addToGroupModalRef!: NgbModalRef;
   addClientToGroupForm!: FormGroup;
   @ViewChild("details") detailsModal!: TemplateRef<any>;
-
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private clintService: ClientsService,
+    private clientService: ClientsService,
     private router: Router,
     private message: MessagesService,
     private clientsGroupService: ClientsGroupsService,
@@ -72,7 +74,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   }
 
   getClintDetails(sno: number): void {
-    let sub = this.clintService.getClintDetails(sno).subscribe({
+    let sub = this.clientService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
         AppUtils.nullValues(this.uiState.clientDetails);
@@ -84,12 +86,78 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  changeStatus(newStatus: String): void {
+  changeStatus(newStatus: string): void {
     let reqBody = {
       clientId: this.uiState.sno,
       status: newStatus,
     };
-    // return service not Completed because response interface
+
+    if (newStatus === ClientStatus.Rejected) {
+      this.changeStatusWithMsg(reqBody);
+    } else {
+      this.message
+        .confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning")
+        .then((result: any) => {
+          if (result.isConfirmed) {
+            let sub = this.clientService.changeStatus(reqBody).subscribe({
+              next: (res: HttpResponse<IBaseResponse<null>>) => {
+                this.message.toast(res.body?.message!, "success");
+                this.uiState.updatedState = true;
+                this.previewModalRef.close();
+                this.backToMainRoute();
+              },
+              error: (error: HttpErrorResponse) => {
+                this.message.popup("Oops!", error.message, "error");
+              },
+            });
+            this.subscribes.push(sub);
+          }
+        });
+    }
+  }
+  changeStatusWithMsg(reqBody: IChangeStatusRequest) {
+    return Swal.fire({
+      title: "Type Rejection Reason",
+      input: "text",
+      inputAttributes: {
+        required: "true",
+      },
+      validationMessage: "Required",
+      showCancelButton: true,
+      background: "var(--vz-modal-bg)",
+      customClass: {
+        confirmButton: "btn btn-success btn-sm w-xs me-2 mt-2",
+        cancelButton: "btn btn-ghost-danger btn-sm w-xs mt-2",
+        input: "customize-swlInput",
+        validationMessage: "fs-6 bg-transparent  m-1 p-1",
+      },
+      confirmButtonText: `Reject`,
+      buttonsStyling: false,
+      showCloseButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: (reason) => {
+        this.uiState.updatedState = true;
+        reqBody = {
+          ...reqBody,
+          rejectionReason: reason,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let sub = this.clientService.changeStatus(reqBody).subscribe({
+          next: (res: HttpResponse<IBaseResponse<null>>) => {
+            this.message.toast(res.body?.message!, "success");
+            this.uiState.updatedState = true;
+            this.previewModalRef.close();
+            this.backToMainRoute();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.message.popup("Oops!", error.message, "error");
+          },
+        });
+        this.subscribes.push(sub);
+      }
+    });
   }
   //#region  Add Client To Group
   openAddClientToGroupModal(modal: TemplateRef<any>): void {
@@ -117,8 +185,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     return this.addClientToGroupForm.controls;
   }
   submitAddClientToGroupForm(): void {
-    console.log(this.addClientToGroupForm.invalid);
-    console.log(this.form["clientId"].value, this.form["groupName"].value);
     if (!this.addClientToGroupForm.valid) {
       return;
     } else {
@@ -133,16 +199,13 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         next: (res: HttpResponse<IBaseResponse<null>>) => {
           if (res.body?.status) {
             this.message.toast(res.body?.message!, "success");
-          } else {
-            this.message.popup("", res.body?.message!, "error");
-          }
-          this.addToGroupModalRef.close();
-          this.previewModalRef.close();
-          this.backToMainRoute();
+            this.uiState.updatedState = true;
+            this.addToGroupModalRef.close();
+            this.previewModalRef.close();
+            this.backToMainRoute();
+          } else this.message.popup("", res.body?.message!, "error");
         },
-        error: (error) => {
-          this.message.popup("Oops!", error.message, "error");
-        },
+        error: (error) => this.message.popup("Oops!", error.message, "error"),
       });
     this.subscribes.push(sub);
   }
@@ -151,7 +214,9 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   // To Do back to main route when close modal
   backToMainRoute() {
     this.previewModalRef.hidden.subscribe(() => {
-      this.router.navigate([{ outlets: { details: null } }]);
+      this.router.navigate([{ outlets: { details: null } }], {
+        state: { updated: this.uiState.updatedState },
+      });
     });
   }
 

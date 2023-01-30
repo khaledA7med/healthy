@@ -6,6 +6,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
 import {
   CellEvent,
   GridApi,
@@ -85,12 +86,26 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
-    private masterTableService: MasterTableService
+    private masterTableService: MasterTableService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.initFilterForm();
-    this.lookupData.subscribe((res) => console.log(res));
+    let sub = this.router.events.subscribe((evt) => {
+      if (evt instanceof NavigationEnd) {
+        if (!evt.url.includes("details")) {
+          if (this.router.getCurrentNavigation()?.extras.state!["updated"])
+            this.gridApi.setDatasource(this.dataSource);
+        }
+      }
+    });
+    this.subscribes.push(sub);
+    console.log(
+      this.lookupData.subscribe((res) => {
+        console.log(res);
+      })
+    );
   }
 
   // Table Section

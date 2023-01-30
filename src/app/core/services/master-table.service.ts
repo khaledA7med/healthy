@@ -39,6 +39,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Client.groupsList,
           name: BaseData.GroupsList,
         },
+        {
+          route: ApiRoutes.MasterTable.Client.status,
+          name: BaseData.ClientStatus,
+        },
       ],
       ClientForm: [
         {

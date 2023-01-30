@@ -8,7 +8,7 @@ import { IClientForms } from "../../app/models/Clients/iclientForms";
 import { IClient } from "../../app/models/Clients/iclient";
 import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { ChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
+import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
 
 @Injectable({
   providedIn: "root",
@@ -31,10 +31,13 @@ export class ClientsService {
   getClintDetails(
     sno: number
   ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
-    return this.http.get(this.env + ApiRoutes.Clients.details, {
-      observe: "response",
-      params: { sno },
-    });
+    return this.http.get<IBaseResponse<IClientPreview>>(
+      this.env + ApiRoutes.Clients.details,
+      {
+        observe: "response",
+        params: { sno },
+      }
+    );
   }
 
   getClientById(
@@ -43,6 +46,17 @@ export class ClientsService {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.editClient,
       { params: { sno: +id }, observe: "response" }
+    );
+  }
+  changeStatus(
+    data: IChangeStatusRequest
+  ): Observable<HttpResponse<IBaseResponse<null>>> {
+    return this.http.post<IBaseResponse<null>>(
+      this.env + ApiRoutes.Clients.changeStatus,
+      data,
+      {
+        observe: "response",
+      }
     );
   }
 }

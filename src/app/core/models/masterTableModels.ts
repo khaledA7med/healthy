@@ -20,6 +20,7 @@ export enum BaseData {
   Banks = "Banks",
   CommericalNo = "CommericalNo",
   GroupsList = "GroupsList",
+  ClientStatus = "ClientStatus",
 }
 
 export interface IBaseMasterTable {
@@ -43,6 +44,7 @@ export interface IBaseMasterTable {
   Banks?: Caching<IBanks[]>;
   CommericalNo?: Caching<IGenericResponseType[]>;
   GroupsList?: Caching<IGenericResponseType[]>;
+  ClientStatus?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

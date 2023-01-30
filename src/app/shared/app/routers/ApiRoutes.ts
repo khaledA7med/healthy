@@ -1,4 +1,3 @@
-import { Base } from "lord-icon-element/build/triggers/base";
 import { BaseData } from "src/app/core/models/masterTableModels";
 const LookUpTables = "/LookupTables/";
 
@@ -29,12 +28,14 @@ export const ApiRoutes = {
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
       commericalNo: LookUpTables + BaseData.CommericalNo,
       groupsList: LookUpTables + BaseData.GroupsList,
+      status: LookUpTables + BaseData.ClientStatus,
     },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
     details: "/ClientRegistry/Clients/Details",
     editClient: "/ClientRegistry/Clients/Edit",
+    changeStatus: "/ClientRegistry/Clients/ChangeStatus",
   },
   ClientsGroups: {
     list: "/ClientRegistry/Groups/Search",
