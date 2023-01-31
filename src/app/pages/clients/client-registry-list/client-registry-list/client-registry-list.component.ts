@@ -7,6 +7,8 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { FormControl, FormGroup } from "@angular/forms";
 import {
   CellEvent,
   GridApi,
@@ -15,7 +17,6 @@ import {
   IDatasource,
   IGetRowsParams,
 } from "ag-grid-community";
-import { FormControl, FormGroup } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
@@ -24,7 +25,6 @@ import { clientManageCols } from "src/app/shared/app/grid/clientCols";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { IClient } from "src/app/shared/app/models/Clients/iclient";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientFilters } from "src/app/shared/app/models/Clients/iclientFilters";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -57,6 +57,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
   };
   // filter form
   filterForm!: FormGroup;
+  lookupData!: Observable<IBaseMasterTable>;
   // to unSubscribe
   subscribes: Subscription[] = [];
   // Grid Definitions
@@ -86,12 +87,13 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
-    private masterTableService: MasterTableService,
+    private table: MasterTableService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.initFilterForm();
+    this.getLookupData();
     let sub = this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
         if (!evt.url.includes("details")) {
@@ -101,11 +103,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       }
     });
     this.subscribes.push(sub);
-    console.log(
-      this.lookupData.subscribe((res) => {
-        console.log(res);
-      })
-    );
   }
 
   // Table Section
@@ -209,8 +206,8 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       status: new FormControl([]),
     });
   }
-  get lookupData(): Observable<IBaseMasterTable> {
-    return this.masterTableService.getBaseData(MODULES.Client);
+  getLookupData() {
+    this.lookupData = this.table.getBaseData(MODULES.Client);
   }
   modifyFilterReq() {
     this.uiState.filters = {

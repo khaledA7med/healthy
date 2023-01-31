@@ -1,4 +1,3 @@
-import { MasterTableService } from "src/app/core/services/master-table.service";
 import {
   AfterViewInit,
   Component,
@@ -11,6 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
+import Swal from "sweetalert2";
 
 import AppUtils from "../../app/util";
 import { ClientStatus, ClientType } from "../../app/models/Clients/clientUtil";
@@ -21,9 +21,8 @@ import { ClientsService } from "src/app/shared/services/clients/clients.service"
 import { ClientsGroupsService } from "../../services/clients/clients.groups.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
-import Swal from "sweetalert2";
+import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
-import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
 @Component({
   selector: "app-modal-for-details",
@@ -42,6 +41,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   previewModalRef!: NgbModalRef;
   addToGroupModalRef!: NgbModalRef;
   addClientToGroupForm!: FormGroup;
+  lookupData!: Observable<IBaseMasterTable>;
   @ViewChild("details") detailsModal!: TemplateRef<any>;
   constructor(
     private modalService: NgbModal,
@@ -50,7 +50,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private message: MessagesService,
     private clientsGroupService: ClientsGroupsService,
-    private masterTableService: MasterTableService
+    private table: MasterTableService
   ) {}
 
   ngAfterViewInit(): void {
@@ -58,6 +58,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.getSNO();
     this.getClintDetails(this.uiState.sno);
     this.initAddClientToGroupForm();
+    this.getLookupData();
   }
 
   openPreviewModal(): void {
@@ -78,6 +79,9 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
         AppUtils.nullValues(this.uiState.clientDetails);
+        this.uiState.clientDetails.documentLists?.forEach((el) => {
+          console.log(el);
+        });
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");
@@ -135,11 +139,11 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       buttonsStyling: false,
       showCloseButton: true,
       showLoaderOnConfirm: true,
-      preConfirm: (reason) => {
-        this.uiState.updatedState = true;
+      allowOutsideClick: false,
+      preConfirm: (inputValue: string) => {
         reqBody = {
           ...reqBody,
-          rejectionReason: reason,
+          rejectionReason: inputValue,
         };
       },
     }).then((result) => {
@@ -171,15 +175,14 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  get lookupData(): Observable<IBaseMasterTable> {
-    return this.masterTableService.getBaseData(MODULES.Client);
-  }
-
   initAddClientToGroupForm(): void {
     this.addClientToGroupForm = new FormGroup({
       clientId: new FormControl(this.uiState.sno, Validators.required),
       groupName: new FormControl(null, Validators.required),
     });
+  }
+  getLookupData() {
+    this.lookupData = this.table.getBaseData(MODULES.Client);
   }
   get form() {
     return this.addClientToGroupForm.controls;
@@ -203,7 +206,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
             this.addToGroupModalRef.close();
             this.previewModalRef.close();
             this.backToMainRoute();
-          } else this.message.popup("", res.body?.message!, "error");
+          } else this.message.popup("Sorry", res.body?.message!, "warning");
         },
         error: (error) => this.message.popup("Oops!", error.message, "error"),
       });

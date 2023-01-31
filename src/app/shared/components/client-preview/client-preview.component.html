@@ -394,7 +394,7 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-header">
-            <h6 class="card-title text-muted text-uppercase mb-0">DOCUMENTS</h6>
+            <h6 class="card-title text-muted text-uppercase mb-0">Documents</h6>
           </div>
           <div class="card-body table-responsive table-card">
             <table class="table table-nowrap mb-0">
@@ -409,8 +409,26 @@
                 <ng-container
                   *ngIf="uiState.clientDetails.documentLists?.length !== 0"
                 >
-                  <tr>
-                    <td>Name</td>
+                  <tr *ngFor="let item of uiState.clientDetails.documentLists">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-sm">
+                          <div
+                            *ngIf="item.extension == 'zip'"
+                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
+                          >
+                            <i class="ri-file-zip-fill"></i>
+                          </div>
+                          <div
+                            *ngIf="item.extension == 'pdf'"
+                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
+                          >
+                            <i class="lab la-file-pdf"></i>
+                          </div>
+                        </div>
+                        <div>{{ item.fileName }}</div>
+                      </div>
+                    </td>
                   </tr>
                 </ng-container>
                 <ng-container
@@ -544,11 +562,7 @@
             'is-invalid': form['groupName'].touched && form['groupName'].errors
           }"
           [loading]="lookupData ? false : true"
-          required
         >
-          <ng-template ng-label-tmp ng-option-tmp let-item="item">
-            <ng-option>{{ item.name }}</ng-option>
-          </ng-template>
         </ng-select>
 
         <div

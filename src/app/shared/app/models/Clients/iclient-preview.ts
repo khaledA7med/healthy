@@ -1,4 +1,4 @@
-import { IClientDocumentList } from "./iclient-documentList";
+import { IDocumentList } from "../App/IDocument";
 import { IClient } from "./iclient";
 import { IClientContact } from "./iclientContactForm";
 import { IClientsBankAccount } from "./iclientsBankAccountForm";
@@ -71,7 +71,7 @@ export interface IClientPreview extends IClient {
   extension?: string;
   secondryNo?: string;
   postalCode?: string;
-  documentLists?: IClientDocumentList[];
+  documentLists?: IDocumentList[];
   clientContacts?: IClientContact[];
   clientsBankAccounts?: IClientsBankAccount[];
 }
