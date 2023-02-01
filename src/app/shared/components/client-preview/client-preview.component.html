@@ -2,7 +2,7 @@
 
 <ng-template #details let-modal>
   <div class="modal-header py-3">
-    <h4 class="modal-title">{{ uiState.clientDetails.fullName }} Details</h4>
+    <h4 class="modal-title">Details</h4>
     <button
       type="button"
       class="btn-close"
@@ -409,47 +409,39 @@
                 <ng-container
                   *ngIf="uiState.clientDetails.documentLists?.length !== 0"
                 >
-                  <tr *ngFor="let item of uiState.clientDetails.documentLists">
+                  <tr
+                    *ngFor="
+                      let item of uiState.clientDetails.documentLists;
+                      let index = index
+                    "
+                  >
                     <td>
                       <div class="d-flex align-items-center">
-                        <div class="avatar-sm">
+                        <div class="avatar-sm me-2">
                           <div
-                            *ngIf="item.contentType == 'zip'"
-                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
+                            class="avatar-title bg-soft-primary {{
+                              item.colorName
+                            }} rounded fs-20"
                           >
-                            <i class="ri-file-zip-fill"></i>
-                          </div>
-                          <div
-                            *ngIf="item.contentType == 'pdf'"
-                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
-                          >
-                            <i class="lab la-file-pdf"></i>
-                          </div>
-                          <div
-                            *ngIf="item.contentType == 'csv'"
-                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
-                          >
-                            <i class="ri-file-code-fill"></i>
-                          </div>
-                          <div
-                            *ngIf="item.contentType == 'image'"
-                            class="avatar-title bg-soft-primary text-primary rounded fs-20"
-                          >
-                            <img [src]="item.name" alt="image" />
+                            <i
+                              *ngIf="item.contentType !== 'image'"
+                              class="ri-file-{{ item.className }}"
+                            ></i>
+                            <img
+                              *ngIf="item.contentType == 'image'"
+                              [src]="item.name"
+                              alt=""
+                            />
                           </div>
                         </div>
                         <div>{{ item.fileName }}</div>
                       </div>
                     </td>
-                    <td>{{ item.contentDisposition }}</td>
+                    <td>{{ (item.contentDisposition?.split("/"))![0] }}</td>
                     <td>{{ item.length }}</td>
                     <td>31/1/2023</td>
                     <td>
-                      <div
-                        ngbDropdown
-                        placement="top-right"
-                        class="dropdown d-flex justify-content-center align-items-center"
-                      >
+                      <div ngbDropdown placement="top-right" class="dropdown">
                         <button
                           type="button"
                           class="btn btn-sm btn-soft-info text-center"
@@ -458,8 +450,24 @@
                           <i class="ri-equalizer-fill text-center"></i>
                         </button>
                         <div ngbDropdownMenu>
-                          <button ngbDropdownItem>Download</button>
-                          <button ngbDropdownItem>Delete</button>
+                          <button ngbDropdownItem>
+                            <a
+                              class="text-muted"
+                              [href]="item.name"
+                              [download]="item.contentDisposition"
+                            >
+                              <i class="ri-download-2-fill me-2"></i>
+                              Download</a
+                            >
+                          </button>
+                          <button
+                            ngbDropdownItem
+                            (click)="deleteFile(index)"
+                            class="text-muted"
+                          >
+                            <i class="ri-delete-bin-fill me-2"></i>
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </td>

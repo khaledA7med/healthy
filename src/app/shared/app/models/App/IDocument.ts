@@ -4,4 +4,6 @@ export interface IDocumentList {
   contentType?: string;
   length?: BigInt;
   contentDisposition?: string;
+  className?: string;
+  colorName?: string;
 }

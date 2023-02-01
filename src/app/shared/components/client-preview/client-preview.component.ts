@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import Swal from "sweetalert2";
 
+import Swal from "sweetalert2";
 import AppUtils from "../../app/util";
 import { ClientStatus, ClientType } from "../../app/models/Clients/clientUtil";
 import { IClientPreview } from "../../app/models/Clients/iclient-preview";
@@ -23,6 +23,7 @@ import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
+import { IDocumentList } from "./../../app/models/App/IDocument";
 
 @Component({
   selector: "app-modal-for-details",
@@ -34,7 +35,9 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     sno: 0,
     clientDetails: {} as IClientPreview,
     updatedState: false,
+    documentList: [],
   };
+
   clientStatus: typeof ClientStatus = ClientStatus;
   clientType: typeof ClientType = ClientType;
   subscribes: Subscription[] = [];
@@ -78,16 +81,48 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     let sub = this.clientService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
+        console.log(res.body?.data);
         AppUtils.nullValues(this.uiState.clientDetails);
-        this.uiState.clientDetails.documentLists?.forEach((el) => {
-          el.contentDisposition = el.contentDisposition?.split("/")[0];
-        });
+        this.customizeClientDetails();
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");
       },
     });
     this.subscribes.push(sub);
+  }
+  customizeClientDetails() {
+    this.uiState.clientDetails.documentLists?.forEach((el: IDocumentList) => {
+      switch (el.contentType) {
+        case "zip":
+          (el.className = "zip-fill"), (el.colorName = "text-success");
+          break;
+        case "pdf":
+          (el.className = "pdf-line"), (el.colorName = "text-danger");
+          break;
+        case "csv":
+          (el.className = "code-fill"), (el.colorName = "text-primary");
+          break;
+        case "txt":
+          (el.className = "text-fill"), (el.colorName = "text-dark");
+          break;
+        case "docx":
+        case "doc":
+          (el.className = "word-2-fill"), (el.colorName = "text-primary");
+          break;
+        case "xls":
+        case "xlsx":
+          (el.className = "excel-2-fill"), (el.colorName = "text-success");
+          break;
+        case "image":
+          break;
+        default:
+          (el.className = "warning-fill"), (el.colorName = "text-warning");
+      }
+    });
+  }
+  deleteFile(index: number) {
+    this.uiState.clientDetails.documentLists?.splice(index, 1);
   }
 
   changeStatus(newStatus: string): void {
