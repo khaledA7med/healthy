@@ -3,5 +3,5 @@ export interface IDocumentList {
   fileName?: string;
   contentType?: string;
   length?: BigInt;
-  extension?: string;
+  contentDisposition?: string;
 }

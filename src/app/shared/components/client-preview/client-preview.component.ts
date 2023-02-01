@@ -80,7 +80,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         this.uiState.clientDetails = res.body?.data!;
         AppUtils.nullValues(this.uiState.clientDetails);
         this.uiState.clientDetails.documentLists?.forEach((el) => {
-          console.log(el);
+          el.contentDisposition = el.contentDisposition?.split("/")[0];
         });
       },
       error: (error: HttpErrorResponse) => {
