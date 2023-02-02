@@ -38,10 +38,14 @@ export class ClientListControlsComponent {
 
   agInit(params: ICellRendererParams) {
     this.params = params;
+    console.log(this.params.data);
   }
 
   Edit() {
-    this._Router.navigate([AppRoutes.Client.clientEdit, this.params.data.sNo]);
+    this._Router.navigate([
+      AppRoutes.Client.clientEdit,
+      this.params.data.identity,
+    ]);
   }
 
   view() {
