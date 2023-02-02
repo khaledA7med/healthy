@@ -78,10 +78,11 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.groupService.getAllClientsGroups().subscribe(
+			let sub = this.groupService.getAllGroups().subscribe(
 				(res: HttpResponse<IBaseResponse<IClientGroups[]>>) => {
 					this.uiState.group.list = res.body?.data!;
 					params.successCallback(this.uiState.group.list, this.uiState.group.list.length);
+					this.selectedGroup = this.uiState.group.list[0];
 					this.uiState.gridReady = true;
 					this.gridApi.hideOverlay();
 				},
@@ -145,7 +146,7 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 			return;
 		} else {
 			let gName = this.addGroupForm.value["groupName"];
-			this.groupService.createClientGroup(gName).subscribe((res) => {
+			this.groupService.createGroup(gName).subscribe((res) => {
 				if (res.body?.status) {
 					this.message.toast(res.body?.message!, "success");
 				} else {

@@ -44,10 +44,17 @@ export class ClientsService {
     id: string
   ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
     return this.http.get<IBaseResponse<IClientPreview>>(
-      this.env + ApiRoutes.Clients.editClient,
-      { params: { sno: +id }, observe: "response" }
+      this.env + ApiRoutes.Clients.edit,
+      { params: { id }, observe: "response" }
     );
   }
+
+  saveClient(body: FormData): Observable<any> {
+    return this.http.post(this.env + ApiRoutes.Clients.save, body, {
+      observe: "response",
+    });
+  }
+
   changeStatus(
     data: IChangeStatusRequest
   ): Observable<HttpResponse<IBaseResponse<null>>> {

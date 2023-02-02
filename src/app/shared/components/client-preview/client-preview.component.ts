@@ -6,8 +6,10 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 
@@ -81,7 +83,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     let sub = this.clientService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
-        console.log(res.body?.data);
         AppUtils.nullValues(this.uiState.clientDetails);
         this.customizeClientDetails();
       },
@@ -231,7 +232,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   }
   addClientToGroupReq(): void {
     let sub = this.clientsGroupService
-      .addGroupClient(this.form["clientId"].value, this.form["groupName"].value)
+      .addClient(this.form["clientId"].value, this.form["groupName"].value)
       .subscribe({
         // no data here
         next: (res: HttpResponse<IBaseResponse<null>>) => {

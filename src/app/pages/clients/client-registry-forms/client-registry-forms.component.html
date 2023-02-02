@@ -319,26 +319,11 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label class="asterisk-input">Expiry Date</label>
-                      <input
-                        id="expiryDate"
-                        type="text"
-                        formControlName="expiryDate"
-                        [ngClass]="{
-                          'is-invalid':
-                            (f.expiryDate?.touched || submitted) &&
-                            f.expiryDate?.invalid
-                        }"
-                        class="form-control form-control-sm birthDate"
-                      />
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
-                          (f.expiryDate?.touched || submitted) &&
-                          f.expiryDate?.invalid
-                        "
-                      >
-                        Required
-                      </div>
+                      <app-gregorian-picker
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="retailExpiryDate($event)"
+                      ></app-gregorian-picker>
                     </div>
                     <!--./col-->
 
@@ -353,12 +338,12 @@
                           'is-submitted': submitted && f.nationality?.invalid
                         }"
                         [items]="(formData | async)?.Nationalities?.content!"
-                        bindLabel="nationalityEn"
-                        bindValue="nationalityEn"
+                        bindLabel="name"
+                        bindValue="name"
                         [loading]="formData ? false : true"
                       >
                         <ng-template ng-option-tmp let-item="item">
-                          <div>{{ item.nationalityEn }}</div>
+                          <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
                       <div
@@ -467,12 +452,12 @@
                         [items]="
                           (formData | async)?.BusinessActivities?.content!
                         "
-                        bindLabel="businessActivity"
-                        bindValue="businessActivity"
+                        bindLabel="name"
+                        bindValue="name"
                         [loading]="formData ? false : true"
                       >
                         <ng-template ng-option-tmp let-item="item">
-                          <div>{{ item.businessActivity }}</div>
+                          <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
                       <div
@@ -549,17 +534,12 @@
                       <label for="dateOfIncorporation" class="asterisk-input">
                         Date of Incorporation
                       </label>
-                      <input
-                        id="dateOfIncorporation"
-                        type="text"
-                        formControlName="dateOfIncorporation"
-                        [ngClass]="{
-                          'is-invalid':
-                            (f.dateOfIncorporation?.touched || submitted) &&
-                            f.dateOfIncorporation?.invalid
-                        }"
-                        class="form-control form-control-sm"
-                      />
+                      <app-gregorian-picker
+                        [model]="f.dateOfIncorporation?.value"
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="coIncorporationDates($event)"
+                      ></app-gregorian-picker>
                       <div
                         class="invalid-feedback fw-bold"
                         *ngIf="
@@ -576,11 +556,12 @@
                       <label for="dateOfIncorporationHijri">
                         Date of Incorporation (Hijri)
                       </label>
-                      <app-hijri-picker></app-hijri-picker>
-
-                      <!-- <input id="dateOfIncorporationHijri" type="text"
-                                                formControlName="dateOfIncorporationHijri"
-                                                class="form-control form-control-sm "> -->
+                      <app-hijri-picker
+                        [model]="f.dateOfIncorporationHijri?.value"
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="coIncorporationDates($event)"
+                      ></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -588,17 +569,13 @@
                       <label for="crExpiryDate" class="asterisk-input">
                         CR Expiry Date
                       </label>
-                      <input
-                        id="idExpiryDate"
-                        type="text"
-                        formControlName="idExpiryDate"
-                        [ngClass]="{
-                          'is-invalid':
-                            (f.idExpiryDate?.touched || submitted) &&
-                            f.idExpiryDate?.invalid
-                        }"
-                        class="form-control form-control-sm"
-                      />
+                      <!-- [model]="CRExpiryGregorianDate" -->
+                      <app-gregorian-picker
+                        [model]="f.idExpiryDate?.value"
+                        (dateChange)="coExpiryDates($event)"
+                        [required]="true"
+                        [submitted]="submitted"
+                      ></app-gregorian-picker>
                       <div
                         class="invalid-feedback fw-bold"
                         *ngIf="
@@ -615,12 +592,13 @@
                       <label for="CRExpiryDateHijri">
                         CR Expiry Date (Hijri)
                       </label>
-                      <input
-                        id="CRExpiryDateHijri"
-                        type="text"
-                        formControlName="expiryDateHijri"
-                        class="form-control form-control-sm crExpiry-date"
-                      />
+                      <!-- [model]="CRExpiryHijriDate"  -->
+                      <app-hijri-picker
+                        [model]="f.expiryDateHijri?.value"
+                        (dateChange)="coExpiryDates($event)"
+                        [required]="true"
+                        [submitted]="submitted"
+                      ></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -628,21 +606,14 @@
                       <label for="sponsorID">Sponsor ID</label>
                       <input
                         type="number"
-                        maxlength="20"
-                        minlength="20"
                         id="sponsorID"
-                        class="form-control form-control-sm"
+                        class="form-control form-control-sm is-invalid"
                         formControlName="sponsorID"
                         [ngClass]="{
                           'is-invalid': submitted && f.sponsorID?.invalid
                         }"
                       />
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="submitted && f.sponsorID?.invalid"
-                      >
-                        Required
-                      </div>
+                      <div class="invalid-feedback fw-bold">Invalid ID</div>
                     </div>
                     <!--./col-->
 
@@ -850,7 +821,7 @@
                   </div>
                   <div
                     class="invalid-feedback fw-bold"
-                    *ngIf="submitted && (this.f.tele?.errors)!['required']"
+                    *ngIf="submitted && this.f.tele?.hasError('required')"
                   >
                     Required
                   </div>
@@ -999,12 +970,12 @@
                           placeholder="Contact Position"
                           appendTo="body"
                           [items]="(formData | async)?.Positions?.content!"
-                          bindLabel="position"
-                          bindValue="position"
+                          bindLabel="name"
+                          bindValue="name"
                           [loading]="formData ? false : true"
                         >
                           <ng-template ng-option-tmp let-item="item">
-                            <div>{{ item.position }}</div>
+                            <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                       </td>
@@ -1139,7 +1110,7 @@
                       <td>
                         <button
                           *ngIf="
-                            uiState.formMode &&
+                            uiState.editMode &&
                             contactControlArray.controls[i].disabled
                           "
                           type="button"
@@ -1218,12 +1189,12 @@
                               submitted && bankControls(i, 'bankName').invalid
                           }"
                           [items]="(formData | async)?.Banks?.content!"
-                          bindLabel="bankName"
-                          bindValue="bankName"
+                          bindLabel="name"
+                          bindValue="name"
                           [loading]="formData ? false : true"
                         >
                           <ng-template ng-option-tmp let-item="item">
-                            <div>{{ item.bankName }}</div>
+                            <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                         <div
@@ -1298,7 +1269,7 @@
                       <td scope="col">
                         <button
                           *ngIf="
-                            uiState.formMode &&
+                            uiState.editMode &&
                             bankControlArray.controls[i].disabled
                           "
                           type="button"
@@ -1335,7 +1306,11 @@
     <!-- Documents -->
     <ngb-panel id="6" title="Documents" cardClass="open my-4">
       <ng-template ngbPanelContent="6">
-        <app-dropzone (files)="documentsList($event)" #dropzone></app-dropzone>
+        <app-dropzone
+          (files)="documentsList($event)"
+          [UploadedFiles]="docs"
+          #dropzone
+        ></app-dropzone>
       </ng-template>
     </ngb-panel>
   </ngb-accordion>

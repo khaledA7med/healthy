@@ -106,6 +106,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
   }
 
   // Table Section
+  // Table Section
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
@@ -215,7 +216,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       ...this.filterForm.value,
     };
   }
-
   onClientFilters(): void {
     this.modifyFilterReq();
     this.gridApi.setDatasource(this.dataSource);
