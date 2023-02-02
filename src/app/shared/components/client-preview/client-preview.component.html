@@ -450,14 +450,13 @@
                           <i class="ri-equalizer-fill text-center"></i>
                         </button>
                         <div ngbDropdownMenu>
-                          <button ngbDropdownItem>
-                            <a
-                              class="text-muted"
-                              (click)="downloadFile(item?.data!)"
-                            >
-                              <i class="ri-download-2-fill me-2"></i>
-                              Download</a
-                            >
+                          <button
+                            ngbDropdownItem
+                            class="text-muted"
+                            (click)="downloadFile(item?.data!)"
+                          >
+                            <i class="ri-download-2-fill me-2"></i>
+                            Download
                           </button>
 
                           <button
