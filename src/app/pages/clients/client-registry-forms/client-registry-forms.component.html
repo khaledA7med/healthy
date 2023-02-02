@@ -201,10 +201,10 @@
                       <label for="nationality" class="asterisk-input">Nationality</label>
                       <ng-select formControlName="nationality" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && f.nationality?.invalid
-                        }" [items]="(formData | async)?.Nationalities?.content!" bindLabel="nationalityEn"
-                        bindValue="nationalityEn" [loading]="formData ? false : true">
+                        }" [items]="(formData | async)?.Nationalities?.content!" bindLabel="name" bindValue="name"
+                        [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
-                          <div>{{ item.nationalityEn }}</div>
+                          <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
                       <div class="invalid-feedback fw-bold" *ngIf="
@@ -382,12 +382,12 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="sponsorID">Sponsor ID</label>
-                      <input type="number" maxlength="20" minlength="20" id="sponsorID"
-                        class="form-control form-control-sm" formControlName="sponsorID" [ngClass]="{
+                      <input type="number" id="sponsorID" class="form-control form-control-sm is-invalid"
+                        formControlName="sponsorID" [ngClass]="{
                           'is-invalid': submitted && f.sponsorID?.invalid
                         }" />
-                      <div class="invalid-feedback fw-bold" *ngIf="submitted && f.sponsorID?.invalid">
-                        Required
+                      <div class="invalid-feedback fw-bold">
+                        Invalid ID
                       </div>
                     </div>
                     <!--./col-->
@@ -708,7 +708,7 @@
                       </td>
                       <td>
                         <button *ngIf="
-                            uiState.formMode &&
+                            uiState.editMode &&
                             contactControlArray.controls[i].disabled
                           " type="button" class="btn btn-sm btn-soft-info me-2"
                           (click)="enableEditingRow(i, 'contact')">
@@ -815,7 +815,7 @@
                       </td>
                       <td scope="col">
                         <button *ngIf="
-                            uiState.formMode &&
+                            uiState.editMode &&
                             bankControlArray.controls[i].disabled
                           " type="button" class="btn btn-sm btn-soft-info me-2" (click)="enableEditingRow(i, 'bank')">
                           <i class="ri-edit-2-line"></i>
@@ -842,7 +842,7 @@
     <!-- Documents -->
     <ngb-panel id="6" title="Documents" cardClass="open my-4">
       <ng-template ngbPanelContent="6">
-        <app-dropzone (files)="documentsList($event)" #dropzone></app-dropzone>
+        <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs" #dropzone></app-dropzone>
       </ng-template>
     </ngb-panel>
   </ngb-accordion>

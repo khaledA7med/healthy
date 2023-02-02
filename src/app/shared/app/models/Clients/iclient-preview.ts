@@ -74,4 +74,6 @@ export interface IClientPreview extends IClient {
   documentLists?: IClientDocumentList[];
   clientContacts?: IClientContact[];
   clientsBankAccounts?: IClientsBankAccount[];
+
+  documents2: any[];
 }

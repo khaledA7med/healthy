@@ -42,7 +42,7 @@ export class ClientsService {
   ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.edit,
-      { params: { sno: +id }, observe: "response" }
+      { params: { id }, observe: "response" }
     );
   }
 

@@ -1,4 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import {
+  AfterContentInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
 import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
@@ -6,15 +15,18 @@ import { MessagesService } from "src/app/shared/services/messages.service";
   templateUrl: "./dropzone.component.html",
   styleUrls: ["./dropzone.component.scss"],
 })
-export class DropzoneComponent implements OnInit {
+export class DropzoneComponent implements OnChanges {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
+
+  @Input() UploadedFiles: any;
 
   @Output() files: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private message: MessagesService) {}
-
-  ngOnInit(): void {}
+  ngOnChanges(): void {
+    if (this.UploadedFiles) this.documentsToDisplay = this.UploadedFiles;
+  }
 
   onSelectFiles(e: Event) {
     const elem = e.target as HTMLInputElement;
@@ -98,12 +110,10 @@ export class DropzoneComponent implements OnInit {
   }
 
   emitingFiles() {
-    this.files.emit({
+    console.log({
       display: this.documentsToDisplay,
       upload: this.documentsToUpload,
     });
-  }
-  clearImages() {
-    console.log("first");
+    this.files.emit(this.documentsToUpload);
   }
 }
