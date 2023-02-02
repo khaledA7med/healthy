@@ -116,6 +116,10 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         case "xlsx":
           (el.className = "excel-2-fill"), (el.colorName = "text-success");
           break;
+        case "ppt":
+        case "pptx":
+          (el.className = "ppt-2-fill"), (el.colorName = "text-danger");
+          break;
         case "image":
           break;
         default:
@@ -162,6 +166,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         this.message.popup("Oops!", error.message, "error");
       },
     });
+    this.subscribes.push(sub);
   }
 
   changeStatus(newStatus: string): void {
