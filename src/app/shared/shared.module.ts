@@ -14,14 +14,9 @@ import { FlatpickrModule } from "angularx-flatpickr";
 import { SimplebarAngularModule } from "simplebar-angular";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { ClientPreviewComponent } from "./components/client-preview/client-preview.component";
 
 @NgModule({
-  declarations: [
-    ScrollspyDirective,
-    TableViewDirective,
-    ClientPreviewComponent,
-  ],
+  declarations: [ScrollspyDirective, TableViewDirective],
   imports: [
     CommonModule,
     NgbNavModule,
@@ -41,7 +36,6 @@ import { ClientPreviewComponent } from "./components/client-preview/client-previ
     NgSelectModule,
     ReactiveFormsModule,
     FormsModule,
-    ClientPreviewComponent,
   ],
 })
 export class SharedModule {}

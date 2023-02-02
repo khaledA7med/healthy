@@ -17,7 +17,10 @@ const routes: Routes = [
   {
     path: AppRoutes.Client.clientRegistry + "/:id",
     outlet: "details",
-    component: ClientPreviewComponent,
+    loadChildren: () =>
+      import(
+        "./../../shared/components/client-preview/client-preview.module"
+      ).then((m) => m.ClientPreviewModule),
   },
   {
     path: AppRoutes.Client.clientForms,
