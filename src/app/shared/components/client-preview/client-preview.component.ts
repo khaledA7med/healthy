@@ -83,8 +83,9 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     let sub = this.clientService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
+        console.log(res.body?.data!);
         AppUtils.nullValues(this.uiState.clientDetails);
-        this.customizeClientDetails();
+        this.customizeClientDocuments();
       },
       error: (error: HttpErrorResponse) => {
         this.message.popup("Oops!", error.message, "error");
@@ -92,9 +93,9 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     });
     this.subscribes.push(sub);
   }
-  customizeClientDetails() {
+  customizeClientDocuments() {
     this.uiState.clientDetails.documentLists?.forEach((el: IDocumentList) => {
-      switch (el.contentType) {
+      switch (el.type) {
         case "zip":
           (el.className = "zip-fill"), (el.colorName = "text-success");
           break;
@@ -122,8 +123,45 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       }
     });
   }
-  deleteFile(index: number) {
-    this.uiState.clientDetails.documentLists?.splice(index, 1);
+  deleteFile(index: number, path: string) {
+    this.message
+      .confirm(` Delete it !`, ` Delete it !`, "danger", "warning")
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          let sub = this.clientService.deleteDocument(path).subscribe({
+            next: (res) => {
+              if (res.body?.status === true) {
+                this.message.toast(res.body?.message!, "success");
+                this.uiState.clientDetails.documentLists?.splice(index, 1);
+              } else this.message.popup("Sorry", res.body?.message!, "warning");
+            },
+            error: (error) => {
+              this.message.popup("Oops!", error.message, "error");
+            },
+          });
+          this.subscribes.push(sub);
+        }
+      });
+  }
+  downloadFile(path: string) {
+    let sub = this.clientService.downloadDocument(path).subscribe({
+      next: (res) => {
+        const downloadedFile = new Blob([res.body as BlobPart], {
+          type: res.body,
+        });
+        const a = document.createElement("a");
+        a.setAttribute("style", "display:none;");
+        document.body.appendChild(a);
+        a.download = path;
+        a.href = URL.createObjectURL(downloadedFile);
+        a.target = "_blank";
+        a.click();
+        document.body.removeChild(a);
+      },
+      error: (error) => {
+        this.message.popup("Oops!", error.message, "error");
+      },
+    });
   }
 
   changeStatus(newStatus: string): void {

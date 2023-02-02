@@ -66,4 +66,19 @@ export class ClientsService {
       }
     );
   }
+
+  deleteDocument(data: string): Observable<HttpResponse<IBaseResponse<null>>> {
+    return this.http.post<IBaseResponse<null>>(
+      this.env + ApiRoutes.Clients.deleteDocument,
+      { path: data },
+      { observe: "response" }
+    );
+  }
+  downloadDocument(data: string): Observable<HttpResponse<any>> {
+    return this.http.post(
+      this.env + ApiRoutes.Clients.downloadDocument,
+      { path: data },
+      { observe: "response", responseType: "blob" }
+    );
+  }
 }

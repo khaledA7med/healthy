@@ -1,9 +1,9 @@
 export interface IDocumentList {
+  data?: string;
   name?: string;
-  fileName?: string;
-  contentType?: string;
-  length?: BigInt;
-  contentDisposition?: string;
+  type?: string;
+  size?: BigInt;
+  contentDescription?: string;
   className?: string;
   colorName?: string;
 }

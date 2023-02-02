@@ -38,6 +38,8 @@ export const ApiRoutes = {
     save: "/ClientRegistry/Clients/Save",
     edit: "/ClientRegistry/Clients/Edit",
     changeStatus: "/ClientRegistry/Clients/ChangeStatus",
+    deleteDocument: "/ClientRegistry/Clients/DeleteFile",
+    downloadDocument: "/ClientRegistry/Clients/DownloadFile",
   },
   ClientsGroups: {
     list: "/ClientRegistry/Groups/Search",

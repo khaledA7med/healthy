@@ -424,21 +424,21 @@
                             }} rounded fs-20"
                           >
                             <i
-                              *ngIf="item.contentType !== 'image'"
+                              *ngIf="item.type !== 'image'"
                               class="ri-file-{{ item.className }}"
                             ></i>
                             <img
-                              *ngIf="item.contentType == 'image'"
-                              [src]="item.name"
+                              *ngIf="item.type == 'image'"
+                              [src]="item.data"
                               alt=""
                             />
                           </div>
                         </div>
-                        <div>{{ item.fileName }}</div>
+                        <div>{{ item.name }}</div>
                       </div>
                     </td>
-                    <td>{{ (item.contentDisposition?.split("/"))![0] }}</td>
-                    <td>{{ item.length }}</td>
+                    <td>{{ (item.contentDescription?.split("/"))![0] }}</td>
+                    <td>{{ item.size }}</td>
                     <td>31/1/2023</td>
                     <td>
                       <div ngbDropdown placement="top-right" class="dropdown">
@@ -453,16 +453,16 @@
                           <button ngbDropdownItem>
                             <a
                               class="text-muted"
-                              [href]="item.name"
-                              [download]="item.contentDisposition"
+                              (click)="downloadFile(item?.data!)"
                             >
                               <i class="ri-download-2-fill me-2"></i>
                               Download</a
                             >
                           </button>
+
                           <button
                             ngbDropdownItem
-                            (click)="deleteFile(index)"
+                            (click)="deleteFile(index, item?.data!)"
                             class="text-muted"
                           >
                             <i class="ri-delete-bin-fill me-2"></i>
