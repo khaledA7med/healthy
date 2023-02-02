@@ -193,6 +193,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label class="asterisk-input">Expiry Date</label>
                       <app-gregorian-picker [required]="true" [submitted]="submitted"
+                        [currentDate]="f.idExpiryDate?.value"
                         (dateChange)="retailExpiryDate($event)"></app-gregorian-picker>
                     </div>
                     <!--./col-->
@@ -337,7 +338,8 @@
                         Date of Incorporation
                       </label>
                       <app-gregorian-picker [model]="f.dateOfIncorporation?.value" [required]="true"
-                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"></app-gregorian-picker>
+                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"
+                        [currentDate]="f.dateOfIncorporation?.value"></app-gregorian-picker>
                       <div class="invalid-feedback fw-bold" *ngIf="
                           (f.dateOfIncorporation?.touched || submitted) &&
                           f.dateOfIncorporation?.invalid
@@ -351,8 +353,9 @@
                       <label for="dateOfIncorporationHijri">
                         Date of Incorporation (Hijri)
                       </label>
-                      <app-hijri-picker [model]="f.dateOfIncorporationHijri?.value" [required]="true"
-                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"></app-hijri-picker>
+                      <app-hijri-picker [model]="f.dateOfIncorporationHijri?.value"
+                        [currentDate]="f.dateOfIncorporationHijri?.value" [required]="true" [submitted]="submitted"
+                        (dateChange)="coIncorporationDates($event)"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -361,11 +364,12 @@
                         CR Expiry Date
                       </label>
                       <!-- [model]="CRExpiryGregorianDate" -->
-                      <app-gregorian-picker [model]="f.idExpiryDate?.value" (dateChange)="coExpiryDates($event)"
-                        [required]="true" [submitted]="submitted"></app-gregorian-picker>
+                      <app-gregorian-picker [model]="f.expiryDate?.value" [currentDate]="f.expiryDate?.value"
+                        (dateChange)="coExpiryDates($event)" [required]="true"
+                        [submitted]="submitted"></app-gregorian-picker>
                       <div class="invalid-feedback fw-bold" *ngIf="
-                          (f.idExpiryDate?.touched || submitted) &&
-                          f.idExpiryDate?.invalid
+                          (f.expiryDate?.touched || submitted) &&
+                          f.expiryDate?.invalid
                         ">
                         Required
                       </div>
@@ -377,8 +381,9 @@
                         CR Expiry Date (Hijri)
                       </label>
                       <!-- [model]="CRExpiryHijriDate"  -->
-                      <app-hijri-picker [model]="f.expiryDateHijri?.value" (dateChange)="coExpiryDates($event)"
-                        [required]="true" [submitted]="submitted"></app-hijri-picker>
+                      <app-hijri-picker [model]="f.expiryDateHijri?.value" [currentDate]="f.expiryDateHijri?.value"
+                        (dateChange)="coExpiryDates($event)" [required]="true"
+                        [submitted]="submitted"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -710,8 +715,7 @@
                         <button *ngIf="
                             uiState.editMode &&
                             contactControlArray.controls[i].disabled
-                          " type="button" class="btn btn-sm btn-soft-info me-2"
-                          (click)="enableEditingRow(i, 'contact')">
+                          " type="button" class="btn btn-sm btn-soft-info me-2">
                           <i class="ri-edit-2-line"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'contact')">
@@ -817,7 +821,7 @@
                         <button *ngIf="
                             uiState.editMode &&
                             bankControlArray.controls[i].disabled
-                          " type="button" class="btn btn-sm btn-soft-info me-2" (click)="enableEditingRow(i, 'bank')">
+                          " type="button" class="btn btn-sm btn-soft-info me-2">
                           <i class="ri-edit-2-line"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'bank')">

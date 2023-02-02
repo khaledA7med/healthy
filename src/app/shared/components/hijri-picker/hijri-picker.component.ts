@@ -69,17 +69,14 @@ export class HijriPickerComponent implements OnChanges {
   @Input() required: boolean = false;
   @Input() submitted: boolean = false;
 
-  @Input("currentDate") currentDate!: [
-    year: number,
-    month: number,
-    day: number
-  ];
+  @Input("currentDate") currentDate!: any;
 
   @Output() dateChange: EventEmitter<any> = new EventEmitter();
 
   constructor(
     config: NgbInputDatepickerConfig,
-    public changeDate: NgbCalendarIslamicUmalqura
+    public changeDate: NgbCalendarIslamicUmalqura,
+    private calendar: NgbCalendar
   ) {
     config.minDate = { year: 1100, month: 1, day: 1 };
     config.maxDate = { year: 1500, month: 12, day: 31 };
@@ -91,6 +88,23 @@ export class HijriPickerComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.model) this.date = this.model;
+  }
+
+  editMode(date: any) {
+    if (date) {
+      let crr = new Date(date);
+      this.date = {
+        day: +crr.getDate(),
+        month: +crr.getMonth() + 1,
+        year: +crr.getFullYear(),
+      };
+      this.onDateSelect(this.date);
+    }
+  }
+
+  get today() {
+    this.onDateSelect(this.calendar.getToday());
+    return this.calendar.getToday();
   }
 
   onDateSelect(e: any) {

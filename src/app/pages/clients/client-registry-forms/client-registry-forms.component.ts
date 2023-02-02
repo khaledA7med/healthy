@@ -20,6 +20,7 @@ import { ClientsService } from "src/app/shared/services/clients/clients.service"
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
 import { HttpResponse } from "@angular/common/http";
+import { HijriPickerComponent } from "src/app/shared/components/hijri-picker/hijri-picker.component";
 
 @Component({
   selector: "app-client-registry-forms",
@@ -46,7 +47,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   docs: any[] = [];
 
   @ViewChild("dropzone") dropzone!: any;
-
+  @ViewChild(HijriPickerComponent) hijri!: HijriPickerComponent;
   subscribes: Subscription[] = [];
   constructor(
     private route: ActivatedRoute,
@@ -228,7 +229,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     });
 
     if (!data) bank.reset();
-    else bank.disable();
 
     this.f.clientsBankAccounts?.push(bank);
     this.bankControlArray.updateValueAndValidity();
@@ -262,7 +262,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     });
 
     if (!data) contact.reset();
-    else contact.disable();
 
     this.f.clientContacts?.push(contact);
     this.contactControlArray.updateValueAndValidity();
@@ -273,13 +272,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     else if (type === "contact") this.contactControlArray.removeAt(i);
     else return;
   }
-
-  enableEditingRow(i: number, type: string) {
-    if (type === "bank") this.bankControlArray.at(i).enable();
-    else if (type === "contact") this.contactControlArray.at(i).enable();
-    else return;
-  }
-
   //#endregion
 
   documentsList(evt: File[]) {
@@ -301,7 +293,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   patchEditingClient(client: IClientPreview): void {
     this.clientTypeToggler(client.type!);
+    this.editId = client.sNo?.toString()!;
     this.formGroup.patchValue({
+      sNo: client.sNo,
       type: client.type,
       fullName: client.fullName,
       fullNameAr: client.fullNameAr,
@@ -349,8 +343,14 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   onSubmit(clientForm: FormGroup<IClientForms>) {
     this.submitted = true;
     const formData = new FormData();
-
+    if (this.editId) {
+      formData.append("sNo", this.editId);
+    }
     // SNo;
+    console.log(this.dateFormater(clientForm.value.expiryDate!));
+    console.log(this.dateFormater(clientForm.value.expiryDateHijri!));
+    console.log(this.dateFormater(clientForm.value.dateOfIncorporation!));
+    console.log(this.dateFormater(clientForm.value.dateOfIncorporationHijri!));
 
     formData.append("FullName", clientForm.value.fullName!);
     formData.append("FullNameAr", clientForm.value.fullNameAr!);
