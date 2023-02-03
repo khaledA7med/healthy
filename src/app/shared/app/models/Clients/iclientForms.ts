@@ -3,6 +3,7 @@ import { IClientContact } from "./iclientContactForm";
 import { IClientsBankAccount } from "./iclientsBankAccountForm";
 
 export interface IClientForms {
+  sNo?: FormControl<number | null>;
   status?: FormControl<string | null>;
   policyType?: FormControl<string | null>;
   fullName?: FormControl<string | null>;

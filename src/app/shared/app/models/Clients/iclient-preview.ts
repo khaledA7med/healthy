@@ -4,6 +4,7 @@ import { IClientContact } from "./iclientContactForm";
 import { IClientsBankAccount } from "./iclientsBankAccountForm";
 
 export interface IClientPreview extends IClient {
+  sNo?: number;
   policyType?: string;
   officalName?: string;
   relationshipStatus?: string;

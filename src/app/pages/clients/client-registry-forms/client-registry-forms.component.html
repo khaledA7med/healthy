@@ -1,66 +1,35 @@
-<form
-  class="mb-4"
-  [formGroup]="formGroup"
-  (ngSubmit)="onSubmit(formGroup)"
-  id="ClientForm"
-  autocomplete="off"
->
+<form class="mb-4" [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)" id="ClientForm" autocomplete="off">
   <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5,6">
     <!-- Client Details -->
     <ngb-panel id="1" title="Client Details" cardClass="open my-4">
       <ng-template ngbPanelContent="1">
-        <div
-          id="collapseOne"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingOne"
-        >
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
           <div class="container-fluid mb-3">
             <div class="row mb-2">
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="clientType" class="asterisk-input"
-                  >Client Type</label
-                >
-                <ng-select
-                  id="clientType"
-                  class="is-invalid"
-                  [searchable]="false"
-                  formControlName="type"
-                  (change)="clientTypeToggler($event.name)"
-                  [ngClass]="{ 'is-submitted': submitted && f.type?.invalid }"
-                  [items]="(formData | async)?.ClientTypes?.content!"
-                  [loading]="formData ? false : true"
-                  bindLabel="name"
-                  bindValue="name"
-                >
+                <label for="clientType" class="asterisk-input">Client Type</label>
+                <ng-select id="clientType" class="is-invalid" [searchable]="false" formControlName="type"
+                  (change)="clientTypeToggler($event.name)" [ngClass]="{ 'is-submitted': submitted && f.type?.invalid }"
+                  [items]="(formData | async)?.ClientTypes?.content!" [loading]="formData ? false : true"
+                  bindLabel="name" bindValue="name">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="(f.type?.touched || submitted) && f.type?.invalid"
-                >
+                <div class="invalid-feedback fw-bold" *ngIf="(f.type?.touched || submitted) && f.type?.invalid">
                   Required
                 </div>
               </div>
               <!--./col-->
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="fullName" class="asterisk-input">Client Name</label>
-                <input
-                  formControlName="fullName"
-                  id="fullName"
-                  class="form-control form-control-sm"
-                  [ngClass]="{
+                <input formControlName="fullName" id="fullName" class="form-control form-control-sm" [ngClass]="{
                     'is-invalid':
                       (f.fullName?.touched || submitted) && f.fullName?.invalid
-                  }"
-                />
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                  }" />
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.fullName?.touched || submitted) && f.fullName?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -68,70 +37,42 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="fullNameAr">Client Name (Ar)</label>
-                <input
-                  formControlName="fullNameAr"
-                  id="fullNameAr"
-                  class="form-control form-control-sm"
-                />
+                <input formControlName="fullNameAr" id="fullNameAr" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="Producer" class="asterisk-input"
-                  >Producer (Salesman)</label
-                >
-                <ng-select
-                  formControlName="producer"
-                  class="is-invalid"
-                  [ngClass]="{
+                <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
+                <ng-select formControlName="producer" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.producer?.invalid
-                  }"
-                  [items]="(formData | async)?.Producers?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.producer?.touched || submitted) && f.producer?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="relationshipStatus" class="asterisk-input"
-                  >Relationship Status</label
-                >
-                <ng-select
-                  formControlName="relationshipStatus"
-                  class="is-invalid"
-                  [ngClass]="{
+                <label for="relationshipStatus" class="asterisk-input">Relationship Status</label>
+                <ng-select formControlName="relationshipStatus" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.relationshipStatus?.invalid
-                  }"
-                  [items]="(formData | async)?.RelationshipStatus?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.RelationshipStatus?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.relationshipStatus?.touched || submitted) &&
                     f.relationshipStatus?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -139,28 +80,18 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label class="asterisk-input">Business Type</label>
-                <ng-select
-                  formControlName="businessType"
-                  class="is-invalid"
-                  [ngClass]="{
+                <ng-select formControlName="businessType" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.businessType?.invalid
-                  }"
-                  [items]="(formData | async)?.BusinessType?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.BusinessType?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.businessType?.touched || submitted) &&
                     f.businessType?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -168,27 +99,17 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Channel" class="asterisk-input">Channel</label>
-                <ng-select
-                  formControlName="channel"
-                  class="is-invalid"
-                  [ngClass]="{
+                <ng-select formControlName="channel" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.channel?.invalid
-                  }"
-                  [items]="(formData | async)?.Channels?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.Channels?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.channel?.touched || submitted) && f.channel?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -196,84 +117,52 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Interface" class="asterisk-input">Interface</label>
-                <ng-select
-                  formControlName="interface"
-                  class="is-invalid"
-                  [ngClass]="{
+                <ng-select formControlName="interface" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.interface?.invalid
-                  }"
-                  [items]="(formData | async)?.Interface?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.Interface?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.interface?.touched || submitted) && f.interface?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="Result" class="asterisk-input"
-                  >Screening Result</label
-                >
-                <ng-select
-                  formControlName="screeningResult"
-                  class="is-invalid"
-                  [ngClass]="{
+                <label for="Result" class="asterisk-input">Screening Result</label>
+                <ng-select formControlName="screeningResult" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.screeningResult?.invalid
-                  }"
-                  [items]="(formData | async)?.ScreeningResult?.content!"
-                  bindLabel="name"
-                  bindValue="name"
-                  [loading]="formData ? false : true"
-                >
+                  }" [items]="(formData | async)?.ScreeningResult?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.screeningResult?.touched || submitted) &&
                     f.screeningResult?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
 
               <!--./col-->
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="OfficialName" class="asterisk-input"
-                  >Official Name</label
-                >
-                <input
-                  formControlName="officalName"
-                  id="OfficialName"
-                  class="form-control form-control-sm"
-                  [ngClass]="{
+                <label for="OfficialName" class="asterisk-input">Official Name</label>
+                <input formControlName="officalName" id="OfficialName" class="form-control form-control-sm" [ngClass]="{
                     'is-invalid':
                       (f.officalName?.touched || submitted) &&
                       f.officalName?.invalid
-                  }"
-                />
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                  }" />
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.officalName?.touched || submitted) &&
                     f.officalName?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -281,37 +170,21 @@
             </div>
 
             <!--./row-->
-            <div
-              #collapse="ngbCollapse"
-              [(ngbCollapse)]="uiState.clientDetails.retail"
-            >
-              <div
-                id="retOptions"
-                class="card ribbon-box border shadow-none mb-lg-0"
-              >
+            <div #collapse="ngbCollapse" [(ngbCollapse)]="uiState.clientDetails.retail">
+              <div id="retOptions" class="card ribbon-box border shadow-none mb-lg-0">
                 <div class="card-body">
-                  <span class="ribbon ribbon-info round-shape"
-                    ><span>Retail</span></span
-                  >
+                  <span class="ribbon ribbon-info round-shape"><span>Retail</span></span>
                   <div class="row mt-4">
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="IDNo" class="asterisk-input">ID No</label>
-                      <input
-                        type="text"
-                        id="IDNo"
-                        formControlName="idNo"
-                        class="form-control form-control-sm"
+                      <input type="text" id="IDNo" formControlName="idNo" class="form-control form-control-sm"
                         [ngClass]="{
                           'is-invalid':
                             (f.idNo?.touched || submitted) && f.idNo?.invalid
-                        }"
-                      />
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                        }" />
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.idNo?.touched || submitted) && f.idNo?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -319,71 +192,45 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label class="asterisk-input">Expiry Date</label>
-                      <app-gregorian-picker
-                        [required]="true"
-                        [submitted]="submitted"
-                        (dateChange)="retailExpiryDate($event)"
-                      ></app-gregorian-picker>
+                      <app-gregorian-picker [required]="true" [submitted]="submitted"
+                        [currentDate]="f.idExpiryDate?.value"
+                        (dateChange)="retailExpiryDate($event)"></app-gregorian-picker>
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                      <label for="nationality" class="asterisk-input"
-                        >Nationality</label
-                      >
-                      <ng-select
-                        formControlName="nationality"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <label for="nationality" class="asterisk-input">Nationality</label>
+                      <ng-select formControlName="nationality" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && f.nationality?.invalid
-                        }"
-                        [items]="(formData | async)?.Nationalities?.content!"
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        }" [items]="(formData | async)?.Nationalities?.content!" bindLabel="name" bindValue="name"
+                        [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.nationality?.touched || submitted) &&
                           f.nationality?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                      <label for="sourceOfIncome" class="asterisk-input"
-                        >Source of Income</label
-                      >
-                      <ng-select
-                        formControlName="sourceofIncome"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <label for="sourceOfIncome" class="asterisk-input">Source of Income</label>
+                      <ng-select formControlName="sourceofIncome" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && f.sourceofIncome?.invalid
-                        }"
-                        [items]="(formData | async)?.SourceofIncome?.content!"
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        }" [items]="(formData | async)?.SourceofIncome?.content!" bindLabel="name" bindValue="name"
+                        [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.sourceofIncome?.touched || submitted) &&
                           f.sourceofIncome?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -394,10 +241,7 @@
             </div>
 
             <!--./row-->
-            <div
-              #collapse="ngbCollapse"
-              [(ngbCollapse)]="uiState.clientDetails.corporate"
-            >
+            <div #collapse="ngbCollapse" [(ngbCollapse)]="uiState.clientDetails.corporate">
               <div class="card ribbon-box border shadow-none mb-lg-0">
                 <div class="card-body">
                   <span class="ribbon ribbon-info round-shape">
@@ -408,31 +252,20 @@
                       <label for="registrationStatus" class="asterisk-input">
                         Registration Status
                       </label>
-                      <ng-select
-                        formControlName="registrationStatus"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <ng-select formControlName="registrationStatus" class="is-invalid" [ngClass]="{
                           'is-submitted':
                             submitted && f.registrationStatus?.invalid
-                        }"
-                        [items]="
+                        }" [items]="
                           (formData | async)?.RegistrationStatus?.content!
-                        "
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        " bindLabel="name" bindValue="name" [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.registrationStatus?.touched || submitted) &&
                           f.registrationStatus?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -442,31 +275,20 @@
                       <label for="businessActivity" class="asterisk-input">
                         Business Activity
                       </label>
-                      <ng-select
-                        formControlName="businessActivity"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <ng-select formControlName="businessActivity" class="is-invalid" [ngClass]="{
                           'is-submitted':
                             submitted && f.businessActivity?.invalid
-                        }"
-                        [items]="
+                        }" [items]="
                           (formData | async)?.BusinessActivities?.content!
-                        "
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        " bindLabel="name" bindValue="name" [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.businessActivity?.touched || submitted) &&
                           f.businessActivity?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -476,28 +298,18 @@
                       <label for="marketSegment" class="asterisk-input">
                         Market Segment
                       </label>
-                      <ng-select
-                        formControlName="marketSegment"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <ng-select formControlName="marketSegment" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && f.marketSegment?.invalid
-                        }"
-                        [items]="(formData | async)?.MarketSegment?.content!"
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        }" [items]="(formData | async)?.MarketSegment?.content!" bindLabel="name" bindValue="name"
+                        [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.marketSegment?.touched || submitted) &&
                           f.marketSegment?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -507,24 +319,15 @@
                       <label for="CommericalNo" class="asterisk-input">
                         Commercial RegistrationNo.
                       </label>
-                      <input
-                        id="commericalNo"
-                        type="number"
-                        formControlName="commericalNo"
-                        [ngClass]="{
+                      <input id="commericalNo" type="number" formControlName="commericalNo" [ngClass]="{
                           'is-invalid':
                             (f.commericalNo?.touched || submitted) &&
                             f.commericalNo?.invalid
-                        }"
-                        class="form-control form-control-sm"
-                      />
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                        }" class="form-control form-control-sm" />
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.commericalNo?.touched || submitted) &&
                           f.commericalNo?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -534,19 +337,13 @@
                       <label for="dateOfIncorporation" class="asterisk-input">
                         Date of Incorporation
                       </label>
-                      <app-gregorian-picker
-                        [model]="f.dateOfIncorporation?.value"
-                        [required]="true"
-                        [submitted]="submitted"
-                        (dateChange)="coIncorporationDates($event)"
-                      ></app-gregorian-picker>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <app-gregorian-picker [model]="f.dateOfIncorporation?.value" [required]="true"
+                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"
+                        [currentDate]="f.dateOfIncorporation?.value"></app-gregorian-picker>
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.dateOfIncorporation?.touched || submitted) &&
                           f.dateOfIncorporation?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -556,12 +353,9 @@
                       <label for="dateOfIncorporationHijri">
                         Date of Incorporation (Hijri)
                       </label>
-                      <app-hijri-picker
-                        [model]="f.dateOfIncorporationHijri?.value"
-                        [required]="true"
-                        [submitted]="submitted"
-                        (dateChange)="coIncorporationDates($event)"
-                      ></app-hijri-picker>
+                      <app-hijri-picker [model]="f.dateOfIncorporationHijri?.value"
+                        [currentDate]="f.dateOfIncorporationHijri?.value" [required]="true" [submitted]="submitted"
+                        (dateChange)="coIncorporationDates($event)"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -570,19 +364,13 @@
                         CR Expiry Date
                       </label>
                       <!-- [model]="CRExpiryGregorianDate" -->
-                      <app-gregorian-picker
-                        [model]="f.idExpiryDate?.value"
-                        (dateChange)="coExpiryDates($event)"
-                        [required]="true"
-                        [submitted]="submitted"
-                      ></app-gregorian-picker>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
-                          (f.idExpiryDate?.touched || submitted) &&
-                          f.idExpiryDate?.invalid
-                        "
-                      >
+                      <app-gregorian-picker [model]="f.expiryDate?.value" [currentDate]="f.expiryDate?.value"
+                        (dateChange)="coExpiryDates($event)" [required]="true"
+                        [submitted]="submitted"></app-gregorian-picker>
+                      <div class="invalid-feedback fw-bold" *ngIf="
+                          (f.expiryDate?.touched || submitted) &&
+                          f.expiryDate?.invalid
+                        ">
                         Required
                       </div>
                     </div>
@@ -593,58 +381,37 @@
                         CR Expiry Date (Hijri)
                       </label>
                       <!-- [model]="CRExpiryHijriDate"  -->
-                      <app-hijri-picker
-                        [model]="f.expiryDateHijri?.value"
-                        (dateChange)="coExpiryDates($event)"
-                        [required]="true"
-                        [submitted]="submitted"
-                      ></app-hijri-picker>
+                      <app-hijri-picker [model]="f.expiryDateHijri?.value" [currentDate]="f.expiryDateHijri?.value"
+                        (dateChange)="coExpiryDates($event)" [required]="true"
+                        [submitted]="submitted"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="sponsorID">Sponsor ID</label>
-                      <input
-                        type="number"
-                        id="sponsorID"
-                        class="form-control form-control-sm is-invalid"
-                        formControlName="sponsorID"
-                        [ngClass]="{
+                      <input type="number" id="sponsorID" class="form-control form-control-sm is-invalid"
+                        formControlName="sponsorID" [ngClass]="{
                           'is-invalid': submitted && f.sponsorID?.invalid
-                        }"
-                      />
+                        }" />
                       <div class="invalid-feedback fw-bold">Invalid ID</div>
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="UnifiedNo">Unified No.</label>
-                      <input
-                        id="UnifiedNo"
-                        formControlName="unifiedNo"
-                        class="form-control form-control-sm"
-                      />
+                      <input id="UnifiedNo" formControlName="unifiedNo" class="form-control form-control-sm" />
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="VAT-No" class="asterisk-input">VAT No.</label>
-                      <input
-                        id="VAT-No"
-                        type="number"
-                        formControlName="vatNo"
-                        [ngClass]="{
+                      <input id="VAT-No" type="number" formControlName="vatNo" [ngClass]="{
                           'is-invalid':
                             (f.vatNo?.touched || submitted) && f.vatNo?.invalid
-                        }"
-                        class="form-control form-control-sm"
-                      />
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                        }" class="form-control form-control-sm" />
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.vatNo?.touched || submitted) && f.vatNo?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -652,40 +419,24 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="capital">Capital</label>
-                      <input
-                        id="capital"
-                        formControlName="capital"
-                        class="form-control form-control-sm"
-                      />
+                      <input id="capital" formControlName="capital" class="form-control form-control-sm" />
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                      <label for="Premium" class="asterisk-input"
-                        >Premium</label
-                      >
-                      <ng-select
-                        formControlName="premium"
-                        class="is-invalid"
-                        [ngClass]="{
+                      <label for="Premium" class="asterisk-input">Premium</label>
+                      <ng-select formControlName="premium" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && f.premium?.invalid
-                        }"
-                        [items]="(formData | async)?.Premium?.content!"
-                        bindLabel="name"
-                        bindValue="name"
-                        [loading]="formData ? false : true"
-                      >
+                        }" [items]="(formData | async)?.Premium?.content!" bindLabel="name" bindValue="name"
+                        [loading]="formData ? false : true">
                         <ng-template ng-option-tmp let-item="item">
                           <div>{{ item.name }}</div>
                         </ng-template>
                       </ng-select>
-                      <div
-                        class="invalid-feedback fw-bold"
-                        *ngIf="
+                      <div class="invalid-feedback fw-bold" *ngIf="
                           (f.premium?.touched || submitted) &&
                           f.premium?.invalid
-                        "
-                      >
+                        ">
                         Required
                       </div>
                     </div>
@@ -703,80 +454,48 @@
     <!-- National Address -->
     <ngb-panel id="2" title="National Address" cardClass="open my-4">
       <ng-template ngbPanelContent="2">
-        <div
-          id="collapseTwo"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingTwo"
-        >
+        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
           <div class="container-fluid mb-3">
             <div class="row">
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Building">Building No.</label>
-                <input
-                  id="Building"
-                  formControlName="buildingNo"
-                  class="form-control form-control-sm"
-                />
+                <input id="Building" formControlName="buildingNo" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Street">Street</label>
-                <input
-                  id="Street"
-                  formControlName="streetName"
-                  class="form-control form-control-sm"
-                />
+                <input id="Street" formControlName="streetName" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="SecondaryNo">Secondary No</label>
-                <input
-                  id="SecondaryNo"
-                  formControlName="secondryNo"
-                  class="form-control form-control-sm"
-                />
+                <input id="SecondaryNo" formControlName="secondryNo" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="District">District</label>
-                <input
-                  id="District"
-                  formControlName="districtName"
-                  class="form-control form-control-sm"
-                />
+                <input id="District" formControlName="districtName" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="PostalCode">Postal Code</label>
-                <input
-                  id="PostalCode"
-                  formControlName="postalCode"
-                  class="form-control form-control-sm"
-                />
+                <input id="PostalCode" formControlName="postalCode" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="City" class="asterisk-input">City</label>
-                <input
-                  id="City"
-                  class="form-control form-control-sm"
-                  formControlName="cityName"
-                  [ngClass]="{
+                <input id="City" class="form-control form-control-sm" formControlName="cityName" [ngClass]="{
                     'is-invalid':
                       (f.cityName?.touched || submitted) && f.cityName?.invalid
-                  }"
-                />
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="
+                  }" />
+                <div class="invalid-feedback fw-bold" *ngIf="
                     (f.cityName?.touched || submitted) && f.cityName?.invalid
-                  "
-                >
+                  ">
                   Required
                 </div>
               </div>
@@ -792,37 +511,21 @@
     <!-- Contact Details -->
     <ngb-panel id="3" title="Contact Details" cardClass="open my-4">
       <ng-template ngbPanelContent="3">
-        <div
-          id="collapseSix"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingSix"
-        >
+        <div id="collapseSix" class="accordion-collapse collapse show" aria-labelledby="headingSix">
           <div class="container-fluid mb-3">
             <div class="row">
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Telephone" class="asterisk-input">Telephone</label>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text">+966</span>
-                  <input
-                    type="number"
-                    formControlName="tele"
-                    class="form-control"
-                    [ngClass]="{
+                  <input type="number" formControlName="tele" class="form-control" [ngClass]="{
                       'is-invalid':
                         (f.tele?.touched || submitted) && f.tele?.invalid
-                    }"
-                    pattern="[0-9]{9}"
-                  />
-                  <div
-                    class="invalid-feedback fw-bold"
-                    *ngIf="(f.tele?.touched || submitted) && f.tele?.invalid"
-                  >
+                    }" pattern="[0-9]{9}" />
+                  <div class="invalid-feedback fw-bold" *ngIf="(f.tele?.touched || submitted) && f.tele?.invalid">
                     Invalid Phone Number
                   </div>
-                  <div
-                    class="invalid-feedback fw-bold"
-                    *ngIf="submitted && this.f.tele?.hasError('required')"
-                  >
+                  <div class="invalid-feedback fw-bold" *ngIf="submitted && this.f.tele?.hasError('required')">
                     Required
                   </div>
                 </div>
@@ -833,19 +536,10 @@
                 <label for="Telephone2">Second Telephone</label>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text">+966</span>
-                  <input
-                    id="Telephone2"
-                    type="number"
-                    formControlName="tele2"
-                    [ngClass]="{
+                  <input id="Telephone2" type="number" formControlName="tele2" [ngClass]="{
                       'is-invalid': submitted && this.f.tele2?.invalid
-                    }"
-                    class="form-control form-control-sm"
-                  />
-                  <div
-                    class="invalid-feedback fw-bold"
-                    *ngIf="submitted && this.f.tele2?.invalid"
-                  >
+                    }" class="form-control form-control-sm" />
+                  <div class="invalid-feedback fw-bold" *ngIf="submitted && this.f.tele2?.invalid">
                     Invalid Phone Number
                   </div>
                 </div>
@@ -854,29 +548,16 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="fax">Fax</label>
-                <input
-                  id="fax"
-                  type="text"
-                  formControlName="fax"
-                  class="form-control form-control-sm"
-                />
+                <input id="fax" type="text" formControlName="fax" class="form-control form-control-sm" />
               </div>
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label>Email</label>
-                <input
-                  type="email"
-                  class="form-control form-control-sm"
-                  formControlName="email"
-                  [ngClass]="{
+                <input type="email" class="form-control form-control-sm" formControlName="email" [ngClass]="{
                     'is-invalid': submitted && this.f.email?.invalid
-                  }"
-                />
-                <div
-                  class="invalid-feedback fw-bold"
-                  *ngIf="submitted && this.f.email?.invalid"
-                >
+                  }" />
+                <div class="invalid-feedback fw-bold" *ngIf="submitted && this.f.email?.invalid">
                   Invalid Email
                 </div>
               </div>
@@ -884,12 +565,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Website">Website</label>
-                <input
-                  type="text"
-                  formControlName="website"
-                  id="Website"
-                  class="form-control form-control-sm"
-                />
+                <input type="text" formControlName="website" id="Website" class="form-control form-control-sm" />
               </div>
               <!--./col-->
             </div>
@@ -903,17 +579,10 @@
     <!-- Contacts -->
     <ngb-panel id="4" title="Contacts" cardClass="open my-4">
       <ng-template ngbPanelContent="4">
-        <div
-          id="collapseThree"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingThree"
-        >
+        <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
           <div class="d-flex flex-column">
-            <button
-              type="button"
-              (click)="addContact()"
-              class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light"
-            >
+            <button type="button" (click)="addContact()"
+              class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light">
               <i class="ri-contacts-book-2-line"></i> Add Contact
             </button>
             <!-- start table -->
@@ -934,78 +603,50 @@
                   </tr>
                 </thead>
                 <tbody formArrayName="clientContacts">
-                  <tr
-                    *ngFor="let c of contactControlArray.controls; index as i"
-                  >
+                  <tr *ngFor="let c of contactControlArray.controls; index as i">
                     <ng-container [formGroupName]="i">
                       <td>
                         <div class="asterisk-div">
-                          <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            formControlName="contactName"
-                            placeholder="Contact Name"
-                            [ngClass]="{
+                          <input type="text" class="form-control form-control-sm" formControlName="contactName"
+                            placeholder="Contact Name" [ngClass]="{
                               'is-invalid':
                                 (contactControls(i, 'contactName').touched ||
                                   submitted) &&
                                 contactControls(i, 'contactName').invalid
-                            }"
-                          />
-                          <div
-                            class="invalid-feedback fw-bold"
-                            *ngIf="
+                            }" />
+                          <div class="invalid-feedback fw-bold" *ngIf="
                               (contactControls(i, 'contactName').touched ||
                                 submitted) &&
                               contactControls(i, 'contactName').invalid
-                            "
-                          >
+                            ">
                             Required
                           </div>
                         </div>
                       </td>
                       <td>
-                        <ng-select
-                          formControlName="position"
-                          placeholder="Contact Position"
-                          appendTo="body"
-                          [items]="(formData | async)?.Positions?.content!"
-                          bindLabel="name"
-                          bindValue="name"
-                          [loading]="formData ? false : true"
-                        >
+                        <ng-select formControlName="position" placeholder="Contact Position" appendTo="body"
+                          [items]="(formData | async)?.Positions?.content!" bindLabel="name" bindValue="name"
+                          [loading]="formData ? false : true">
                           <ng-template ng-option-tmp let-item="item">
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                       </td>
                       <td>
-                        <input
-                          type="text"
-                          class="form-control form-control-sm"
-                          placeholder="Contact Extension"
-                          formControlName="extension"
-                        />
+                        <input type="text" class="form-control form-control-sm" placeholder="Contact Extension"
+                          formControlName="extension" />
                       </td>
 
                       <td>
                         <div class="input-group input-group-sm">
                           <span class="input-group-text">+966</span>
-                          <input
-                            type="number"
-                            formControlName="mobile"
-                            placeholder="Contact Phone"
-                            class="form-control"
+                          <input type="number" formControlName="mobile" placeholder="Contact Phone" class="form-control"
                             [ngClass]="{
                               'is-invalid':
                                 submitted &&
                                 contactControls(i, 'mobile').invalid
-                            }"
-                          />
-                          <div
-                            class="invalid-feedback fw-bold"
-                            *ngIf="contactControls(i, 'mobile').invalid"
-                          >
+                            }" />
+                          <div class="invalid-feedback fw-bold" *ngIf="contactControls(i, 'mobile').invalid">
                             Invalid Phone Number
                           </div>
                         </div>
@@ -1013,126 +654,78 @@
                       <td>
                         <div class="input-group input-group-sm">
                           <span class="input-group-text">+966</span>
-                          <input
-                            type="number"
-                            formControlName="tele"
-                            placeholder="Contact Second Phone"
-                            class="form-control"
-                            [ngClass]="{
+                          <input type="number" formControlName="tele" placeholder="Contact Second Phone"
+                            class="form-control" [ngClass]="{
                               'is-invalid':
                                 submitted && contactControls(i, 'tele').invalid
-                            }"
-                            pattern="[0-9]{9}"
-                          />
-                          <div
-                            class="invalid-feedback fw-bold"
-                            *ngIf="contactControls(i, 'tele').invalid"
-                          >
+                            }" pattern="[0-9]{9}" />
+                          <div class="invalid-feedback fw-bold" *ngIf="contactControls(i, 'tele').invalid">
                             Invalid Phone Number
                           </div>
                         </div>
                       </td>
                       <td>
                         <div class="asterisk-div">
-                          <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            placeholder="Contact Email"
-                            formControlName="email"
-                            [ngClass]="{
+                          <input type="text" class="form-control form-control-sm" placeholder="Contact Email"
+                            formControlName="email" [ngClass]="{
                               'is-invalid':
                                 (contactControls(i, 'email').touched ||
                                   submitted) &&
                                 contactControls(i, 'email').invalid
-                            }"
-                          />
-                          <div
-                            class="invalid-feedback fw-bold"
-                            *ngIf="
+                            }" />
+                          <div class="invalid-feedback fw-bold" *ngIf="
                               (contactControls(i, 'email').touched ||
                                 submitted) &&
                               contactControls(i, 'email').invalid
-                            "
-                          >
+                            ">
                             Required
                           </div>
                         </div>
                       </td>
                       <td>
-                        <ng-select
-                          formControlName="branch"
-                          appendTo="body"
-                          placeholder="Contact Branch"
-                          [items]="(formData | async)?.Branch?.content!"
-                          bindLabel="name"
-                          bindValue="name"
-                          [loading]="formData ? false : true"
-                        >
+                        <ng-select formControlName="branch" appendTo="body" placeholder="Contact Branch"
+                          [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                          [loading]="formData ? false : true">
                           <ng-template ng-option-tmp let-item="item">
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                       </td>
                       <td>
-                        <ng-select
-                          formControlName="lineOfBusiness"
-                          placeholder="Contact Line Of Business"
-                          appendTo="body"
-                          [items]="
+                        <ng-select formControlName="lineOfBusiness" placeholder="Contact Line Of Business"
+                          appendTo="body" [items]="
                             (formData | async)?.ContactLineOfBusiness?.content!
-                          "
-                          bindLabel="name"
-                          bindValue="name"
-                          [loading]="formData ? false : true"
-                        >
+                          " bindLabel="name" bindValue="name" [loading]="formData ? false : true">
                           <ng-template ng-option-tmp let-item="item">
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                       </td>
                       <td>
-                        <ng-select
-                          formControlName="department"
-                          placeholder="Contact Department"
-                          appendTo="body"
+                        <ng-select formControlName="department" placeholder="Contact Department" appendTo="body"
                           [items]="
                             (formData | async)?.ContactDepartment?.content!
-                          "
-                          bindLabel="name"
-                          bindValue="name"
-                          [loading]="formData ? false : true"
-                        >
+                          " bindLabel="name" bindValue="name" [loading]="formData ? false : true">
                           <ng-template ng-option-tmp let-item="item">
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
                       </td>
                       <td>
-                        <button
-                          *ngIf="
+                        <button *ngIf="
                             uiState.editMode &&
                             contactControlArray.controls[i].disabled
-                          "
-                          type="button"
-                          class="btn btn-sm btn-soft-info me-2"
-                          (click)="enableEditingRow(i, 'contact')"
-                        >
+                          " type="button" class="btn btn-sm btn-soft-info me-2">
                           <i class="ri-edit-2-line"></i>
                         </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-soft-danger"
-                          (click)="remove(i, 'contact')"
-                        >
+                        <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'contact')">
                           <i class="ri-delete-bin-2-line"></i>
                         </button>
                       </td>
                     </ng-container>
                   </tr>
-                  <tr
-                    *ngIf="contactControlArray.controls.length === 0"
-                    class="my-1 text-center text-dark fw-bold no-item-contact"
-                  >
+                  <tr *ngIf="contactControlArray.controls.length === 0"
+                    class="my-1 text-center text-dark fw-bold no-item-contact">
                     <td colspan="100">No items show</td>
                   </tr>
                 </tbody>
@@ -1147,17 +740,10 @@
     <!-- Bank Accounts -->
     <ngb-panel id="5" title="Bank Accounts" cardClass="open my-4">
       <ng-template ngbPanelContent="5">
-        <div
-          id="collapseFour"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingFour"
-        >
+        <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
           <div class="d-flex flex-column">
-            <button
-              type="button"
-              (click)="addBank()"
-              class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light"
-            >
+            <button type="button" (click)="addBank()"
+              class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light">
               <i class="ri-bank-line"></i> Add Bank Account
             </button>
 
@@ -1179,119 +765,73 @@
                   <tr *ngFor="let c of bankControlArray.controls; index as i">
                     <ng-container [formGroupName]="i">
                       <td scope="col">
-                        <ng-select
-                          formControlName="bankName"
-                          placeholder="Bank Name"
-                          appendTo="body"
-                          class="is-invalid"
+                        <ng-select formControlName="bankName" placeholder="Bank Name" appendTo="body" class="is-invalid"
                           [ngClass]="{
                             'is-submitted':
                               submitted && bankControls(i, 'bankName').invalid
-                          }"
-                          [items]="(formData | async)?.Banks?.content!"
-                          bindLabel="name"
-                          bindValue="name"
-                          [loading]="formData ? false : true"
-                        >
+                          }" [items]="(formData | async)?.Banks?.content!" bindLabel="name" bindValue="name"
+                          [loading]="formData ? false : true">
                           <ng-template ng-option-tmp let-item="item">
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
-                        <div
-                          class="invalid-feedback fw-bold"
-                          *ngIf="
+                        <div class="invalid-feedback fw-bold" *ngIf="
                             (bankControls(i, 'bankName').touched ||
                               submitted) &&
                             bankControls(i, 'bankName').invalid
-                          "
-                        >
+                          ">
                           Required
                         </div>
                       </td>
                       <td scope="col">
-                        <input
-                          type="text"
-                          class="form-control form-control-sm"
-                          placeholder="Bank Branch"
-                          formControlName="branch"
-                        />
+                        <input type="text" class="form-control form-control-sm" placeholder="Bank Branch"
+                          formControlName="branch" />
                       </td>
                       <td scope="col">
                         <div class="asterisk-div">
-                          <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            formControlName="fullName"
-                            placeholder="Full Name"
-                            [ngClass]="{
+                          <input type="text" class="form-control form-control-sm" formControlName="fullName"
+                            placeholder="Full Name" [ngClass]="{
                               'is-invalid':
                                 (bankControls(i, 'fullName').touched ||
                                   submitted) &&
                                 bankControls(i, 'fullName').invalid
-                            }"
-                          />
-                          <div
-                            class="invalid-feedback fw-bold"
-                            *ngIf="
+                            }" />
+                          <div class="invalid-feedback fw-bold" *ngIf="
                               (bankControls(i, 'fullName').touched ||
                                 submitted) &&
                               bankControls(i, 'fullName').invalid
-                            "
-                          >
+                            ">
                             Required
                           </div>
                         </div>
                       </td>
                       <td scope="col">
-                        <input
-                          type="text"
-                          class="form-control form-control-sm"
-                          formControlName="arabicName"
-                          placeholder="Full Name ( Ar )"
-                        />
+                        <input type="text" class="form-control form-control-sm" formControlName="arabicName"
+                          placeholder="Full Name ( Ar )" />
                       </td>
                       <td scope="col">
-                        <input
-                          type="text"
-                          class="form-control form-control-sm"
-                          formControlName="iban"
-                          placeholder="IBAN"
-                        />
+                        <input type="text" class="form-control form-control-sm" formControlName="iban"
+                          placeholder="IBAN" />
                       </td>
                       <td scope="col">
-                        <input
-                          type="text"
-                          class="form-control form-control-sm"
-                          formControlName="swiftCode"
-                          placeholder="Swift Code"
-                        />
+                        <input type="text" class="form-control form-control-sm" formControlName="swiftCode"
+                          placeholder="Swift Code" />
                       </td>
                       <td scope="col">
-                        <button
-                          *ngIf="
+                        <button *ngIf="
                             uiState.editMode &&
                             bankControlArray.controls[i].disabled
-                          "
-                          type="button"
-                          class="btn btn-sm btn-soft-info me-2"
-                          (click)="enableEditingRow(i, 'bank')"
-                        >
+                          " type="button" class="btn btn-sm btn-soft-info me-2">
                           <i class="ri-edit-2-line"></i>
                         </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-soft-danger"
-                          (click)="remove(i, 'bank')"
-                        >
+                        <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'bank')">
                           <i class="ri-delete-bin-2-line"></i>
                         </button>
                       </td>
                     </ng-container>
                   </tr>
-                  <tr
-                    *ngIf="bankControlArray.controls.length === 0"
-                    class="my-1 text-center text-dark fw-bold no-item-contact"
-                  >
+                  <tr *ngIf="bankControlArray.controls.length === 0"
+                    class="my-1 text-center text-dark fw-bold no-item-contact">
                     <td colspan="100">No items show</td>
                   </tr>
                 </tbody>
@@ -1306,29 +846,27 @@
     <!-- Documents -->
     <ngb-panel id="6" title="Documents" cardClass="open my-4">
       <ng-template ngbPanelContent="6">
-        <app-dropzone
-          (files)="documentsList($event)"
-          [UploadedFiles]="docs"
-          #dropzone
-        ></app-dropzone>
+        <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs" #dropzone></app-dropzone>
       </ng-template>
     </ngb-panel>
   </ngb-accordion>
 
   <!-- Buttons -->
-  <div class="my-2 d-flex justify-content-end">
-    <button type="submit" class="btn btn-sm btn-success me-2">
-      <i class="ri-save-2-fill"></i>
-      Save
-    </button>
-    <button
-      type="button"
-      id="sa-warning"
-      (click)="resetForm(); dropzone.clearImages()"
-      class="btn btn-sm btn-soft-danger"
-    >
-      <i class="ri-delete-bin-2-line"></i>
-      Clear
-    </button>
+  <div class="card">
+    <div class="container-fluid">
+      <div class="card-body px-1 py-3">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-sm btn-success me-2">
+            <i class="ri-save-2-fill"></i>
+            Save
+          </button>
+          <button type="button" id="sa-warning" (click)="resetForm(); dropzone.clearImages()"
+            class="btn btn-sm btn-soft-danger">
+            <i class="ri-delete-bin-2-line"></i>
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </form>
