@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
 @Component({
@@ -6,7 +7,9 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
   templateUrl: "./business-development-management.component.html",
   styleUrls: ["./business-development-management.component.scss"],
 })
-export class BusinessDevelopmentManagementComponent implements OnInit {
+export class BusinessDevelopmentManagementComponent
+  implements OnInit, OnDestroy
+{
   uiState = {
     view: "card",
     routerLink: {
@@ -20,10 +23,14 @@ export class BusinessDevelopmentManagementComponent implements OnInit {
     },
   };
 
+  // To Unsubscription
+  subscribes: Subscription[] = [];
   constructor() {}
 
   ngOnInit(): void {}
 
   openFilterOffcanvas() {}
   onPageSizeChange() {}
+
+  ngOnDestroy(): void {}
 }
