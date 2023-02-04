@@ -5,6 +5,7 @@ import { LayoutComponent } from "./layouts/layout.component";
 
 // Auth
 import { AuthGuard } from "./core/guards/auth.guard";
+import { NotFoundComponent } from "./extraspages/not-found/not-found.component";
 
 const routes: Routes = [
   {
@@ -26,6 +27,15 @@ const routes: Routes = [
         (m) => m.ExtraspagesModule
       ),
     canActivate: [AuthGuard],
+  },
+  {
+    path: "**",
+    component: NotFoundComponent,
+  },
+  {
+    path: "",
+    redirectTo: "/",
+    pathMatch: "full",
   },
 ];
 

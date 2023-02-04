@@ -237,6 +237,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     });
 
     if (!data) bank.reset();
+    else bank.disable();
 
     this.f.clientsBankAccounts?.push(bank);
     this.bankControlArray.updateValueAndValidity();
@@ -270,6 +271,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     });
 
     if (!data) contact.reset();
+    else contact.disable();
 
     this.f.clientContacts?.push(contact);
     this.contactControlArray.updateValueAndValidity();
@@ -278,6 +280,12 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   remove(i: number, type: string) {
     if (type === "bank") this.bankControlArray.removeAt(i);
     else if (type === "contact") this.contactControlArray.removeAt(i);
+    else return;
+  }
+
+  enableEditingRow(i: number, type: string) {
+    if (type === "bank") this.bankControlArray.at(i).enable();
+    else if (type === "contact") this.contactControlArray.at(i).enable();
     else return;
   }
   //#endregion
@@ -385,11 +393,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     if (this.editId) formData.append("sNo", this.editId);
 
-    console.log(this.dateFormater(clientForm.value.expiryDate!));
-    console.log(this.dateFormater(clientForm.value.expiryDateHijri!));
-    console.log(this.dateFormater(clientForm.value.dateOfIncorporation!));
-    console.log(this.dateFormater(clientForm.value.dateOfIncorporationHijri!));
-
     formData.append("FullName", clientForm.value.fullName!);
     formData.append("FullNameAr", clientForm.value.fullNameAr!);
     formData.append("OfficalName", clientForm.value.officalName!);
@@ -445,6 +448,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     formData.append("Email", clientForm.value.email!);
     formData.append("Website", clientForm.value.website!);
 
+    this.contactControlArray.controls.forEach((el) => el.enable());
+
     let contacts = clientForm.value.clientContacts!;
 
     for (let i = 0; i < contacts.length; i++) {
@@ -467,6 +472,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       formData.append(`ClientContacts[${i}].email`, contacts[i].email!);
       formData.append(`ClientContacts[${i}].address`, contacts[i].address!);
     }
+
+    this.bankControlArray.controls.forEach((el) => el.enable());
 
     let banks = clientForm.value.clientsBankAccounts!;
 

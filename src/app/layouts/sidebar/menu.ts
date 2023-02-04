@@ -49,7 +49,7 @@ export const MENU: MenuItem[] = [
       {
         id: 301,
         label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
-        link: AppRoutes.BusinessDevelopment.Management,
+        link: AppRoutes.BusinessDevelopment.management,
         parentId: 3,
       },
       {
