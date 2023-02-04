@@ -193,7 +193,6 @@
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label class="asterisk-input">Expiry Date</label>
                       <app-gregorian-picker [required]="true" [submitted]="submitted"
-                        [currentDate]="f.idExpiryDate?.value"
                         (dateChange)="retailExpiryDate($event)"></app-gregorian-picker>
                     </div>
                     <!--./col-->
@@ -338,8 +337,7 @@
                         Date of Incorporation
                       </label>
                       <app-gregorian-picker [model]="f.dateOfIncorporation?.value" [required]="true"
-                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"
-                        [currentDate]="f.dateOfIncorporation?.value"></app-gregorian-picker>
+                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"></app-gregorian-picker>
                       <div class="invalid-feedback fw-bold" *ngIf="
                           (f.dateOfIncorporation?.touched || submitted) &&
                           f.dateOfIncorporation?.invalid
@@ -353,9 +351,8 @@
                       <label for="dateOfIncorporationHijri">
                         Date of Incorporation (Hijri)
                       </label>
-                      <app-hijri-picker [model]="f.dateOfIncorporationHijri?.value"
-                        [currentDate]="f.dateOfIncorporationHijri?.value" [required]="true" [submitted]="submitted"
-                        (dateChange)="coIncorporationDates($event)"></app-hijri-picker>
+                      <app-hijri-picker [model]="f.dateOfIncorporationHijri?.value" [required]="false"
+                        [submitted]="submitted" (dateChange)="coIncorporationDates($event)"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
@@ -363,10 +360,8 @@
                       <label for="crExpiryDate" class="asterisk-input">
                         CR Expiry Date
                       </label>
-                      <!-- [model]="CRExpiryGregorianDate" -->
-                      <app-gregorian-picker [model]="f.expiryDate?.value" [currentDate]="f.expiryDate?.value"
-                        (dateChange)="coExpiryDates($event)" [required]="true"
-                        [submitted]="submitted"></app-gregorian-picker>
+                      <app-gregorian-picker [model]="f.expiryDate?.value" (dateChange)="coExpiryDates($event)"
+                        [required]="true" [submitted]="submitted"></app-gregorian-picker>
                       <div class="invalid-feedback fw-bold" *ngIf="
                           (f.expiryDate?.touched || submitted) &&
                           f.expiryDate?.invalid
@@ -381,19 +376,20 @@
                         CR Expiry Date (Hijri)
                       </label>
                       <!-- [model]="CRExpiryHijriDate"  -->
-                      <app-hijri-picker [model]="f.expiryDateHijri?.value" [currentDate]="f.expiryDateHijri?.value"
-                        (dateChange)="coExpiryDates($event)" [required]="true"
-                        [submitted]="submitted"></app-hijri-picker>
+                      <app-hijri-picker [model]="f.expiryDateHijri?.value" (dateChange)="coExpiryDates($event)"
+                        [required]="false" [submitted]="submitted"></app-hijri-picker>
                     </div>
                     <!--./col-->
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="sponsorID">Sponsor ID</label>
-                      <input type="number" id="sponsorID" class="form-control form-control-sm is-invalid"
-                        formControlName="sponsorID" [ngClass]="{
-                          'is-invalid': submitted && f.sponsorID?.invalid
-                        }" />
-                      <div class="invalid-feedback fw-bold">Invalid ID</div>
+                      <input formControlName="sponsorID" id="sponsorID" type="number"
+                        class="form-control form-control-sm" [ngClass]="{
+                        'is-invalid': submitted && f.sponsorID?.invalid
+                      }" />
+                      <div class="invalid-feedback fw-bold" *ngIf="submitted &&  f.sponsorID?.invalid">
+                        Invalid ID ( Min: 20 ) & ( Max: 20 ) Length
+                      </div>
                     </div>
                     <!--./col-->
 
@@ -818,12 +814,6 @@
                           placeholder="Swift Code" />
                       </td>
                       <td scope="col">
-                        <button *ngIf="
-                            uiState.editMode &&
-                            bankControlArray.controls[i].disabled
-                          " type="button" class="btn btn-sm btn-soft-info me-2">
-                          <i class="ri-edit-2-line"></i>
-                        </button>
                         <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'bank')">
                           <i class="ri-delete-bin-2-line"></i>
                         </button>

@@ -69,8 +69,6 @@ export class HijriPickerComponent implements OnChanges {
   @Input() required: boolean = false;
   @Input() submitted: boolean = false;
 
-  @Input("currentDate") currentDate!: any;
-
   @Output() dateChange: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -88,18 +86,6 @@ export class HijriPickerComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.model) this.date = this.model;
-  }
-
-  editMode(date: any) {
-    if (date) {
-      let crr = new Date(date);
-      this.date = {
-        day: +crr.getDate(),
-        month: +crr.getMonth() + 1,
-        year: +crr.getFullYear(),
-      };
-      this.onDateSelect(this.date);
-    }
   }
 
   get today() {
