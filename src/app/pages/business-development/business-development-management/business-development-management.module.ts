@@ -4,6 +4,7 @@ import { BusinessDevelopmentManagementComponent } from "./business-development-m
 
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
+import { DragulaModule } from "ng2-dragula";
 
 export const routes: Routes = [
   { path: "", component: BusinessDevelopmentManagementComponent },
@@ -11,6 +12,11 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [BusinessDevelopmentManagementComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    DragulaModule,
+  ],
 })
 export class BusinessDevelopmentManagementModule {}

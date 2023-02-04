@@ -41,7 +41,8 @@
               "ngx-masonry",
               "lottie-web",
               "sweetalert2",
-              "ag-grid-community"
+              "ag-grid-community",
+              "dragula"
             ],
             "outputPath": "dist/oasis",
             "index": "src/index.html",
