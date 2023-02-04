@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import {
   AbstractControl,
@@ -20,12 +20,16 @@ import { ClientsService } from "src/app/shared/services/clients/clients.service"
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
 import { HttpResponse } from "@angular/common/http";
-import { HijriPickerComponent } from "src/app/shared/components/hijri-picker/hijri-picker.component";
+import AppUtils from "src/app/shared/app/util";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
 @Component({
   selector: "app-client-registry-forms",
   templateUrl: "./client-registry-forms.component.html",
   styleUrls: ["./client-registry-forms.component.scss"],
+  providers: [AppUtils],
 })
 export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
@@ -47,13 +51,15 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   docs: any[] = [];
 
   @ViewChild("dropzone") dropzone!: any;
-  @ViewChild(HijriPickerComponent) hijri!: HijriPickerComponent;
   subscribes: Subscription[] = [];
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private message: MessagesService,
     private tables: MasterTableService,
-    private clientService: ClientsService
+    private clientService: ClientsService,
+    private util: AppUtils,
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +69,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     let sub = this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
         this.editId = res.get("id")!;
+        // Display Loader
+        this.eventService.broadcast(reserved.isLoading, true);
         this.getClient(this.editId);
       }
     });
@@ -307,17 +315,12 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       screeningResult: client.screeningResult,
       officalName: client.officalName,
       idNo: client.idNo,
-      expiryDate: client.expiryDate,
       nationality: client.nationality,
       sourceofIncome: client.sourceofIncome,
       registrationStatus: client.registrationStatus,
       businessActivity: client.businessActivity,
       marketSegment: client.marketSegment,
       commericalNo: client.commericalNo,
-      dateOfIncorporation: client.dateOfIncorporation,
-      dateOfIncorporationHijri: client.dateOfIncorporationHijri!,
-      idExpiryDate: client.idExpiryDate,
-      expiryDateHijri: client.expiryDateHijri,
       sponsorID: client.sponsorID,
       unifiedNo: client.unifiedNo,
       vatNo: client.vatNo,
@@ -336,17 +339,52 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       website: client.website,
     });
 
+    // @@@@@@ Dates Formating To Append Values @@@@@@ //
+    // Date Of Incorporation
+    this.f.dateOfIncorporation?.patchValue(
+      this.util.dateStructFormat(client.dateOfIncorporation!) as any
+    );
+
+    // Date Of Incorporation Hijri
+    this.f.dateOfIncorporationHijri?.patchValue(
+      this.util.dateStructFormat(client.dateOfIncorporationHijri!) as any
+    );
+
+    // Expiry Date
+    this.f.expiryDate?.patchValue(
+      this.util.dateStructFormat(client.expiryDate!) as any
+    );
+
+    // Expiry Date Hijri
+    this.f.expiryDateHijri?.patchValue(
+      this.util.dateStructFormat(client.expiryDateHijri!) as any
+    );
+
+    // Retail ID Expiry Date
+    this.f.idExpiryDate?.patchValue(
+      this.util.dateStructFormat(client.idExpiryDate!) as any
+    );
+
+    this.docs = client.documentList!;
+
     client.clientContacts?.map((con) => this.addContact(con));
     client.clientsBankAccounts?.map((bank) => this.addBank(bank));
+
+    // Hide Loader
+    this.eventService.broadcast(reserved.isLoading, false);
   }
 
   onSubmit(clientForm: FormGroup<IClientForms>) {
     this.submitted = true;
+    if (!this.validationChecker()) return;
+
+    // Display Submitting Loader
+    this.eventService.broadcast(reserved.isLoading, true);
+
     const formData = new FormData();
-    if (this.editId) {
-      formData.append("sNo", this.editId);
-    }
-    // SNo;
+
+    if (this.editId) formData.append("sNo", this.editId);
+
     console.log(this.dateFormater(clientForm.value.expiryDate!));
     console.log(this.dateFormater(clientForm.value.expiryDateHijri!));
     console.log(this.dateFormater(clientForm.value.dateOfIncorporation!));
@@ -451,17 +489,19 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     // this.validationChecker();
 
-    this.clientService.saveClient(formData).subscribe((res) => {
-      console.log(res);
-    });
-  }
-
-  dateFormater(dt: any) {
-    let date = "";
-    if (dt) {
-      date = new Date(`${dt.year}/${dt.month}/${dt.day}`).toLocaleDateString();
-    }
-    return date;
+    let sub = this.clientService.saveClient(formData).subscribe(
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.message.toast(res.body.message!, "success");
+          if (this.editId) this.router.navigate([AppRoutes.Client.base]);
+          this.resetForm();
+        } else this.message.popup("Sorry!", res.body?.message!, "warning");
+        // Hide Loader
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err) => this.message.popup("Sorry!", err.message!, "warning")
+    );
+    this.subscribes.push(sub);
   }
 
   validationChecker(): boolean {
@@ -479,6 +519,15 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.submitted = false;
   }
 
+  // @@@@ Date Events @@@@ //
+  //#region Dates
+  dateFormater(dt: any) {
+    let date = "";
+    if (dt) {
+      date = new Date(`${dt.year}/${dt.month}/${dt.day}`).toLocaleDateString();
+    }
+    return date;
+  }
   retailExpiryDate(e: { gon: any; hijri: any }): void {
     this.f.idExpiryDate?.patchValue(e.gon);
   }
@@ -492,6 +541,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     this.f.expiryDateHijri?.patchValue(e.hijri);
     this.f.expiryDate?.patchValue(e.gon);
   }
+  //#endregion
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

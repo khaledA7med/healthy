@@ -1,11 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { EventService } from "../core/services/event.service";
-import {
-  LAYOUT_VERTICAL,
-  LAYOUT_HORIZONTAL,
-  LAYOUT_TWOCOLUMN,
-} from "./layout.model";
+import { LAYOUT_VERTICAL } from "./layout.model";
 
 @Component({
   selector: "app-layout",
