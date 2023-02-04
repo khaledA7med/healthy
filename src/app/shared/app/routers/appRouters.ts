@@ -8,23 +8,27 @@ export const AppRoutes = {
   Error: {
     base: "pages",
     comingSoon: "pages/coming-soon",
+    notFound: "pages/not-found",
   },
   MasterTable: {
-    insuranceClasses: "/Master/InsuranceClasses",
+    insuranceClasses: "/master/insurance-classes",
   },
   Client: {
-    base: "Clients",
-    clientRegistry: "Clients",
-    clientForms: "Clients/Create",
-    clientEdit: "Clients/Update/",
-    groups: "Clients/Groups",
-    reports: "Clients/Reports",
+    base: "clients",
+    clientRegistry: "clients",
+    clientForms: "clients/create",
+    clientEdit: "clients/update/",
+    groups: "clients/groups",
+    reports: "clients/reports",
   },
   BusinessDevelopment: {
-    Management: "SalesLead/Management",
+    base: "saleslead",
+    management: "saleslead",
+    create: "saleslead/create",
+    edit: "saleslead/update/",
     Reports: {
-      Business: "SalesLead/BusinessReport",
-      Renewal: "SalesLead/RenewalReport",
+      Business: "saleslead/business-report",
+      Renewal: "saleslead/renewal-report",
     },
   },
 };

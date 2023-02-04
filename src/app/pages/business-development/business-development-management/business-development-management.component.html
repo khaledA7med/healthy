@@ -1,0 +1,209 @@
+<div class="row justify-content-between align-items-center mb-3">
+    <div class="col-2 form-group row align-items-center">
+        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
+        <div class="col-sm-4">
+            <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
+                [(ngModel)]="uiState.filters.pageSize">
+                <ng-option [value]="25">25</ng-option>
+                <ng-option [value]="50">50</ng-option>
+                <ng-option [value]="100">100</ng-option>
+                <ng-option [value]="150">150</ng-option>
+                <ng-option [value]="200">200</ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="col-3 d-flex justify-content-end">
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-sm btn-outline-primary p-0" [class.active]="uiState.view=='card'"
+                (click)="uiState.view='card'"><i class="ri-layout-grid-line px-2 fs-16"></i></button>
+            <button class="btn btn-sm btn-outline-primary p-0" [class.active]="uiState.view=='list'"
+                (click)="uiState.view='list'"><i class="ri-list-unordered px-2 fs-16"></i></button>
+        </div>
+        <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openFilterOffcanvas()"><i
+                class="ri-filter-3-line me-1"></i>
+            Filters
+        </button>
+        <a [routerLink]="'/' + uiState.routerLink.forms" class="btn btn-sm btn-success  d-flex align-items-center">
+            <i class="ri-add-line me-1"></i> New Lead
+        </a>
+    </div>
+</div>
+<div [ngSwitch]="uiState.view">
+    <div *ngSwitchCase="'card'">
+        <div class="tasks-board mb-3" id="kanbanboard">
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                            Pending With Underwriting <small
+                                class="badge bg-dark align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="pending-underwriting-cards" data-status="Pending with Underwriting" class="status-cards">
+                        <div class="card tasks-box">
+                            <div class="card-body">
+                                <div class="d-flex mb-2">
+                                    <a href="javascript:void(0)"
+                                        class="text-muted fw-medium fs-14 flex-grow-1">#el.leadNo</a>
+                                    <div class="dropdown">
+                                        <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink7"
+                                            data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                class="ri-more-fill"></i></a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink7">
+                                            <li><button type="button" class="dropdown-item follow-up-grid-view"><i
+                                                        class="ri-chat-follow-up-fill align-bottom me-2 text-muted"></i>
+                                                    Follow Up</button>
+                                            </li>
+                                            <li><a class="dropdown-item" href="/">
+                                                    <i class="ri-edit-2-line align-bottom me-2 text-muted"></i>
+                                                    Edit
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <h6 class="fs-16 text-truncate task-title"><a href="#"
+                                        class="link-dark d-block">el.name</a></h6>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <span class="badge badge-soft-primary">el.leadType</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-top-dashed">
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <span class="text-muted"><i class="ri-timer-line align-bottom"></i>
+                                            el.savedDate</span>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <span class="text-muted"><i class="ri-alarm-line align-bottom"></i>
+                                            el.deadline</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end card-body-->
+                            <div class="progress progress-sm">
+                                <div class="progress-bar ${state}" role="progressbar" style="width: 100%"
+                                    aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end tasks-->
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="pendingLoadBtn"
+                        onclick="loadMoreCards('Pending with Underwriting')">
+                        Load More
+                    </button>
+                </div>
+            </div>
+            <!--end pending-underwriting-->
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                            Waiting For Client FeedBack <small
+                                class="badge bg-secondary align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="waiting-client-feedback-cards" data-status="Waiting for Client Feedback"
+                        class="status-cards">
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="waitingLoadBtn"
+                        onclick="loadMoreCards('Waiting for Client Feedback')">
+                        Load More
+                    </button>
+                </div>
+            </div>
+            <!--end Waiting For Client-->
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-bold mb-0">
+                            Prospect <small class="badge bg-info align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="prospect-cards" data-status="Prospect" class="status-cards">
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="prospectLoadBtn" onclick="loadMoreCards('Prospect')">
+                        Load
+                        More
+                    </button>
+                </div>
+            </div>
+            <!--end Prospect-->
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-bold mb-0">
+                            Confirmed <small class="badge bg-success align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="confirmed-cards" data-status="Confirmed" class="status-cards">
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="confirmLoadBtn" onclick="loadMoreCards('Confirmed')">
+                        Load
+                        More
+                    </button>
+                </div>
+            </div>
+            <!--end Confirmed-->
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-bold mb-0">
+                            Quoting <small class="badge bg-warning align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="quoting-cards" data-status="Quoting" class="status-cards">
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="quotingLoadBtn" onclick="loadMoreCards('Quoting')">
+                        Load
+                        More
+                    </button>
+                </div>
+            </div>
+            <!--end Quoting-->
+            <div class="tasks-list">
+                <div class="d-flex mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-bold mb-0">
+                            Lost <small class="badge bg-danger align-bottom ms-1 totaltask-badge">0</small>
+                        </h6>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="lost-cards" data-status="Lost" class="status-cards">
+
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="lostLoadBtn" onclick="loadMoreCards('Lost')">
+                        Load More
+                    </button>
+                </div>
+            </div>
+            <!--end Lost-->
+        </div>
+    </div>
+    <div *ngSwitchCase="'list'">List View Content</div>
+</div>

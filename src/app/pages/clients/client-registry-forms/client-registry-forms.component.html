@@ -708,10 +708,8 @@
                         </ng-select>
                       </td>
                       <td>
-                        <button *ngIf="
-                            uiState.editMode &&
-                            contactControlArray.controls[i].disabled
-                          " type="button" class="btn btn-sm btn-soft-info me-2">
+                        <button *ngIf="uiState.editMode && contactControlArray.controls[i].disabled" type="button"
+                          class="btn btn-sm btn-soft-info me-2" (click)="enableEditingRow(i, 'contact')">
                           <i class="ri-edit-2-line"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'contact')">
@@ -814,6 +812,12 @@
                           placeholder="Swift Code" />
                       </td>
                       <td scope="col">
+                        <button *ngIf="
+                        uiState.editMode&&
+                        bankControlArray.controls[i].disabled
+                      " type="button" class="btn btn-sm btn-soft-info me-2" (click)="enableEditingRow(i, 'bank')">
+                          <i class="ri-edit-2-line"></i>
+                        </button>
                         <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'bank')">
                           <i class="ri-delete-bin-2-line"></i>
                         </button>
