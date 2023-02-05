@@ -36,68 +36,19 @@
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             Pending With Underwriting <small
-                                class="badge bg-dark align-bottom ms-1 totaltask-badge">0</small>
+                                class="badge bg-dark align-bottom ms-1 totaltask-badge">{{cardLists.pending.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="pending-underwriting-cards" data-status="Pending with Underwriting" class="status-cards">
-                        <div class="card tasks-box">
-                            <div class="card-body">
-                                <div class="d-flex mb-2">
-                                    <a href="javascript:void(0)"
-                                        class="text-muted fw-medium fs-14 flex-grow-1">#el.leadNo</a>
-                                    <div class="dropdown">
-                                        <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink7"
-                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                class="ri-more-fill"></i></a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink7">
-                                            <li><button type="button" class="dropdown-item follow-up-grid-view"><i
-                                                        class="ri-chat-follow-up-fill align-bottom me-2 text-muted"></i>
-                                                    Follow Up</button>
-                                            </li>
-                                            <li><a class="dropdown-item" href="/">
-                                                    <i class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                    Edit
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <h6 class="fs-16 text-truncate task-title"><a href="#"
-                                        class="link-dark d-block">el.name</a></h6>
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1">
-                                        <span class="badge badge-soft-primary">el.leadType</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer border-top-dashed">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <span class="text-muted"><i class="ri-timer-line align-bottom"></i>
-                                            el.savedDate</span>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <span class="text-muted"><i class="ri-alarm-line align-bottom"></i>
-                                            el.deadline</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end card-body-->
-                            <div class="progress progress-sm">
-                                <div class="progress-bar ${state}" role="progressbar" style="width: 100%"
-                                    aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 mb-3 status-cards">
+                    <div class="status-card-body" id="pending" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.pending" data-status="Pending With Underwriting">
+                        <div *ngFor="let item of cardLists.pending">
+                            <app-draggable-card [item]="item" barBg="bg-dark"></app-draggable-card>
                         </div>
                     </div>
+                    <div [ngClass]="{'noTask': cardLists.pending.length === 0}"></div>
                     <!--end tasks-->
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="pendingLoadBtn"
-                        onclick="loadMoreCards('Pending with Underwriting')">
-                        Load More
-                    </button>
                 </div>
             </div>
             <!--end pending-underwriting-->
@@ -106,20 +57,18 @@
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             Waiting For Client FeedBack <small
-                                class="badge bg-secondary align-bottom ms-1 totaltask-badge">0</small>
+                                class="badge bg-secondary align-bottom ms-1 totaltask-badge">{{cardLists.waitingClient.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="waiting-client-feedback-cards" data-status="Waiting for Client Feedback"
-                        class="status-cards">
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="waitingClient" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.waitingClient">
+                        <div *ngFor="let item of cardLists.waitingClient">
+                            <app-draggable-card [item]="item" barBg="bg-secondary"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="waitingLoadBtn"
-                        onclick="loadMoreCards('Waiting for Client Feedback')">
-                        Load More
-                    </button>
+                    <div [ngClass]="{'noTask': cardLists.waitingClient.length === 0}"></div>
                 </div>
             </div>
             <!--end Waiting For Client-->
@@ -127,19 +76,19 @@
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Prospect <small class="badge bg-info align-bottom ms-1 totaltask-badge">0</small>
+                            Prospect <small
+                                class="badge bg-info align-bottom ms-1 totaltask-badge">{{cardLists.prospect.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="prospect-cards" data-status="Prospect" class="status-cards">
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="prospect" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.prospect">
+                        <div *ngFor="let item of cardLists.prospect">
+                            <app-draggable-card [item]="item" barBg="bg-info"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="prospectLoadBtn" onclick="loadMoreCards('Prospect')">
-                        Load
-                        More
-                    </button>
+                    <div [ngClass]="{'noTask': cardLists.prospect.length === 0}"></div>
                 </div>
             </div>
             <!--end Prospect-->
@@ -147,19 +96,19 @@
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Confirmed <small class="badge bg-success align-bottom ms-1 totaltask-badge">0</small>
+                            Confirmed <small
+                                class="badge bg-success align-bottom ms-1 totaltask-badge">{{cardLists.confirmed.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="confirmed-cards" data-status="Confirmed" class="status-cards">
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="confirmed" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.confirmed">
+                        <div *ngFor="let item of cardLists.confirmed">
+                            <app-draggable-card [item]="item" barBg="bg-success"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="confirmLoadBtn" onclick="loadMoreCards('Confirmed')">
-                        Load
-                        More
-                    </button>
+                    <div [ngClass]="{'noTask': cardLists.confirmed.length === 0}"></div>
                 </div>
             </div>
             <!--end Confirmed-->
@@ -167,19 +116,19 @@
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Quoting <small class="badge bg-warning align-bottom ms-1 totaltask-badge">0</small>
+                            Quoting <small
+                                class="badge bg-warning align-bottom ms-1 totaltask-badge">{{cardLists.quoting.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="quoting-cards" data-status="Quoting" class="status-cards">
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="quoting" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.quoting">
+                        <div *ngFor="let item of cardLists.quoting">
+                            <app-draggable-card [item]="item" barBg="bg-warning"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="quotingLoadBtn" onclick="loadMoreCards('Quoting')">
-                        Load
-                        More
-                    </button>
+                    <div [ngClass]="{'noTask': cardLists.quoting.length === 0}"></div>
                 </div>
             </div>
             <!--end Quoting-->
@@ -187,23 +136,29 @@
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Lost <small class="badge bg-danger align-bottom ms-1 totaltask-badge">0</small>
+                            Lost <small
+                                class="badge bg-danger align-bottom ms-1 totaltask-badge">{{cardLists.lost.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="lost-cards" data-status="Lost" class="status-cards">
-
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="lost" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.lost">
+                        <div *ngFor="let item of cardLists.lost">
+                            <app-draggable-card [item]="item" barBg="bg-danger"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="lostLoadBtn" onclick="loadMoreCards('Lost')">
-                        Load More
-                    </button>
+                    <div [ngClass]="{'noTask': cardLists.lost.length === 0}"></div>
                 </div>
             </div>
             <!--end Lost-->
         </div>
     </div>
-    <div *ngSwitchCase="'list'">List View Content</div>
+    <div *ngSwitchCase="'list'">
+        <div class="ag-theme-alpine" appTableView>
+            <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [rowData]="uiState.salesLead.list"
+                [gridOptions]="gridOpts">
+            </ag-grid-angular>
+        </div>
+    </div>
 </div>

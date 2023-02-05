@@ -49,6 +49,16 @@ export const ApiRoutes = {
     addClient: "/ClientRegistry/Groups/Join",
     deleteClient: "/ClientRegistry/Groups/RemoveClient",
   },
+  BusinessDevelopment: {
+    search: "/BusinessDevelopment/SalesLeads/Search",
+    changeStatus: "/BusinessDevelopment/SalesLeads/UpdateStatus",
+  },
+  CustomerService: {
+    search: "",
+    create: "",
+    edit: "",
+    delete: "",
+  },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
   },
