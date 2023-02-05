@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
-import { IBusineeDevelopment } from "../../app/models/BusinessDevelopment/ibusiness-development";
+import { IBusinessDevelopment } from "../../app/models/BusinessDevelopment/ibusiness-development";
 import { IBusinessDevelopmentFilters } from "../../app/models/BusinessDevelopment/ibusiness-development-filters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
@@ -17,14 +17,25 @@ export class BusinessDevelopmentService {
   constructor(private http: HttpClient) {}
 
   getAllSalesLeads(
-    businessDevelopmentFilters: IBusinessDevelopmentFilters
-  ): Observable<HttpResponse<IBaseResponse<IBusineeDevelopment[]>>> {
-    return this.http.post<IBaseResponse<IBusineeDevelopment[]>>(
+    filters: IBusinessDevelopmentFilters
+  ): Observable<HttpResponse<IBaseResponse<IBusinessDevelopment[]>>> {
+    return this.http.post<IBaseResponse<IBusinessDevelopment[]>>(
       this.env + ApiRoutes.BusinessDevelopment.search,
-      businessDevelopmentFilters,
+      filters,
       {
         observe: "response",
       }
+    );
+  }
+
+  changeStatus(
+    lead: string,
+    status: string
+  ): Observable<HttpResponse<IBaseResponse<any>>> {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.changeStatus,
+      {},
+      { params: { LeadNo: lead, status }, observe: "response" }
     );
   }
 

@@ -7,17 +7,24 @@ import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
 import { DragulaModule } from "ng2-dragula";
+import { DraggableCardComponent } from "./draggable-card.component";
 
-export const routes: Routes = [{ path: "", component: BusinessDevelopmentManagementComponent }];
+export const routes: Routes = [
+  { path: "", component: BusinessDevelopmentManagementComponent },
+];
 
 @NgModule({
-	declarations: [BusinessDevelopmentManagementComponent, BusinessDevelopmentControlsComponent],
-	imports: [
-		CommonModule,
-		RouterModule.forChild(routes),
-		SharedModule,
-		DragulaModule,
-		AgGridModule.withComponents([BusinessDevelopmentControlsComponent]),
-	],
+  declarations: [
+    BusinessDevelopmentManagementComponent,
+    BusinessDevelopmentControlsComponent,
+    DraggableCardComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    DragulaModule,
+    AgGridModule.withComponents([BusinessDevelopmentControlsComponent]),
+  ],
 })
 export class BusinessDevelopmentManagementModule {}
