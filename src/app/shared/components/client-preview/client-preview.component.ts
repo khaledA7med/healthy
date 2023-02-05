@@ -83,7 +83,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     let sub = this.clientService.getClintDetails(sno).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
-        console.log(res.body?.data!);
         AppUtils.nullValues(this.uiState.clientDetails);
         this.customizeClientDocuments();
       },
