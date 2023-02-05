@@ -30,6 +30,18 @@
         }
       }
     },
+    "PRODUCTION": {
+      "TEXT": "Production",
+      "LIST": {
+        "MANAGEMENT": "Policies/Endorsements Management"
+      }
+    },
+    "CUSTOMERSERVICE": {
+      "TEXT": "Customer Service",
+      "LIST": {
+        "MANAGEMENT": "Request Management"
+      }
+    },
     "MENU": {
       "TEXT": "MENU"
     },

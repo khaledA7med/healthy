@@ -74,4 +74,31 @@ export const MENU: MenuItem[] = [
       },
     ],
   },
+  {
+    id: 4,
+    label: "MENUITEMS.PRODUCTION.TEXT",
+    icon: "bx bx-layer",
+    subItems: [
+      {
+        id: 401,
+        label: "MENUITEMS.PRODUCTION.LIST.MANAGEMENT",
+        // link: AppRoutes.BusinessDevelopment.management,
+        link: "",
+        parentId: 4,
+      },
+    ],
+  },
+  {
+    id: 5,
+    label: "MENUITEMS.CUSTOMERSERVICE.TEXT",
+    icon: "ri-customer-service-2-line",
+    subItems: [
+      {
+        id: 501,
+        label: "MENUITEMS.CUSTOMERSERVICE.LIST.MANAGEMENT",
+        link: AppRoutes.CustomerService.base,
+        parentId: 5,
+      },
+    ],
+  },
 ];
