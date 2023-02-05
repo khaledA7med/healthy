@@ -51,6 +51,7 @@ export const ApiRoutes = {
   },
   BusinessDevelopment: {
     search: "/BusinessDevelopment/SalesLeads/Search",
+    changeStatus: "/BusinessDevelopment/SalesLeads/UpdateStatus",
   },
   CustomerService: {
     search: "",

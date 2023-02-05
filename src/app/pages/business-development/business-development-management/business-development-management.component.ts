@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Subscription, using } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import {
   CellEvent,
@@ -19,7 +19,7 @@ import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IBusineeDevelopment } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development";
+import { IBusinessDevelopment } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development";
 import { IBusinessDevelopmentFilters } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-filters";
 import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelopmentCols";
 import { MasterTableService } from "src/app/core/services/master-table.service";
@@ -27,6 +27,11 @@ import { Router } from "@angular/router";
 import { FormControl, FormGroup } from "@angular/forms";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { HttpResponse, HttpErrorResponse } from "@angular/common/http";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
+import { SalesLeadStatus } from "src/app/shared/app/models/BusinessDevelopment/business-development-status";
+import { DragulaService } from "ng2-dragula";
+import { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-business-development-management",
@@ -39,6 +44,7 @@ export class BusinessDevelopmentManagementComponent
 {
   uiState = {
     view: "card",
+    dragulaInit: "SALESLEADS",
     routerLink: {
       forms: AppRoutes.BusinessDevelopment.create,
     },
@@ -51,9 +57,18 @@ export class BusinessDevelopmentManagementComponent
       orderDir: "asc",
     } as IBusinessDevelopmentFilters,
     salesLead: {
-      list: [] as IBusineeDevelopment[],
+      list: [] as IBusinessDevelopment[],
       totalPages: 0,
     },
+  };
+
+  cardLists = {
+    pending: [] as IBusinessDevelopment[],
+    waitingClient: [] as IBusinessDevelopment[],
+    prospect: [] as IBusinessDevelopment[],
+    confirmed: [] as IBusinessDevelopment[],
+    quoting: [] as IBusinessDevelopment[],
+    lost: [] as IBusinessDevelopment[],
   };
 
   // To Unsubscription
@@ -82,21 +97,25 @@ export class BusinessDevelopmentManagementComponent
     private businssDevelopmenService: BusinessDevelopmentService,
     private tableRef: ElementRef,
     private message: MessagesService,
+    private dragulaService: DragulaService,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
-    private router: Router
+    private router: Router,
+    private eventService: EventService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getCardData();
+    this.draggableHandler();
+  }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
-
       let sub = this.businssDevelopmenService
         .getAllSalesLeads(this.uiState.filters)
         .subscribe(
-          (res: HttpResponse<IBaseResponse<IBusineeDevelopment[]>>) => {
+          (res: HttpResponse<IBaseResponse<IBusinessDevelopment[]>>) => {
             this.uiState.salesLead.totalPages = JSON.parse(
               res.headers.get("x-pagination")!
             ).TotalCount;
@@ -107,8 +126,9 @@ export class BusinessDevelopmentManagementComponent
               this.uiState.salesLead.list,
               this.uiState.salesLead.totalPages
             );
-            this.uiState.gridReady = true;
             this.gridApi.hideOverlay();
+            this.uiState.gridReady = true;
+            this.cardsDataFiltering();
           },
           (err: HttpErrorResponse) => {
             this.message.popup("Oops!", err.message, "error");
@@ -117,6 +137,62 @@ export class BusinessDevelopmentManagementComponent
       this.subscribes.push(sub);
     },
   };
+
+  getCardData() {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.businssDevelopmenService
+      .getAllSalesLeads(this.uiState.filters)
+      .subscribe(
+        (res: HttpResponse<IBaseResponse<IBusinessDevelopment[]>>) => {
+          this.uiState.salesLead.totalPages = JSON.parse(
+            res.headers.get("x-pagination")!
+          ).TotalCount;
+          this.uiState.salesLead.list = res.body?.data!;
+          this.cardsDataFiltering();
+          this.eventService.broadcast(reserved.isLoading, false);
+        },
+        (err: HttpErrorResponse) => {
+          this.message.popup("Oops!", err.message, "error");
+        }
+      );
+    this.subscribes.push(sub);
+  }
+
+  cardsDataFiltering() {
+    this.cardLists = {
+      confirmed: [],
+      lost: [],
+      prospect: [],
+      pending: [],
+      quoting: [],
+      waitingClient: [],
+    };
+    this.uiState.salesLead.list.map((el) => {
+      switch (el.status) {
+        case SalesLeadStatus.Prospect:
+          this.cardLists.prospect.push(el);
+          break;
+        case SalesLeadStatus.Confirmed:
+          this.cardLists.confirmed.push(el);
+          break;
+        case SalesLeadStatus.Quoting:
+          this.cardLists.quoting.push(el);
+          break;
+        case SalesLeadStatus.Lost:
+          this.cardLists.lost.push(el);
+          break;
+        case SalesLeadStatus.PendingwithUnderwriting:
+          this.cardLists.pending.push(el);
+          break;
+        case SalesLeadStatus.WaitingForClientFeedback:
+          this.cardLists.waitingClient.push(el);
+          break;
+        default:
+          break;
+      }
+    });
+    console.log(this.cardLists);
+  }
 
   onSort(e: GridReadyEvent) {
     let colState = e.columnApi.getColumnState();
@@ -155,7 +231,6 @@ export class BusinessDevelopmentManagementComponent
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
-
     const agBodyHorizontalViewport: HTMLElement =
       this.tableRef.nativeElement.querySelector(
         "#gridScrollbar .ag-body-horizontal-scroll-viewport"
@@ -173,6 +248,63 @@ export class BusinessDevelopmentManagementComponent
       const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
       horizontal.update();
     }
+  }
+
+  draggableHandler(): void {
+    this.dragulaService
+      .createGroup(this.uiState.dragulaInit, {
+        revertOnSpill: true,
+      })
+      .drake.cancel(true);
+    this.dragulaService
+      .removeModel(this.uiState.dragulaInit)
+      .subscribe((res) => {
+        console.log(res);
+      });
+
+    // let sub = this.dragulaService
+    //   .dropModel(this.uiState.dragulaInit)
+
+    //   // .().options
+    //   .subscribe(({ targetModel, item, sourceModel }) => {
+    //     // console.log(arg);
+    //     // console.log({
+    //     //   item: arg.item,
+    //     //   source: arg.source.id,
+    //     //   target: arg.target.id,
+    //     // });
+    //     // console.log(sourceModel);
+    //     console.log(this.cardLists);
+    //     let temp = this.cardLists;
+    //     this.message
+    //       .confirm(
+    //         "Yes, Sure!",
+    //         "Are You Sure To Change Status?!",
+    //         "primary",
+    //         "question"
+    //       )
+    //       .then((result: SweetAlertResult) => {
+    //         if (result.isConfirmed) {
+    //           // this.changeStatus(arg.item, arg.target.id);
+    //         } else {
+    //           this.dragulaService
+    //             .find(this.uiState.dragulaInit)
+    //             .drake.cancel(true);
+    //           // let elem = targetModel.find((i) => i.sNo === item.sNo);
+    //           // targetModel.filter((el) => el.sNo === elem.sNo);
+    //           // sourceModel.push(elem);
+    //           console.log(this.cardLists);
+    //           this.cardLists = temp;
+    //           // console.log(elem);
+    //         }
+    //       });
+    //   });
+    // this.subscribes.push(sub);
+  }
+
+  changeStatus(lead: IBusinessDevelopment, status: string): void {
+    // lead.leadNo
+    console.log({ lead, status });
   }
 
   openFilterOffcanvas() {}
