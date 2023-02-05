@@ -4,7 +4,9 @@ import { MODULES, MODULE_NAME } from "src/app/core/models/MODULES";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
 import { BaseData } from "../models/masterTableModels";
+import { reserved } from "../models/reservedWord";
 import { CachingService } from "./caching.service";
+import { EventService } from "./event.service";
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +14,11 @@ import { CachingService } from "./caching.service";
 export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor(private http: HttpClient, private caching: CachingService) {
+  constructor(
+    private http: HttpClient,
+    private caching: CachingService,
+    private eventService: EventService
+  ) {
     this.dataSrc = [];
   }
 
@@ -138,8 +144,6 @@ export class MasterTableService {
         })
         .subscribe();
     }
-    // this.data$ = ;
-
     return this.caching.getAll();
   }
 }

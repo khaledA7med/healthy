@@ -52,7 +52,7 @@ import "@angular/localize/init";
 import "zone.js"; // Included with Angular CLI.
 
 import "intersection-observer";
-
+(window as any).global = window;
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */

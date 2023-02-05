@@ -43,6 +43,7 @@ export class MessagesService {
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true,
+      background: "var(--vz-modal-bg)",
       didOpen: (toast) => {
         toast.addEventListener("mouseenter", Swal.stopTimer);
         toast.addEventListener("mouseleave", Swal.resumeTimer);

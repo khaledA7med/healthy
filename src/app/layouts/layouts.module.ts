@@ -14,6 +14,7 @@ import { TopbarComponent } from "./topbar/topbar.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { FooterComponent } from "./footer/footer.component";
 import { RightsidebarComponent } from "./rightsidebar/rightsidebar.component";
+import { GeneralLoaderComponent } from "../shared/components/general-loader/general-loader.component";
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { RightsidebarComponent } from "./rightsidebar/rightsidebar.component";
     SidebarComponent,
     FooterComponent,
     RightsidebarComponent,
+    GeneralLoaderComponent,
   ],
   imports: [
     CommonModule,

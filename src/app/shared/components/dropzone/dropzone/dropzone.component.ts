@@ -1,19 +1,18 @@
 import {
-  AfterContentInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
-  SimpleChanges,
 } from "@angular/core";
+import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
   selector: "app-dropzone",
   templateUrl: "./dropzone.component.html",
   styleUrls: ["./dropzone.component.scss"],
+  providers: [AppUtils],
 })
 export class DropzoneComponent implements OnChanges {
   documentsToUpload: any[] = [];
@@ -23,7 +22,8 @@ export class DropzoneComponent implements OnChanges {
 
   @Output() files: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private message: MessagesService) {}
+  constructor(private message: MessagesService, public util: AppUtils) {}
+
   ngOnChanges(): void {
     if (this.UploadedFiles) this.documentsToDisplay = this.UploadedFiles;
   }
@@ -52,7 +52,7 @@ export class DropzoneComponent implements OnChanges {
   }
 
   openImage(img: string) {
-    var win = window.open();
+    var win = window.open("about:blank");
     win?.document.write(
       '<iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="' +
         img +
@@ -98,22 +98,7 @@ export class DropzoneComponent implements OnChanges {
     this.emitingFiles();
   }
 
-  formatBytes(bytes: number, decimals?: number) {
-    if (bytes === 0) {
-      return "0 Bytes";
-    }
-    const k = 1024;
-    const dm = decimals! <= 0 ? 0 : decimals || 2;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-  }
-
   emitingFiles() {
-    console.log({
-      display: this.documentsToDisplay,
-      upload: this.documentsToUpload,
-    });
     this.files.emit(this.documentsToUpload);
   }
 }
