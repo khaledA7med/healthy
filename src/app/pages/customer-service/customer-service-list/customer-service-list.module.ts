@@ -10,7 +10,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CustomerServiceListComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
+  declarations: [ CustomerServiceListComponent ],
+  imports: [ CommonModule, RouterModule.forChild(routes), SharedModule ],
 })
-export class CustomerServiceListModule {}
+export class CustomerServiceListModule { }

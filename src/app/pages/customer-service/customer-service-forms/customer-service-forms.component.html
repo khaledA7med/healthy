@@ -1,1 +1,354 @@
-<p>customer-service-forms works!</p>
+<form class="mb-4" id="CustomerServiceForm" autocomplete="off">
+    <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
+
+        <!-- Client Details -->
+        <ngb-panel id="1" title="Client Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="1">
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                    <div class="container-fluid mb-3">
+                        <div class="row my-2">
+
+                            <!-- ID -->
+                            <div class="col-lg-4 col-md-12">
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="id" class="">
+                                            Client ID
+                                        </label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" id="clientID" aria-label="ID"
+                                            class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- Client Info -->
+                            <div class="col-lg-4 col-md-12">
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="ClientName">Client Name</label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" id="ClientName" name="ClientName" required readonly
+                                            aria-label="Client Info" class="form-control form-control-sm"
+                                            placeholder="Client Name">
+                                        <button class="btn btn-info btn-sm d-flex align-items-center"
+                                            id="clientInfoModalBtn" type="button" data-bs-toggle="modal"
+                                            data-bs-target=".search-Policies-form-modal">
+                                            <i class="ri-user-search-fill mx-1"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- Producer ( Salesman )-->
+                            <div class="col-lg-4 col-md-12">
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="producer">Producer (Salesman)</label>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="producer" readonly
+                                        placeholder="Producer." id="producer" aria-label="Producer">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+        <!-- end Client Details-->
+
+        <!--start Policy/Endorsement Details -->
+        <ngb-panel id="2" title="Policy/Endorsement Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="2">
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row my-2">
+                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
+
+                                <!-- Endors Type -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="endorsType">Endors Type</label>
+                                    </div>
+                                    <ng-select id="endorsType" class="is-invalid" [searchable]="false"
+                                        placeholder="Select Endors Type" formControlName="branch" [items]="branches"
+                                        bindLabel="name" bindValue="id" [(ngModel)]="branchSelect">
+                                    </ng-select>
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- Policy No -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="policyNo" class="">
+                                            Policy
+                                            No
+                                        </label>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="policyNo" readonly
+                                        placeholder="Policy No." id="policyNo" aria-label="Policy No">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- Issued By -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="issuedBy">Issued By</label>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="issuedBy" readonly
+                                        placeholder="Issued By." id="issuedBy" aria-label="Issued By">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- Expiry Date -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="expiryDate">Expiry Date</label>
+                                    </div>
+                                    <input type="text" class="format-date-picker form-control form-control-sm" readonly
+                                        name="expiryDate" id="expiryDate" placeholder="yyyy/mm/dd"
+                                        aria-label="Expiry Date">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- CS Special Conditions -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="csSpecialConditions">CS Special Conditions</label>
+                                    </div>
+                                    <textarea class="form-control form-control-sm" name="csSpecialConditions"
+                                        id="csSpecialConditions" readonly rows="2"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
+                                <!-- Class Of Insurance -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="classOfInsurance">Class Of Insurance</label>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="classOfInsurance"
+                                        readonly placeholder="Class Of Insurance." id="classOfInsurance"
+                                        aria-label="Class Of Insurance">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- Line Of Business -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="lineOfBusiness">Line Of Business</label>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" name="lineOfBusiness"
+                                        readonly placeholder="Line Of Business." id="lineOfBusiness"
+                                        aria-label="Line Of Business">
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- DeadLine -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="deadLine">DeadLine</label>
+                                    </div>
+                                    <app-gregorian-picker [required]="true"
+                                        [submitted]="submitted"></app-gregorian-picker>
+                                    <!-- (dateChange)="DeadLineDate($event)" -->
+                                </div>
+                                <span class="invalid-feedback d-none mt-0">Required</span>
+
+                                <!-- Request Details -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="requestDetails">Request Details</label>
+                                    </div>
+                                    <textarea class="form-control form-control-sm" name="requestDetails"
+                                        id="requestDetails" rows="5"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Net Premium -->
+                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="netPremium">Net Premium</label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control input-text-right" name="netPremium"
+                                            placeholder="0.00" aria-label="netPremium" id="netPremium"
+                                            aria-describedby="SAR">
+                                        <span class="input-group-text" id="SAR">SAR</span>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+
+                                <!-- Policy Fees -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="policyFees" class="">
+                                            Policy
+                                            Fees
+                                        </label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" id="policyFees" name="policyFees"
+                                            class="form-control form-control-sm input-text-right" placeholder="0.00"
+                                            aria-label="policyFees">
+                                        <span class="input-group-text" id="">SAR</span>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+
+                                <!-- VAT -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="vatPerc" class="">VAT</label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <ng-select id="vatPerc" name="VAT" placeholder="0%" [items]="vats"
+                                                bindLabel="name" bindValue="id" [(ngModel)]="vatSelect">
+                                            </ng-select>
+                                        </div>
+                                        <input type="text" id="vatPercValue" name="vatPercValue"
+                                            class="form-control form-control-sm input-text-right"
+                                            aria-label="vatPercentValue" placeholder="0.00" readonly>
+                                        <span class="input-group-text" id="">SAR</span>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+
+                                <!-- Total Premium -->
+                                <div class="accordion-info mb-2">
+                                    <div class="lables">
+                                        <label for="totalPremium">Total Premium</label>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control input-text-right" name="totalPremium"
+                                            id="totalPremium" placeholder="0.00" aria-label="totalPremium"
+                                            aria-describedby="SAR" readonly>
+                                        <span class="input-group-text" id="SAR">SAR</span>
+                                    </div>
+                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+        <!-- end Policy/Endorsement Details-->
+
+        <!-- start Requirements & Endorsements -->
+        <ngb-panel id="3" title="Requirements & Endorsements" cardClass="open my-4">
+            <ng-template ngbPanelContent="3">
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                    <div class="container-fluid mb-3">
+                        <div class="row my-2">
+                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
+                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                                    <div class="card-body">
+                                        <div class="ribbon ribbon-info round-shape">Similar Clients List</div>
+                                        <div class="ribbon-content mt-4 text-muted">
+                                            <div class="row my-3">
+                                                <div class="col-lg-12 table-responsive">
+                                                    <table class="table align-middle table-nowrap mb-0"
+                                                        id="similarClientsEndorseListTbl">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th class="col-lg-3" scope="col">Endorse No.</th>
+                                                                <th class="col-lg-9" scope="col">Endorse Type</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="similarClientsEndorseList">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
+                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                                    <div class="card-body">
+                                        <div class="ribbon ribbon-info round-shape">Requirements</div>
+                                        <div class="ribbon-content mt-4 text-muted">
+                                            <div class="row my-3">
+                                                <div class="col-lg-12 table-responsive">
+                                                    <table class="table align-middle table-nowrap mb-0"
+                                                        id="requiermentsTbl">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th class="col-lg-1 d-flex" scope="col">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input id="checkAllRequierments" type="checkbox"
+                                                                            class="text-dark">
+                                                                    </div>
+                                                                    <div class="ps-1">Select</div>
+
+                                                                </th>
+                                                                <th class="col-lg-11" scope="col">Item</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="requirements">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+        <!-- end Requirements & Endorsements -->
+
+        <!-- start Documents -->
+        <ngb-panel id="4" title="Documents" cardClass="open my-4">
+            <ng-template ngbPanelContent="4">
+                <app-dropzone [UploadedFiles]="docs" #dropzone></app-dropzone>
+            </ng-template>
+        </ngb-panel>
+        <!-- end Documents -->
+
+    </ngb-accordion>
+
+    <!-- start Buttons -->
+    <div class="my-2 d-lg-flex d-md-flex justify-content-end align-items-end">
+
+        <!-- Branch -->
+        <div class="col-lg-3 col-md-6">
+            <div class="lables form-group row">
+                <label class="col-sm-2 col-form-label" for="branch">Branch</label>
+                <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
+                    [items]="branches" bindLabel="name" bindValue="id" [(ngModel)]="branchSelect">
+                </ng-select>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-lg-2 col-md-6 mt-md-3 d-flex justify-content-end">
+            <button type="submit" id="submittingFormBtn"
+                class="btn btn-success btn-sm me-2 bg-gradient waves-effect waves-light ">
+                <i class="  ri-save-2-fill"></i>
+                Save
+            </button>
+            <button type="button" id="sa-warning"
+                class="btn btn-danger me-2 btn-sm bg-gradient waves-effect waves-light " onclick="resetForm()">
+                <i class="ri-delete-bin-2-line"></i>
+                Clear
+            </button>
+        </div>
+    </div>
+    <!-- end Buttons -->
+</form>
