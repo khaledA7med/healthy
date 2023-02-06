@@ -302,7 +302,10 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
           this.patchEditingClient(res.body?.data!);
         }
       },
-      (err) => this.message.popup("Error", err.message, "error")
+      (err) => {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Error", err.message, "error");
+      }
     );
     this.subscribes.push(sub);
   }
