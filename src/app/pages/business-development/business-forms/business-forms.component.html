@@ -1,4 +1,10 @@
-<form [formGroup]="formGroup" autocomplete="of" id="AddLeadForm">
+<form
+  [formGroup]="formGroup"
+  autocomplete="of"
+  (ngSubmit)="submitForm()"
+  id="AddLeadForm"
+>
+  {{ formGroup.value | json }}
   <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
     <!-- start sales lead details acc   -->
     <ngb-panel id="1" title="Sales Lead Details" cardClass="open my-4">
@@ -47,16 +53,18 @@
                   <!-- /row -->
                   <!-- Client | Group & Producer row  -->
                   <div class="row my-2">
+                    <!-- col check client | group -->
                     <div
                       class="col-sm-2 col-md-5 col-lg-2 d-flex flex-column my-1"
                     >
                       <div class="form-check mb-2">
                         <input
+                          name="check"
                           class="form-check-input"
                           type="radio"
-                          value="Client"
                           id="client"
-                          [checked]="uiState.isClient"
+                          (change)="changeToClient()"
+                          checked
                         />
                         <label for="client" class="form-check-label"
                           >Client</label
@@ -64,27 +72,50 @@
                       </div>
                       <div class="form-check">
                         <input
+                          name="check"
                           class="form-check-input"
                           type="radio"
-                          value="Group"
-                          id="client"
+                          id="group"
+                          (change)="changeToGroup()"
                         />
-                        <label for="client" class="form-check-label"
+                        <label for="group" class="form-check-label"
                           >Group</label
                         >
                       </div>
                     </div>
+                    <!-- /col -->
+                    <!-- col select client | group -->
                     <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
-                      <label for="client" class="asterisk-input"> Client</label>
+                      <label for="client" class="asterisk-input">
+                        {{ uiState.isClient ? "Client" : "Group" }}</label
+                      >
                       <div class="input-group input-group-sm">
                         <ng-select
+                          #clintSelect
                           id="client"
+                          formControlName="name"
+                          bindValue="name"
+                          bindLabel="name"
                           class="form-control form-control-sm"
                           aria-describedby="inputGroup-sizing-sm"
-                          placeholder="Select Client"
+                          (change)="getClientId($event)"
+                          [loading]="formData ? false : true"
+                          [items]="
+                            uiState.isClient
+                              ? (formData | async)?.AllClients?.content!
+                              : (formData | async)?.GroupsList?.content!
+                          "
+                          [ngClass]="{
+                            'is-submitted': submitted && f.name?.invalid
+                          }"
+                          placeholder="{{
+                            uiState.isClient ? 'Select Client' : 'Select Group'
+                          }}"
                         >
+                          <ng-template ng-option-tmp let-item="item">
+                            <div>{{ item.id }} | {{ item.name }}</div>
+                          </ng-template>
                         </ng-select>
-
                         <button
                           class="input-group-text btn-outline-success btn-sm"
                           id="inputGroup-sizing-sm"
@@ -93,7 +124,17 @@
                           <i class="ri-user-add-line align-middle"></i>
                         </button>
                       </div>
+                      <div
+                        class="invalid-feedback fw-bold d-block"
+                        *ngIf="
+                          (f.name?.touched || submitted) && f.name?.invalid
+                        "
+                      >
+                        Required
+                      </div>
                     </div>
+                    <!-- /col -->
+                    <!-- col producer -->
                     <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
                       <label for="producer" class="asterisk-input">
                         Producer</label
@@ -102,9 +143,27 @@
                         id="Producer"
                         class="form-control-sm"
                         placeholder="Select Producer"
+                        formControlName="producer"
+                        bindValue="name"
+                        bindLabel="name"
+                        [loading]="formData ? false : true"
+                        [items]="(formData | async)?.Producers?.content!"
+                        [ngClass]="{
+                          'is-submitted': submitted && f.producer?.invalid
+                        }"
                       >
                       </ng-select>
+                      <div
+                        class="invalid-feedback fw-bold d-block"
+                        *ngIf="
+                          (f.producer?.touched || submitted) &&
+                          f.producer?.invalid
+                        "
+                      >
+                        Required
+                      </div>
                     </div>
+                    <!-- /col -->
                   </div>
                   <!-- /row -->
                 </div>
@@ -130,14 +189,33 @@
                             id="classOfInc"
                             class="form-control-sm"
                             placeholder="Select Class Of Insurance"
+                            formControlName="classOfBusiness"
+                            bindValue="name"
+                            bindLabel="name"
+                            [loading]="formData ? false : true"
+                            [items]="(formData | async)?.InsurClasses?.content!"
+                            [ngClass]="{
+                              'is-submitted':
+                                submitted && f.classOfBusiness?.invalid
+                            }"
+                            (change)="getLineOfBusiness($event.name)"
                           >
                           </ng-select>
+                          <div
+                            class="invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.classOfBusiness?.touched || submitted) &&
+                              f.classOfBusiness?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <div
                           class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label for="lineOfBus" class="asterisk-input">
-                            Class of Insurance</label
+                            Line of Business</label
                           >
                           <ng-select
                             id="lineOfBus"
@@ -183,7 +261,6 @@
                               type="text"
                               ngbDatepicker
                               #d="ngbDatepicker"
-                              formControlName="deadline"
                               placeholder="yyyy-mm-dd"
                               class="form-control form-control-sm"
                               (click)="d.toggle()"

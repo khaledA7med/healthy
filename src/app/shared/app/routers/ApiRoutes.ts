@@ -70,6 +70,12 @@ export const ApiRoutes = {
   MasterMethods: {
     downloadDocument: "/Documents/Download",
     deleteDocument: "/Documents/Delete",
+    BusinessDevelopment: {
+      allClients: LookUpTables + BaseData.AllClients,
+      groupsList: LookUpTables + BaseData.GroupsList,
+      producers: LookUpTables + BaseData.Producers,
+      insurClasses: LookUpTables + BaseData.InsurClasses,
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
@@ -100,6 +106,7 @@ export const ApiRoutes = {
     clientByRequest: "/Production/Policy/SearchClientByRequest",
     searchClient: LookUpTables + "ActiveClient",
     searchPolicies: "/Production/Policy/SearchClientPolicies",
+    lineOfBusiness: "/LookupTables/LineOfBusiness",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
