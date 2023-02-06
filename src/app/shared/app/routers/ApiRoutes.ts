@@ -31,6 +31,10 @@ export const ApiRoutes = {
       groupsList: LookUpTables + BaseData.GroupsList,
       status: LookUpTables + BaseData.ClientStatus,
     },
+    CustomerService: {
+      AllClients: LookUpTables + BaseData.AllClients,
+      clientType: LookUpTables + BaseData.ClientType,
+    }
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
