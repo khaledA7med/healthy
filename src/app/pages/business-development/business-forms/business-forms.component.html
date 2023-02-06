@@ -472,7 +472,7 @@
                     <div class="ribbon-content mt-4 text-muted">
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
-                          <thead class="table-light">
+                          <thead class="table-light text-center">
                             <th>Type</th>
                             <th>Date</th>
                             <th>Note</th>
@@ -480,15 +480,17 @@
                           </thead>
                           <tbody>
                             <td>
-                              <ng-select
-                                class="form-control-sm"
-                                placeholder="log Type"
-                                dropdownPosition="bottom"
-                              ></ng-select>
+                              <div>
+                                <ng-select
+                                  class="form-control-sm"
+                                  placeholder="log Type"
+                                  dropdownPosition="top"
+                                ></ng-select>
+                              </div>
                             </td>
                             <td>
                               <div
-                                class="input-group input-group-sm py-0 custom-inp-group"
+                                class="input-group input-group-sm custom-inp-group"
                               >
                                 <input
                                   type="text"
@@ -507,18 +509,22 @@
                               </div>
                             </td>
                             <td>
-                              <textarea
-                                class="form-control form-control-sm py-0"
-                                rows="0"
-                              ></textarea>
+                              <div>
+                                <textarea
+                                  class="form-control form-control-sm"
+                                  rows="1"
+                                ></textarea>
+                              </div>
                             </td>
-                            <td>
-                              <button
-                                type="button"
-                                class="btn btn-sm btn-soft-danger p-2"
-                              >
-                                <i class="ri-delete-bin-2-line"></i>
-                              </button>
+                            <td class="text-center">
+                              <div>
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-soft-danger"
+                                >
+                                  <i class="ri-delete-bin-2-line"></i>
+                                </button>
+                              </div>
                             </td>
                           </tbody>
                         </table>
@@ -543,32 +549,38 @@
                     <div class="ribbon-content mt-4 text-muted">
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
-                          <thead class="table-light">
+                          <thead class="table-light text-center">
                             <th>Competitors</th>
                             <th>Note</th>
                             <th>Action</th>
                           </thead>
                           <tbody>
                             <td>
-                              <input
-                                type="text"
-                                class="form-control form-control-sm py-0"
-                              />
+                              <div>
+                                <input
+                                  type="text"
+                                  class="form-control form-control-sm py-0"
+                                />
+                              </div>
                             </td>
 
                             <td>
-                              <textarea
-                                class="form-control form-control-sm py-0"
-                                rows="0"
-                              ></textarea>
+                              <div>
+                                <textarea
+                                  class="form-control form-control-sm"
+                                  rows="1"
+                                ></textarea>
+                              </div>
                             </td>
-                            <td>
-                              <button
-                                type="button"
-                                class="btn btn-sm btn-soft-danger py-2"
-                              >
-                                <i class="ri-delete-bin-2-line"></i>
-                              </button>
+                            <td class="text-center">
+                              <div>
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-soft-danger"
+                                >
+                                  <i class="ri-delete-bin-2-line"></i>
+                                </button>
+                              </div>
                             </td>
                           </tbody>
                         </table>
