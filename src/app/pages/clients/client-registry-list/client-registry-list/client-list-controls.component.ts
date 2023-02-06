@@ -38,6 +38,7 @@ export class ClientListControlsComponent {
 
   agInit(params: ICellRendererParams) {
     this.params = params;
+    console.log(this.params.data);
   }
 
   Edit() {
@@ -49,7 +50,7 @@ export class ClientListControlsComponent {
 
   view() {
     this._Router.navigate([
-      { outlets: { details: [this.route, this.params.data.sNo] } },
+      { outlets: { details: [this.route, this.params.data.identity] } },
     ]);
   }
 }

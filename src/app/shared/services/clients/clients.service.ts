@@ -29,13 +29,13 @@ export class ClientsService {
     );
   }
   getClintDetails(
-    sno: number
+    id: string
   ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.details,
       {
         observe: "response",
-        params: { sno },
+        params: { id },
       }
     );
   }
