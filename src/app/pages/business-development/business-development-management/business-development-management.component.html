@@ -40,7 +40,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 mb-3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 mb-3 status-cards">
                     <div class="status-card-body" id="pending" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.pending" data-status="Pending With Underwriting">
                         <div *ngFor="let item of cardLists.pending">
@@ -49,7 +49,7 @@
                     </div>
                     <div [ngClass]="{'noTask': cardLists.pending.length === 0}"></div>
                     <!--end tasks-->
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end pending-underwriting-->
             <div class="tasks-list">
@@ -61,7 +61,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
                     <div class="status-card-body" id="waitingClient" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.waitingClient">
                         <div *ngFor="let item of cardLists.waitingClient">
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <div [ngClass]="{'noTask': cardLists.waitingClient.length === 0}"></div>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end Waiting For Client-->
             <div class="tasks-list">
@@ -81,7 +81,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
                     <div class="status-card-body" id="prospect" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.prospect">
                         <div *ngFor="let item of cardLists.prospect">
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div [ngClass]="{'noTask': cardLists.prospect.length === 0}"></div>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end Prospect-->
             <div class="tasks-list">
@@ -101,7 +101,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
                     <div class="status-card-body" id="confirmed" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.confirmed">
                         <div *ngFor="let item of cardLists.confirmed">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <div [ngClass]="{'noTask': cardLists.confirmed.length === 0}"></div>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end Confirmed-->
             <div class="tasks-list">
@@ -121,7 +121,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
                     <div class="status-card-body" id="quoting" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.quoting">
                         <div *ngFor="let item of cardLists.quoting">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                     <div [ngClass]="{'noTask': cardLists.quoting.length === 0}"></div>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end Quoting-->
             <div class="tasks-list">
@@ -141,7 +141,7 @@
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
                     <div class="status-card-body" id="lost" [dragula]="uiState.dragulaInit"
                         [(dragulaModel)]="cardLists.lost">
                         <div *ngFor="let item of cardLists.lost">
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <div [ngClass]="{'noTask': cardLists.lost.length === 0}"></div>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end Lost-->
         </div>

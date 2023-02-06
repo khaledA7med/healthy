@@ -251,55 +251,39 @@ export class BusinessDevelopmentManagementComponent
   }
 
   draggableHandler(): void {
-    this.dragulaService
-      .createGroup(this.uiState.dragulaInit, {
-        revertOnSpill: true,
-      })
-      .drake.cancel(true);
-    this.dragulaService
-      .removeModel(this.uiState.dragulaInit)
-      .subscribe((res) => {
-        console.log(res);
+    this.dragulaService.createGroup(this.uiState.dragulaInit, {
+      revertOnSpill: true,
+    });
+    let sub = this.dragulaService
+      .dropModel(this.uiState.dragulaInit)
+      .subscribe(({ item, target, source }) => {
+        this.message
+          .confirm(
+            "Yes, Sure!",
+            "Are You Sure To Change Status?!",
+            "primary",
+            "question"
+          )
+          .then((result: SweetAlertResult) => {
+            if (result.isConfirmed) {
+              this.changeStatus(item, target.id);
+            } else {
+              for (let [key, val] of Object.entries(this.cardLists)) {
+                if (key === target.id) {
+                  type ObjectKey = keyof typeof this.cardLists;
+                  const propFrom = key as ObjectKey;
+                  const propTo = source.id as ObjectKey;
+                  this.cardLists[propFrom] = val.filter(
+                    (e) => e.sNo !== item.sNo
+                  );
+                  this.cardLists[propTo].push(item);
+                  this.cardLists[propTo].sort((a, b) => a.sNo! - b.sNo!);
+                }
+              }
+            }
+          });
       });
-
-    // let sub = this.dragulaService
-    //   .dropModel(this.uiState.dragulaInit)
-
-    //   // .().options
-    //   .subscribe(({ targetModel, item, sourceModel }) => {
-    //     // console.log(arg);
-    //     // console.log({
-    //     //   item: arg.item,
-    //     //   source: arg.source.id,
-    //     //   target: arg.target.id,
-    //     // });
-    //     // console.log(sourceModel);
-    //     console.log(this.cardLists);
-    //     let temp = this.cardLists;
-    //     this.message
-    //       .confirm(
-    //         "Yes, Sure!",
-    //         "Are You Sure To Change Status?!",
-    //         "primary",
-    //         "question"
-    //       )
-    //       .then((result: SweetAlertResult) => {
-    //         if (result.isConfirmed) {
-    //           // this.changeStatus(arg.item, arg.target.id);
-    //         } else {
-    //           this.dragulaService
-    //             .find(this.uiState.dragulaInit)
-    //             .drake.cancel(true);
-    //           // let elem = targetModel.find((i) => i.sNo === item.sNo);
-    //           // targetModel.filter((el) => el.sNo === elem.sNo);
-    //           // sourceModel.push(elem);
-    //           console.log(this.cardLists);
-    //           this.cardLists = temp;
-    //           // console.log(elem);
-    //         }
-    //       });
-    //   });
-    // this.subscribes.push(sub);
+    this.subscribes.push(sub);
   }
 
   changeStatus(lead: IBusinessDevelopment, status: string): void {
