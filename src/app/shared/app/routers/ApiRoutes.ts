@@ -31,6 +31,12 @@ export const ApiRoutes = {
       groupsList: LookUpTables + BaseData.GroupsList,
       status: LookUpTables + BaseData.ClientStatus,
     },
+    BusinessDevelopment: {
+      allClients: LookUpTables + BaseData.AllClients,
+      groupsList: LookUpTables + BaseData.GroupsList,
+      producers: LookUpTables + BaseData.Producers,
+      insurClasses: LookUpTables + BaseData.InsurClasses,
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
@@ -52,6 +58,7 @@ export const ApiRoutes = {
   BusinessDevelopment: {
     search: "/BusinessDevelopment/SalesLeads/Search",
     changeStatus: "/BusinessDevelopment/SalesLeads/UpdateStatus",
+    lineOfBusiness: "/LookupTables/LineOfBusiness",
   },
   CustomerService: {
     search: "",

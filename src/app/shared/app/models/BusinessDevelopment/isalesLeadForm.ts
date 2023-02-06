@@ -43,7 +43,7 @@ export interface ISalesLeadForm {
   policyRequiermentsList?: FormControl<FormGroup<IPolicyRequirement>>;
   preferedInsurComapnies?: FormControl<string[] | null>;
   producer?: FormControl<string | null>;
-  producerID: FormControl<number | null>;
+  producerID?: FormControl<number | null>;
   quotingRequirementsList?: FormArray<FormGroup<IQoutingRequirement>>;
   sNo?: FormControl<number | null>;
   salesActivityLogChecked?: FormControl<boolean | null>;

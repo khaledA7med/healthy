@@ -7,7 +7,10 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IBusinessDevelopment } from "../../app/models/BusinessDevelopment/ibusiness-development";
 import { IBusinessDevelopmentFilters } from "../../app/models/BusinessDevelopment/ibusiness-development-filters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
+import {
+  Caching,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 
 @Injectable({
   providedIn: "root",
@@ -36,6 +39,16 @@ export class BusinessDevelopmentService {
       this.env + ApiRoutes.BusinessDevelopment.changeStatus,
       {},
       { params: { LeadNo: lead, status }, observe: "response" }
+    );
+  }
+
+  lineOfBusiness(
+    classOfInc: string
+  ): Observable<HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>> {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.lineOfBusiness,
+      {},
+      { params: { ClassName: classOfInc }, observe: "response" }
     );
   }
 

@@ -124,6 +124,24 @@ export class MasterTableService {
           name: BaseData.Banks,
         },
       ],
+      BusinessDevelopmentForm: [
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.allClients,
+          name: BaseData.AllClients,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.groupsList,
+          name: BaseData.GroupsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+      ],
     };
 
     switch (module) {
@@ -133,6 +151,10 @@ export class MasterTableService {
       case MODULES.ClientForm:
         this.dataSrc = data.ClientForm;
         break;
+      case MODULES.BusinessDevelopmentForm:
+        this.dataSrc = data.BusinessDevelopmentForm;
+        break;
+
       default:
         break;
     }

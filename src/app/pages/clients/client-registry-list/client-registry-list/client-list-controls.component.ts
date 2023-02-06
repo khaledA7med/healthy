@@ -38,7 +38,6 @@ export class ClientListControlsComponent {
 
   agInit(params: ICellRendererParams) {
     this.params = params;
-    console.log(this.params.data);
   }
 
   Edit() {
