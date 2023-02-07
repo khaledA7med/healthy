@@ -18,7 +18,7 @@
                                 <div class="form-check form-check-inline mx-2">
                                     <input class="form-check-input" id="request" type="radio"
                                         formControlName="searchType" (change)="searchByEvt()"
-                                        [value]="uiState.policy.searching.request">
+                                        (click)="openRequestModal(request)" [value]="uiState.policy.searching.request">
                                     <label class="form-check-label" for="request">Request</label>
                                 </div>
                             </div>
@@ -33,7 +33,8 @@
                                         class="form-control form-control-sm"
                                         [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && submitted && f.requestInfo?.invalid}"
                                         placeholder="Request Details">
-                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                        (click)="openRequestModal(request)">
                                         <i class="ri-user-search-fill mx-1"></i>
                                         Search
                                     </button>
@@ -251,4 +252,19 @@
             </div>
         </div>
     </div>
+
+    <!-- Request Popup Modal -->
+    <ng-template #request let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Search By Request</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div>
+    </ng-template>
+
 </form>

@@ -1,5 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { NgbModal, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
@@ -26,7 +33,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   @ViewChild("dropzone") dropzone!: any;
   subscribes: Subscription[] = [];
 
-  constructor() {}
+  constructor(private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -66,6 +73,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.requestInfo?.setValidators(Validators.required);
     else this.f.requestInfo?.clearValidators();
     this.f.requestInfo?.updateValueAndValidity();
+  }
+
+  openRequestModal(modal: TemplateRef<NgbModalOptions>) {
+    this.modalService.open(modal, {
+      centered: true,
+      size: "xl",
+    });
   }
 
   documentsList(e: any) {}
