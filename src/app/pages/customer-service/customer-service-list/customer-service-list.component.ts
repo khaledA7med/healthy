@@ -33,16 +33,20 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { ICustomerServiceFilters } from "src/app/shared/app/models/CustomerService/icustomer-service-filter";
 import { ICustomerService } from "src/app/shared/app/models/CustomerService/icustomer-service";
 import { customerServiceManageCols } from "src/app/shared/app/grid/customerServiceCols";
+import AppUtils from 'src/app/shared/app/util';
 
 
 @Component({
   selector: 'app-customer-service-list',
   templateUrl: './customer-service-list.component.html',
   styleUrls: [ './customer-service-list.component.scss' ],
+  providers: [ AppUtils ],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomerServiceListComponent implements OnInit
+export class CustomerServiceListComponent implements OnInit, OnDestroy
 {
+  submitted = false;
+
   @ViewChild("filter") clintFilter!: ElementRef;
   uiState = {
     routerLink: { forms: AppRoutes.CustomerService.create },
@@ -61,7 +65,7 @@ export class CustomerServiceListComponent implements OnInit
   };
 
   // filter form
-  filterForm!: FormGroup;
+  filterForms!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
   // to unSubscribe
   subscribes: Subscription[] = [];
@@ -223,10 +227,10 @@ export class CustomerServiceListComponent implements OnInit
   }
   private initFilterForm (): void
   {
-    this.filterForm = new FormGroup({
+    this.filterForms = new FormGroup({
       client: new FormControl(""),
       status: new FormControl([]),
-      type: new FormControl(""),
+      type: new FormControl([]),
       requestNo: new FormControl(""),
       branch: new FormControl(""),
       insuranceCompany: new FormControl(""),
@@ -239,16 +243,16 @@ export class CustomerServiceListComponent implements OnInit
   }
   getLookupData ()
   {
-    this.lookupData = this.table.getBaseData(MODULES.Client);
+    this.lookupData = this.table.getBaseData(MODULES.CustomerService);
   }
   modifyFilterReq ()
   {
     this.uiState.filters = {
       ...this.uiState.filters,
-      ...this.filterForm.value,
+      ...this.filterForms.value,
     };
   }
-  onClientFilters (): void
+  onCSFilter (): void
   {
     this.modifyFilterReq();
     this.gridApi.setDatasource(this.dataSource);
@@ -256,7 +260,7 @@ export class CustomerServiceListComponent implements OnInit
 
   clearFilter ()
   {
-    this.filterForm.reset();
+    this.filterForms.reset();
   }
 
   ngOnDestroy (): void

@@ -26,7 +26,7 @@ export const customerServiceManageCols: ColDef[] = [
     },
     {
         headerName: "Duration - W.Days(s)",
-        field: "",
+        field: "duration",
     },
     {
         headerName: "Pending Reason",
@@ -34,70 +34,73 @@ export const customerServiceManageCols: ColDef[] = [
     },
     {
         headerName: "Request No.",
-        field: "",
+        field: "requestNo",
     },
     {
         headerName: "Client ID",
-        field: "",
+        field: "clientId",
     },
     {
         headerName: "Client Name",
-        field: "",
+        field: "clientName",
     },
     {
         headerName: "Policy No.",
-        field: "",
+        field: "policyNo",
     },
     {
         headerName: "ClientPsNo",
-        field: "",
+        field: "clientPolicySno",
     },
     {
         headerName: "Insurance Company",
-        field: "",
+        field: "insurComp",
     },
     {
         headerName: "Class of Insrance",
-        field: "",
+        field: "classOfBusiness",
     },
     {
         headerName: "Net Premium",
-        field: "",
+        field: "netPremium",
     },
     {
         headerName: "Policy Fees",
-        field: "",
+        field: "policyFees",
     },
     {
         headerName: "Total Premium",
-        field: "",
+        field: "totalPremium",
     },
     {
         headerName: "Saved By",
-        field: "",
+        field: "savedBy",
     },
     {
         headerName: "Saved On",
-        field: "",
+        field: "savedDate",
+        valueFormatter: GlobalCellRender.dateFormater,
     },
     {
         headerName: "Notify Client",
-        field: "",
+        field: "notifyClient",
     },
     {
         headerName: "Notify Insurer",
-        field: "",
+        field: "notifyInsurer",
     },
     {
         headerName: "Cancellation Reason",
-        field: "",
+        field: "cancelationReason",
     },
     {
-        headerName: "Cloased/Cancelled By",
-        field: "",
+        headerName: "Closed/Cancelled By",
+        field: "closedBy/canceledBy",
     },
     {
         headerName: "Closed/Cancelled On",
-        field: "",
+        field: "closedOn/canceledOn",
+        valueFormatter: GlobalCellRender.dateFormater,
+
     }
 ];

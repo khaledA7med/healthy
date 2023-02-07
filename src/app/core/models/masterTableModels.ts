@@ -23,6 +23,12 @@ export enum BaseData
   GroupsList = "GroupsList",
   ClientStatus = "ClientStatus",
   AllClients = "AllClients",
+  InsuranceCompanies = "InsuranceCompanies",
+  CServiceStatus = "CServiceStatus",
+  PendingReason = "PendingReason",
+  AllUsers = "AllUsers",
+  InsurClasses = "InsurClasses",
+  TypeOfCustomerServices = "TypeOfCustomerServices"
 }
 
 export interface IBaseMasterTable
@@ -48,7 +54,14 @@ export interface IBaseMasterTable
   CommericalNo?: Caching<IGenericResponseType[]>;
   GroupsList?: Caching<IGenericResponseType[]>;
   ClientStatus?: Caching<IGenericResponseType[]>;
-  AllClients?: Caching<IGenericResponseType[]>;
+  AllClients?: Caching<IAllClients[]>;
+  CSRegistryClients?: Caching<IGenericResponseType[]>;
+  InsuranceCompanies?: Caching<IGenericResponseType[]>;
+  CServiceStatus?: Caching<IGenericResponseType[]>;
+  PendingReason?: Caching<IGenericResponseType[]>;
+  AllUsers?: Caching<IGenericResponseType[]>;
+  InsurClasses?: Caching<IGenericResponseType[]>;
+  TypeOfCustomerServices?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T>
@@ -85,12 +98,6 @@ export interface IBanks
   sNo?: number;
   bankName?: string;
   swift?: string;
-}
-
-export interface IClientTypes
-{
-  id: number;
-  name: string;
 }
 
 export interface IAllClients

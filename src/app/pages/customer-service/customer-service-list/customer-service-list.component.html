@@ -49,13 +49,117 @@
             <button type="button" class="btn-close" aria-label="Close"
                 (click)="offcanvas.dismiss('Cross click')"></button>
         </div>
-        <div class="offcanvas-body">
-            <form class="row justify-content-center" [formGroup]="filterForm">
-                <!-- full Name -->
-                <div class="col-12 mb-2">
-                    <label for="fullName" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Full Name"
-                        formControlName="fullName" />
+        <div class="offcanvas-body mb-5">
+            <form class="row justify-content-center" [formGroup]="filterForms">
+                <!-- Client Name -->
+                <div class="mb-4">
+                    <label for="Client" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                        Client Name:
+                    </label>
+                    <ng-select id="client" class="is-invalid" placeholder="Select Client Name"
+                        [items]="(lookupData | async)?.AllClients?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="client" bindLabel="name" bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="Status" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Status</label>
+                    <ng-select id="Status" class="is-invalid" placeholder="Select Status"
+                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
+                        bindLabel="name" bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="Type" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Type</label>
+                    <ng-select id="Type" class="is-invalid" placeholder="Select Type"
+                        [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" [multiple]="true"
+                        formControlName="type" bindLabel="name" bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="duration" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                        Waiting Period above :
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <label class="m-checkbox m-checkbox--solid">
+                                <input id="Checkduration" type="checkbox"> Waiting Period above
+                                <span></span>
+                            </label>
+                        </span>
+                        <input name="duration" type="number" formControlName="duration" class="form-control m-input"
+                            id="duration" min="0" placeholder="">
+                        <span class="input-group-text"> W. Day(s)</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="RequestNo" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                        Request No :
+                    </label>
+                    <input name="RequestNo" type="text" class="form-control" id="RequestNo" placeholder="">
+                </div>
+
+                <div class="mb-4">
+                    <label for="Branch" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Branch</label>
+                    <ng-select id="Branch" class="is-invalid" placeholder="Select Branch" formControlName="branch"
+                        [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="InsuranceCompany"
+                        class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Insurance Company :</label>
+                    <ng-select id="insuranceCompany" class="is-invalid" placeholder="Select Insurance Company"
+                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+                        formControlName="insuranceCompany" bindLabel="name" bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="PendingReason" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Pending
+                        Reason : </label>
+                    <ng-select id="PendingReason" class="is-invalid" placeholder="Select Pending Reason"
+                        [items]="(lookupData | async)?.PendingReason?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="pendingReason" bindLabel="name"
+                        bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="ClassOfBusniess" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Class
+                        Of Busniess : </label>
+                    <ng-select id="ClassOfBusniess" class="is-invalid" placeholder="Select Class Of Busniess"
+                        [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="classOfBusniess" bindLabel="name"
+                        bindValue="id">
+                    </ng-select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="CreatedBy" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3"> Created
+                        by: </label>
+                    <ng-select id="CreatedBy" class="is-invalid" placeholder="Created By"
+                        [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="createdBy" bindLabel="name"
+                        bindValue="id">
+                    </ng-select>
+                </div>
+
+
+                <!-- Issue -->
+
+                <div class="mb-4 mb-5">
+                    <label for="Deadline" class="form-label text-muted text-uppercase fw-bold fs-13">
+                        Dead line:
+                    </label>
+                    <app-gregorian-picker [submitted]="submitted"></app-gregorian-picker>
                 </div>
                 <div class="col-12 mh-100"></div>
             </form>
@@ -68,7 +172,7 @@
                 </button>
             </div>
             <div class="col-6 mt-2">
-                <button class="btn btn-success btn-sm w-100" (click)="onClientFilters()">
+                <button class="btn btn-success btn-sm w-100" (click)="onCSFilter()">
                     Apply
                 </button>
             </div>

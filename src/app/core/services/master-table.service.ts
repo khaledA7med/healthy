@@ -131,6 +131,38 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.CustomerService.AllClients,
           name: BaseData.AllClients
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.Branch,
+          name: BaseData.Branch
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.InsuranceCompanies,
+          name: BaseData.InsuranceCompanies
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.CServiceStatus,
+          name: BaseData.CServiceStatus
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.PendingReason,
+          name: BaseData.PendingReason
+
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.AllUsers,
+          name: BaseData.AllUsers
+
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.InsurClasses,
+          name: BaseData.InsurClasses
+
+        },
+        {
+          route: ApiRoutes.MasterTable.CustomerService.TypeOfCustomerServices,
+          name: BaseData.TypeOfCustomerServices
+
         }
       ]
     };

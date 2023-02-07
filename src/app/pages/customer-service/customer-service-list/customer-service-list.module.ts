@@ -6,6 +6,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
 import { CustomerServiceListControlsComponent } from './customer-service-list-controls.component';
+import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
 
 export const routes: Routes = [
   { path: "", component: CustomerServiceListComponent },
@@ -17,6 +18,7 @@ export const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
+    GregorianPickerModule,
     AgGridModule.withComponents([ CustomerServiceListControlsComponent ]) ],
 })
 export class CustomerServiceListModule { }

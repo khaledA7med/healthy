@@ -33,7 +33,13 @@ export const ApiRoutes = {
     },
     CustomerService: {
       AllClients: LookUpTables + BaseData.AllClients,
-      clientType: LookUpTables + BaseData.ClientType,
+      Branch: LookUpTables + BaseData.Branch,
+      InsuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      CServiceStatus: LookUpTables + BaseData.CServiceStatus,
+      PendingReason: LookUpTables + BaseData.PendingReason,
+      AllUsers: LookUpTables + BaseData.AllUsers,
+      InsurClasses: LookUpTables + BaseData.InsurClasses,
+      TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices
     }
   },
   Clients: {
@@ -57,7 +63,7 @@ export const ApiRoutes = {
     search: "/BusinessDevelopment/SalesLeads/Search",
   },
   CustomerService: {
-    search: "",
+    search: "/CustomerService/Requests/Search",
     create: "",
     edit: "",
     delete: "",
