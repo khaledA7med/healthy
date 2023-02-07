@@ -8,3 +8,5 @@ export enum issueType {
   renewal = "renewal",
   endorsement = "endorsement",
 }
+
+export interface IPolicyRequests {}

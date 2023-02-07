@@ -18,7 +18,7 @@
                                 <div class="form-check form-check-inline mx-2">
                                     <input class="form-check-input" id="request" type="radio"
                                         formControlName="searchType" (change)="searchByEvt()"
-                                        (click)="openRequestModal(request)" [value]="uiState.policy.searching.request">
+                                        (click)="openModal(request)" [value]="uiState.policy.searching.request">
                                     <label class="form-check-label" for="request">Request</label>
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                         [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && submitted && f.requestInfo?.invalid}"
                                         placeholder="Request Details">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
-                                        (click)="openRequestModal(request)">
+                                        (click)="openModal(request)">
                                         <i class="ri-user-search-fill mx-1"></i>
                                         Search
                                     </button>
@@ -51,7 +51,9 @@
                                         class="form-control form-control-sm"
                                         [ngClass]="{'is-invalid' : submitted && f.clientInfo?.invalid}"
                                         placeholder="Client Details">
-                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                        [disabled]="(f.searchType?.value === uiState.policy.searching.request)"
+                                        (click)="openModal(client)">
                                         <i class="ri-user-search-fill mx-1"></i>
                                         Search
                                     </button>
@@ -252,19 +254,71 @@
             </div>
         </div>
     </div>
-
-    <!-- Request Popup Modal -->
-    <ng-template #request let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Search By Request</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-        <div class="modal-body">
-
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-        </div>
-    </ng-template>
-
 </form>
+
+
+<!-- Request Popup Modal -->
+<ng-template #request let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Search By Request</h4>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.requestSearch.clientName" #clientName="ngModel" placeholder="Client Name">
+            </div>
+            <div class="col-5">
+                <input type="hidden" required [(ngModel)]="uiState.requestSearch.dateFrom" #dateFrom="ngModel">
+                <input type="hidden" required [(ngModel)]="uiState.requestSearch.dateTo" #dateTo="ngModel">
+                <app-range-picker (dateChange)="setRange($event)" [monthCount]="2"></app-range-picker>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-primary w-100"
+                    [disabled]="dateFrom?.invalid || dateTo?.invalid || clientName.invalid">
+                    <i class="ri-search-line mx-1"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <app-policy-requests-list [filter]="uiState.requestSearch" type="request"></app-policy-requests-list>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
+
+<!-- Client Popup Modal -->
+<ng-template #client let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Search By Client</h4>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.clientSearch.clientID" #clientID="ngModel" placeholder="Client ID">
+            </div>
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.clientSearch.clientName" #clientName="ngModel" placeholder="Client Name">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-primary w-100" [disabled]="clientName.invalid && clientID.invalid">
+                    <i class="ri-search-line mx-1"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <app-policy-requests-list [filter]="uiState.clientSearch" type="client"></app-policy-requests-list>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
