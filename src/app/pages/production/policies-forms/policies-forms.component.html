@@ -1,0 +1,254 @@
+<form class="mb-4" [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)" id="ClientForm" autocomplete="off">
+    <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5,6">
+        <!-- Client Details -->
+        <ngb-panel id="1" title="Client Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="1">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <!-- Search By Client | Request -->
+                            <div class="col-lg-12">
+                                <label for="client">Search By: </label>
+                                <div class="form-check form-check-inline mx-2">
+                                    <input class="form-check-input" id="client" type="radio"
+                                        formControlName="searchType" (change)="searchByEvt()"
+                                        [value]="uiState.policy.searching.client" checked>
+                                    <label class="form-check-label" for="client">Client</label>
+                                </div>
+                                <div class="form-check form-check-inline mx-2">
+                                    <input class="form-check-input" id="request" type="radio"
+                                        formControlName="searchType" (change)="searchByEvt()"
+                                        [value]="uiState.policy.searching.request">
+                                    <label class="form-check-label" for="request">Request</label>
+                                </div>
+                            </div>
+                            <!--./col-->
+
+                            <!-- Request Info -->
+                            <div class="col-lg-4 col-md-12 mt-md-2" id="requestControl"
+                                *ngIf="f.searchType?.value === uiState.policy.searching.request">
+                                <label for="requestInfo" class="asterisk-input">Request Info</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="requestInfo" name="requestInfo" readonly
+                                        class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && submitted && f.requestInfo?.invalid}"
+                                        placeholder="Request Details">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+                                        <i class="ri-user-search-fill mx-1"></i>
+                                        Search
+                                    </button>
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <!-- Client Info -->
+                            <div class="col-lg-4 col-md-12 my-1">
+                                <label for="clientInfo" class="asterisk-input">Client Info</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="clientInfo" formControlName="clientInfo" readonly
+                                        class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid' : submitted && f.clientInfo?.invalid}"
+                                        placeholder="Client Details">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+                                        <i class="ri-user-search-fill mx-1"></i>
+                                        Search
+                                    </button>
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- Producer ( Salesman )-->
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                                <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
+                                <ng-select formControlName="producer" class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
+                                    [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">Required</span>
+                            </div>
+
+                            <!-- Other Policy Holder -->
+                            <div class="col-lg-4 col-md-12 my-1">
+                                <label for="otherPolicy" [ngClass]="{'asterisk-input' : f.chPolicyHolder?.value}">
+                                    Other Policy Holder</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <input class="form-check-input mt-0" id='otherPolicyChecker' type="checkbox"
+                                            formControlName="chPolicyHolder" (change)="chPolicyHolderEvt($event)">
+                                    </div>
+                                    <input type="text"
+                                        [ngClass]="{'is-invalid' : (f.policyHolder?.touched || submitted) && f.policyHolder?.invalid}"
+                                        id="otherPolicy" formControlName="policyHolder" class="form-control">
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Policy/Endorsement Details -->
+        <ngb-panel id="2" title="Policy/Endorsement Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="2">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Building">Building No.</label>
+                                <input id="Building" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Street">Street</label>
+                                <input id="Street" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="SecondaryNo">Secondary No</label>
+                                <input id="SecondaryNo" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="District">District</label>
+                                <input id="District" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="PostalCode">Postal Code</label>
+                                <input id="PostalCode" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Invoice Details -->
+        <ngb-panel id="3" title="Invoice Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="3">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Building">Building No.</label>
+                                <input id="Building" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Street">Street</label>
+                                <input id="Street" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="SecondaryNo">Secondary No</label>
+                                <input id="SecondaryNo" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="District">District</label>
+                                <input id="District" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="PostalCode">Postal Code</label>
+                                <input id="PostalCode" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Payments & Commissions Details -->
+        <ngb-panel id="4" title="Payments & Commissions" cardClass="open my-4">
+            <ng-template ngbPanelContent="4">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Building">Building No.</label>
+                                <input id="Building" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Street">Street</label>
+                                <input id="Street" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="SecondaryNo">Secondary No</label>
+                                <input id="SecondaryNo" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="District">District</label>
+                                <input id="District" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="PostalCode">Postal Code</label>
+                                <input id="PostalCode" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Documents -->
+        <ngb-panel id="5" title="Documents" cardClass="open my-4">
+            <ng-template ngbPanelContent="5">
+                <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs" #dropzone></app-dropzone>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+
+    <!-- Buttons -->
+    <div class="card">
+        <div class="container-fluid">
+            <div class="card-body px-1 py-3">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-sm btn-success me-2">
+                        <i class="ri-save-2-fill"></i>
+                        Save
+                    </button>
+                    <button type="button" id="sa-warning" (click)="resetForm(); dropzone.clearImages()"
+                        class="btn btn-sm btn-soft-danger">
+                        <i class="ri-delete-bin-2-line"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
