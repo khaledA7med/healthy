@@ -31,10 +31,12 @@ import { IDocumentList } from "./../../app/models/App/IDocument";
   selector: "app-modal-for-details",
   templateUrl: "./client-preview.component.html",
   styleUrls: ["./client-preview.component.scss"],
+  providers: [AppUtils],
 })
 export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   uiState = {
     sno: 0,
+    id: "",
     clientDetails: {} as IClientPreview,
     updatedState: false,
     documentList: [],
@@ -55,13 +57,14 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private message: MessagesService,
     private clientsGroupService: ClientsGroupsService,
-    private table: MasterTableService
+    private table: MasterTableService,
+    public util: AppUtils
   ) {}
 
   ngAfterViewInit(): void {
     this.openPreviewModal();
     this.getSNO();
-    this.getClintDetails(this.uiState.sno);
+    this.getClintDetails(this.uiState.id);
     this.initAddClientToGroupForm();
     this.getLookupData();
   }
@@ -75,15 +78,14 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
 
   getSNO(): void {
     this.route.paramMap.subscribe((res) => {
-      this.uiState.sno = +res.get("id")!;
+      this.uiState.id = res.get("id")!;
     });
   }
 
-  getClintDetails(sno: number): void {
-    let sub = this.clientService.getClintDetails(sno).subscribe({
+  getClintDetails(id: string): void {
+    let sub = this.clientService.getClintDetails(id).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
-        console.log(res.body?.data!);
         AppUtils.nullValues(this.uiState.clientDetails);
         this.customizeClientDocuments();
       },
@@ -116,11 +118,17 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         case "xlsx":
           (el.className = "excel-2-fill"), (el.colorName = "text-success");
           break;
+        case "ppt":
+        case "pptx":
+          (el.className = "ppt-2-fill"), (el.colorName = "text-danger");
+          break;
         case "image":
           break;
         default:
           (el.className = "warning-fill"), (el.colorName = "text-warning");
       }
+
+      el.size = this.util.formatBytes(+el?.size!);
     });
   }
   deleteFile(index: number, path: string) {
@@ -162,6 +170,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
         this.message.popup("Oops!", error.message, "error");
       },
     });
+    this.subscribes.push(sub);
   }
 
   changeStatus(newStatus: string): void {

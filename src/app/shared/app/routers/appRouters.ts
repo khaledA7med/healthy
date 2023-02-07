@@ -31,6 +31,11 @@ export const AppRoutes = {
       Renewal: "saleslead/renewal-report",
     },
   },
+  Production: {
+    base: "production",
+    create: "production/create",
+    edit: "production/update/",
+  },
   CustomerService: {
     base: "customer-service",
     create: "customer-service/create",

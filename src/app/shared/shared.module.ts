@@ -36,6 +36,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
     NgSelectModule,
     ReactiveFormsModule,
     FormsModule,
+    NgbAccordionModule,
   ],
 })
 export class SharedModule {}

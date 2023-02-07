@@ -35,6 +35,6 @@ export class ClientListControlsComponent {
 	}
 
 	view() {
-		this._Router.navigate([{ outlets: { details: [this.route, this.params.data.sNo] } }]);
+		this._Router.navigate([{ outlets: { details: [this.route, this.params.data.identity] } }]);
 	}
 }

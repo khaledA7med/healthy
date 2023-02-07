@@ -1,18 +1,19 @@
+import { ClientStatus } from "./../models/Clients/clientUtil";
 import { CellEvent } from "ag-grid-community";
 import { SalesLeadStatus } from "../models/BusinessDevelopment/business-development-util";
 
 export default class StatusCellRender {
 	public static clientStatus(e: CellEvent): string {
 		switch (e.value) {
-			case "Prospect":
+			case ClientStatus.Prospect:
 				return `<span class='badge bg-warning'>${e.value}</span>`;
-			case "Active":
+			case ClientStatus.Active:
 				return `<span class='badge bg-success'>${e.value}</span>`;
-			case "Pending Activation":
+			case ClientStatus.PendingActivation:
 				return `<span class='badge bg-info'>${e.value}</span>`;
-			case "Blocked":
+			case ClientStatus.Blocked:
 				return `<span class='badge bg-dark'>${e.value}</span>`;
-			case "Rejected":
+			case ClientStatus.Rejected:
 				return `<span class='badge bg-danger'>${e.value}</span>`;
 			default:
 				return `<span class='badge bg-success'>${e.value}</span>`;
