@@ -1,15 +1,3 @@
-<!-- <div class="row my-2">
-  <div class="col-6 d-flex justify-content-start align-items-center">
-    <h4 class="card-title">Group {{group?.groupName}} Clients List</h4>
-  </div>
-  <div class="col-6 d-flex justify-content-end">
-    <button type="button" class="btn btn-soft-info add-btn btn-sm" (click)="openAddClientDialoge(clientContent)">
-      <i class="ri-add-fill me-1 align-bottom"></i> Add Client
-    </button>
-  </div>
-</div> -->
-
-
 <!-- <div class="row"> -->
 <div class="col-lg-12">
   <div class="card">
@@ -50,15 +38,13 @@
         <label for="clientName" class="form-label font-weight-bold">Client Name</label>
         <div class="input-group">
           <ng-select class="w-100" id="clientName" formControlName="clientId"
-            [ngClass]="{ 'is-invalid':addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors }"
-            required>
+            [ngClass]="{ 'is-invalid':form['clientId'].touched && form['clientId'].errors }" required>
             <ng-option *ngFor="let name of clientsList" [value]="name.sNo">{{name.fullName}}
             </ng-option>
           </ng-select>
-          <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors"
-            class="invalid-feedback">
-            <div *ngIf="addClientToGroupForm.controls['clientId'].touched && form['clientId'].errors['required']">
-              A Client is required</div>
+          <div *ngIf="form['clientId'].touched && form['clientId'].errors" class="invalid-feedback">
+            <div *ngIf="form['clientId'].touched && form['clientId'].errors['required']">
+              required</div>
           </div>
         </div>
       </div>
@@ -67,15 +53,13 @@
         <label for="groupName" class="form-label font-weight-bold">Group Name</label>
         <div class="input-group">
           <ng-select class="w-100" id="groupName" formControlName="groupName"
-            [ngClass]="{ 'is-invalid': addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors }"
-            required>
+            [ngClass]="{ 'is-invalid': form['groupName'].touched && form['groupName'].errors }" required>
             <ng-option *ngFor="let name of groupsList" [value]="name.groupName">{{name.groupName}}
             </ng-option>
           </ng-select>
-          <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors"
-            class="invalid-feedback">
-            <div *ngIf="addClientToGroupForm.controls['groupName'].touched && form['groupName'].errors['required']">
-              Group Name is required</div>
+          <div *ngIf="form['groupName'].touched && form['groupName'].errors" class="invalid-feedback">
+            <div *ngIf="form['groupName'].touched && form['groupName'].errors['required']">
+              required</div>
           </div>
         </div>
       </div>
