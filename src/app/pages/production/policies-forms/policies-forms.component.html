@@ -276,14 +276,16 @@
             </div>
             <div class="col-2">
                 <button class="btn btn-sm btn-primary w-100"
-                    [disabled]="dateFrom?.invalid || dateTo?.invalid || clientName.invalid">
+                    [disabled]="dateFrom?.invalid || dateTo?.invalid || clientName.invalid"
+                    (click)="requestsData.setDataSource()">
                     <i class="ri-search-line mx-1"></i>
                     Search
                 </button>
             </div>
         </div>
         <div class="row mt-5">
-            <app-policy-requests-list [filter]="uiState.requestSearch" type="request"></app-policy-requests-list>
+            <app-policy-requests-list [filter]="uiState.requestSearch" type="request"
+                #requestsData></app-policy-requests-list>
         </div>
     </div>
     <div class="modal-footer">
@@ -308,14 +310,16 @@
                     [(ngModel)]="uiState.clientSearch.clientName" #clientName="ngModel" placeholder="Client Name">
             </div>
             <div class="col-2">
-                <button class="btn btn-sm btn-primary w-100" [disabled]="clientName.invalid && clientID.invalid">
+                <button class="btn btn-sm btn-primary w-100" [disabled]="clientName.invalid && clientID.invalid"
+                    (click)="requestsData.setDataSource()">
                     <i class="ri-search-line mx-1"></i>
                     Search
                 </button>
             </div>
         </div>
         <div class="row mt-5">
-            <app-policy-requests-list [filter]="uiState.clientSearch" type="client"></app-policy-requests-list>
+            <app-policy-requests-list [filter]="uiState.clientSearch" type="client"
+                #requestsData></app-policy-requests-list>
         </div>
     </div>
     <div class="modal-footer">
