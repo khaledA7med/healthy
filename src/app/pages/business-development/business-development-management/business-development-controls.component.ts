@@ -73,32 +73,40 @@ import { SweetAlertResult } from "sweetalert2";
 		`,
 	],
 })
-export class BusinessDevelopmentControlsComponent {
+export class BusinessDevelopmentControlsComponent
+{
 	private params!: ICellRendererParams;
 	private comp!: BusinessDevelopmentManagementComponent;
 
 	// route: string = AppRoutes.Client.clientRegistry;
 	leadStatus: any = SalesLeadStatus;
-	constructor(private _Router: Router, private message: MessagesService) {}
+	constructor (private _Router: Router, private message: MessagesService) { }
 
-	agInit(params: ICellRendererParams) {
+	agInit (params: ICellRendererParams)
+	{
 		this.params = params;
 		this.comp = this.params.context.comp;
 	}
 
-	FollowUp() {
+	FollowUp ()
+	{
 		this.comp.openSalesLeadFollowUp(this.params.data.leadNo);
 	}
 
-	Edit() {
-		this._Router.navigate([AppRoutes.Client.clientEdit, this.params.data.identity]);
+	Edit ()
+	{
+		this._Router.navigate([ AppRoutes.Client.clientEdit, this.params.data.identity ]);
 	}
 
-	changeLeadStatus(status: string) {
-		this.message.confirm("Yes, Sure!", "Are You Sure To Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
-			if (result.isConfirmed) {
+	changeLeadStatus (status: string)
+	{
+		this.message.confirm("Yes, Sure!", "Are You Sure To Change Status?!", "primary", "question").then((result: SweetAlertResult) =>
+		{
+			if (result.isConfirmed)
+			{
 				this.comp.changeStatus(this.params.data, status);
-			} else {
+			} else
+			{
 				return;
 			}
 		});

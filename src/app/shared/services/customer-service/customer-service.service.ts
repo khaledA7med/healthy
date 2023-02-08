@@ -6,6 +6,8 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
+import { ICustomerServiceFollowUp } from '../../app/models/CustomerService/icustomer-service-followup';
+import { IChangeCsStatusRequest } from '../../app/models/CustomerService/icustomer-service-req';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,30 @@ export class CustomerServiceService
       {
         observe: "response",
       }
+    );
+  }
+
+  getFollowUps (requestNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>>
+  {
+    return this.http.post<IBaseResponse<ICustomerServiceFollowUp[]>>(
+      this.env + ApiRoutes.CustomerService.followUp,
+      { requestNo },
+      {
+        observe: "response",
+      }
+    );
+  }
+  saveNote (data: {}): Observable<HttpResponse<IBaseResponse<any>>>
+  {
+    return this.http.post(this.env + ApiRoutes.CustomerService.saveNote, data, { observe: "response" });
+  }
+
+  changeStatus (data: IChangeCsStatusRequest): Observable<HttpResponse<IBaseResponse<any>>>
+  {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.changeStatus,
+      {},
+      { params: { rquestNo: data.rquestNo, status: data.status }, observe: "response" }
     );
   }
 }

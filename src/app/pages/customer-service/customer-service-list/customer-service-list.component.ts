@@ -10,7 +10,7 @@ import
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import
 {
   CellEvent,
@@ -34,6 +34,8 @@ import { ICustomerServiceFilters } from "src/app/shared/app/models/CustomerServi
 import { ICustomerService } from "src/app/shared/app/models/CustomerService/icustomer-service";
 import { customerServiceManageCols } from "src/app/shared/app/grid/customerServiceCols";
 import AppUtils from 'src/app/shared/app/util';
+import { ICustomerServiceFollowUp } from 'src/app/shared/app/models/CustomerService/icustomer-service-followup';
+import { CustomerServiceStatus } from 'src/app/shared/app/models/CustomerService/icustomer-service-utils';
 
 
 @Component({
@@ -47,7 +49,10 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
 {
   submitted = false;
 
-  @ViewChild("filter") clintFilter!: ElementRef;
+  @ViewChild("filter") CsFilter!: ElementRef;
+  @ViewChild("followUp") FollowUpCanvas!: ElementRef;
+  context: any = { comp: this };
+
   uiState = {
     routerLink: { forms: AppRoutes.CustomerService.create },
     gridReady: false,
@@ -62,8 +67,14 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
       list: [] as ICustomerService[],
       totalPages: 0,
     },
+    followUpData: {
+      list: [] as ICustomerServiceFollowUp[],
+      requestNo: "",
+    },
   };
 
+  // Follow Up Canvas
+  followUpForm!: FormGroup;
   // filter form
   filterForms!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
@@ -80,6 +91,7 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
+    context: { comp: this },
     defaultColDef: {
       flex: 1,
       minWidth: 100,
@@ -97,28 +109,17 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
+    private appUtils: AppUtils,
     private router: Router
   ) { }
 
   ngOnInit (): void
   {
+    this.initFollowUpForm();
     this.initFilterForm();
     this.getLookupData();
-    let sub = this.router.events.subscribe((evt) =>
-    {
-      if (evt instanceof NavigationEnd)
-      {
-        if (!evt.url.includes("details"))
-        {
-          if (this.router.getCurrentNavigation()?.extras.state![ "updated" ])
-            this.gridApi.setDatasource(this.dataSource);
-        }
-      }
-    });
-    this.subscribes.push(sub);
   }
 
-  // Table Section
   // Table Section
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
@@ -223,24 +224,35 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
   //  filter Section
   openFilterOffcanvas (): void
   {
-    this.offcanvasService.open(this.clintFilter, { position: "end" });
+    this.offcanvasService.open(this.CsFilter, { position: "end" });
   }
   private initFilterForm (): void
   {
     this.filterForms = new FormGroup({
-      client: new FormControl(""),
+      client: new FormControl(null),
       status: new FormControl([]),
       type: new FormControl([]),
-      requestNo: new FormControl(""),
-      branch: new FormControl(""),
-      insuranceCompany: new FormControl(""),
-      pendingReason: new FormControl(""),
-      classOfBusniess: new FormControl(""),
-      createdBy: new FormControl(""),
-      deadline: new FormControl(""),
-      duration: new FormControl(""),
+      requestNo: new FormControl(null),
+      branch: new FormControl(null),
+      insuranceCompany: new FormControl(null),
+      pendingReason: new FormControl(null),
+      classOfBusniess: new FormControl(null),
+      createdBy: new FormControl(null),
+      deadline: new FormControl(null),
+      duration: new FormControl(null),
     });
   }
+  get f ()
+  {
+    return this.filterForms.controls;
+  }
+
+  setDeadLineFilter (e: any)
+  {
+    this.f[ "deadlineFrom" ].setValue(this.appUtils.dateFormater(e.from));
+    this.f[ "deadlineTo" ].setValue(this.appUtils.dateFormater(e.to));
+  }
+
   getLookupData ()
   {
     this.lookupData = this.table.getBaseData(MODULES.CustomerService);
@@ -262,6 +274,123 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
   {
     this.filterForms.reset();
   }
+
+  //#region FollowUp Cancvas
+  private initFollowUpForm (): void
+  {
+    this.followUpForm = new FormGroup({
+      names: new FormControl([], Validators.required),
+      msg: new FormControl(null, Validators.required),
+      no: new FormControl(null),
+    });
+  }
+
+  get ff ()
+  {
+    return this.followUpForm.controls;
+  }
+
+  loadFollowUpData (requestNo: string): void
+  {
+    let sub = this.customerService.getFollowUps(requestNo).subscribe(
+      (res: HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>) =>
+      {
+        if (res.body?.status)
+        {
+          this.uiState.followUpData.requestNo = requestNo;
+          this.uiState.followUpData.list = res.body?.data!;
+        } else
+        {
+          this.message.popup("Oops!", res.body?.message!, "error");
+        }
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  openCustomerServiceFollowUp (requestNo: string): void
+  {
+    let sub = this.offcanvasService.open(this.FollowUpCanvas, { position: "end" });
+    sub.dismissed.subscribe(() =>
+    {
+      this.followUpForm.reset();
+      this.followUpForm.markAsUntouched();
+      this.uiState.submitted = false;
+    });
+    this.uiState.submitted = false;
+    this.loadFollowUpData(requestNo);
+  }
+
+  sendFollowUp ()
+  {
+    this.ff[ "no" ].patchValue(this.uiState.followUpData.requestNo);
+    this.uiState.submitted = true;
+    if (!this.followUpForm.valid)
+    {
+      return;
+    } else
+    {
+      let sub = this.customerService.saveNote(this.followUpForm.value).subscribe(
+        (res: HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>) =>
+        {
+          if (res.body?.status)
+          {
+            this.message.toast(res.body!.message!, "success");
+            this.followUpForm.reset();
+            this.loadFollowUpData(this.uiState.followUpData.requestNo);
+          } else this.message.toast(res.body!.message!, "error");
+        },
+        (err: HttpErrorResponse) =>
+        {
+          this.message.popup("Oops!", err.message, "error");
+        }
+      );
+      this.subscribes.push(sub);
+    }
+  }
+  //#endregion
+
+  changeStatus (CS: ICustomerService, status: string): void
+  {
+    console.log("called");
+    let dataSubmit = {
+      rquestNo: CS.requestNo!,
+      status: "",
+    };
+    switch (status)
+    {
+      case "pending":
+        dataSubmit.status = CustomerServiceStatus.Pending;
+        break;
+      case "close":
+        dataSubmit.status = CustomerServiceStatus.Close;
+        break;
+      case "cancel":
+        dataSubmit.status = CustomerServiceStatus.Cancel;
+        break;
+      default:
+        dataSubmit.status = status;
+        break;
+    }
+    let sub = this.customerService.changeStatus(dataSubmit).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        this.gridApi.setDatasource(this.dataSource);
+        if (res.body?.status) this.message.toast(res.body!.message!, "success");
+        else this.message.toast(res.body!.message!, "error");
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
 
   ngOnDestroy (): void
   {

@@ -74,6 +74,9 @@ export const ApiRoutes = {
 	},
 	CustomerService: {
 		search: "/CustomerService/Requests/Search",
+		followUp: "/CustomerService/Requests/CSFollwUp",
+		saveNote: "/CustomerService/Requests/SaveNote",
+		changeStatus: "/CustomerService/Requests/CSchangeStatus",
 		create: "",
 		edit: "",
 		delete: "",

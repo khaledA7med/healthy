@@ -14,6 +14,7 @@ export const customerServiceManageCols: ColDef[] = [
     {
         headerName: "Endors. Type",
         field: "endorsType",
+        minWidth: 120
     },
     {
         headerName: "Branch",
@@ -21,20 +22,23 @@ export const customerServiceManageCols: ColDef[] = [
     },
     {
         headerName: "Status",
-        cellRenderer: StatusCellRender.clientStatus,
+        cellRenderer: StatusCellRender.customerServiceStatus,
         field: "status",
     },
     {
         headerName: "Duration - W.Days(s)",
         field: "duration",
+        minWidth: 150
     },
     {
         headerName: "Pending Reason",
-        field: "",
+        field: "pendingReason",
+        minWidth: 130
     },
     {
         headerName: "Request No.",
         field: "requestNo",
+        minWidth: 130
     },
     {
         headerName: "Client ID",
@@ -43,6 +47,7 @@ export const customerServiceManageCols: ColDef[] = [
     {
         headerName: "Client Name",
         field: "clientName",
+        minWidth: 130
     },
     {
         headerName: "Policy No.",
@@ -51,26 +56,32 @@ export const customerServiceManageCols: ColDef[] = [
     {
         headerName: "ClientPsNo",
         field: "clientPolicySno",
+        minWidth: 105
     },
     {
         headerName: "Insurance Company",
         field: "insurComp",
+        minWidth: 140
     },
     {
-        headerName: "Class of Insrance",
+        headerName: "Class of Insurance",
         field: "classOfBusiness",
+        minWidth: 140
     },
     {
         headerName: "Net Premium",
         field: "netPremium",
+        minWidth: 110
     },
     {
         headerName: "Policy Fees",
         field: "policyFees",
+        minWidth: 110
     },
     {
         headerName: "Total Premium",
         field: "totalPremium",
+        minWidth: 110
     },
     {
         headerName: "Saved By",
@@ -84,23 +95,28 @@ export const customerServiceManageCols: ColDef[] = [
     {
         headerName: "Notify Client",
         field: "notifyClient",
+        minWidth: 110
     },
     {
         headerName: "Notify Insurer",
         field: "notifyInsurer",
+        minWidth: 110
     },
     {
         headerName: "Cancellation Reason",
         field: "cancelationReason",
+        minWidth: 150
     },
     {
         headerName: "Closed/Cancelled By",
         field: "closedBy/canceledBy",
+        minWidth: 170
     },
     {
         headerName: "Closed/Cancelled On",
         field: "closedOn/canceledOn",
-        valueFormatter: GlobalCellRender.dateFormater,
+        minWidth: 170,
+        valueFormatter: GlobalCellRender.dateFormater
 
     }
 ];
