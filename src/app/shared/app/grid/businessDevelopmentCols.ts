@@ -15,15 +15,18 @@ export const businessDevelopmentCols: ColDef[] = [
 		headerName: "Status",
 		cellRenderer: StatusCellRender.salesLeadStatus,
 		field: "status",
+		minWidth: 200,
 	},
 	{
 		headerName: "Lead Type",
 		field: "leadType",
 		sort: "asc",
+		minWidth: 130,
 	},
 	{
 		headerName: "Lead No.",
 		field: "leadNo",
+		minWidth: 200,
 	},
 	{
 		headerName: "Client ID",
@@ -32,37 +35,45 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Client Name",
 		field: "name",
+		minWidth: 250,
 	},
 	{
 		headerName: "Producer",
 		field: "producer",
+		minWidth: 250,
 	},
 	{
 		headerName: "Class of Business",
 		field: "classOfBusiness",
+		minWidth: 250,
 	},
 	{
 		headerName: "Line of Business",
 		field: "lineOfBusiness",
+		minWidth: 250,
 	},
 	{
 		headerName: "Deadline",
 		field: "deadline",
 		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 	{
 		headerName: "Current Insurer",
 		field: "currentInsurer",
+		minWidth: 250,
 	},
 	{
 		headerName: "Expiry Date",
 		field: "existingPolExpDate",
 		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 	{
 		headerName: "Quoted Date",
 		field: "quoatationDate",
 		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 	{
 		headerName: "Quoted Premium",
@@ -97,19 +108,23 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Created By",
 		field: "savedBy",
+		minWidth: 200,
 	},
 	{
 		headerName: "Created On",
 		field: "savedDate",
 		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 	{
 		headerName: "Updated By",
 		field: "updatedBy",
+		minWidth: 200,
 	},
 	{
 		headerName: "Updated On",
 		field: "updatedOn",
 		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 ];

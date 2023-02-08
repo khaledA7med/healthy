@@ -33,13 +33,12 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 })
 export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
-  submitted = false;
+  submitted: boolean = false;
   formData!: Observable<IBaseMasterTable>;
-
-  editId!: string;
 
   uiState = {
     editMode: false,
+    editId: "",
     clientDetails: {
       clientType: ClientType,
       retail: true,
@@ -68,10 +67,10 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     let sub = this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
-        this.editId = res.get("id")!;
+        this.uiState.editId = res.get("id")!;
         // Display Loader
         this.eventService.broadcast(reserved.isLoading, true);
-        this.getClient(this.editId);
+        this.getClient(this.uiState.editId);
       }
     });
     this.subscribes.push(sub);
@@ -302,14 +301,17 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
           this.patchEditingClient(res.body?.data!);
         }
       },
-      (err) => this.message.popup("Error", err.message, "error")
+      (err) => {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Error", err.message, "error");
+      }
     );
     this.subscribes.push(sub);
   }
 
   patchEditingClient(client: IClientPreview): void {
     this.clientTypeToggler(client.type!);
-    this.editId = client.sNo?.toString()!;
+    this.uiState.editId = client.sNo?.toString()!;
     this.formGroup.patchValue({
       sNo: client.sNo,
       type: client.type,
@@ -391,7 +393,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     const formData = new FormData();
 
-    if (this.editId) formData.append("sNo", this.editId);
+    if (this.uiState.editId) formData.append("sNo", this.uiState.editId);
 
     formData.append("FullName", clientForm.value.fullName!);
     formData.append("FullNameAr", clientForm.value.fullNameAr!);
@@ -500,7 +502,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.message.toast(res.body.message!, "success");
-          if (this.editId) this.router.navigate([AppRoutes.Client.base]);
+          if (this.uiState.editId)
+            this.router.navigate([AppRoutes.Client.base]);
           this.resetForm();
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
         // Hide Loader

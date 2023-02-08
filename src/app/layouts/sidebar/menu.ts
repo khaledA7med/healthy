@@ -82,8 +82,7 @@ export const MENU: MenuItem[] = [
       {
         id: 401,
         label: "MENUITEMS.PRODUCTION.LIST.MANAGEMENT",
-        // link: AppRoutes.BusinessDevelopment.management,
-        link: "",
+        link: AppRoutes.Production.base,
         parentId: 4,
       },
     ],

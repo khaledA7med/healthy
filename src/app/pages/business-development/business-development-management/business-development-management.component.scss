@@ -30,4 +30,38 @@
 	.form-control {
 		max-height: 30px;
 	}
+	.form-control.text-area {
+		max-height: unset;
+	}
+}
+
+.status-cards {
+	min-height: 180px;
+	position: relative;
+}
+
+.status-cards {
+	.status-card-body {
+		min-height: 180px;
+		position: relative;
+	}
+	.noTask::before {
+		content: "";
+		position: absolute;
+		right: 0;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		height: 180px;
+		width: 270px;
+		margin: 0 auto;
+		background-image: url("/assets/images/file.png");
+		background-size: cover;
+		background-position: center;
+	}
+}
+
+.followUpCanvas {
+	overflow-y: unset !important;
+	padding-bottom: unset !important;
 }

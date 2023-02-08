@@ -19,7 +19,7 @@
             <button class="btn btn-sm btn-outline-primary p-0" [class.active]="uiState.view=='list'"
                 (click)="uiState.view='list'"><i class="ri-list-unordered px-2 fs-16"></i></button>
         </div>
-        <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openFilterOffcanvas()"><i
+        <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openSalesLeadFilters()"><i
                 class="ri-filter-3-line me-1"></i>
             Filters
         </button>
@@ -28,77 +28,30 @@
         </a>
     </div>
 </div>
-<div [ngSwitch]="uiState.view">
-    <div *ngSwitchCase="'card'">
+<!-- <div [ngSwitch]="uiState.view"> -->
+<div>
+    <!-- <div *ngSwitchCase="'card'"> -->
+    <div [class.d-none]="uiState.view=='list'">
         <div class="tasks-board mb-3" id="kanbanboard">
             <div class="tasks-list">
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             Pending With Underwriting <small
-                                class="badge bg-dark align-bottom ms-1 totaltask-badge">0</small>
+                                class="badge bg-dark align-bottom ms-1 totaltask-badge">{{cardLists.pending.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="pending-underwriting-cards" data-status="Pending with Underwriting" class="status-cards">
-                        <div class="card tasks-box">
-                            <div class="card-body">
-                                <div class="d-flex mb-2">
-                                    <a href="javascript:void(0)"
-                                        class="text-muted fw-medium fs-14 flex-grow-1">#el.leadNo</a>
-                                    <div class="dropdown">
-                                        <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink7"
-                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                class="ri-more-fill"></i></a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink7">
-                                            <li><button type="button" class="dropdown-item follow-up-grid-view"><i
-                                                        class="ri-chat-follow-up-fill align-bottom me-2 text-muted"></i>
-                                                    Follow Up</button>
-                                            </li>
-                                            <li><a class="dropdown-item" href="/">
-                                                    <i class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                    Edit
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <h6 class="fs-16 text-truncate task-title"><a href="#"
-                                        class="link-dark d-block">el.name</a></h6>
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1">
-                                        <span class="badge badge-soft-primary">el.leadType</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer border-top-dashed">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <span class="text-muted"><i class="ri-timer-line align-bottom"></i>
-                                            el.savedDate</span>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <span class="text-muted"><i class="ri-alarm-line align-bottom"></i>
-                                            el.deadline</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end card-body-->
-                            <div class="progress progress-sm">
-                                <div class="progress-bar ${state}" role="progressbar" style="width: 100%"
-                                    aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 mb-3 status-cards">
+                    <div class="status-card-body" id="pending" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.pending" data-status="Pending With Underwriting">
+                        <div *ngFor="let item of cardLists.pending">
+                            <app-draggable-card [item]="item" [context]="context" barBg="bg-dark"></app-draggable-card>
                         </div>
                     </div>
+                    <div [ngClass]="{'noTask': cardLists.pending.length === 0}"></div>
                     <!--end tasks-->
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="pendingLoadBtn"
-                        onclick="loadMoreCards('Pending with Underwriting')">
-                        Load More
-                    </button>
-                </div>
+                </ngx-simplebar>
             </div>
             <!--end pending-underwriting-->
             <div class="tasks-list">
@@ -106,111 +59,308 @@
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             Waiting For Client FeedBack <small
-                                class="badge bg-secondary align-bottom ms-1 totaltask-badge">0</small>
+                                class="badge bg-secondary align-bottom ms-1 totaltask-badge">{{cardLists.waitingClient.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="waiting-client-feedback-cards" data-status="Waiting for Client Feedback"
-                        class="status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="waitingClient" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.waitingClient">
+                        <div *ngFor="let item of cardLists.waitingClient">
+                            <app-draggable-card [item]="item" [context]="context"
+                                barBg="bg-secondary"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="waitingLoadBtn"
-                        onclick="loadMoreCards('Waiting for Client Feedback')">
-                        Load More
-                    </button>
-                </div>
+                    <div [ngClass]="{'noTask': cardLists.waitingClient.length === 0}"></div>
+                </ngx-simplebar>
             </div>
             <!--end Waiting For Client-->
             <div class="tasks-list">
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Prospect <small class="badge bg-info align-bottom ms-1 totaltask-badge">0</small>
+                            Prospect <small
+                                class="badge bg-info align-bottom ms-1 totaltask-badge">{{cardLists.prospect.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="prospect-cards" data-status="Prospect" class="status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="prospect" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.prospect">
+                        <div *ngFor="let item of cardLists.prospect">
+                            <app-draggable-card [item]="item" [context]="context" barBg="bg-info"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="prospectLoadBtn" onclick="loadMoreCards('Prospect')">
-                        Load
-                        More
-                    </button>
-                </div>
+                    <div [ngClass]="{'noTask': cardLists.prospect.length === 0}"></div>
+                </ngx-simplebar>
             </div>
             <!--end Prospect-->
             <div class="tasks-list">
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Confirmed <small class="badge bg-success align-bottom ms-1 totaltask-badge">0</small>
+                            Confirmed <small
+                                class="badge bg-success align-bottom ms-1 totaltask-badge">{{cardLists.confirmed.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="confirmed-cards" data-status="Confirmed" class="status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="confirmed" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.confirmed">
+                        <div *ngFor="let item of cardLists.confirmed">
+                            <app-draggable-card [item]="item" [context]="context"
+                                barBg="bg-success"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="confirmLoadBtn" onclick="loadMoreCards('Confirmed')">
-                        Load
-                        More
-                    </button>
-                </div>
+                    <div [ngClass]="{'noTask': cardLists.confirmed.length === 0}"></div>
+                </ngx-simplebar>
             </div>
             <!--end Confirmed-->
             <div class="tasks-list">
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Quoting <small class="badge bg-warning align-bottom ms-1 totaltask-badge">0</small>
+                            Quoting <small
+                                class="badge bg-warning align-bottom ms-1 totaltask-badge">{{cardLists.quoting.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="quoting-cards" data-status="Quoting" class="status-cards">
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="quoting" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.quoting">
+                        <div *ngFor="let item of cardLists.quoting">
+                            <app-draggable-card [item]="item" [context]="context"
+                                barBg="bg-warning"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="quotingLoadBtn" onclick="loadMoreCards('Quoting')">
-                        Load
-                        More
-                    </button>
-                </div>
+                    <div [ngClass]="{'noTask': cardLists.quoting.length === 0}"></div>
+                </ngx-simplebar>
             </div>
             <!--end Quoting-->
             <div class="tasks-list">
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-bold mb-0">
-                            Lost <small class="badge bg-danger align-bottom ms-1 totaltask-badge">0</small>
+                            Lost <small
+                                class="badge bg-danger align-bottom ms-1 totaltask-badge">{{cardLists.lost.length}}</small>
                         </h6>
                     </div>
                 </div>
-                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="lost-cards" data-status="Lost" class="status-cards">
-
+                <ngx-simplebar class="tasks-wrapper px-3 mx-n3 status-cards">
+                    <div class="status-card-body" id="lost" [dragula]="uiState.dragulaInit"
+                        [(dragulaModel)]="cardLists.lost">
+                        <div *ngFor="let item of cardLists.lost">
+                            <app-draggable-card [item]="item" [context]="context"
+                                barBg="bg-danger"></app-draggable-card>
+                        </div>
                     </div>
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-soft-info w-100" id="lostLoadBtn" onclick="loadMoreCards('Lost')">
-                        Load More
-                    </button>
-                </div>
+                    <div [ngClass]="{'noTask': cardLists.lost.length === 0}"></div>
+                </ngx-simplebar>
             </div>
             <!--end Lost-->
         </div>
+        <ngb-pagination class="d-flex justify-content-center mt-5" [collectionSize]="uiState.salesLead.totalPages"
+            [pageSize]="uiState.filters.pageSize" [maxSize]="10" [rotate]="true" [(page)]="uiState.filters.pageNumber"
+            (pageChange)="cardsPageChange($event)"></ngb-pagination>
     </div>
-    <div *ngSwitchCase="'list'">
+    <!-- <div *ngSwitchCase="'list'"> -->
+    <div [class.d-none]="uiState.view=='card'">
         <div class="ag-theme-alpine" appTableView>
-            <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+            <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [rowData]="uiState.salesLead.list"
+                [gridOptions]="gridOpts">
             </ag-grid-angular>
         </div>
-
-
     </div>
+</div>
+
+<!----------------------------------  --------------------
+                      Sales Lead Filter
+-------------------------------------------------------->
+<div>
+    <ng-template #filter let-offcanvas>
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title fs-4">Filters</h4>
+            <button type="button" class="btn-close" aria-label="Close"
+                (click)="offcanvas.dismiss('Cross click')"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form class="row justify-content-center" [formGroup]="filterForm">
+                <!-- clinet Name -->
+                <div class="col-12 mb-2">
+                    <label for="clientName" class="form-label">Client Name:</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="Full Name"
+                        formControlName="clientName" />
+                </div>
+                <!-- Client Group -->
+                <div class="col-12 mb-2">
+                    <label for="clinetGroup" class="form-label">Client Group:</label>
+                    <ng-select [items]="(lookupData | async)?.GroupsList?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="clinetGroup" formControlName="groupName">
+                    </ng-select>
+                </div>
+                <!-- Client Status -->
+                <div class="col-12 mb-2">
+                    <label for="salesleadStatus" class="form-label">Client Status:</label>
+
+                    <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" [multiple]="true" id="salesleadStatus" formControlName="status">
+                    </ng-select>
+                </div>
+                <!-- Lead Type -->
+                <div class="col-12 mb-2">
+                    <label for="leadType" class="form-label">Lead Type:</label>
+                    <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true"
+                        [searchable]="true" bindLabel="name" bindValue="name" id="leadType" formControlName="leadType">
+                    </ng-select>
+                </div>
+                <!-- Branch -->
+                <div class="col-12 mb-2">
+                    <label for="branch" class="form-label">Branch:</label>
+                    <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
+                        formControlName="branch">
+                    </ng-select>
+                </div>
+                <!-- ClassOfBusiness -->
+                <div class="col-12 mb-2">
+                    <label for="classOfBusiness" class="form-label">Class Of Business:</label>
+                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="classOfBusiness" formControlName="classOfBusiness">
+                    </ng-select>
+                </div>
+                <!-- producer -->
+                <div class="col-12 mb-2">
+                    <label for="producer" class="form-label">Producer</label>
+                    <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="producer"
+                        formControlName="producer">
+                    </ng-select>
+                </div>
+                <!-- User -->
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">User:</label>
+                    <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="user"
+                        formControlName="user">
+                    </ng-select>
+                </div>
+                <!-- DeadLine Range -->
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">Deadline Range:</label>
+                    <app-range-picker (dateChange)="setDeadLineFilter($event)"></app-range-picker>
+                </div>
+                <!-- Saved On Range -->
+
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">Saved On Range:</label>
+                    <app-range-picker (dateChange)="setSavedOnFilter($event)"></app-range-picker>
+                </div>
+                <!-- Expires In Days -->
+                <div class="col-12 mb-2">
+                    <label for="expireIn" class="form-label">Expires In:</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" type="number" class="form-control" id="expireIn" placeholder="Full Name"
+                            formControlName="expireIn" />
+                        <span class="input-group-text" id="Days">Days</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- submit and clear btn -->
+        <div class="offcanvas-footer border-top row mb-3 mx-1">
+            <div class="col-6 mt-2">
+                <button class="btn btn-light btn-sm w-100" (click)="clearFilter()">
+                    Clear Filter
+                </button>
+            </div>
+            <div class="col-6 mt-2">
+                <button class="btn btn-success btn-sm w-100" (click)="onSalesLeadFilters()">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+
+
+<!----------------------------------  --------------------
+                      Follow Up Canvas
+-------------------------------------------------------->
+<div>
+    <ng-template #followUp let-followOffcanvas>
+        <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp()">
+            <div class="offcanvas-header">
+                <h4 class="offcanvas-title fs-4">Follow Up</h4>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="followOffcanvas.dismiss('Cross click')"></button>
+            </div>
+            <div class="offcanvas-body followUpCanvas">
+                <div class="row justify-content-center">
+                    <!-- <div class="chat-conversation p-3 p-lg-4" id="chat-conversation"> -->
+                    <ngx-simplebar class="chat-conversation p-3 p-lg-4" id="chat-conversation">
+                        <ul class="list-unstyled chat-conversation-list" id="conversation-list">
+                            <li class="chat-list left" *ngFor="let el of uiState.followUpData.list">
+                                <div class="conversation-list">
+                                    <div class="chat-avatar fs-20 text-muted">
+                                        <i class="ri-user-voice-fill"></i>
+                                    </div>
+                                    <div class="user-chat-content">
+                                        <div class="ctext-wrap">
+                                            <div class="ctext-wrap-content">
+                                                <p class="mb-0 ctext-content">{{el.notes}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="conversation-name">
+                                            <small class="text-muted time">{{el.savedUser}}</small>
+                                            <small class="text-muted time">{{el.savedDate | date: "mediumDate"
+                                                }}</small><br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </ngx-simplebar>
+                    <!-- </div> -->
+                    <!--end offcanvas-body-->
+                    <div class="offcanvas-footer border-top pt-3 px-3 gap-2">
+                        <div class="col-12 mb-2">
+                            <label for="users" class="form-label">Users:</label>
+                            <ng-select [items]="(lookupData | async)?.AllUsers?.content!"
+                                [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+                                [ngClass]="{ 'is-invalid': ff['names'].touched && ff['names'].errors }"
+                                [multiple]="true" bindLabel="name" bindValue="name" id="users" formControlName="names">
+                            </ng-select>
+                            <div *ngIf="ff['names'].touched && ff['names'].errors" class="invalid-feedback">
+                                <div *ngIf="ff['names'].touched && ff['names'].errors['required']">
+                                    required</div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control text-area" id="Msg"
+                                [ngClass]="{ 'is-invalid': ff['msg'].touched && ff['msg'].errors }" name="msg"
+                                formControlName="msg" rows="3" placeholder="Type A Message"></textarea>
+                            <div *ngIf="ff['msg'].touched && ff['msg'].errors" class="invalid-feedback">
+                                <div *ngIf="ff['msg'].touched && ff['msg'].errors['required']">
+                                    required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end offcanvas-footer-->
+
+                </div>
+            </div>
+            <!-- submit and clear btn -->
+            <div class="offcanvas-footer border-top row mb-3 mx-1">
+                <div class="col-12 mt-2">
+                    <button class="btn btn-success btn-sm w-100" type="submit" [disabled]="!followUpForm.valid">
+                        Send Emails
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ng-template>
 </div>

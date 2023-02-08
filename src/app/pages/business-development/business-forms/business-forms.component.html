@@ -1,1 +1,656 @@
-<p>business-forms works!</p>
+<form [formGroup]="formGroup" autocomplete="of" id="AddLeadForm">
+  <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
+    <!-- start sales lead details acc   -->
+    <ngb-panel id="1" title="Sales Lead Details" cardClass="open my-4">
+      <ng-template ngbPanelContent>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse show"
+          aria-labelledby="headingOne"
+        >
+          <div class="container-fluid mb-3">
+            <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+              <div class="card-body">
+                <div class="ribbon ribbon-info round-shape">Lead Details</div>
+                <div class="ribbon-content mt-4 text-muted">
+                  <!-- Lead Type Row -->
+                  <div class="row my-2">
+                    <div class="col-sm-2 col-md-2 col-lg-2">Lead Type:</div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 d-flex">
+                      <div class="form-check me-5">
+                        <input
+                          formControlName="leadType"
+                          class="form-check-input"
+                          type="radio"
+                          value="New"
+                          id="leadTypeNew"
+                          checked
+                        />
+                        <label for="leadTypeNew" class="form-check-label"
+                          >New</label
+                        >
+                      </div>
+                      <div class="form-check">
+                        <input
+                          formControlName="leadType"
+                          class="form-check-input"
+                          type="radio"
+                          value="Renewal"
+                          id="leadTypeRen"
+                        />
+                        <label for="leadTypeRen" class="form-check-label"
+                          >Renewal</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /row -->
+                  <!-- Client | Group & Producer row  -->
+                  <div class="row my-2">
+                    <div
+                      class="col-sm-2 col-md-5 col-lg-2 d-flex flex-column my-1"
+                    >
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          value="Client"
+                          id="client"
+                          [checked]="uiState.isClient"
+                        />
+                        <label for="client" class="form-check-label"
+                          >Client</label
+                        >
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          value="Group"
+                          id="client"
+                        />
+                        <label for="client" class="form-check-label"
+                          >Group</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
+                      <label for="client" class="asterisk-input"> Client</label>
+                      <div class="input-group input-group-sm">
+                        <ng-select
+                          id="client"
+                          class="form-control form-control-sm"
+                          aria-describedby="inputGroup-sizing-sm"
+                          placeholder="Select Client"
+                        >
+                        </ng-select>
+
+                        <button
+                          class="input-group-text btn-outline-success btn-sm"
+                          id="inputGroup-sizing-sm"
+                          title="Add New Client"
+                        >
+                          <i class="ri-user-add-line align-middle"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
+                      <label for="producer" class="asterisk-input">
+                        Producer</label
+                      >
+                      <ng-select
+                        id="Producer"
+                        class="form-control-sm"
+                        placeholder="Select Producer"
+                      >
+                      </ng-select>
+                    </div>
+                  </div>
+                  <!-- /row -->
+                </div>
+              </div>
+            </div>
+            <!-- insurance Det & Currently Insured row  -->
+            <div class="row my-2">
+              <div class="col-lg-6 my-2">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape">
+                      Insurance Details
+                    </div>
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="row">
+                        <div
+                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                        >
+                          <label for="classOfInc" class="asterisk-input">
+                            Class of Insurance</label
+                          >
+                          <ng-select
+                            id="classOfInc"
+                            class="form-control-sm"
+                            placeholder="Select Class Of Insurance"
+                          >
+                          </ng-select>
+                        </div>
+                        <div
+                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                        >
+                          <label for="lineOfBus" class="asterisk-input">
+                            Class of Insurance</label
+                          >
+                          <ng-select
+                            id="lineOfBus"
+                            class="form-control-sm"
+                            placeholder="Select Lien Of Business"
+                          >
+                          </ng-select>
+                        </div>
+                        <div
+                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                        >
+                          <label for="estPremium">Estimated Premium</label>
+                          <div class="input-group input-group-sm">
+                            <input
+                              type="number"
+                              class="form-control form-control-sm"
+                              aria-describedby="inputGroup-sizing-sm"
+                            />
+                            <span
+                              class="input-group-text"
+                              id="inputGroup-sizing-sm"
+                              >SAR</span
+                            >
+                          </div>
+                        </div>
+                        <!-- col Deadline -->
+                        <div
+                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                        >
+                          <label for="deadline">Deadline</label>
+                          <div class="input-group input-group-sm">
+                            <span
+                              class="input-group-text"
+                              id="inputGroup-sizing-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                class="form-check-input-sm"
+                                (change)="toggleDate($event)"
+                            /></span>
+
+                            <input
+                              type="text"
+                              ngbDatepicker
+                              #d="ngbDatepicker"
+                              formControlName="deadline"
+                              placeholder="yyyy-mm-dd"
+                              class="form-control form-control-sm"
+                              (click)="d.toggle()"
+                            />
+
+                            <button
+                              class="btn btn-outline-secondary ri-calendar-2-line"
+                              type="button"
+                              (click)="d.toggle()"
+                            ></button>
+                          </div>
+                        </div>
+                        <!-- /col -->
+                        <!-- col Insurance Companies -->
+                        <div class="col-sm-12 my-2 d-flex flex-column">
+                          <label for="PrefInCompnies"
+                            >Preferred Insurance Companies</label
+                          >
+                          <ng-select
+                            id="PrefInCompnies"
+                            class="form-control-sm"
+                            placeholder="Choose Companies"
+                            [multiple]="true"
+                          >
+                          </ng-select>
+                        </div>
+                        <!-- /col -->
+                        <!-- col Acc Details -->
+                        <div class="col-sm-12 my-2 d-flex flex-column">
+                          <label for="accDetails" class="asterisk-input"
+                            >Account Details (Business size ...etc)</label
+                          >
+                          <textarea
+                            id="accDetails"
+                            class="form-control form-control-sm"
+                            rows="3"
+                          ></textarea>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Currently Insured Section -->
+              <div class="col-lg-6 my-2">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape d-flex">
+                      <input
+                        type="checkbox"
+                        class="form-check-input-sm me-1"
+                        (change)="toggleCurInsured()"
+                      />
+                      <span>Currently Insured</span>
+                    </div>
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="row">
+                        <!-- col Expiry Date   -->
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <label for="expiryDate">Expiry Date</label>
+                          <div class="input-group input-group-sm">
+                            <input
+                              type="text"
+                              ngbDatepicker
+                              #d2="ngbDatepicker"
+                              placeholder="yyyy-mm-dd"
+                              class="form-control form-control-sm"
+                              (click)="d2.toggle()"
+                            />
+
+                            <button
+                              class="btn btn-outline-secondary ri-calendar-2-line"
+                              type="button"
+                              (click)="d2.toggle()"
+                            ></button>
+                          </div>
+                        </div>
+                        <!-- /col -->
+                        <!-- col Policy No  -->
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <label for="policyNo">Policy No</label>
+                          <input
+                            id="policyNo"
+                            type="text"
+                            class="form-control form-control-sm"
+                          />
+                        </div>
+                        <!-- /col -->
+                        <!-- col current insurance broker -->
+                        <div class="col-sm-12 my-2">
+                          <label for="curIncBroker"
+                            >Current Insurance Broker
+                          </label>
+                          <ng-select
+                            id="curIncBroker"
+                            class="form-control-sm"
+                            placeholder="Select Current Broker"
+                          >
+                          </ng-select>
+                        </div>
+                        <!-- /col -->
+                        <!-- col current insurance company -->
+                        <div class="col-sm-12 my-2">
+                          <label for="curIncCompany"
+                            >Current Insurance Company
+                          </label>
+                          <ng-select
+                            id="curIncCompany"
+                            class="form-control-sm"
+                            placeholder="Select Current Company"
+                          >
+                          </ng-select>
+                        </div>
+                        <!-- /col -->
+                        <!-- col  existing policy details -->
+                        <div class="col-sm-12 my-2 d-flex flex-column">
+                          <label for="polDetails"
+                            >Existing Policy Details (Business
+                            size,...etc)</label
+                          >
+                          <textarea
+                            id="polDetails"
+                            class="form-control form-control-sm"
+                            rows="4"
+                          ></textarea>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /row -->
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+    <!-- end sales lead details acc -->
+    <!-- start requirement acc -->
+    <ngb-panel id="2" title="Requirement" cardClass="open my-4">
+      <ng-template ngbPanelContent>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse show"
+          aria-labelledby="headingTwo"
+        >
+          <div class="container-fluid mb-3">
+            <div class="row my-2">
+              <div class="col-lg-6">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape">Quoting</div>
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="row my-2">
+                        <!-- col select company  -->
+                        <div class="col-12 mt-2">
+                          <div class="input-group input-group-sm">
+                            <ng-select
+                              class="form-control form-control-sm"
+                              aria-describedby="inputGroup-sizing-sm"
+                              placeholder="Select company"
+                            >
+                            </ng-select>
+
+                            <button
+                              class="input-group-text btn-outline-success btn-sm"
+                              id="inputGroup-sizing-sm"
+                              title="Search Company"
+                            >
+                              <i class="ri-search-line align-middle"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <!-- /col -->
+                        <!-- col start table -->
+                        <div class="col-12 table-responsive my-2">
+                          <table class="table table-nowrap">
+                            <thead class="table-light">
+                              <tr>
+                                <th>
+                                  <div>
+                                    <input
+                                      type="checkbox"
+                                      class="text-dark form-check-input"
+                                    />
+                                  </div>
+                                </th>
+                                <th>Company</th>
+                                <th>Item</th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                        <!-- col end table -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape">
+                      Policy Issuance
+                    </div>
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="row my-2">
+                        <!-- col select company  -->
+                        <div class="col-12 mt-2">
+                          <div class="input-group input-group-sm">
+                            <ng-select
+                              class="form-control form-control-sm"
+                              aria-describedby="inputGroup-sizing-sm"
+                              placeholder="Select company"
+                            >
+                            </ng-select>
+
+                            <button
+                              class="input-group-text btn-outline-success btn-sm"
+                              id="inputGroup-sizing-sm"
+                              title="Search Company"
+                            >
+                              <i class="ri-search-line align-middle"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <!-- /col -->
+                        <!-- col start table -->
+                        <div class="col-12 table-responsive my-2">
+                          <table class="table table-nowrap">
+                            <thead class="table-light">
+                              <tr>
+                                <th>
+                                  <div>
+                                    <input
+                                      type="checkbox"
+                                      class="text-dark form-check-input"
+                                    />
+                                  </div>
+                                </th>
+                                <th>Company</th>
+                                <th>Item</th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                        <!-- col end table -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+    <!-- end requirement acc -->
+    <!-- start lead activities acc   -->
+    <ngb-panel id="3" title="Lead Activities" cardClass="open my-4">
+      <ng-template ngbPanelContent>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse show"
+          aria-labelledby="headingThree"
+        >
+          <div class="container-fluid mb-3">
+            <div class="row my-2">
+              <!-- col activity log -->
+              <div class="col-lg-6 my-2">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape">
+                      Activity Log
+                    </div>
+                    <button
+                      class="btn btn-sm btn-success bg-gradient waves-effect custom-btn"
+                    >
+                      Add Log
+                    </button>
+
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="table-responsive">
+                        <table class="table table-nowrap mt-2">
+                          <thead class="table-light text-center">
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Note</th>
+                            <th>Action</th>
+                          </thead>
+                          <tbody>
+                            <td>
+                              <div>
+                                <ng-select
+                                  class="form-control-sm"
+                                  placeholder="log Type"
+                                  dropdownPosition="top"
+                                ></ng-select>
+                              </div>
+                            </td>
+                            <td>
+                              <div
+                                class="input-group input-group-sm custom-inp-group"
+                              >
+                                <input
+                                  type="text"
+                                  ngbDatepicker
+                                  #d3="ngbDatepicker"
+                                  placeholder="yyyy-mm-dd"
+                                  class="form-control form-control-sm"
+                                  (click)="d3.toggle()"
+                                />
+
+                                <button
+                                  class="btn btn-outline-secondary ri-calendar-2-line"
+                                  type="button"
+                                  (click)="d3.toggle()"
+                                ></button>
+                              </div>
+                            </td>
+                            <td>
+                              <div>
+                                <textarea
+                                  class="form-control form-control-sm"
+                                  rows="1"
+                                ></textarea>
+                              </div>
+                            </td>
+                            <td class="text-center">
+                              <div>
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-soft-danger"
+                                >
+                                  <i class="ri-delete-bin-2-line"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /col -->
+              <!-- col competitors -->
+              <div class="col-lg-6 my-2">
+                <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+                  <div class="card-body">
+                    <div class="ribbon ribbon-info round-shape">
+                      Competitors
+                    </div>
+                    <button
+                      class="btn btn-sm btn-success bg-gradient waves-effect custom-btn"
+                    >
+                      Add Competitors
+                    </button>
+                    <div class="ribbon-content mt-4 text-muted">
+                      <div class="table-responsive">
+                        <table class="table table-nowrap mt-2">
+                          <thead class="table-light text-center">
+                            <th>Competitors</th>
+                            <th>Note</th>
+                            <th>Action</th>
+                          </thead>
+                          <tbody>
+                            <td>
+                              <div>
+                                <input
+                                  type="text"
+                                  class="form-control form-control-sm py-0"
+                                />
+                              </div>
+                            </td>
+
+                            <td>
+                              <div>
+                                <textarea
+                                  class="form-control form-control-sm"
+                                  rows="1"
+                                ></textarea>
+                              </div>
+                            </td>
+                            <td class="text-center">
+                              <div>
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-soft-danger"
+                                >
+                                  <i class="ri-delete-bin-2-line"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /col -->
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+    <!-- end lead activities acc  -->
+    <!-- start Document acc -->
+    <ngb-panel id="4" title="Documents" cardClass="open my-4">
+      <ng-template ngbPanelContent="6">
+        <app-dropzone
+          [UploadedFiles]="docs"
+          (files)="documentsList($event)"
+          #dropzone
+        ></app-dropzone>
+      </ng-template>
+    </ngb-panel>
+    <!-- end document acc -->
+  </ngb-accordion>
+
+  <!-- branch -->
+  <div class="card">
+    <div class="container-fluid">
+      <div class="card-body px-1 py-3">
+        <div class="row my-2">
+          <div class="col-sm-4">
+            <div class="form-check">
+              <input type="checkbox" id="sentTo" class="form-check-input" />
+              <label for="sentTo">Send to U / W</label>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <ng-select
+              placeholder="Choose Branch"
+              class="form-control form-control-sm"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="card">
+    <div class="container-fluid">
+      <div class="card-body px-1 py-3">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-sm btn-success me-2">
+            <i class="ri-save-2-fill"></i>
+            Save
+          </button>
+          <button
+            type="button"
+            id="sa-warning"
+            class="btn btn-sm btn-soft-danger"
+          >
+            <i class="ri-delete-bin-2-line"></i>
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
