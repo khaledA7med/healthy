@@ -95,7 +95,7 @@ export class BusinessDevelopmentControlsComponent {
 	}
 
 	changeLeadStatus(status: string) {
-		this.message.confirm("Yes, Sure!", "Are You Sure To Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
+		this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
 			if (result.isConfirmed) {
 				this.comp.changeStatus(this.params.data, status);
 			} else {

@@ -1,4 +1,4 @@
 export interface IChangeLeadStatusRequest {
-	LeadNo: string;
+	leadNo: string;
 	status: string;
 }
