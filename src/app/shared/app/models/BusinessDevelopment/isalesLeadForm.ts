@@ -1,6 +1,6 @@
+import { IActivityLog } from "./iactivity-log";
 import { ICompetitors } from "./icompetitors";
 import { IQoutingRequirement } from "./iqoutingReq";
-import { IClasses } from "./iclassses";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { IPolicyRequirement } from "./ipolicyReq";
 
@@ -15,7 +15,6 @@ export interface ISalesLeadForm {
   chQuoatationSentToClient?: FormControl<boolean | null>;
   chRevisedQuoatation?: FormControl<boolean | null>;
   classOfBusiness?: FormControl<string | null>;
-  // classesDD?:FormArray<FormGroup<IClasses>>
   clientID?: FormControl<number | null>;
   clientResultPremium?: FormControl<number | null>;
   currentBroker?: FormControl<string | null>;
@@ -48,8 +47,9 @@ export interface ISalesLeadForm {
   sNo?: FormControl<number | null>;
   salesActivityLogChecked?: FormControl<boolean | null>;
   salesLeadCompetitorChecked?: FormControl<boolean | null>;
-  salesLeadCompetitorsList?: FormArray<FormGroup<ICompetitors>>;
   selectedPolicyCompany?: FormControl<string | null>;
   selectedQuotingCompany?: FormControl<string | null>;
   sendToUW?: FormControl<Boolean | null>;
+  salesLeadCompetitorsList?: FormArray<FormGroup<ICompetitors>>;
+  salesActivityLogList?: FormArray<FormGroup<IActivityLog>>;
 }

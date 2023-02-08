@@ -75,6 +75,9 @@ export const ApiRoutes = {
       groupsList: LookUpTables + BaseData.GroupsList,
       producers: LookUpTables + BaseData.Producers,
       insurClasses: LookUpTables + BaseData.InsurClasses,
+      InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
+      InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
+      branch: LookUpTables + BaseData.Branch,
     },
   },
   Clients: {
