@@ -1,14 +1,25 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { NgbModal, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { EventService } from "src/app/core/services/event.service";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
 import { searchBy } from "src/app/shared/app/models/Production/production-util";
+import AppUtils from "src/app/shared/app/util";
+import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
 @Component({
   selector: "app-policies-forms",
   templateUrl: "./policies-forms.component.html",
   styleUrls: ["./policies-forms.component.scss"],
+  providers: [AppUtils],
 })
 export class PoliciesFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IProductionForms>;
@@ -20,13 +31,28 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     policy: {
       searching: searchBy,
     },
+    requestSearch: {
+      clientName: "",
+      dateFrom: "",
+      dateTo: "",
+    },
+    clientSearch: {
+      clientName: "",
+      clientID: "",
+    },
   };
 
   docs: any[] = [];
   @ViewChild("dropzone") dropzone!: any;
+  @ViewChild(PolicyRequestsListComponent)
+  dataSource!: PolicyRequestsListComponent;
   subscribes: Subscription[] = [];
 
-  constructor() {}
+  constructor(
+    private modalService: NgbModal,
+    private eventService: EventService,
+    private appUtils: AppUtils
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -41,7 +67,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       policyHolder: new FormControl({ value: null, disabled: true }),
       requestInfo: new FormControl(null),
       clientInfo: new FormControl(null, Validators.required),
-      clientName: new FormControl(null),
+      clientName: new FormControl(null, Validators.required),
     });
   }
 
@@ -66,6 +92,19 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.requestInfo?.setValidators(Validators.required);
     else this.f.requestInfo?.clearValidators();
     this.f.requestInfo?.updateValueAndValidity();
+  }
+
+  openModal(modal: TemplateRef<NgbModalOptions>) {
+    this.modalService.open(modal, {
+      centered: true,
+      size: "xl",
+      backdrop: "static",
+    });
+  }
+
+  setRange(e: any) {
+    this.uiState.requestSearch.dateFrom = this.appUtils.dateFormater(e.from);
+    this.uiState.requestSearch.dateTo = this.appUtils.dateFormater(e.to);
   }
 
   documentsList(e: any) {}
