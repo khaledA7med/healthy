@@ -141,6 +141,18 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.BusinessDevelopment.insurClasses,
           name: BaseData.InsurClasses,
         },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsuranceCompanyName,
+          name: BaseData.InsuranceCompanyName,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsuranceBrokersList,
+          name: BaseData.InsuranceBrokersList,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.branch,
+          name: BaseData.Branch,
+        },
       ],
     };
 
