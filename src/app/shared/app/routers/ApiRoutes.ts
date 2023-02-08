@@ -49,6 +49,10 @@ export const ApiRoutes = {
       TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
     },
   },
+  MasterMethods: {
+    downloadDocument: "/Documents/Download",
+    deleteDocument: "/Documents/Delete",
+  },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
     details: "/ClientRegistry/Clients/Details",
@@ -74,6 +78,7 @@ export const ApiRoutes = {
   },
   Production: {
     search: "",
+    details: "/Production/Policy/Details",
     clientByRequest: "/Production/Policy/SearchClientByRequest",
   },
   CustomerService: {

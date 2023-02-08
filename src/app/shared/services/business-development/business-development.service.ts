@@ -24,11 +24,7 @@ export class BusinessDevelopmentService {
 	}
 
 	changeStatus(data: IChangeLeadStatusRequest): Observable<HttpResponse<IBaseResponse<any>>> {
-		return this.http.post(
-			this.env + ApiRoutes.BusinessDevelopment.changeStatus,
-			{},
-			{ params: { LeadNo: data.LeadNo, status: data.status }, observe: "response" }
-		);
+		return this.http.post(this.env + ApiRoutes.BusinessDevelopment.changeStatus, data, { observe: "response" });
 	}
 
 	getFollowUps(leadNo: string): Observable<HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>> {
