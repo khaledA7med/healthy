@@ -1,0 +1,536 @@
+<form class="mb-4" [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)" id="ClientForm" autocomplete="off">
+    <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5,6">
+        <!-- Client Details -->
+        <ngb-panel id="1" title="Client Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="1">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <!-- Search By Client | Request -->
+                            <div class="col-lg-12">
+                                <label for="client">Search By: </label>
+                                <div class="form-check form-check-inline mx-2">
+                                    <input class="form-check-input" id="client" type="radio"
+                                        formControlName="searchType" (change)="searchByEvt()"
+                                        [value]="uiState.policy.searching.client" checked>
+                                    <label class="form-check-label" for="client">Client</label>
+                                </div>
+                                <div class="form-check form-check-inline mx-2">
+                                    <input class="form-check-input" id="request" type="radio"
+                                        formControlName="searchType" (change)="searchByEvt()"
+                                        (click)="openModal(request)" [value]="uiState.policy.searching.request">
+                                    <label class="form-check-label" for="request">Request</label>
+                                </div>
+                            </div>
+                            <!--./col-->
+
+                            <!-- Request Info -->
+                            <div class="col-lg-4 col-md-12 mt-md-2" id="requestControl"
+                                *ngIf="f.searchType?.value === uiState.policy.searching.request">
+                                <label for="requestInfo" class="asterisk-input">Request Info</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="requestInfo" name="requestInfo" readonly
+                                        class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && submitted && f.requestNo?.invalid}"
+                                        placeholder="Request Details">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                        (click)="openModal(request)">
+                                        <i class="ri-user-search-fill mx-1"></i>
+                                        Search
+                                    </button>
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <!-- Client Info -->
+                            <div class="col-lg-4 col-md-12 my-1">
+                                <label for="clientInfo" class="asterisk-input">Client Info</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="clientInfo" formControlName="clientInfo" readonly
+                                        class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid' : submitted && f.clientInfo?.invalid}"
+                                        placeholder="Client Details">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                        [disabled]="(f.searchType?.value === uiState.policy.searching.request)"
+                                        (click)="openModal(client)">
+                                        <i class="ri-user-search-fill mx-1"></i>
+                                        Search
+                                    </button>
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- Producer ( Salesman )-->
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                                <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
+                                <ng-select formControlName="producer" class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
+                                    [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">Required</span>
+                            </div>
+
+                            <!-- Other Policy Holder -->
+                            <div class="col-lg-4 col-md-12 my-1">
+                                <label for="otherPolicy" [ngClass]="{'asterisk-input' : f.chPolicyHolder?.value}">
+                                    Other Policy Holder</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <input class="form-check-input mt-0" id='otherPolicyChecker' type="checkbox"
+                                            formControlName="chPolicyHolder" (change)="chPolicyHolderEvt($event)">
+                                    </div>
+                                    <input type="text"
+                                        [ngClass]="{'is-invalid' : (f.policyHolder?.touched || submitted) && f.policyHolder?.invalid}"
+                                        id="otherPolicy" formControlName="policyHolder" class="form-control">
+                                    <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Policy/Endorsement Details -->
+        <ngb-panel id="2" title="Policy/Endorsement Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="2">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <div class="d-lg-flex flex-wrap">
+                                    <label for="client" class="fw-bolder">Issue Type: </label>
+                                    <div class="">
+                                        <div class="form-check form-check-inline mx-2">
+                                            <input class="form-check-input" type="radio" formControlName="issueType"
+                                                id="new" [value]="this.uiState.policy.issueType.new" checked>
+                                            <label class="form-check-label" for="new">New
+                                                Policy</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mx-2">
+                                            <input class="form-check-input" type="radio" formControlName="issueType"
+                                                id="renewal" [value]="this.uiState.policy.issueType.renewal">
+                                            <label class="form-check-label" for="renewal">Renewal
+                                                Of</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mx-2">
+                                            <input class="form-check-input" type="radio" formControlName="issueType"
+                                                id="endorsement" [value]="this.uiState.policy.issueType.endorsement">
+                                            <label class="form-check-label" for="endorsement">Endorsement
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--./col-->
+
+                            <!-- Our Policy Ref -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                                <label for="ourPolicyRef" class="">Our
+                                    Policy Ref</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="ourPolicyRef" name="ourPolicyRef" readonly
+                                        [ngClass]="{'is-invalid' : (f.oasisPolRef?.touched || submitted) && f.oasisPolRef?.invalid}"
+                                        aria-label="Our Policy Ref" class="form-control" placeholder="Policy Ref">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center" id="ourPolicyRefBtn"
+                                        type="button" (click)="openModal(policy)">
+                                        <i class="ri-file-search-line mx-1"></i>
+                                        Search
+                                    </button>
+                                    <span class="invalid-feedback mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- A/C No -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="A-CNo" class="asterisk-input">A/C No</label>
+                                <input type="text" formControlName="accNo" class="form-control form-control-sm"
+                                    [ngClass]="{'is-invalid' : (f.accNo?.touched || submitted) && f.accNo?.invalid}"
+                                    placeholder="A/C No." id="A-CNo">
+                                <span class="invalid-feedback mt-0">Required</span>
+                            </div>
+
+                            <!-- Policy No -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="PolicyNo" class="asterisk-input">Policy
+                                    No</label>
+                                <input type="text" class="form-control form-control-sm" formControlName="policyNo"
+                                    [ngClass]="{'is-invalid' : (f.policyNo?.touched || submitted) && f.policyNo?.invalid}"
+                                    placeholder="Policy No." id="PolicyNo">
+                                <span class="invalid-feedback mt-0">Required</span>
+                            </div>
+
+                            <!-- Endors Type-->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="endorsType">Endors Type</label>
+                                <!-- [items]="(formData | async)?.endorsTypes?.content!" bindLabel="name" bindValue="name" -->
+                                <ng-select formControlName="endorsType" placeholder="Endors Type"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+
+                            <!-- Endors No -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="endorsNo">Endors
+                                    No</label>
+                                <input type="text" class="form-control form-control-sm" formControlName="endorsNo"
+                                    placeholder="Endors No." id="endorsNo">
+                            </div>
+
+                            <!-- Issued By -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="insurComp" class="asterisk-input">Issued By</label>
+                                <!-- [items]="(formData | async)?.insurComp?.content!" bindLabel="name" bindValue="name" -->
+                                <ng-select formControlName="insurComp" id="insurComp" placeholder="Insurance Company"
+                                    class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.insurComp?.touched || submitted) && f.insurComp?.invalid}"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.insurComp?.touched || submitted) && f.insurComp?.invalid">Required</span>
+                            </div>
+
+                            <!-- Class Of Insurance -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="className" class="asterisk-input">Class Of Business</label>
+                                <!-- [items]="(formData | async)?.className?.content!" bindLabel="name" bindValue="name" -->
+                                <ng-select formControlName="className" id="className" placeholder="Class Of Business"
+                                    class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.className?.touched || submitted) && f.className?.invalid}"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.className?.touched || submitted) && f.className?.invalid">Required</span>
+                            </div>
+
+                            <!-- Line Of Business -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="lineOfBusiness" class="asterisk-input">Line Of Business</label>
+                                <!-- [items]="(formData | async)?.lineOfBusiness?.content!" bindLabel="name" bindValue="name" -->
+                                <ng-select formControlName="lineOfBusiness" id="lineOfBusiness"
+                                    placeholder="Line Of Business" class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid}"
+                                    [loading]="formData ? false : true">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div>{{ item.name }}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid">Required</span>
+                            </div>
+
+                            <!-- Minimum Driver Age -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="minDriverAge">Minimum Driver Age</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="number" class="form-control" name="minDriverAge"
+                                        [ngClass]="{'is-invalid': (f.minDriverAge?.touched || submitted) && f.minDriverAge?.invalid}"
+                                        id="minDriverAge" placeholder="Minimum Driver Age"
+                                        aria-label="Minimum Driver Age" aria-describedby="year">
+                                    <span class="input-group-text" id="year">Years</span>
+                                    <span class="invalid-feedback mt-0">Required</span>
+                                </div>
+                            </div>
+
+                            <!-- Issue Date -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label class="asterisk-input">Issue Date</label>
+                                <app-gregorian-picker [model]="f.issueDate?.value" [required]="true"
+                                    [submitted]="submitted" (dateChange)="issueDate($event)"></app-gregorian-picker>
+                            </div>
+
+                            <!-- Inception Date -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label class="asterisk-input">Inception Date</label>
+                                <app-gregorian-picker [model]="f.periodFrom?.value" [required]="true"
+                                    [submitted]="submitted" (dateChange)="inceptionDate($event)"></app-gregorian-picker>
+                            </div>
+
+                            <!-- Expiry Date -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label class="asterisk-input">Expiry Date</label>
+                                <app-gregorian-picker [model]="f.periodTo?.value" [required]="true"
+                                    [submitted]="submitted" (dateChange)="expiryDate($event)"></app-gregorian-picker>
+                            </div>
+
+                            <!-- Claims Deadline -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="claimNoOfDays">Claims Deadline</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="number" class="form-control" formControlName="claimNoOfDays"
+                                        id="claimNoOfDays" placeholder="Claims Deadline" aria-describedby="Days">
+                                    <span class="input-group-text" id="Days">Days</span>
+                                </div>
+                            </div>
+
+                            <!-- CS Deadline -->
+                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                <label for="csNoOfDays">CS Deadline</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="number" class="form-control" formControlName="csNoOfDays"
+                                        id="csNoOfDays" placeholder="CS Deadline" aria-describedby="Days">
+                                    <span class="input-group-text" id="Days">Days</span>
+                                </div>
+                            </div>
+
+                            <!-- Remarks -->
+                            <div class="col-lg-6 col-md-6 col-ms-12 my-1">
+                                <label for="remarks">Remarks</label>
+                                <textarea class="form-control form-control-sm" formControlName="remarks" id="remarks"
+                                    rows="1"></textarea>
+                            </div>
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Invoice Details -->
+        <ngb-panel id="3" title="Invoice Details" cardClass="open my-4">
+            <ng-template ngbPanelContent="3">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Building">Building No.</label>
+                                <input id="Building" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Street">Street</label>
+                                <input id="Street" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="SecondaryNo">Secondary No</label>
+                                <input id="SecondaryNo" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="District">District</label>
+                                <input id="District" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="PostalCode">Postal Code</label>
+                                <input id="PostalCode" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Payments & Commissions Details -->
+        <ngb-panel id="4" title="Payments & Commissions" cardClass="open my-4">
+            <ng-template ngbPanelContent="4">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                    <div class="container-fluid mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Building">Building No.</label>
+                                <input id="Building" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="Street">Street</label>
+                                <input id="Street" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="SecondaryNo">Secondary No</label>
+                                <input id="SecondaryNo" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="District">District</label>
+                                <input id="District" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="PostalCode">Postal Code</label>
+                                <input id="PostalCode" class="form-control form-control-sm" />
+                            </div>
+                            <!--./col-->
+                        </div>
+                        <!--./row-->
+                    </div>
+                    <!--./container-->
+                </div>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Documents -->
+        <ngb-panel id="5" title="Documents" cardClass="open my-4">
+            <ng-template ngbPanelContent="5">
+                <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs" #dropzone></app-dropzone>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+
+    <!-- Buttons -->
+    <div class="card">
+        <div class="container-fluid">
+            <div class="card-body px-1 py-3">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-sm btn-success me-2">
+                        <i class="ri-save-2-fill"></i>
+                        Save
+                    </button>
+                    <button type="button" id="sa-warning" (click)="resetForm(); dropzone.clearImages()"
+                        class="btn btn-sm btn-soft-danger">
+                        <i class="ri-delete-bin-2-line"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Request Popup Modal -->
+<ng-template #request let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Search By Request</h4>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.requestSearch.clientName" #clientName="ngModel" placeholder="Client Name">
+            </div>
+            <div class="col-5">
+                <input type="hidden" required [(ngModel)]="uiState.requestSearch.dateFrom" #dateFrom="ngModel">
+                <input type="hidden" required [(ngModel)]="uiState.requestSearch.dateTo" #dateTo="ngModel">
+                <app-range-picker (dateChange)="setRange($event)" [monthCount]="2"></app-range-picker>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-primary w-100"
+                    [disabled]="dateFrom?.invalid || dateTo?.invalid || clientName.invalid"
+                    (click)="requestsData.setDataSource()">
+                    <i class="ri-search-line mx-1"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <app-policy-requests-list [filter]="uiState.requestSearch" (dataEvent)="fillRequestDataToForm($event)"
+                type="request" #requestsData></app-policy-requests-list>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
+
+<!-- Client Popup Modal -->
+<ng-template #client let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Search By Client</h4>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.clientSearch.clientID" #clientID="ngModel" placeholder="Client ID">
+            </div>
+            <div class="col-5">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.clientSearch.clientName" #clientName="ngModel" placeholder="Client Name">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-primary w-100" [disabled]="clientName.invalid && clientID.invalid"
+                    (click)="requestsData.setDataSource()">
+                    <i class="ri-search-line mx-1"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <app-policy-requests-list [filter]="uiState.clientSearch" (dataEvent)="fillClientDataToForm($event)"
+                type="client" #requestsData></app-policy-requests-list>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
+
+<!-- Policies Popup Modal -->
+<ng-template #policy let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Search For Policies</h4>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-4">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.policySearch.clientID" #clientID="ngModel" placeholder="Client ID">
+            </div>
+            <div class="col-4">
+                <input type="text" class="form-control form-control-sm" required
+                    [(ngModel)]="uiState.policySearch.clientName" #clientName="ngModel" placeholder="Client Name">
+            </div>
+            <div class="col-lg-2 d-flex align-items-end">
+                <div class="form-check form-check-inline mx-2">
+                    <input class="form-check-input" type="radio" name="policyStatus"
+                        [(ngModel)]="uiState.policySearch.status" id="active" value="active" checked>
+                    <label class="form-check-label" for="active">Active</label>
+                </div>
+                <div class="form-check form-check-inline mx-2">
+                    <input class="form-check-input" type="radio" name="policyStatus"
+                        [(ngModel)]="uiState.policySearch.status" id="expired" value="expired">
+                    <label class="form-check-label" for="expired">Expired</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-primary w-100" [disabled]="clientName.invalid && clientID.invalid"
+                    (click)="requestsData.setDataSource()">
+                    <i class="ri-search-line mx-1"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <app-policy-requests-list [filter]="uiState.policySearch" type="policy"
+                (dataEvent)="fillPolicyDataToForm($event)" #requestsData></app-policy-requests-list>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>

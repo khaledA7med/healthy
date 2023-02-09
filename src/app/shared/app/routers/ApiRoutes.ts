@@ -1,4 +1,3 @@
-import { Base } from "lord-icon-element/build/triggers/base";
 import { BaseData } from "src/app/core/models/masterTableModels";
 const LookUpTables = "/LookupTables/";
 
@@ -32,13 +31,15 @@ export const ApiRoutes = {
       status: LookUpTables + BaseData.ClientStatus,
     },
     BusinessDevelopment: {
-      allClients: LookUpTables + BaseData.AllClients,
       groupsList: LookUpTables + BaseData.GroupsList,
+      branch: LookUpTables + BaseData.Branch,
       producers: LookUpTables + BaseData.Producers,
-      insurClasses: LookUpTables + BaseData.InsurClasses,
+      InsurClasses: LookUpTables + BaseData.InsurClasses,
+      AllUsers: LookUpTables + BaseData.AllUsers,
+      SalesleadStatus: LookUpTables + BaseData.SalesleadStatus,
+      allClients: LookUpTables + BaseData.AllClients,
       InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
-      branch: LookUpTables + BaseData.Branch,
     },
   },
   Clients: {
@@ -61,7 +62,15 @@ export const ApiRoutes = {
   BusinessDevelopment: {
     search: "/BusinessDevelopment/SalesLeads/Search",
     changeStatus: "/BusinessDevelopment/SalesLeads/UpdateStatus",
+    followUp: "/BusinessDevelopment/SalesLeads/GetSalesLeadFllowup",
+    saveNote: "/BusinessDevelopment/SalesLeads/SaveNote",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
+  },
+  Production: {
+    search: "",
+    clientByRequest: "/Production/Policy/SearchClientByRequest",
+    searchClient: LookUpTables + "ActiveClient",
+    searchPolicies: "/Production/Policy/SearchClientPolicies",
   },
   CustomerService: {
     search: "",

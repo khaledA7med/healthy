@@ -27,6 +27,11 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
+      import("./production/production.module").then((m) => m.ProductionModule),
+  },
+  {
+    path: "",
+    loadChildren: () =>
       import("./extrapages/extraspages.module").then(
         (m) => m.ExtraspagesModule
       ),

@@ -21,6 +21,8 @@ export enum BaseData {
   CommericalNo = "CommericalNo",
   GroupsList = "GroupsList",
   ClientStatus = "ClientStatus",
+  AllUsers = "AllUsers",
+  SalesleadStatus = "SalesleadStatus",
   AllClients = "AllClients",
   InsurClasses = "InsurClasses",
   InsuranceCompanyName = "InsuranceCompanyName",
@@ -49,6 +51,8 @@ export interface IBaseMasterTable {
   CommericalNo?: Caching<IGenericResponseType[]>;
   GroupsList?: Caching<IGenericResponseType[]>;
   ClientStatus?: Caching<IGenericResponseType[]>;
+  AllUsers?: Caching<IGenericResponseType[]>;
+  SalesleadStatus?: Caching<IGenericResponseType[]>;
   AllClients?: Caching<IGenericResponseType[]>;
   InsurClasses?: Caching<IGenericResponseType[]>;
   InsuranceCompanyName?: Caching<IGenericResponseType[]>;

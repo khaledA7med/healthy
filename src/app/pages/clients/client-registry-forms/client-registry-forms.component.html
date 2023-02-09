@@ -44,7 +44,7 @@
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
                 <ng-select formControlName="producer" class="is-invalid" [ngClass]="{
-                    'is-submitted': submitted && f.producer?.invalid
+                    'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid
                   }" [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">

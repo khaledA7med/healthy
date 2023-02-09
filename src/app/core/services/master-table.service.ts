@@ -4,9 +4,7 @@ import { MODULES, MODULE_NAME } from "src/app/core/models/MODULES";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
 import { BaseData } from "../models/masterTableModels";
-import { reserved } from "../models/reservedWord";
 import { CachingService } from "./caching.service";
-import { EventService } from "./event.service";
 
 @Injectable({
   providedIn: "root",
@@ -14,11 +12,7 @@ import { EventService } from "./event.service";
 export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor(
-    private http: HttpClient,
-    private caching: CachingService,
-    private eventService: EventService
-  ) {
+  constructor(private http: HttpClient, private caching: CachingService) {
     this.dataSrc = [];
   }
 
@@ -138,7 +132,7 @@ export class MasterTableService {
           name: BaseData.Producers,
         },
         {
-          route: ApiRoutes.MasterTable.BusinessDevelopment.insurClasses,
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsurClasses,
           name: BaseData.InsurClasses,
         },
         {
@@ -154,6 +148,32 @@ export class MasterTableService {
           name: BaseData.Branch,
         },
       ],
+      BusinessDevelopment: [
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.groupsList,
+          name: BaseData.GroupsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.AllUsers,
+          name: BaseData.AllUsers,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.SalesleadStatus,
+          name: BaseData.SalesleadStatus,
+        },
+      ],
     };
 
     switch (module) {
@@ -162,6 +182,9 @@ export class MasterTableService {
         break;
       case MODULES.ClientForm:
         this.dataSrc = data.ClientForm;
+        break;
+      case MODULES.BusinessDevelopment:
+        this.dataSrc = data.BusinessDevelopment;
         break;
       case MODULES.BusinessDevelopmentForm:
         this.dataSrc = data.BusinessDevelopmentForm;

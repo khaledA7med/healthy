@@ -11,6 +11,8 @@ import {
   Caching,
   IGenericResponseType,
 } from "src/app/core/models/masterTableModels";
+import { IChangeLeadStatusRequest } from "../../app/models/BusinessDevelopment/ibusiness-development-req";
+import { ISalesLeadFollowUps } from "../../app/models/BusinessDevelopment/ibusiness-development-followups";
 
 @Injectable({
   providedIn: "root",
@@ -32,13 +34,35 @@ export class BusinessDevelopmentService {
   }
 
   changeStatus(
-    lead: string,
-    status: string
+    data: IChangeLeadStatusRequest
   ): Observable<HttpResponse<IBaseResponse<any>>> {
     return this.http.post(
       this.env + ApiRoutes.BusinessDevelopment.changeStatus,
       {},
-      { params: { LeadNo: lead, status }, observe: "response" }
+      {
+        params: { LeadNo: data.LeadNo, status: data.status },
+        observe: "response",
+      }
+    );
+  }
+
+  getFollowUps(
+    leadNo: string
+  ): Observable<HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>> {
+    return this.http.post<IBaseResponse<ISalesLeadFollowUps[]>>(
+      this.env + ApiRoutes.BusinessDevelopment.followUp,
+      { leadNo },
+      {
+        observe: "response",
+      }
+    );
+  }
+
+  saveNote(data: {}): Observable<HttpResponse<IBaseResponse<any>>> {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.saveNote,
+      data,
+      { observe: "response" }
     );
   }
 
@@ -52,25 +76,12 @@ export class BusinessDevelopmentService {
     );
   }
 
-  // getClintDetails(sno: number): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
-  // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.details, {
-  // 		observe: "response",
-  // 		params: { sno },
-  // 	});
-  // }
-
   // getClientById(id: string): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
   // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.edit, { params: { id }, observe: "response" });
   // }
 
   // saveClient(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
   // 	return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Clients.save, body, {
-  // 		observe: "response",
-  // 	});
-  // }
-
-  // changeStatus(data: IChangeStatusRequest): Observable<HttpResponse<IBaseResponse<null>>> {
-  // 	return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Clients.changeStatus, data, {
   // 		observe: "response",
   // 	});
   // }

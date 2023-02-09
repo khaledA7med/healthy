@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 
 import { ICellRendererParams } from "ag-grid-community";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
-import { environment } from "src/environments/environment";
 @Component({
   selector: "app-client-list-controls",
   template: `

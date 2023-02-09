@@ -33,13 +33,12 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 })
 export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
-  submitted = false;
+  submitted: boolean = false;
   formData!: Observable<IBaseMasterTable>;
-
-  editId!: string;
 
   uiState = {
     editMode: false,
+    editId: "",
     clientDetails: {
       clientType: ClientType,
       retail: true,
@@ -68,10 +67,10 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     let sub = this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
-        this.editId = res.get("id")!;
+        this.uiState.editId = res.get("id")!;
         // Display Loader
         this.eventService.broadcast(reserved.isLoading, true);
-        this.getClient(this.editId);
+        this.getClient(this.uiState.editId);
       }
     });
     this.subscribes.push(sub);
@@ -162,41 +161,66 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   retailClientType(): void {
     // Retail Type
-    this.f.idNo?.setValidators(Validators.required);
-    this.f.nationality?.setValidators(Validators.required);
-    this.f.sourceofIncome?.setValidators(Validators.required);
-    this.f.idExpiryDate?.setValidators(Validators.required);
+    let retailControls = [
+      this.f.idNo!,
+      this.f.nationality!,
+      this.f.sourceofIncome!,
+      this.f.idExpiryDate!,
+    ];
+    this.setValidatorAndUpdate(retailControls);
 
     // Corporate Type
-    this.f.registrationStatus?.clearValidators();
-    this.f.businessActivity?.clearValidators();
-    this.f.marketSegment?.clearValidators();
-    this.f.commericalNo?.clearValidators();
-    this.f.dateOfIncorporation?.clearValidators();
-    this.f.vatNo?.clearValidators();
-    this.f.premium?.clearValidators();
-    this.f.expiryDate?.clearValidators();
-    this.formGroup.updateValueAndValidity();
+    let coporateControls = [
+      this.f.registrationStatus!,
+      this.f.businessActivity!,
+      this.f.marketSegment!,
+      this.f.commericalNo!,
+      this.f.dateOfIncorporation!,
+      this.f.vatNo!,
+      this.f.premium!,
+      this.f.expiryDate!,
+    ];
+    this.removeValidatorAndUpdate(coporateControls);
   }
 
   corporateClientType(): void {
     // Retail Type
-    this.f.idNo?.clearValidators();
-    this.f.nationality?.clearValidators();
-    this.f.sourceofIncome?.clearValidators();
-    this.f.idExpiryDate?.clearValidators();
+    let retailControls = [
+      this.f.idNo!,
+      this.f.nationality!,
+      this.f.sourceofIncome!,
+      this.f.idExpiryDate!,
+    ];
+    this.removeValidatorAndUpdate(retailControls);
 
     // Corporate Type
-    this.f.registrationStatus?.setValidators(Validators.required);
-    this.f.businessActivity?.setValidators(Validators.required);
-    this.f.marketSegment?.setValidators(Validators.required);
-    this.f.commericalNo?.setValidators(Validators.required);
-    this.f.dateOfIncorporation?.setValidators(Validators.required);
-    this.f.vatNo?.setValidators(Validators.required);
-    this.f.premium?.setValidators(Validators.required);
-    this.f.expiryDate?.setValidators(Validators.required);
-    this.formGroup.updateValueAndValidity();
+    let coporateControls = [
+      this.f.registrationStatus!,
+      this.f.businessActivity!,
+      this.f.marketSegment!,
+      this.f.commericalNo!,
+      this.f.dateOfIncorporation!,
+      this.f.vatNo!,
+      this.f.premium!,
+      this.f.expiryDate!,
+    ];
+    this.setValidatorAndUpdate(coporateControls);
   }
+
+  setValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.setValidators(Validators.required);
+      el.updateValueAndValidity();
+    });
+  }
+
+  removeValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.clearValidators();
+      el.updateValueAndValidity();
+    });
+  }
+
   //#endregion
 
   //#region Form Controls
@@ -302,14 +326,17 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
           this.patchEditingClient(res.body?.data!);
         }
       },
-      (err) => this.message.popup("Error", err.message, "error")
+      (err) => {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Error", err.message, "error");
+      }
     );
     this.subscribes.push(sub);
   }
 
   patchEditingClient(client: IClientPreview): void {
     this.clientTypeToggler(client.type!);
-    this.editId = client.sNo?.toString()!;
+    this.uiState.editId = client.sNo?.toString()!;
     this.formGroup.patchValue({
       sNo: client.sNo,
       type: client.type,
@@ -391,7 +418,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     const formData = new FormData();
 
-    if (this.editId) formData.append("sNo", this.editId);
+    if (this.uiState.editId) formData.append("sNo", this.uiState.editId);
 
     formData.append("FullName", clientForm.value.fullName!);
     formData.append("FullNameAr", clientForm.value.fullNameAr!);
@@ -500,7 +527,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.message.toast(res.body.message!, "success");
-          if (this.editId) this.router.navigate([AppRoutes.Client.base]);
+          if (this.uiState.editId)
+            this.router.navigate([AppRoutes.Client.base]);
           this.resetForm();
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
         // Hide Loader
