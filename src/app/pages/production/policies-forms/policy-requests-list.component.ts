@@ -1,7 +1,14 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, ElementRef, Input, OnDestroy, OnInit } from "@angular/core";
 import {
-  ColDef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
+import {
   GridApi,
   GridOptions,
   GridReadyEvent,
@@ -14,25 +21,21 @@ import { Subscription } from "rxjs";
 import {
   searchByClientCols,
   searchByRequestCols,
+  searchPolicy,
 } from "src/app/shared/app/grid/policyFormCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IPolicyRequests } from "src/app/shared/app/models/Production/production-util";
+import {
+  IPoliciesRef,
+  IPolicyClient,
+  IPolicyRequests,
+} from "src/app/shared/app/models/Production/production-util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 
 @Component({
   selector: "app-policy-requests-list",
   template: `
-    <div
-      class="ag-theme-alpine d-none"
-      appTableView
-      [ngClass]="{
-        'd-block':
-          uiState.clientSearch.length > 0 && uiState.requests.length > 0,
-        'd-none':
-          uiState.clientSearch.length === 0 && uiState.requests.length === 0
-      }"
-    >
+    <div class="ag-theme-alpine" appTableView>
       <ag-grid-angular
         id="gridScrollbar"
         style="width: 100%; height: 75vh"
@@ -46,9 +49,11 @@ import { ProductionService } from "src/app/shared/services/production/production
 export class PolicyRequestsListComponent implements OnDestroy, OnInit {
   @Input() filter!: any;
   @Input() type!: string;
+  @Output() dataEvent: EventEmitter<any> = new EventEmitter();
   uiState = {
     requests: [] as IPolicyRequests[],
-    clientSearch: [] as IPolicyRequests[],
+    clients: [] as IPolicyRequests[],
+    policies: [] as IPolicyRequests[],
   };
 
   gridApi: GridApi = <GridApi>{};
@@ -62,11 +67,12 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
       minWidth: 100,
       resizable: true,
     },
+    overlayNoRowsTemplate: "No Rows",
     onGridReady: (e) => this.onGridReady(e),
     onRowClicked: (e) => this.onRowClicked(e),
   };
 
-  subscribes: Subscription[] = [];
+  subscribes!: Subscription;
 
   constructor(
     private tableRef: ElementRef,
@@ -77,14 +83,14 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
 
   onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
+    this.gridApi.sizeColumnsToFit();
+    this.gridApi.showNoRowsOverlay();
     if (this.type === "client") {
       this.gridOpts.api!.setColumnDefs(searchByClientCols);
-      // this.gridApi.setDatasource(this.clientDataSource);
     } else if (this.type === "request") {
       this.gridOpts.api!.setColumnDefs(searchByRequestCols);
-      // this.gridApi.setDatasource(this.requestDataSource);
     } else if (this.type === "policy") {
-      // this.gridApi.setDatasource(this.policyDataSource);
+      this.gridOpts.api!.setColumnDefs(searchPolicy);
     }
 
     const agBodyHorizontalViewport: HTMLElement =
@@ -109,105 +115,93 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
   // Request Section
   requestDataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
-      // this.gridApi.sizeColumnsToFit();
-
       this.gridApi.showLoadingOverlay();
-      console.log(this.filter);
       let sub = this.productionService
         .searchClientByRequest(this.filter)
         .subscribe(
           (res: IBaseResponse<IPolicyRequests[]>) => {
-            params.successCallback(
-              this.uiState.requests,
-              this.uiState.requests.length
-            );
-            this.gridApi.hideOverlay();
+            if (res.status) {
+              this.uiState.requests = res.data!;
+              params.successCallback(
+                this.uiState.requests,
+                this.uiState.requests.length
+              );
+              if (this.uiState.requests.length === 0) {
+                this.gridApi.showNoRowsOverlay();
+              } else {
+                this.gridApi.hideOverlay();
+              }
+            } else {
+              this.message.popup("Oops!", res.message!, "warning");
+              this.gridApi.hideOverlay();
+            }
           },
           (err: HttpErrorResponse) => {
+            this.gridApi.hideOverlay();
             this.message.popup("Oops!", err.message, "error");
           }
         );
-      this.subscribes.push(sub);
+      this.subscribes.add(sub);
     },
   };
 
   // Clients Section
   clientDataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
-      console.log("client");
-      // this.uiState.requests = [
-      //   {
-      //     clientID: "123",
-      //     clientName: "sdfgdsfg",
-      //     requestNo: "sadfsadf",
-      //     policyNo: "safasdf",
-      //     classOfBusiness: "sadfasdf",
-      //     lineOfBusiness: "sadfsadf",
-      //     producer: "asdfasdf",
-      //     endorsType: "sdsadfsdf",
-      //   },
-      // ];
-      // this.gridApi.showLoadingOverlay();
-      // let sub = this.productionService
-      //   .getAllClients(this.uiState.filters)
-      //   .subscribe(
-      //     (res: HttpResponse<IBaseResponse<IPolicyRequests[]>>) => {
-      //       // this.uiState.clients.list = res.body?.data!;
-      //       // params.successCallback(
-      //       //   this.uiState.clients.list,
-      //       //   this.uiState.clients.totalPages
-      //       // );
-      //       this.gridApi.hideOverlay();
-      //     },
-      //     (err: HttpErrorResponse) => {
-      //       this.message.popup("Oops!", err.message, "error");
-      //     }
-      //   );
-      // this.subscribes.push(sub);
-      params.successCallback(
-        this.uiState.requests,
-        this.uiState.requests.length
+      this.gridApi.showLoadingOverlay();
+      let sub = this.productionService.searchForClient(this.filter).subscribe(
+        (res: IBaseResponse<IPolicyClient[]>) => {
+          if (res.status) {
+            this.uiState.clients = res.data!;
+            params.successCallback(
+              this.uiState.clients,
+              this.uiState.clients.length
+            );
+
+            if (this.uiState.clients.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.message!, "warning");
+            this.gridApi.hideOverlay();
+          }
+        },
+        (err: HttpErrorResponse) => {
+          this.gridApi.hideOverlay();
+          this.message.popup("Oops!", err.message, "error");
+        }
       );
+      this.subscribes.add(sub);
     },
   };
 
   // Policies Section
   policyDataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
-      console.log("policy");
-      // this.uiState.requests = [
-      //   {
-      //     clientID: "123",
-      //     clientName: "sdfgdsfg",
-      //     requestNo: "sadfsadf",
-      //     policyNo: "safasdf",
-      //     classOfBusiness: "sadfasdf",
-      //     lineOfBusiness: "sadfsadf",
-      //     producer: "asdfasdf",
-      //     endorsType: "sdsadfsdf",
-      //   },
-      // ];
-      // this.gridApi.showLoadingOverlay();
-      // let sub = this.productionService
-      //   .getAllClients(this.uiState.filters)
-      //   .subscribe(
-      //     (res: HttpResponse<IBaseResponse<IPolicyRequests[]>>) => {
-      //       // this.uiState.clients.list = res.body?.data!;
-      //       // params.successCallback(
-      //       //   this.uiState.clients.list,
-      //       //   this.uiState.clients.totalPages
-      //       // );
-      //       this.gridApi.hideOverlay();
-      //     },
-      //     (err: HttpErrorResponse) => {
-      //       this.message.popup("Oops!", err.message, "error");
-      //     }
-      //   );
-      // this.subscribes.push(sub);
-      params.successCallback(
-        this.uiState.requests,
-        this.uiState.requests.length
+      this.gridApi.showLoadingOverlay();
+      let sub = this.productionService.searchForPolicy(this.filter).subscribe(
+        (res: IBaseResponse<IPoliciesRef[]>) => {
+          if (res.status) {
+            this.uiState.policies = res.data!;
+            params.successCallback(
+              this.uiState.policies,
+              this.uiState.policies.length
+            );
+
+            if (this.uiState.policies.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.message!, "warning");
+            this.gridApi.hideOverlay();
+          }
+        },
+        (err: HttpErrorResponse) => {
+          this.gridApi.hideOverlay();
+          this.message.popup("Oops!", err.message, "error");
+        }
       );
+      this.subscribes.add(sub);
     },
   };
 
@@ -222,8 +216,10 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
   }
 
   onRowClicked(e: RowClickedEvent) {
-    console.log(e.data);
+    this.dataEvent.emit(e.data);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscribes && this.subscribes.unsubscribe();
+  }
 }

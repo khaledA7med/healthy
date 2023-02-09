@@ -161,41 +161,66 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   retailClientType(): void {
     // Retail Type
-    this.f.idNo?.setValidators(Validators.required);
-    this.f.nationality?.setValidators(Validators.required);
-    this.f.sourceofIncome?.setValidators(Validators.required);
-    this.f.idExpiryDate?.setValidators(Validators.required);
+    let retailControls = [
+      this.f.idNo!,
+      this.f.nationality!,
+      this.f.sourceofIncome!,
+      this.f.idExpiryDate!,
+    ];
+    this.setValidatorAndUpdate(retailControls);
 
     // Corporate Type
-    this.f.registrationStatus?.clearValidators();
-    this.f.businessActivity?.clearValidators();
-    this.f.marketSegment?.clearValidators();
-    this.f.commericalNo?.clearValidators();
-    this.f.dateOfIncorporation?.clearValidators();
-    this.f.vatNo?.clearValidators();
-    this.f.premium?.clearValidators();
-    this.f.expiryDate?.clearValidators();
-    this.formGroup.updateValueAndValidity();
+    let coporateControls = [
+      this.f.registrationStatus!,
+      this.f.businessActivity!,
+      this.f.marketSegment!,
+      this.f.commericalNo!,
+      this.f.dateOfIncorporation!,
+      this.f.vatNo!,
+      this.f.premium!,
+      this.f.expiryDate!,
+    ];
+    this.removeValidatorAndUpdate(coporateControls);
   }
 
   corporateClientType(): void {
     // Retail Type
-    this.f.idNo?.clearValidators();
-    this.f.nationality?.clearValidators();
-    this.f.sourceofIncome?.clearValidators();
-    this.f.idExpiryDate?.clearValidators();
+    let retailControls = [
+      this.f.idNo!,
+      this.f.nationality!,
+      this.f.sourceofIncome!,
+      this.f.idExpiryDate!,
+    ];
+    this.removeValidatorAndUpdate(retailControls);
 
     // Corporate Type
-    this.f.registrationStatus?.setValidators(Validators.required);
-    this.f.businessActivity?.setValidators(Validators.required);
-    this.f.marketSegment?.setValidators(Validators.required);
-    this.f.commericalNo?.setValidators(Validators.required);
-    this.f.dateOfIncorporation?.setValidators(Validators.required);
-    this.f.vatNo?.setValidators(Validators.required);
-    this.f.premium?.setValidators(Validators.required);
-    this.f.expiryDate?.setValidators(Validators.required);
-    this.formGroup.updateValueAndValidity();
+    let coporateControls = [
+      this.f.registrationStatus!,
+      this.f.businessActivity!,
+      this.f.marketSegment!,
+      this.f.commericalNo!,
+      this.f.dateOfIncorporation!,
+      this.f.vatNo!,
+      this.f.premium!,
+      this.f.expiryDate!,
+    ];
+    this.setValidatorAndUpdate(coporateControls);
   }
+
+  setValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.setValidators(Validators.required);
+      el.updateValueAndValidity();
+    });
+  }
+
+  removeValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.clearValidators();
+      el.updateValueAndValidity();
+    });
+  }
+
   //#endregion
 
   //#region Form Controls
