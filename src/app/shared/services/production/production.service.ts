@@ -5,6 +5,8 @@ import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import {
   IFilterByRequest,
+  IPoliciesRef,
+  IPolicyClient,
   IPolicyRequests,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
@@ -24,8 +26,29 @@ export class ProductionService {
       this.env + ApiRoutes.Production.clientByRequest,
       {
         clientName: body.clientName,
-        periodFrom: body.dateFrom,
-        periodTo: body.dateTo,
+        periodFrom: new Date(body.dateFrom!),
+        periodTo: new Date(body.dateTo!),
+      }
+    );
+  }
+
+  searchForClient(body: any): Observable<IBaseResponse<IPolicyClient[]>> {
+    return this.http.post<IBaseResponse<IPolicyClient[]>>(
+      this.env + ApiRoutes.Production.searchClient,
+      {
+        sNo: +body.clientID,
+        fullName: body.clientName,
+      }
+    );
+  }
+
+  searchForPolicy(body: any): Observable<IBaseResponse<IPoliciesRef[]>> {
+    return this.http.post<IBaseResponse<IPoliciesRef[]>>(
+      this.env + ApiRoutes.Production.searchPolicies,
+      {
+        clientNo: body.clientID,
+        clientName: body.clientName,
+        status: body.status,
       }
     );
   }
