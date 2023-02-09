@@ -8,6 +8,7 @@ import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.modu
 import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 import { AgGridModule } from "ag-grid-angular";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
+import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
 
 export const routes: Routes = [{ path: "", component: PoliciesFormsComponent }];
 
@@ -20,6 +21,7 @@ export const routes: Routes = [{ path: "", component: PoliciesFormsComponent }];
     DropzoneModule,
     RangePickerModule,
     AgGridModule,
+    GregorianPickerModule,
   ],
 })
 export class PoliciesFormsModule {}

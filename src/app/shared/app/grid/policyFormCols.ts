@@ -46,12 +46,12 @@ export const searchByRequestCols: ColDef[] = [
 export const searchByClientCols: ColDef[] = [
   {
     headerName: "Client ID",
-    field: "clientID",
+    field: "sNo",
     minWidth: 130,
   },
   {
     headerName: "Client Name",
-    field: "clientName",
+    field: "fullName",
     minWidth: 130,
   },
   {
@@ -62,6 +62,44 @@ export const searchByClientCols: ColDef[] = [
   {
     headerName: "Status",
     field: "status",
+    minWidth: 130,
+  },
+];
+
+export const searchPolicy: ColDef[] = [
+  {
+    headerName: "Policy No",
+    field: "policyNo",
+    minWidth: 130,
+  },
+  {
+    headerName: "Insurance Company",
+    field: "insurComp",
+    minWidth: 130,
+  },
+  {
+    headerName: "Account No",
+    field: "accNo",
+    minWidth: 130,
+  },
+  {
+    headerName: "Class Name",
+    field: "className",
+    minWidth: 130,
+  },
+  {
+    headerName: "Line Of Business	",
+    field: "lineOfBusiness",
+    minWidth: 130,
+  },
+  {
+    headerName: "Period From",
+    field: "periodFrom",
+    minWidth: 130,
+  },
+  {
+    headerName: "Period To",
+    field: "periodTo",
     minWidth: 130,
   },
 ];

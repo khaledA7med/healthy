@@ -80,6 +80,8 @@ export const ApiRoutes = {
     search: "",
     details: "/Production/Policy/Details",
     clientByRequest: "/Production/Policy/SearchClientByRequest",
+    searchClient: LookUpTables + "ActiveClient",
+    searchPolicies: "/Production/Policy/SearchClientPolicies",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
