@@ -40,6 +40,7 @@ export const ApiRoutes = {
       allClients: LookUpTables + BaseData.AllClients,
       InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
+      logType: LookUpTables + BaseData.LogType,
     },
   },
   Clients: {
@@ -65,6 +66,7 @@ export const ApiRoutes = {
     followUp: "/BusinessDevelopment/SalesLeads/GetSalesLeadFllowup",
     saveNote: "/BusinessDevelopment/SalesLeads/SaveNote",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
+    quotingRequirements: "/BusinessDevelopment/SalesLeads/QuotingRequirments",
   },
   Production: {
     search: "",

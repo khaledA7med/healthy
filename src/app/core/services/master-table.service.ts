@@ -144,6 +144,10 @@ export class MasterTableService {
           name: BaseData.InsuranceBrokersList,
         },
         {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.logType,
+          name: BaseData.LogType,
+        },
+        {
           route: ApiRoutes.MasterTable.BusinessDevelopment.branch,
           name: BaseData.Branch,
         },

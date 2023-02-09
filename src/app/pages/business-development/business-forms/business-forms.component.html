@@ -518,7 +518,7 @@
                             bindLabel="name"
                             bindValue="name"
                             [ngClass]="{
-                              'is-invalid':
+                              'is-submitted':
                                 submitted && f.currentInsurer?.invalid
                             }"
                             [items]="
@@ -607,7 +607,7 @@
                               bindLabel="name"
                               bindValue="name"
                               [items]="quotingArr"
-                              [loading]="formData ? false : true"
+                              (change)="quotCompany($event.name)"
                             >
                             </ng-select>
 
@@ -615,6 +615,8 @@
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
+                              type="button"
+                              (click)="getQuotRequirements()"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -662,6 +664,7 @@
                               class="form-control form-control-sm"
                               aria-describedby="inputGroup-sizing-sm"
                               placeholder="Select company"
+                              [items]="quotingArr"
                             >
                             </ng-select>
 
@@ -724,15 +727,17 @@
                     <div class="ribbon ribbon-info round-shape">
                       Activity Log
                     </div>
-                    <button
-                      (click)="addActivityLog()"
-                      type="button"
-                      class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light custom-btn"
-                    >
-                      Add Log
-                    </button>
 
-                    <div class="ribbon-content mt-4 text-muted">
+                    <div class="ribbon-content mt-2 text-muted">
+                      <div class="d-flex justify-content-end">
+                        <button
+                          (click)="addActivityLog()"
+                          type="button"
+                          class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light"
+                        >
+                          Add Log
+                        </button>
+                      </div>
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
@@ -743,7 +748,7 @@
                               <th>Action</th>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody formArrayName="salesActivityLogList">
                             <tr
                               *ngFor="
                                 let c of activityLogArray.controls;
@@ -759,12 +764,18 @@
                                       placeholder="log Type"
                                       dropdownPosition="top"
                                       formControlName="logType"
+                                      bindLabel="name"
+                                      bindValue="name"
                                       [ngClass]="{
                                         'is-submitted':
-                                          submitted ||
+                                          submitted &&
                                           activityLogControls(i, 'logType')
                                             .invalid
                                       }"
+                                      [items]="
+                                        (formData | async)?.LogType?.content!
+                                      "
+                                      [loading]="formData ? false : true"
                                     ></ng-select>
 
                                     <div
@@ -795,7 +806,7 @@
                                       formControlName="logDate"
                                       [ngClass]="{
                                         'is-invalid':
-                                          submitted ||
+                                          submitted &&
                                           activityLogControls(i, 'logDate')
                                             .invalid
                                       }"
@@ -850,6 +861,7 @@
                                     <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
+                                      (click)="remove(i, 'activityLog')"
                                     >
                                       <i class="ri-delete-bin-2-line"></i>
                                     </button>
@@ -872,14 +884,17 @@
                     <div class="ribbon ribbon-info round-shape">
                       Competitors
                     </div>
-                    <button
-                      (click)="addCompetitor()"
-                      type="button"
-                      class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light custom-btn"
-                    >
-                      Add Competitors
-                    </button>
-                    <div class="ribbon-content mt-4 text-muted">
+
+                    <div class="ribbon-content mt-2 text-muted">
+                      <div class="d-flex justify-content-end">
+                        <button
+                          (click)="addCompetitor()"
+                          type="button"
+                          class="ms-auto btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light"
+                        >
+                          Add Competitors
+                        </button>
+                      </div>
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
@@ -905,12 +920,9 @@
                                       formControlName="competitor"
                                       [ngClass]="{
                                         'is-invalid':
-                                          submitted ||
-                                          ((competitorControls(i, 'competitor')
-                                            .touched ||
-                                            submitted) &&
-                                            competitorControls(i, 'competitor')
-                                              .invalid)
+                                          submitted &&
+                                          competitorControls(i, 'competitor')
+                                            .invalid
                                       }"
                                     />
                                   </div>
@@ -942,6 +954,7 @@
                                     <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
+                                      (click)="remove(i, 'competitor')"
                                     >
                                       <i class="ri-delete-bin-2-line"></i>
                                     </button>
@@ -983,7 +996,13 @@
         <div class="row my-2">
           <div class="col-sm-4">
             <div class="form-check">
-              <input type="checkbox" id="sentTo" class="form-check-input" />
+              <input
+                type="checkbox"
+                formControlName="sendToUW"
+                id="sentTo"
+                class="form-check-input"
+                (change)="checkSentUW($event)"
+              />
               <label for="sentTo">Send to U / W</label>
             </div>
           </div>
