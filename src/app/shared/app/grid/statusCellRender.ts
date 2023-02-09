@@ -52,12 +52,12 @@ export default class StatusCellRender
 				return `<span class='badge bg-info'>${ e.value }</span>`;
 			case "New Request":
 				return `<span class='badge bg-secondary'>${ e.value }</span>`;
-			case "Close":
+			case "Closed":
 				return `<span class='badge bg-success'>${ e.value }</span>`;
-			case "Cancelled":
+			case "Canceled":
 				return `<span class='badge bg-danger'>${ e.value }</span>`;
 			default:
-				return `<span class='badge bg-success'>${ e.value }</span>`;
+				return `<span class='badge bg-dark'>${ e.value }</span>`;
 		}
 	}
 }

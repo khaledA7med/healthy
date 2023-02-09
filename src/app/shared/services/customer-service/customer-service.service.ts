@@ -51,7 +51,7 @@ export class CustomerServiceService
     return this.http.post(
       this.env + ApiRoutes.BusinessDevelopment.changeStatus,
       {},
-      { params: { rquestNo: data.rquestNo, status: data.status }, observe: "response" }
+      { params: { reqNo: data.reqNo, status: data.status }, observe: "response" }
     );
   }
 }

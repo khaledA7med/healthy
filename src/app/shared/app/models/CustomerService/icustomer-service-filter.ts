@@ -12,5 +12,8 @@ export interface ICustomerServiceFilters extends IBaseFilters
     classOfBusniess?: string,
     createdBy?: string,
     duration?: string,
-    deadline?: string
+    deadline?: Date,
+    chassisNo?: string,
+    deadlineFrom?: Date,
+    deadlineTo?: Date
 }

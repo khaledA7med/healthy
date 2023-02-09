@@ -87,7 +87,8 @@
                     <div class="input-group">
                         <span class="input-group-text">
                             <label class="m-checkbox m-checkbox--solid">
-                                <input id="Checkduration" type="checkbox"> Waiting Period above
+                                <input id="Checkduration" type="checkbox" (change)="CheckdurationEvt($event)"> Waiting
+                                Period above
                                 <span></span>
                             </label>
                         </span>
@@ -180,6 +181,9 @@
         </div>
     </ng-template>
 </div>
+
+
+
 
 <!----------------------------------  --------------------
                       Follow Up Canvas

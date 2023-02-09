@@ -1,5 +1,5 @@
 export interface IChangeCsStatusRequest
 {
-    rquestNo: string;
+    reqNo: string;
     status: string;
 }

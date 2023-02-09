@@ -21,10 +21,10 @@ import { CustomerServiceListComponent } from './customer-service-list.component'
         <a class="btn btn-sm dropdown-item">Notify By Email &nbsp; &nbsp; &raquo;</a>
         <ul class="dropdown-menu dropdown-submenu">
           <li>
-            <button (click)="Client()" class="btn btn-sm dropdown-item">Cient</button>
+            <button class="btn btn-sm dropdown-item">Cient</button>
           </li>
           <li>
-            <button (click)="Insurer()" class="btn btn-sm dropdown-item">Insurer</button>
+            <button class="btn btn-sm dropdown-item">Insurer</button>
           </li>
         </ul>
       </li>
@@ -76,7 +76,11 @@ export class CustomerServiceListControlsComponent
 
   status: any = CustomerServiceStatus;
 
-  constructor (private _Router: Router, private message: MessagesService) { }
+
+
+  constructor (private _Router: Router,
+    private message: MessagesService,
+  ) { }
 
   agInit (params: ICellRendererParams)
   {
@@ -89,15 +93,6 @@ export class CustomerServiceListControlsComponent
     this.comp.openCustomerServiceFollowUp(this.params.data.requestNo);
   }
 
-  Client ()
-  {
-
-  }
-
-  Insurer ()
-  {
-
-  }
   changeCsStatus (status: string)
   {
     this.message.confirm("Yes, Sure!", "Are You Sure To Change Status?!", "primary", "question").then((result: SweetAlertResult) =>

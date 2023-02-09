@@ -37,7 +37,6 @@ import AppUtils from 'src/app/shared/app/util';
 import { ICustomerServiceFollowUp } from 'src/app/shared/app/models/CustomerService/icustomer-service-followup';
 import { CustomerServiceStatus } from 'src/app/shared/app/models/CustomerService/icustomer-service-utils';
 
-
 @Component({
   selector: 'app-customer-service-list',
   templateUrl: './customer-service-list.component.html',
@@ -221,6 +220,7 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
     }
   }
 
+
   //  filter Section
   openFilterOffcanvas (): void
   {
@@ -239,8 +239,20 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
       classOfBusniess: new FormControl(null),
       createdBy: new FormControl(null),
       deadline: new FormControl(null),
-      duration: new FormControl(null),
+      duration: new FormControl({ value: null, disabled: true })
     });
+  }
+  CheckdurationEvt (e: Event)
+  {
+    let elem = e.target as HTMLInputElement;
+    if (elem.checked)
+    {
+      this.f[ 'duration' ]?.enable();
+    } else
+    {
+      this.f[ 'duration' ]?.disable();
+    }
+    this.f[ 'duration' ]?.updateValueAndValidity();
   }
   get f ()
   {
@@ -356,9 +368,8 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy
 
   changeStatus (CS: ICustomerService, status: string): void
   {
-    console.log("called");
     let dataSubmit = {
-      rquestNo: CS.requestNo!,
+      reqNo: CS.requestNo!,
       status: "",
     };
     switch (status)
