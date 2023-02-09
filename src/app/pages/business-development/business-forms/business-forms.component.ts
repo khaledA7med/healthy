@@ -1,3 +1,4 @@
+import { IQoutingRequirement } from "./../../../shared/app/models/BusinessDevelopment/iqoutingReq";
 import { IActivityLog } from "./../../../shared/app/models/BusinessDevelopment/iactivity-log";
 import { ICompetitors } from "./../../../shared/app/models/BusinessDevelopment/icompetitors";
 import { BusinessDevelopmentService } from "./../../../shared/services/business-development/business-development.service";
@@ -19,7 +20,7 @@ import {
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { NgSelectComponent } from "@ng-select/ng-select";
-import { HttpResponse } from "@angular/common/http";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 
@@ -42,6 +43,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     isClient: true, // Choose client Or Group
     isDeadline: false,
     isCurrentIns: false,
+    quotingCompany: "",
+    policyCompany: "",
+    quotingCompanyArr: [] as IQoutingRequirement[],
+    policyCompanyArr: [],
   };
   @ViewChild("clintSelect") clintSelect!: NgSelectComponent;
 
@@ -54,7 +59,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.BusinessDevelopmentForm);
-    this.formData.subscribe((res) => console.log(res));
   }
 
   initForm() {
@@ -76,12 +80,17 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       currentBroker: new FormControl({ value: null, disabled: true }),
       currentInsurer: new FormControl({ value: null, disabled: true }),
       existingPolDetails: new FormControl({ value: null, disabled: true }),
+      branch: new FormControl(null),
+      sendToUW: new FormControl(false),
       isPolicyRequierments: new FormControl(false), //
       isQuotingRequierments: new FormControl(false), //
       salesActivityLogChecked: new FormControl(false), //
       salesLeadCompetitorChecked: new FormControl(false), //
-      salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
+      quotingRequirementsList: new FormArray<FormGroup<IQoutingRequirement>>(
+        []
+      ),
       salesActivityLogList: new FormArray<FormGroup<IActivityLog>>([]),
+      salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
     });
   }
   get f() {
@@ -96,7 +105,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.clintSelect.clearModel();
   }
   getClientId(e: any) {
-    this.f.clientID?.patchValue(e.id);
+    this.f.clientID?.patchValue(e?.id);
   }
   getLineOfBusiness(e: string) {
     console.log(e);
@@ -124,7 +133,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.deadLine?.disable();
       this.f.deadLine?.clearValidators();
       this.f.deadLine?.updateValueAndValidity();
-      this.f.deadLine?.reset();
       this.f.deadLine?.reset();
       this.f.chDeadline?.patchValue(0);
       this.uiState.isDeadline = false;
@@ -160,35 +168,37 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Competitors
-  get competitorsArray(): FormArray {
-    return this.formGroup.get("salesLeadCompetitorsList") as FormArray;
+  // Quoting
+  quotCompany(companyName: string) {
+    this.uiState.quotingCompany = companyName;
   }
 
-  competitorControls(i: number, control: string): AbstractControl {
-    return this.competitorsArray.controls[i].get(control)!;
-  }
-
-  addCompetitor(data?: ICompetitors) {
-    if (this.f.salesLeadCompetitorsList?.invalid) {
-      this.f.salesLeadCompetitorsList?.markAllAsTouched();
-      return;
+  getQuotRequirements() {
+    if (
+      this.uiState.quotingCompany &&
+      this.f.classOfBusiness?.value &&
+      this.f.lineOfBusiness?.value
+    ) {
+      let data = {
+        className: this.f.classOfBusiness?.value,
+        lineOfBusiness: this.f.lineOfBusiness?.value,
+        companyName: this.uiState.quotingCompany,
+      };
+      let sub = this.businessDevService.quotRequirements(data).subscribe({
+        next: (res: HttpResponse<IBaseResponse<IQoutingRequirement[]>>) => {
+          this.uiState.quotingCompanyArr = res.body?.data!;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.message.popup("Sorry!", err.message!, "warning");
+        },
+      });
+      this.subscribes.push(sub);
+    } else {
+      this.message.toast(
+        "Please Select \n Class of Insurance, Line of Business and Quoting Company",
+        "warning"
+      );
     }
-
-    let competitor = new FormGroup<ICompetitors>({
-      competitor: new FormControl(
-        data?.competitor || null,
-        Validators.required
-      ),
-      competitorNotes: new FormControl(data?.competitorNotes || null),
-    });
-
-    !data ? competitor.reset() : competitor.disable();
-
-    this.f.salesLeadCompetitorsList?.push(competitor);
-    // this.competitorsArray.updateValueAndValidity();
-    competitor.controls["competitor"]?.updateValueAndValidity();
-    competitor.controls["competitorNotes"]?.updateValueAndValidity();
   }
 
   // Activity Log
@@ -218,6 +228,46 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.activityLogArray.updateValueAndValidity();
   }
 
+  // Competitors
+  get competitorsArray(): FormArray {
+    return this.formGroup.get("salesLeadCompetitorsList") as FormArray;
+  }
+
+  competitorControls(i: number, control: string): AbstractControl {
+    return this.competitorsArray.controls[i].get(control)!;
+  }
+
+  addCompetitor(data?: ICompetitors) {
+    if (this.f.salesLeadCompetitorsList?.invalid) {
+      this.f.salesLeadCompetitorsList?.markAllAsTouched();
+      return;
+    }
+
+    let competitor = new FormGroup<ICompetitors>({
+      competitor: new FormControl(
+        data?.competitor || null,
+        Validators.required
+      ),
+      competitorNotes: new FormControl(data?.competitorNotes || null),
+    });
+
+    !data ? competitor.reset() : competitor.disable();
+
+    this.f.salesLeadCompetitorsList?.push(competitor);
+    this.competitorsArray.updateValueAndValidity();
+  }
+
+  remove(i: number, type: string) {
+    if (type === "competitor") this.competitorsArray.removeAt(i);
+    else if (type === "activityLog") this.activityLogArray.removeAt(i);
+    else return;
+  }
+  // sent to U/W
+  checkSentUW(e: any) {
+    e.target.checked
+      ? this.f.sendToUW?.patchValue(true)
+      : this.f.sendToUW?.patchValue(false);
+  }
   documentsList(e: any) {}
   submitForm() {
     this.submitted = true;

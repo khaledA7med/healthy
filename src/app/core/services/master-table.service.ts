@@ -118,6 +118,40 @@ export class MasterTableService {
           name: BaseData.Banks,
         },
       ],
+      BusinessDevelopmentForm: [
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.allClients,
+          name: BaseData.AllClients,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.groupsList,
+          name: BaseData.GroupsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsuranceCompanyName,
+          name: BaseData.InsuranceCompanyName,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.InsuranceBrokersList,
+          name: BaseData.InsuranceBrokersList,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.logType,
+          name: BaseData.LogType,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.branch,
+          name: BaseData.Branch,
+        },
+      ],
       BusinessDevelopment: [
         {
           route: ApiRoutes.MasterTable.BusinessDevelopment.groupsList,

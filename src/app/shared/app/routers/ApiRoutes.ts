@@ -77,6 +77,7 @@ export const ApiRoutes = {
       insurClasses: LookUpTables + BaseData.InsurClasses,
       InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
+      logType: LookUpTables + BaseData.LogType,
       branch: LookUpTables + BaseData.Branch,
     },
   },
@@ -102,6 +103,7 @@ export const ApiRoutes = {
     changeStatus: "/BusinessDevelopment/SalesLeads/UpdateStatus",
     followUp: "/BusinessDevelopment/SalesLeads/GetSalesLeadFllowup",
     saveNote: "/BusinessDevelopment/SalesLeads/SaveNote",
+    quotingRequirements: "/BusinessDevelopment/SalesLeads/QuotingRequirments",
   },
   Production: {
     search: "/Production/Policy/Search",

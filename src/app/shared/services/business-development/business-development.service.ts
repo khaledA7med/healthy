@@ -9,6 +9,7 @@ import { IBusinessDevelopmentFilters } from "../../app/models/BusinessDevelopmen
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IChangeLeadStatusRequest } from "../../app/models/BusinessDevelopment/ibusiness-development-req";
 import { ISalesLeadFollowUps } from "../../app/models/BusinessDevelopment/ibusiness-development-followups";
+import { IQoutingRequirement } from "../../app/models/BusinessDevelopment/iqoutingReq";
 
 @Injectable({
   providedIn: "root",
@@ -69,6 +70,16 @@ export class BusinessDevelopmentService {
       this.env + ApiRoutes.BusinessDevelopment.lineOfBusiness,
       {},
       { params: { ClassName: classOfInc }, observe: "response" }
+    );
+  }
+
+  quotRequirements(data: {}): Observable<
+    HttpResponse<IBaseResponse<IQoutingRequirement[]>>
+  > {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.quotingRequirements,
+      data,
+      { observe: "response" }
     );
   }
 
