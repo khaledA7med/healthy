@@ -310,35 +310,190 @@
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="Building">Building No.</label>
-                                <input id="Building" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
+                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
+                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                                    <div class="card-body">
+                                        <div class="ribbon ribbon-info round-shape">
+                                            Client's Premium & Company Commissions
+                                        </div>
+                                        <div class="ribbon-content mt-4 pt-2 text-muted">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-12">
+                                                    <!-- Payment Type -->
+                                                    <div class="col-lg-12 col-md-12 my-1">
+                                                        <label for="paymentType">Payment Type</label>
+                                                        <ng-select placeholder="Payment Type"
+                                                            bindValue="Direct to Insurance Company"
+                                                            bindLabel="Direct to Insurance Company"
+                                                            [items]="['Direct to Insurance Company']"
+                                                            formControlName="paymentType">
+                                                        </ng-select>
+                                                    </div>
+                                                    <div class="col-lg-12 my-2">
+                                                        <label for="clientDNCNNo" class="asterisk-input">Client DN/CN
+                                                            No.</label>
+                                                        <input id="clientDNCNNo" formControlName="clientDNCNNo"
+                                                            class="form-control form-control-sm"
+                                                            placeholder="Client DN/CN No."
+                                                            [ngClass]="{'is-invalid' : (f.clientDNCNNo?.touched || submitted) && f.clientDNCNNo?.invalid}" />
+                                                        <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                                    </div>
+                                                    <div class="col-lg-12 my-2">
+                                                        <label for="compCommDNCNNo" class="asterisk-input">
+                                                            Company Comm .DN/CN No.
+                                                        </label>
+                                                        <input id="compCommDNCNNo" formControlName="compCommDNCNNo"
+                                                            class="form-control form-control-sm"
+                                                            placeholder="Company Comm .DN/CN No."
+                                                            [ngClass]="{'is-invalid' : (f.compCommDNCNNo?.touched || submitted) && f.compCommDNCNNo?.invalid}" />
+                                                        <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-8 col-md-12">
+                                                    <!-- Sum Insured -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="sumInsur">Sum Insured</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control input-text-right"
+                                                                    id="sumInsur" formControlName="sumInsur"
+                                                                    placeholder="0.00" aria-describedby="SAR">
+                                                                <span class="input-group-text" id="SAR">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="Street">Street</label>
-                                <input id="Street" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
+                                                    <!-- Net Premium -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="netPremium">Net Premium</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control input-text-right"
+                                                                    formControlName="netPremium" placeholder="0.00"
+                                                                    id="netPremium" aria-describedby="SAR">
+                                                                <span class="input-group-text" id="SAR">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="SecondaryNo">Secondary No</label>
-                                <input id="SecondaryNo" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
+                                                    <!-- Policy Fees -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="fees" class="">Policy
+                                                                Fees</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0" type="checkbox"
+                                                                        formControlName="deductFees" id="deductFees">
+                                                                    <label for="deductFees"
+                                                                        class="px-1 mb-0">Deduct</label>
+                                                                </div>
+                                                                <input type="text" id="fees" formControlName="fees"
+                                                                    class="form-control form-control-sm input-text-right"
+                                                                    placeholder="0.00">
+                                                                <span class="input-group-text">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="District">District</label>
-                                <input id="District" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
+                                                    <!-- VAT -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="vatPerc">VAT</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-prepend">
+                                                                    <select class="form-select py-1" id="vatPerc"
+                                                                        formControlName="vatPerc">
+                                                                    </select>
+                                                                </div>
+                                                                <input type="text" id="vatValue"
+                                                                    formControlName="vatValue"
+                                                                    class="form-control form-control-sm input-text-right"
+                                                                    placeholder="0.00" readonly>
+                                                                <span class="input-group-text" id="">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="PostalCode">Postal Code</label>
-                                <input id="PostalCode" class="form-control form-control-sm" />
+                                                    <!-- Total Premium -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="totalPremium">Total Premium</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control input-text-right"
+                                                                    formControlName="totalPremium" id="totalPremium"
+                                                                    placeholder="0.00" aria-describedby="SAR" readonly>
+                                                                <span class="input-group-text" id="SAR">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Company Commission Per -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="compCommPerc">Company
+                                                                Commission %</label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="number"
+                                                                    class="form-control input-text-right"
+                                                                    formControlName="compCommPerc" id="compCommPerc"
+                                                                    placeholder="0.0" aria-describedby="per">
+                                                                <span class="input-group-text" id="per">%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Company Commission -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="compCommAmount">
+                                                                Company Commission
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control input-text-right"
+                                                                    formControlName="compCommAmount" id="compCommAmount"
+                                                                    placeholder="0.00" aria-describedby="SAR" readonly>
+                                                                <span class="input-group-text" id="SAR">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Company Commission VAT -->
+                                                    <div class="row my-2">
+                                                        <div class="col-lg-4">
+                                                            <label for="compCommVAT">
+                                                                Company Commission VAT
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="text" class="form-control input-text-right"
+                                                                    formControlName="compCommVAT" id="compCommVAT"
+                                                                    placeholder="0.00" aria-label="compCommVAT"
+                                                                    aria-describedby="SAR" readonly>
+                                                                <span class="input-group-text" id="SAR">SAR</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!--./col-->
                         </div>
                         <!--./row-->
                     </div>
@@ -353,35 +508,120 @@
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="Building">Building No.</label>
-                                <input id="Building" class="form-control form-control-sm" />
+                            <!-- Payment Terms -->
+                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
+                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                                    <div class="card-body">
+                                        <div class="ribbon ribbon-info round-shape">
+                                            Payment Terms
+                                        </div>
+                                        <div class="ribbon-content mt-4 text-muted">
+                                            <div class="d-flex justify-content-end">
+                                                <button type="button" (click)="addPaymentTerm()"
+                                                    class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
+                                                    <i class="ri-menu-add-line"></i> Add Payment Term
+                                                </button>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 table-responsive">
+                                                    <table class="table align-middle table-nowrap mb-0">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th scope="col">Payment Date</th>
+                                                                <th scope="col">Percentage %</th>
+                                                                <th scope="col" class="text-end">Net Premium
+                                                                </th>
+                                                                <th scope="col" class="text-end">Policy Fees
+                                                                </th>
+                                                                <th scope="col" class="text-end">VAT Amount
+                                                                </th>
+                                                                <th scope="col" class="text-end">Total</th>
+                                                                <th scope="col">&nbsp;</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody formArrayName="paymentTermsList">
+                                                            <tr
+                                                                *ngFor="let c of paymentTermsArrayControls.controls; index as i">
+                                                                <ng-container [formGroupName]="i">
+                                                                    <td>
+                                                                        <app-gregorian-picker [required]="true"
+                                                                            (dateChange)="paymentTermDates($event, i)"
+                                                                            [submitted]="paymentsControls(i, 'payDate').invalid && paymentsControls(i, 'payDate').touched"></app-gregorian-picker>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="number" max="100"
+                                                                            class="form-control form-control-sm"
+                                                                            placeholder="0.00%"
+                                                                            formControlName="percentage" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm input-text-right"
+                                                                            placeholder="0.00" formControlName="amount"
+                                                                            readonly />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm input-text-right"
+                                                                            placeholder="0.00"
+                                                                            formControlName="policyFees" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm input-text-right"
+                                                                            placeholder="0.00"
+                                                                            formControlName="vatAmount" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm input-text-right"
+                                                                            placeholder="0.00"
+                                                                            formControlName="rowTotal" readonly />
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- <button
+                                                                            *ngIf="uiState.editMode && contactControlArray.controls[i].disabled"
+                                                                            type="button"
+                                                                            class="btn btn-sm btn-soft-info me-2"
+                                                                            (click)="enableEditingRow(i, 'contact')">
+                                                                            <i class="ri-edit-2-line"></i>
+                                                                        </button>
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-soft-danger"
+                                                                            (click)="remove(i, 'contact')">
+                                                                            <i class="ri-delete-bin-2-line"></i>
+                                                                        </button> -->
+                                                                    </td>
+                                                                </ng-container>
+                                                            </tr>
+                                                            <!-- <tr *ngIf="paymentTermsControls.controls.length === 0"
+                                                                class="my-1 text-center text-dark fw-bold no-item-contact">
+                                                                <td colspan="100">Add Payment Terms To show</td>
+                                                            </tr> -->
+                                                        </tbody>
+                                                        <tfoot id="totalPaymentTermFooter" class="alert">
+                                                            <tr>
+                                                                <th>Total</th>
+                                                                <th id="totalPaymentTermsPerc">0 %</th>
+                                                                <th id="totalPaymentTermsNetPremium"
+                                                                    class="input-text-right">0.00</th>
+                                                                <th id="totalPaymentTermsPolicyFees"
+                                                                    class="input-text-right">0.00</th>
+                                                                <th id="totalPaymentTermsVATAmount"
+                                                                    class="input-text-right">0.00</th>
+                                                                <th id="allPaymentTotals" class="input-text-right">
+                                                                    0.00
+                                                                </th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!--./col-->
-
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="Street">Street</label>
-                                <input id="Street" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
-
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="SecondaryNo">Secondary No</label>
-                                <input id="SecondaryNo" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
-
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="District">District</label>
-                                <input id="District" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
-
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="PostalCode">Postal Code</label>
-                                <input id="PostalCode" class="form-control form-control-sm" />
-                            </div>
-                            <!--./col-->
                         </div>
                         <!--./row-->
                     </div>

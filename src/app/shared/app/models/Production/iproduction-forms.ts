@@ -1,5 +1,8 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { IPolicyCommissionList, IPolicyPaymentsList } from "./ipolicy-payments";
+import {
+  IPolicyCommissionListForms,
+  IPolicyPaymentsListForms,
+} from "./ipolicy-payments";
 
 export interface IProductionForms {
   sNo?: FormControl<string | null>;
@@ -13,6 +16,7 @@ export interface IProductionForms {
   clientNo?: FormControl<string | null>;
   oasisPolRef?: FormControl<string | null>;
   issueType?: FormControl<string | null>;
+  paymentType?: FormControl<string | null>;
   accNo?: FormControl<string | null>;
   policyNo?: FormControl<string | null>;
   endorsType?: FormControl<string | null>;
@@ -47,6 +51,6 @@ export interface IProductionForms {
   endorsRequestType?: FormControl<string | null>;
   periodFrom?: FormControl<string | null>;
   periodTo?: FormControl<string | null>;
-  paymentTermsList?: FormArray<FormGroup<IPolicyPaymentsList>>;
-  producersCommissionsList?: FormArray<FormGroup<IPolicyCommissionList>>;
+  paymentTermsList?: FormArray<FormGroup<IPolicyPaymentsListForms>>;
+  producersCommissionsList?: FormArray<FormGroup<IPolicyCommissionListForms>>;
 }
