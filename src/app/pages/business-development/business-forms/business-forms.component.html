@@ -726,6 +726,7 @@
                     </div>
                     <button
                       (click)="addActivityLog()"
+                      type="button"
                       class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light custom-btn"
                     >
                       Add Log
@@ -735,10 +736,12 @@
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                            <tr>
+                              <th>Type</th>
+                              <th>Date</th>
+                              <th>Note</th>
+                              <th>Action</th>
+                            </tr>
                           </thead>
                           <tbody>
                             <tr
@@ -871,6 +874,7 @@
                     </div>
                     <button
                       (click)="addCompetitor()"
+                      type="button"
                       class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light custom-btn"
                     >
                       Add Competitors
@@ -879,9 +883,11 @@
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
-                            <th>Competitors</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                            <tr>
+                              <th>Competitors</th>
+                              <th>Note</th>
+                              <th>Action</th>
+                            </tr>
                           </thead>
                           <tbody formArrayName="salesLeadCompetitorsList">
                             <tr
@@ -891,7 +897,7 @@
                               "
                             >
                               <ng-container [formGroupName]="i">
-                                <td scope="col">
+                                <td>
                                   <div>
                                     <input
                                       type="text"
