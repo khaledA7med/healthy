@@ -144,6 +144,40 @@ export class MasterTableService {
 					name: BaseData.SalesleadStatus,
 				},
 			],
+			Production: [
+				{
+					route: ApiRoutes.MasterTable.Production.policyStatus,
+					name: BaseData.PolicyStatus,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.branch,
+					name: BaseData.Branch,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.policyEndorsTypes,
+					name: BaseData.PolicyEndorsTypes,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.clientsList,
+					name: BaseData.ClientsList,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.producers,
+					name: BaseData.Producers,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.insuranceCompanies,
+					name: BaseData.InsuranceCompanies,
+				},
+				{
+					route: ApiRoutes.MasterTable.Production.InsurClasses,
+					name: BaseData.InsurClasses,
+				},
+				{
+					route: ApiRoutes.MasterTable.BusinessDevelopment.AllUsers,
+					name: BaseData.AllUsers,
+				},
+			],
 		};
 
 		switch (module) {

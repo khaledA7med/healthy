@@ -4,7 +4,9 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentReq } from "../../app/models/App/IDocumentReq";
+import { IPolicy } from "../../app/models/Production/i-policy";
 import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
+import { IProductionFilters } from "../../app/models/Production/iproduction-filters";
 import { IFilterByRequest, IPoliciesRef, IPolicyClient, IPolicyRequests } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
@@ -16,6 +18,12 @@ export class ProductionService {
 	constructor(private http: HttpClient) {}
 
 	//#region  Form Services
+	getAllPolicies(filters: IProductionFilters): Observable<HttpResponse<IBaseResponse<IPolicy[]>>> {
+		return this.http.post<IBaseResponse<IPolicy[]>>(this.env + ApiRoutes.Production.search, filters, {
+			observe: "response",
+		});
+	}
+
 	searchClientByRequest(body: IFilterByRequest): Observable<IBaseResponse<IPolicyRequests[]>> {
 		return this.http.post<IBaseResponse<IPolicyRequests[]>>(this.env + ApiRoutes.Production.clientByRequest, {
 			clientName: body.clientName,
