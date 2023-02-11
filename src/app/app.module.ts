@@ -19,6 +19,7 @@ import { interceptorProviders } from "./core/helpers";
 import { UrlSerializer } from "@angular/router";
 import { LowerCaseUrlSerializer } from "./core/helpers/LowerCaseUrlSerializer";
 import { registerLocaleData } from "@angular/common";
+
 export function createTranslateLoader(http: HttpClient): any {
 	return new TranslateHttpLoader(http, "assets/i18n/", ".json");
 }

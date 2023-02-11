@@ -67,7 +67,8 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
       minWidth: 100,
       resizable: true,
     },
-    overlayNoRowsTemplate: "No Rows",
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onRowClicked: (e) => this.onRowClicked(e),
   };

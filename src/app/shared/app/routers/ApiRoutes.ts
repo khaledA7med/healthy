@@ -38,6 +38,13 @@ export const ApiRoutes = {
       AllUsers: LookUpTables + BaseData.AllUsers,
       SalesleadStatus: LookUpTables + BaseData.SalesleadStatus,
     },
+    Production: {
+      producers: LookUpTables + BaseData.Producers,
+      insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      insuranceClasses: LookUpTables + BaseData.InsurClasses,
+      branch: LookUpTables + BaseData.Branch,
+      endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+    },
     CustomerService: {
       AllClients: LookUpTables + BaseData.AllClients,
       Branch: LookUpTables + BaseData.Branch,

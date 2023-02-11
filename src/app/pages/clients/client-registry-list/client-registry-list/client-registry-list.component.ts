@@ -75,6 +75,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       flex: 1,
       minWidth: 100,
       sortable: true,
+      resizable: true,
     },
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
