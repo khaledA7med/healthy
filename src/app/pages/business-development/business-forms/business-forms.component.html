@@ -1,11 +1,11 @@
 <form
   [formGroup]="formGroup"
   autocomplete="off"
-  (ngSubmit)="submitForm()"
+  (ngSubmit)="submitForm(formGroup)"
   id="AddLeadForm"
 >
   {{ formGroup.value | json }}
-  <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
+  <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5">
     <!-- start sales lead details acc   -->
     <ngb-panel id="1" title="Sales Lead Details" cardClass="open my-4">
       <ng-template ngbPanelContent>
@@ -178,7 +178,7 @@
                 </div>
               </div>
             </div>
-            <!-- insurance Det & Currently Insured row  -->
+            <!-- insurance Details & Currently Insured row  -->
             <div class="row my-2">
               <div class="col-lg-6 my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
@@ -207,7 +207,7 @@
                               'is-submitted':
                                 submitted && f.classOfBusiness?.invalid
                             }"
-                            (change)="getLineOfBusiness($event.name)"
+                            (change)="getLineOfBusiness($event?.name)"
                           >
                           </ng-select>
                           <div
@@ -276,7 +276,7 @@
                           <label
                             for="deadline"
                             [ngClass]="{
-                              'asterisk-input': uiState.isDeadline
+                              'asterisk-input': f.chDeadlinebool?.value
                             }"
                             >Deadline</label
                           >
@@ -288,7 +288,6 @@
                               <input
                                 type="checkbox"
                                 class="form-check-input-sm"
-                                value="true"
                                 formControlName="chDeadlinebool"
                                 (change)="toggleDeadline($event)"
                             /></span>
@@ -341,7 +340,6 @@
                               (formData | async)?.InsuranceCompanyName?.content!
                             "
                             [loading]="formData ? false : true"
-                            (change)="getQuotingArr($event)"
                           >
                           </ng-select>
                         </div>
@@ -606,8 +604,8 @@
                               placeholder="Select company"
                               bindLabel="name"
                               bindValue="name"
-                              [items]="quotingArr"
-                              (change)="quotCompany($event.name)"
+                              formControlName="companyName"
+                              [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
 
@@ -632,7 +630,8 @@
                                   <div>
                                     <input
                                       type="checkbox"
-                                      class="text-dark form-check-input"
+                                      class="form-check-input"
+                                      (change)="checkAllCompanies($event)"
                                     />
                                   </div>
                                 </th>
@@ -640,7 +639,61 @@
                                 <th>Item</th>
                               </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody formArrayName="quotingRequirementsList">
+                              <!-- <ng-container
+                                *ngFor="
+                                  let c of quotingControlArray.controls;
+                                  index as i
+                                "
+                                  *ngFor="let item of uiState.quotingCompanyArr"
+
+                              > -->
+                              <tr
+                                *ngFor="
+                                  let c of quotingControlArray.controls;
+                                  index as i
+                                "
+                              >
+                                <ng-container [formGroupName]="i">
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      formControlName="itemCheck"
+                                      class="form-check-input"
+                                    />
+                                  </td>
+                                  <td>
+                                    <!-- {{ item.insuranceCopmany }} -->
+                                    {{
+                                      quotingControls(i, "insuranceCopmany")
+                                        .value
+                                    }}
+                                    <input
+                                      type="hidden"
+                                      formControlName="insuranceCopmany"
+                                    />
+                                  </td>
+                                  <td>
+                                    <!-- {{ item.item }} -->
+                                    {{ quotingControls(i, "item").value }}
+
+                                    <input
+                                      type="hidden"
+                                      formControlName="item"
+                                    />
+                                  </td>
+                                </ng-container>
+                              </tr>
+                              <!-- </ng-container> -->
+                              <tr
+                                *ngIf="
+                                  quotingControlArray.controls.length === 0
+                                "
+                                class="my-1 text-center text-dark fw-bold no-item-contact"
+                              >
+                                <td colspan="100">No items show</td>
+                              </tr>
+                            </tbody>
                           </table>
                         </div>
                         <!-- col end table -->
@@ -664,11 +717,14 @@
                               class="form-control form-control-sm"
                               aria-describedby="inputGroup-sizing-sm"
                               placeholder="Select company"
-                              [items]="quotingArr"
+                              bindLabel="name"
+                              bindValue="name"
+                              [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
 
                             <button
+                              type="button"
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
@@ -976,9 +1032,90 @@
       </ng-template>
     </ngb-panel>
     <!-- end lead activities acc  -->
+    <!-- start tasks acc on edit mood -->
+    <ngb-panel id="4" title="New Activities" cardClass="open my-4">
+      <ng-template ngbPanelContent>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse show"
+          aria-labelledby="headingThree"
+        >
+          <div class="container-fluid mb-3">
+            <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+              <div class="card-body">
+                <div class="ribbon ribbon-info round-shape">Tasks</div>
+                <div class="ribbon-content mt-4 text-muted">
+                  <div class="row my-2">
+                    <!--  -->
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="taskType" class="asterisk-input"
+                        >Task Type</label
+                      >
+                      <ng-select
+                        id="taskType"
+                        class="form-control-sm"
+                        placeholder="Select Task Type"
+                        bindLabel="name"
+                        bindValue="name"
+                        [items]="(formData | async)?.LogType?.content!"
+                        [loading]="formData ? false : true"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="taskName" class="asterisk-input"
+                        >Task Name</label
+                      >
+                      <input
+                        id="taskName"
+                        class="form-control form-control-sm"
+                        placeholder="Select Task Type"
+                      />
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="assigned" class="asterisk-input"
+                        >Assigned To
+                      </label>
+                      <ng-select
+                        id="assigned"
+                        class="form-control-sm"
+                        placeholder="Select Task Type"
+                        bindLabel="name"
+                        bindValue="name"
+                        [items]="(formData | async)?.Producers?.content!"
+                        [loading]="formData ? false : true"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label class="asterisk-input">Task Date From</label>
+                      <app-gregorian-picker
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="taskDateFrom($event)"
+                      ></app-gregorian-picker>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label class="asterisk-input">Task Date To</label>
+                      <app-gregorian-picker
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="taskDateTo($event)"
+                      ></app-gregorian-picker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+    <!-- end tasks acc -->
+
     <!-- start Document acc -->
-    <ngb-panel id="4" title="Documents" cardClass="open my-4">
-      <ng-template ngbPanelContent="6">
+    <ngb-panel id="5" title="Documents" cardClass="open my-4">
+      <ng-template ngbPanelContent>
         <app-dropzone
           [UploadedFiles]="docs"
           (files)="documentsList($event)"
@@ -1001,7 +1138,6 @@
                 formControlName="sendToUW"
                 id="sentTo"
                 class="form-check-input"
-                (change)="checkSentUW($event)"
               />
               <label for="sentTo">Send to U / W</label>
             </div>
@@ -1010,6 +1146,7 @@
             <ng-select
               placeholder="Choose Branch"
               class="form-control form-control-sm"
+              formControlName="branch"
               bindLabel="name"
               bindValue="name"
               [items]="(formData | async)?.Branch?.content!"
@@ -1035,6 +1172,7 @@
             type="button"
             id="sa-warning"
             class="btn btn-sm btn-soft-danger"
+            (click)="dropzone.clearImages()"
           >
             <i class="ri-delete-bin-2-line"></i>
             Clear
