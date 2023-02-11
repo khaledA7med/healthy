@@ -15,8 +15,14 @@ import {
 import { NgbModal, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
+import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
-import { IPolicyPaymentsListForms } from "src/app/shared/app/models/Production/ipolicy-payments";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import {
+  IPolicyCommissionListForms,
+  IPolicyPaymentsListForms,
+} from "src/app/shared/app/models/Production/ipolicy-payments";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
 import {
   issueType,
@@ -61,6 +67,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       netPremium: 0,
       fees: 0,
       vat: 0,
+      total: 0,
     },
   };
 
@@ -72,11 +79,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private eventService: EventService,
-    private appUtils: AppUtils
+    private appUtils: AppUtils,
+    private tables: MasterTableService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.formData = this.tables.getBaseData(MODULES.ProductionForm);
   }
 
   initForm(): void {
@@ -114,15 +123,18 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       compCommDNCNNo: new FormControl(null, Validators.required),
       sumInsur: new FormControl(null),
       netPremium: new FormControl(null),
-      fees: new FormControl(null),
-      deductFees: new FormControl({ value: false, disabled: true }),
-      vatPerc: new FormControl(null),
+      fees: new FormControl(null, [Validators.max(1000)]),
+      deductFees: new FormControl({ value: false, disabled: false }),
+      vatPerc: new FormControl(+reserved.DefaultVATPerc),
       vatValue: new FormControl(null),
       totalPremium: new FormControl(null),
       compCommPerc: new FormControl(null),
       compCommAmount: new FormControl(null),
       compCommVAT: new FormControl(null),
       paymentTermsList: new FormArray<FormGroup<IPolicyPaymentsListForms>>([]),
+      producersCommissionsList: new FormArray<
+        FormGroup<IPolicyCommissionListForms>
+      >([]),
     });
   }
 
@@ -199,6 +211,176 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     console.log(e);
   }
 
+  //#region Policy Details Handlers
+  setValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.setValidators(Validators.required);
+      el.updateValueAndValidity();
+    });
+  }
+
+  removeValidatorAndUpdate(controls: FormControl[]) {
+    controls.map((el) => {
+      el.clearValidators();
+      el.updateValueAndValidity();
+    });
+  }
+
+  issueTypeToggler(e: Event) {
+    let elem = this.f.issueType?.value;
+    switch (elem) {
+      case this.uiState.policy.issueType.new:
+        this.newIssue();
+        break;
+      case this.uiState.policy.issueType.renewal:
+        this.renewalIssue();
+        break;
+      case this.uiState.policy.issueType.endorsement:
+        this.endorsementIssue();
+        break;
+      default:
+        break;
+    }
+  }
+  // Issue Types
+  newIssue(): void {
+    this.f.accNo?.enable();
+    this.f.policyNo?.enable();
+
+    this.f.endorsType?.reset();
+    this.f.endorsType?.disable();
+    this.f.endorsNo?.reset();
+    this.f.endorsNo?.disable();
+    this.f.insurComp?.enable();
+    this.f.className?.enable();
+    this.f.lineOfBusiness?.enable();
+    this.f.issueDate?.enable();
+    this.f.periodFrom?.enable();
+    this.f.periodTo?.enable();
+    this.f.compCommPerc?.enable();
+
+    let validators = [
+      this.f.endorsType!,
+      this.f.endorsNo!,
+      this.f.oasisPolRef!,
+    ];
+    this.removeValidatorAndUpdate(validators);
+    // resetValidationByPolicyRef();
+  }
+
+  renewalIssue(): void {
+    this.f.accNo?.enable();
+    this.f.policyNo?.enable();
+
+    this.f.endorsType?.reset();
+    this.f.endorsType?.disable();
+
+    this.f.endorsNo?.reset();
+    this.f.endorsNo?.disable();
+
+    this.f.insurComp?.enable();
+    this.f.className?.enable();
+    this.f.lineOfBusiness?.enable();
+    this.f.periodFrom?.enable();
+    this.f.periodTo?.enable();
+    this.f.compCommPerc?.enable();
+
+    this.setValidatorAndUpdate([this.f.oasisPolRef!]);
+    this.removeValidatorAndUpdate([this.f.endorsType!, this.f.endorsNo!]);
+  }
+
+  endorsementIssue(): void {
+    this.f.accNo?.reset();
+    this.f.accNo?.disable();
+    this.f.policyNo?.reset();
+    this.f.policyNo?.disable();
+
+    this.f.endorsNo?.enable();
+    this.f.endorsType?.enable();
+
+    this.f.insurComp?.disable();
+    this.f.insurComp?.reset();
+
+    this.f.className?.disable();
+    this.f.className?.reset();
+
+    this.f.lineOfBusiness?.disable();
+    this.f.lineOfBusiness?.reset();
+
+    this.f.issueDate?.enable();
+    this.f.periodFrom?.enable();
+
+    this.f.periodTo?.disable();
+    this.f.periodTo?.reset();
+
+    this.f.compCommPerc?.disable();
+    this.f.compCommPerc?.reset();
+
+    this.setValidatorAndUpdate([
+      this.f.oasisPolRef!,
+      this.f.endorsNo!,
+      this.f.endorsType!,
+    ]);
+  }
+
+  //#endregion
+
+  //#region Invoices Details
+  formListeners(e?: Event): void {
+    this.vatHandler();
+    if (+this.f.compCommPerc?.value! > 0) {
+      if (+this.f.compCommPerc?.value! > 100) {
+        this.f.compCommPerc?.patchValue(100);
+        return;
+      }
+      this.f.compCommAmount?.patchValue(
+        +this.f.netPremium?.value! * (+this.f.compCommPerc?.value! / 100)
+      );
+      this.f.compCommVAT?.patchValue(
+        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+      );
+      this.f.producerComm?.patchValue(
+        this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
+      );
+      if (+this.f.producerCommPerc?.value! > 0) {
+        this.f.producerComm?.patchValue(
+          +this.f.compCommAmount?.value! *
+            (this.f.producerCommPerc?.value! / 100)
+        );
+      }
+    }
+    this.totalPaymentRow();
+  }
+  vatHandler(): void {
+    if (this.f.endorsType?.value === "Refund" && this.f.deductFees?.value) {
+      this.f.vatValue?.patchValue(
+        +this.f.netPremium?.value! -
+          (+this.f.fees?.value! * +this.f.vatPerc?.value!) / 100
+      );
+      this.f.totalPremium?.patchValue(
+        +this.f.netPremium?.value! -
+          +this.f.fees?.value! +
+          +this.f.vatValue?.value!
+      );
+    } else {
+      this.f.vatValue?.patchValue(
+        (+this.f.netPremium?.value! + +this.f.fees?.value!) *
+          (this.f.vatPerc?.value! / 100)
+      );
+      this.f.totalPremium?.patchValue(
+        +this.f.netPremium?.value! +
+          +this.f.fees?.value! +
+          +this.f.vatValue?.value!
+      );
+    }
+
+    if (+this.f.compCommPerc?.value! > 0)
+      this.f.compCommVAT?.patchValue(
+        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+      );
+  }
+  //#endregion
+
   //#region Payment Terms
   addPaymentTerm(data?: IPolicyPaymentsListForms) {
     if (this.f.paymentTermsList?.invalid) {
@@ -236,46 +418,35 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   totalPaymentRow() {
+    const handler = {
+      emitEvent: false,
+      OnlySelf: true,
+    };
     this.f.paymentTermsList?.controls.forEach((el) => {
-      console.log(el.controls.vatAmount);
-      el.controls.percentage?.valueChanges.subscribe((elm) => {
-        if (+elm! > 100) el.controls.percentage?.patchValue(100);
+      let sub1 = el.controls.percentage?.valueChanges.subscribe((elm) => {
+        if (+elm! > 100 - +this.uiState.paymentTermsTotals.percentage)
+          el.controls.percentage?.patchValue(
+            100 - +this.uiState.paymentTermsTotals.percentage,
+            handler
+          );
         el.controls.amount?.patchValue(
-          +this.f.netPremium?.value! * (+elm! / 100)
+          +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
+        );
+        el.controls.policyFees?.patchValue(
+          +this.f.fees?.value! * (+el.controls.percentage?.value! / 100)
+        );
+        el.controls.vatAmount?.patchValue(
+          +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
         );
       });
-      // el.controls.percentage?.valueChanges.subscribe((elm) => {
-      //   if (+elm! > 100) el.controls.percentage?.patchValue(100);
-      //   el.controls.amount?.patchValue(
-      //     +this.f.netPremium?.value! * (+elm! / 100)
-      //   );
-      // });
+      this.subscribes.push(sub1!);
     });
-    this.paymentTermsArrayControls.valueChanges.subscribe((el) => {
-      // console.log(el);
-      const handler = {
-        emitEvent: false,
-        OnlySelf: true,
-      };
-      console.log(this.f.netPremium?.value);
+    let sub = this.paymentTermsArrayControls.valueChanges.subscribe((el) => {
       for (let i = 0; i < el.length; i++) {
-        // this.paymentsControls(i, "amount")?.patchValue(
-        //   +this.f.netPremium?.value! * (+el[i].percentage / 100),
-        //   handler
-        // );
-        // this.paymentsControls(i, "policyFees")?.patchValue(
-        //   +this.f.fees?.value! * (+el[i].percentage / 100),
-        //   handler
-        // );
-        // this.paymentsControls(i, "vatAmount")?.patchValue(
-        //   +this.f.vatValue?.value! * (+el[i].percentage / 100),
-        //   handler
-        // );
         this.paymentsControls(i, "rowTotal")?.patchValue(
           +el[i].amount + +el[i].vatAmount + +el[i].policyFees,
           handler
         );
-        console.log(+el[i].amount + +el[i].vatAmount + +el[i].policyFees);
       }
       this.uiState.paymentTermsTotals = {
         percentage: el.reduce(
@@ -288,8 +459,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         ),
         fees: el.reduce((prev: any, next: any) => +prev + +next.policyFees, 0),
         vat: el.reduce((prev: any, next: any) => +prev + +next.vatAmount, 0),
+        total: el.reduce((prev: any, next: any) => +prev + +next.rowTotal, 0),
       };
     });
+    this.subscribes.push(sub);
+  }
+
+  removePayment(i: number) {
+    this.paymentTermsArrayControls.removeAt(i);
   }
   //#endregion
 

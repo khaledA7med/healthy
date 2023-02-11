@@ -111,19 +111,22 @@
                                     <div class="">
                                         <div class="form-check form-check-inline mx-2">
                                             <input class="form-check-input" type="radio" formControlName="issueType"
-                                                id="new" [value]="this.uiState.policy.issueType.new" checked>
+                                                (change)="issueTypeToggler($event)" id="new"
+                                                [value]="this.uiState.policy.issueType.new" checked>
                                             <label class="form-check-label" for="new">New
                                                 Policy</label>
                                         </div>
                                         <div class="form-check form-check-inline mx-2">
                                             <input class="form-check-input" type="radio" formControlName="issueType"
-                                                id="renewal" [value]="this.uiState.policy.issueType.renewal">
+                                                (change)="issueTypeToggler($event)" id="renewal"
+                                                [value]="this.uiState.policy.issueType.renewal">
                                             <label class="form-check-label" for="renewal">Renewal
                                                 Of</label>
                                         </div>
                                         <div class="form-check form-check-inline mx-2">
                                             <input class="form-check-input" type="radio" formControlName="issueType"
-                                                id="endorsement" [value]="this.uiState.policy.issueType.endorsement">
+                                                (change)="issueTypeToggler($event)" id="endorsement"
+                                                [value]="this.uiState.policy.issueType.endorsement">
                                             <label class="form-check-label" for="endorsement">Endorsement
                                             </label>
                                         </div>
@@ -141,7 +144,8 @@
                                         [ngClass]="{'is-invalid' : (f.oasisPolRef?.touched || submitted) && f.oasisPolRef?.invalid}"
                                         aria-label="Our Policy Ref" class="form-control" placeholder="Policy Ref">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" id="ourPolicyRefBtn"
-                                        type="button" (click)="openModal(policy)">
+                                        type="button" (click)="openModal(policy)"
+                                        [disabled]="f.issueType?.value === uiState.policy.issueType.new">
                                         <i class="ri-file-search-line mx-1"></i>
                                         Search
                                     </button>
@@ -170,30 +174,38 @@
 
                             <!-- Endors Type-->
                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
-                                <label for="endorsType">Endors Type</label>
-                                <!-- [items]="(formData | async)?.endorsTypes?.content!" bindLabel="name" bindValue="name" -->
-                                <ng-select formControlName="endorsType" placeholder="Endors Type"
-                                    [loading]="formData ? false : true">
+                                <label for="endorsType"
+                                    [ngClass]="{'asterisk-input' :f.issueType?.value === uiState.policy.issueType.endorsement}">Endors
+                                    Type</label>
+                                <ng-select formControlName="endorsType" placeholder="Endors Type" class="is-invalid"
+                                    [ngClass]="{'is-submitted': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
+                                    [items]="(formData | async)?.PolicyEndorsTypes?.content!" bindLabel="name"
+                                    bindValue="name" [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div>{{ item.name }}</div>
                                     </ng-template>
                                 </ng-select>
+                                <span class="invalid-feedback fw-bold mt-0"
+                                    *ngIf="(f.endorsType?.touched || submitted) && f.endorsType?.invalid">Required</span>
                             </div>
 
                             <!-- Endors No -->
                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
-                                <label for="endorsNo">Endors
+                                <label for="endorsNo"
+                                    [ngClass]="{'asterisk-input' :f.issueType?.value === uiState.policy.issueType.endorsement}">Endors
                                     No</label>
                                 <input type="text" class="form-control form-control-sm" formControlName="endorsNo"
+                                    [ngClass]="{'is-invalid': (f.endorsNo?.touched || submitted) && f.endorsNo?.invalid}"
                                     placeholder="Endors No." id="endorsNo">
+                                <span class="invalid-feedback fw-bold mt-0">Required</span>
                             </div>
 
                             <!-- Issued By -->
                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                 <label for="insurComp" class="asterisk-input">Issued By</label>
-                                <!-- [items]="(formData | async)?.insurComp?.content!" bindLabel="name" bindValue="name" -->
                                 <ng-select formControlName="insurComp" id="insurComp" placeholder="Insurance Company"
-                                    class="is-invalid"
+                                    [items]="(formData | async)?.InsuranceCompanies?.content!" bindLabel="name"
+                                    bindValue="name" class="is-invalid"
                                     [ngClass]="{'is-submitted': (f.insurComp?.touched || submitted) && f.insurComp?.invalid}"
                                     [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
@@ -207,9 +219,9 @@
                             <!-- Class Of Insurance -->
                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                 <label for="className" class="asterisk-input">Class Of Business</label>
-                                <!-- [items]="(formData | async)?.className?.content!" bindLabel="name" bindValue="name" -->
                                 <ng-select formControlName="className" id="className" placeholder="Class Of Business"
-                                    class="is-invalid"
+                                    [items]="(formData | async)?.InsurClasses?.content!" bindLabel="name"
+                                    bindValue="name" class="is-invalid"
                                     [ngClass]="{'is-submitted': (f.className?.touched || submitted) && f.className?.invalid}"
                                     [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
@@ -354,11 +366,12 @@
                                                     <div class="row my-2">
                                                         <div class="col-lg-4">
                                                             <label for="sumInsur">Sum Insured</label>
+                                                            <!-- [mask]="uiState.currencies.seperator" -->
                                                         </div>
                                                         <div class="col-lg-8">
                                                             <div class="input-group input-group-sm">
                                                                 <input type="text" class="form-control input-text-right"
-                                                                    id="sumInsur" formControlName="sumInsur"
+                                                                    id="sumInsur" formControlName="sumInsur" InputMask
                                                                     placeholder="0.00" aria-describedby="SAR">
                                                                 <span class="input-group-text" id="SAR">SAR</span>
                                                             </div>
@@ -373,6 +386,7 @@
                                                         <div class="col-lg-8">
                                                             <div class="input-group input-group-sm">
                                                                 <input type="text" class="form-control input-text-right"
+                                                                    (input)="formListeners($event)" InputMask
                                                                     formControlName="netPremium" placeholder="0.00"
                                                                     id="netPremium" aria-describedby="SAR">
                                                                 <span class="input-group-text" id="SAR">SAR</span>
@@ -383,38 +397,45 @@
                                                     <!-- Policy Fees -->
                                                     <div class="row my-2">
                                                         <div class="col-lg-4">
-                                                            <label for="fees" class="">Policy
+                                                            <label for="fees">Policy
                                                                 Fees</label>
                                                         </div>
                                                         <div class="col-lg-8">
                                                             <div class="input-group input-group-sm">
                                                                 <div class="input-group-text">
                                                                     <input class="form-check-input mt-0" type="checkbox"
+                                                                        (input)="formListeners($event)" InputMask
                                                                         formControlName="deductFees" id="deductFees">
                                                                     <label for="deductFees"
                                                                         class="px-1 mb-0">Deduct</label>
                                                                 </div>
                                                                 <input type="text" id="fees" formControlName="fees"
+                                                                    (input)="formListeners($event)" InputMask
+                                                                    [max]="1000"
                                                                     class="form-control form-control-sm input-text-right"
-                                                                    placeholder="0.00">
+                                                                    pattern="" placeholder="0.00">
                                                                 <span class="input-group-text">SAR</span>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <!-- VAT -->
                                                     <div class="row my-2">
                                                         <div class="col-lg-4">
-                                                            <label for="vatPerc">VAT</label>
+                                                            <label for="vatPerc">VAT </label>
                                                         </div>
                                                         <div class="col-lg-8">
                                                             <div class="input-group input-group-sm">
                                                                 <div class="input-group-prepend">
                                                                     <select class="form-select py-1" id="vatPerc"
+                                                                        (change)="formListeners($event)"
                                                                         formControlName="vatPerc">
+                                                                        <option [value]="0">0%</option>
+                                                                        <option [value]="15">15%
+                                                                        </option>
                                                                     </select>
                                                                 </div>
                                                                 <input type="text" id="vatValue"
+                                                                    (change)="formListeners($event)" InputMask
                                                                     formControlName="vatValue"
                                                                     class="form-control form-control-sm input-text-right"
                                                                     placeholder="0.00" readonly>
@@ -432,7 +453,8 @@
                                                             <div class="input-group input-group-sm">
                                                                 <input type="text" class="form-control input-text-right"
                                                                     formControlName="totalPremium" id="totalPremium"
-                                                                    placeholder="0.00" aria-describedby="SAR" readonly>
+                                                                    InputMask placeholder="0.00" aria-describedby="SAR"
+                                                                    readonly>
                                                                 <span class="input-group-text" id="SAR">SAR</span>
                                                             </div>
                                                         </div>
@@ -446,7 +468,7 @@
                                                         </div>
                                                         <div class="col-lg-8">
                                                             <div class="input-group input-group-sm">
-                                                                <input type="number"
+                                                                <input type="number" (input)="formListeners($event)"
                                                                     class="form-control input-text-right"
                                                                     formControlName="compCommPerc" id="compCommPerc"
                                                                     placeholder="0.0" aria-describedby="per">
@@ -466,7 +488,8 @@
                                                             <div class="input-group input-group-sm">
                                                                 <input type="text" class="form-control input-text-right"
                                                                     formControlName="compCommAmount" id="compCommAmount"
-                                                                    placeholder="0.00" aria-describedby="SAR" readonly>
+                                                                    InputMask placeholder="0.00" aria-describedby="SAR"
+                                                                    readonly>
                                                                 <span class="input-group-text" id="SAR">SAR</span>
                                                             </div>
                                                         </div>
@@ -483,7 +506,7 @@
                                                                 <input type="text" class="form-control input-text-right"
                                                                     formControlName="compCommVAT" id="compCommVAT"
                                                                     placeholder="0.00" aria-label="compCommVAT"
-                                                                    aria-describedby="SAR" readonly>
+                                                                    InputMask aria-describedby="SAR" readonly>
                                                                 <span class="input-group-text" id="SAR">SAR</span>
                                                             </div>
                                                         </div>
@@ -549,7 +572,7 @@
                                                                             [submitted]="paymentsControls(i, 'payDate').invalid && paymentsControls(i, 'payDate').touched"></app-gregorian-picker>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="number" max="100"
+                                                                        <input type="number"
                                                                             class="form-control form-control-sm"
                                                                             placeholder="0.00%"
                                                                             formControlName="percentage" />
@@ -558,24 +581,24 @@
                                                                         <input type="text"
                                                                             class="form-control form-control-sm input-text-right"
                                                                             placeholder="0.00" formControlName="amount"
-                                                                            readonly />
+                                                                            InputMask readonly />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             class="form-control form-control-sm input-text-right"
-                                                                            placeholder="0.00"
+                                                                            placeholder="0.00" InputMask
                                                                             formControlName="policyFees" />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             class="form-control form-control-sm input-text-right"
-                                                                            placeholder="0.00"
+                                                                            placeholder="0.00" InputMask
                                                                             formControlName="vatAmount" />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             class="form-control form-control-sm input-text-right"
-                                                                            placeholder="0.00"
+                                                                            placeholder="0.00" InputMask
                                                                             formControlName="rowTotal" readonly />
                                                                     </td>
                                                                     <td>
@@ -585,12 +608,12 @@
                                                                             class="btn btn-sm btn-soft-info me-2"
                                                                             (click)="enableEditingRow(i, 'contact')">
                                                                             <i class="ri-edit-2-line"></i>
-                                                                        </button>
+                                                                        </button> -->
                                                                         <button type="button"
                                                                             class="btn btn-sm btn-soft-danger"
-                                                                            (click)="remove(i, 'contact')">
+                                                                            (click)="removePayment(i)">
                                                                             <i class="ri-delete-bin-2-line"></i>
-                                                                        </button> -->
+                                                                        </button>
                                                                     </td>
                                                                 </ng-container>
                                                             </tr>
@@ -602,16 +625,20 @@
                                                         <tfoot id="totalPaymentTermFooter" class="alert">
                                                             <tr>
                                                                 <th>Total</th>
-                                                                <th id="totalPaymentTermsPerc">0 %</th>
-                                                                <th id="totalPaymentTermsNetPremium"
-                                                                    class="input-text-right">0.00</th>
-                                                                <th id="totalPaymentTermsPolicyFees"
-                                                                    class="input-text-right">0.00</th>
-                                                                <th id="totalPaymentTermsVATAmount"
-                                                                    class="input-text-right">0.00</th>
-                                                                <th id="allPaymentTotals" class="input-text-right">
-                                                                    0.00
+                                                                <th>{{uiState.paymentTermsTotals.percentage}}%</th>
+                                                                <th class="input-text-right">
+                                                                    {{uiState.paymentTermsTotals.netPremium | currency :
+                                                                    'SAR' : ''}}
                                                                 </th>
+                                                                <th class="input-text-right">
+                                                                    {{uiState.paymentTermsTotals.fees | currency : 'SAR'
+                                                                    : ''}}</th>
+                                                                <th class="input-text-right">
+                                                                    {{uiState.paymentTermsTotals.vat | currency : 'SAR'
+                                                                    : ''}}</th>
+                                                                <th class="input-text-right">
+                                                                    {{uiState.paymentTermsTotals.total | currency :
+                                                                    'SAR' : ''}}</th>
                                                                 <th></th>
                                                             </tr>
                                                         </tfoot>

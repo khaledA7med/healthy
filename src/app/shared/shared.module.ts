@@ -9,14 +9,15 @@ import {
 // Counter
 
 import { ScrollspyDirective } from "./scrollspy.directive";
-import { TableViewDirective } from "./table-view.directive";
+import { TableViewDirective } from "./directives/table-view.directive";
 import { FlatpickrModule } from "angularx-flatpickr";
 import { SimplebarAngularModule } from "simplebar-angular";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { InputMaskDirective } from "./directives/input-mask.directive";
 
 @NgModule({
-  declarations: [ScrollspyDirective, TableViewDirective],
+  declarations: [ScrollspyDirective, TableViewDirective, InputMaskDirective],
   imports: [
     CommonModule,
     NgbNavModule,
@@ -37,6 +38,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
     ReactiveFormsModule,
     FormsModule,
     NgbAccordionModule,
+    InputMaskDirective,
   ],
 })
 export class SharedModule {}
