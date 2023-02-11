@@ -20,33 +20,33 @@ import { UrlSerializer } from "@angular/router";
 import { LowerCaseUrlSerializer } from "./core/helpers/LowerCaseUrlSerializer";
 import { registerLocaleData } from "@angular/common";
 export function createTranslateLoader(http: HttpClient): any {
-  return new TranslateHttpLoader(http, "assets/i18n/", ".json");
+	return new TranslateHttpLoader(http, "assets/i18n/", ".json");
 }
 registerLocaleData(sa, "SAR");
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    TranslateModule.forRoot({
-      defaultLanguage: "en",
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    BrowserAnimationsModule,
-    HttpClientModule,
-    BrowserModule,
-    AppRoutingModule,
-    LayoutsModule,
-    PagesModule,
-  ],
-  providers: [
-    interceptorProviders,
-    { provide: UrlSerializer, useClass: LowerCaseUrlSerializer },
-    // { provide: LOCALE_ID, useValue: "SAR" },
-  ],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent],
+	imports: [
+		TranslateModule.forRoot({
+			defaultLanguage: "en",
+			loader: {
+				provide: TranslateLoader,
+				useFactory: createTranslateLoader,
+				deps: [HttpClient],
+			},
+		}),
+		BrowserAnimationsModule,
+		HttpClientModule,
+		BrowserModule,
+		AppRoutingModule,
+		LayoutsModule,
+		PagesModule,
+	],
+	providers: [
+		interceptorProviders,
+		{ provide: UrlSerializer, useClass: LowerCaseUrlSerializer },
+		// { provide: LOCALE_ID, useValue: "SAR" },
+	],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}

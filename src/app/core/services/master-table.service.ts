@@ -9,17 +9,14 @@ import { CachingService } from "./caching.service";
 @Injectable({
   providedIn: "root",
 })
-export class MasterTableService
-{
+export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor (private http: HttpClient, private caching: CachingService)
-  {
+  constructor(private http: HttpClient, private caching: CachingService) {
     this.dataSrc = [];
   }
 
-  getBaseData (module: string)
-  {
+  getBaseData(module: string) {
     let data = {
       Client: [
         {
@@ -147,48 +144,77 @@ export class MasterTableService
           name: BaseData.SalesleadStatus,
         },
       ],
+      Production: [
+        {
+          route: ApiRoutes.MasterTable.Production.policyStatus,
+          name: BaseData.PolicyStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.policyEndorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.clientsList,
+          name: BaseData.ClientsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.AllUsers,
+          name: BaseData.AllUsers,
+        },
+      ],
       CustomerService: [
         {
           route: ApiRoutes.MasterTable.CustomerService.AllClients,
-          name: BaseData.AllClients
+          name: BaseData.AllClients,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.Branch,
-          name: BaseData.Branch
+          name: BaseData.Branch,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.InsuranceCompanies,
-          name: BaseData.InsuranceCompanies
+          name: BaseData.InsuranceCompanies,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.CServiceStatus,
-          name: BaseData.CServiceStatus
+          name: BaseData.CServiceStatus,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.PendingReason,
-          name: BaseData.PendingReason
-
+          name: BaseData.PendingReason,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.AllUsers,
-          name: BaseData.AllUsers
-
+          name: BaseData.AllUsers,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.InsurClasses,
-          name: BaseData.InsurClasses
-
+          name: BaseData.InsurClasses,
         },
         {
           route: ApiRoutes.MasterTable.CustomerService.TypeOfCustomerServices,
-          name: BaseData.TypeOfCustomerServices
-
-        }
-      ]
+          name: BaseData.TypeOfCustomerServices,
+        },
+      ],
     };
 
-    switch (module)
-    {
+    switch (module) {
       case MODULES.Client:
         this.dataSrc = data.Client;
         break;
@@ -205,11 +231,10 @@ export class MasterTableService
         break;
     }
 
-    for (let i = 0; i < this.dataSrc.length; i++)
-    {
+    for (let i = 0; i < this.dataSrc.length; i++) {
       this.http
-        .get<any>(this.env + this.dataSrc[ i ].route, {
-          context: new HttpContext().set(MODULE_NAME, this.dataSrc[ i ].name),
+        .get<any>(this.env + this.dataSrc[i].route, {
+          context: new HttpContext().set(MODULE_NAME, this.dataSrc[i].name),
         })
         .subscribe();
     }

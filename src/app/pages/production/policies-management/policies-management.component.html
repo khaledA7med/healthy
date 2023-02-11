@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="col-3 d-flex justify-content-end">
-        <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openFilterOffcanvas()"><i
+        <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openPoliciesFilter()"><i
                 class="ri-filter-3-line me-1"></i>
             Filters
         </button>
@@ -25,4 +25,126 @@
             <i class="ri-add-line me-1"></i> New Policy
         </a>
     </div>
+</div>
+
+<div>
+    <div class="ag-theme-alpine" appTableView>
+        <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [rowData]="uiState.policies.list"
+            [gridOptions]="gridOpts">
+        </ag-grid-angular>
+    </div>
+</div>
+
+
+
+<!----------------------------------  --------------------
+                      Policy Filter
+-------------------------------------------------------->
+<div>
+    <ng-template #filter let-offcanvas>
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title fs-4">Filters</h4>
+            <button type="button" class="btn-close" aria-label="Close"
+                (click)="offcanvas.dismiss('Cross click')"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form class="row justify-content-center" [formGroup]="filterForm">
+                <!-- clinet Name -->
+                <div class="col-12 mb-2">
+                    <label for="clientName" class="form-label">Client Name:</label>
+                    <input type="text" class="form-control" id="clientName" placeholder="Full Name"
+                        formControlName="clientName" />
+                </div>
+                <!-- Client Group -->
+                <div class="col-12 mb-2">
+                    <label for="clinetGroup" class="form-label">Client Group:</label>
+                    <ng-select [items]="(lookupData | async)?.GroupsList?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="clinetGroup" formControlName="groupName">
+                    </ng-select>
+                </div>
+                <!-- Client Status -->
+                <div class="col-12 mb-2">
+                    <label for="salesleadStatus" class="form-label">Client Status:</label>
+
+                    <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" [multiple]="true" id="salesleadStatus" formControlName="status">
+                    </ng-select>
+                </div>
+                <!-- Lead Type -->
+                <!-- <div class="col-12 mb-2">
+                    <label for="leadType" class="form-label">Lead Type:</label>
+                    <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true"
+                        [searchable]="true" bindLabel="name" bindValue="name" id="leadType" formControlName="leadType">
+                    </ng-select>
+                </div> -->
+                <!-- Branch -->
+                <div class="col-12 mb-2">
+                    <label for="branch" class="form-label">Branch:</label>
+                    <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
+                        formControlName="branch">
+                    </ng-select>
+                </div>
+                <!-- ClassOfBusiness -->
+                <div class="col-12 mb-2">
+                    <label for="classOfBusiness" class="form-label">Class Of Business:</label>
+                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="classOfBusiness" formControlName="classOfBusiness">
+                    </ng-select>
+                </div>
+                <!-- producer -->
+                <div class="col-12 mb-2">
+                    <label for="producer" class="form-label">Producer</label>
+                    <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="producer"
+                        formControlName="producer">
+                    </ng-select>
+                </div>
+                <!-- User -->
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">User:</label>
+                    <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="user"
+                        formControlName="user">
+                    </ng-select>
+                </div>
+                <!-- DeadLine Range -->
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">Deadline Range:</label>
+                    <!-- <app-range-picker (dateChange)="setDeadLineFilter($event)"></app-range-picker> -->
+                </div>
+                <!-- Saved On Range -->
+
+                <div class="col-12 mb-2">
+                    <label for="user" class="form-label">Saved On Range:</label>
+                    <!-- <app-range-picker (dateChange)="setSavedOnFilter($event)"></app-range-picker> -->
+                </div>
+                <!-- Expires In Days -->
+                <div class="col-12 mb-2">
+                    <label for="expireIn" class="form-label">Expires In:</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" type="number" class="form-control" id="expireIn" placeholder="Full Name"
+                            formControlName="expireIn" />
+                        <span class="input-group-text" id="Days">Days</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- submit and clear btn -->
+        <div class="offcanvas-footer border-top row mb-3 mx-1">
+            <div class="col-6 mt-2">
+                <button class="btn btn-light btn-sm w-100" (click)="clearFilter()">
+                    Clear Filter
+                </button>
+            </div>
+            <div class="col-6 mt-2">
+                <button class="btn btn-success btn-sm w-100" (click)="onPolicyFilters()">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </ng-template>
 </div>

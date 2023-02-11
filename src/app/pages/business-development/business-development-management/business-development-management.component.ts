@@ -216,8 +216,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	onPageChange(params: GridReadyEvent) {
 		if (this.uiState.gridReady) {
 			this.uiState.filters.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
-			// this.gridApi.setRowCount(this.uiState.salesLead.totalPages);
-			// this.gridApi.paginationGoToPage(this.uiState.filters.pageNumber);
 		}
 	}
 
