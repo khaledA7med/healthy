@@ -19,7 +19,7 @@ import {
 } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import { NgSelectComponent } from "@ng-select/ng-select";
+
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -34,21 +34,17 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   formData!: Observable<IBaseMasterTable>;
   submitted: boolean = false;
   subscribes: Subscription[] = [];
+  lineOfBussArr: IGenericResponseType[] = [];
   documentsToUpload: File[] = [];
   docs: any[] = [];
-  lineOfBussArr: IGenericResponseType[] = [];
-  quotingArr: IGenericResponseType[] = [];
 
   uiState = {
     isClient: true, // Choose client Or Group
-    isDeadline: false,
     isCurrentIns: false,
-    quotingCompany: "",
-    policyCompany: "",
     quotingCompanyArr: [] as IQoutingRequirement[],
     policyCompanyArr: [],
   };
-  @ViewChild("clintSelect") clintSelect!: NgSelectComponent;
+  @ViewChild("dropzone") dropzone!: any;
 
   constructor(
     private tables: MasterTableService,
@@ -63,10 +59,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
   initForm() {
     this.formGroup = new FormGroup<ISalesLeadForm>({
+      //lead details
       leadType: new FormControl("New"),
       clientID: new FormControl(0, Validators.required),
       name: new FormControl(null, Validators.required),
       producer: new FormControl(null, Validators.required),
+      //insurance details
       classOfBusiness: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
       estimatedPremium: new FormControl(0),
@@ -75,22 +73,31 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       chDeadlinebool: new FormControl(false),
       preferedInsurComapnies: new FormControl([]),
       policyDetails: new FormControl(null, Validators.required),
+      //currently insurance
       existingPolExpDate: new FormControl({ value: null, disabled: true }),
       currentPolicyNo: new FormControl({ value: null, disabled: true }),
       currentBroker: new FormControl({ value: null, disabled: true }),
       currentInsurer: new FormControl({ value: null, disabled: true }),
       existingPolDetails: new FormControl({ value: null, disabled: true }),
+      //quoting
+      quotingRequirementsList: new FormArray<FormGroup<IQoutingRequirement>>(
+        []
+      ),
+      // Policy Issuance
+
+      // for get data only
+      companyName: new FormControl(null),
+      //activity Log
+      salesActivityLogList: new FormArray<FormGroup<IActivityLog>>([]),
+      //competitors
+      salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
+      //others
       branch: new FormControl(null),
       sendToUW: new FormControl(false),
       isPolicyRequierments: new FormControl(false), //
       isQuotingRequierments: new FormControl(false), //
       salesActivityLogChecked: new FormControl(false), //
       salesLeadCompetitorChecked: new FormControl(false), //
-      quotingRequirementsList: new FormArray<FormGroup<IQoutingRequirement>>(
-        []
-      ),
-      salesActivityLogList: new FormArray<FormGroup<IActivityLog>>([]),
-      salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
     });
   }
   get f() {
@@ -98,17 +105,20 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
   changeToClient() {
     this.uiState.isClient = true;
-    this.clintSelect.clearModel();
+
+    this.f.name?.reset();
+    this.f.clientID?.reset();
   }
   changeToGroup() {
     this.uiState.isClient = false;
-    this.clintSelect.clearModel();
+
+    this.f.name?.reset();
+    this.f.clientID?.reset();
   }
   getClientId(e: any) {
     this.f.clientID?.patchValue(e?.id);
   }
   getLineOfBusiness(e: string) {
-    console.log(e);
     let sub = this.businessDevService.lineOfBusiness(e).subscribe({
       next: (
         res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>
@@ -128,20 +138,15 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.deadLine?.setValidators(Validators.required);
       this.f.deadLine?.updateValueAndValidity();
       this.f.chDeadline?.patchValue(1);
-      this.uiState.isDeadline = true;
     } else {
       this.f.deadLine?.disable();
       this.f.deadLine?.clearValidators();
       this.f.deadLine?.updateValueAndValidity();
       this.f.deadLine?.reset();
       this.f.chDeadline?.patchValue(0);
-      this.uiState.isDeadline = false;
     }
   }
-  getQuotingArr(e: any) {
-    this.quotingArr = e;
-  }
-
+  // is current insurance
   toggleCurInsured(e: any) {
     let controls = [
       this.f.existingPolExpDate,
@@ -168,25 +173,32 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Quoting
-  quotCompany(companyName: string) {
-    this.uiState.quotingCompany = companyName;
+  //#region requirment
+  get quotingControlArray() {
+    return this.formGroup.get("quotingRequirementsList") as FormArray;
+  }
+  quotingControls(i: number, control: string): AbstractControl {
+    return this.quotingControlArray.controls[i].get(control)!;
   }
 
   getQuotRequirements() {
     if (
-      this.uiState.quotingCompany &&
+      this.f.companyName?.value &&
       this.f.classOfBusiness?.value &&
       this.f.lineOfBusiness?.value
     ) {
       let data = {
         className: this.f.classOfBusiness?.value,
         lineOfBusiness: this.f.lineOfBusiness?.value,
-        companyName: this.uiState.quotingCompany,
+        companyName: this.f.companyName?.value,
       };
       let sub = this.businessDevService.quotRequirements(data).subscribe({
         next: (res: HttpResponse<IBaseResponse<IQoutingRequirement[]>>) => {
-          this.uiState.quotingCompanyArr = res.body?.data!;
+          if (res.body?.data) {
+            this.uiState.quotingCompanyArr.push(...res.body?.data!);
+            // console.log(this.uiState.quotingCompanyArr);
+            this.createQuotingArray();
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.message.popup("Sorry!", err.message!, "warning");
@@ -201,7 +213,41 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Activity Log
+  createQuotingArray(data?: IQoutingRequirement) {
+    let quoting = new FormGroup<any>({
+      itemCheck: new FormControl(data?.itemCheck || false),
+      insuranceCopmany: new FormControl(data?.insuranceCopmany || null),
+      item: new FormControl(data?.item || null),
+    });
+
+    this.uiState.quotingCompanyArr?.forEach((el, i) => {
+      this.quotingControlArray?.controls.forEach((c, j) => {
+        if (i == j) {
+          c?.get("insuranceCopmany")?.patchValue(el.insuranceCopmany);
+          c?.get("item")?.patchValue(el.item);
+        }
+      });
+      // quoting.reset();
+      // quoting.get("insuranceCopmany")?.patchValue(el.insuranceCopmany);
+      // quoting.get("item")?.patchValue(el?.item);
+      this.f.quotingRequirementsList?.push(quoting);
+      this.quotingControlArray.updateValueAndValidity();
+    });
+  }
+  checkAllCompanies(e: any) {
+    if (e.target.checked) {
+      this.quotingControlArray?.controls?.forEach((c) => {
+        c?.get("itemCheck")?.patchValue(true);
+      });
+    } else {
+      this.quotingControlArray?.controls?.forEach((c) => {
+        c?.get("itemCheck")?.patchValue(false);
+      });
+    }
+  }
+  //#endregion
+
+  //#region  Activity Log
   get activityLogArray(): FormArray {
     return this.formGroup.get("salesActivityLogList") as FormArray;
   }
@@ -227,8 +273,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.f.salesActivityLogList?.push(activityLog);
     this.activityLogArray.updateValueAndValidity();
   }
+  //#endregion
 
-  // Competitors
+  //#region  Competitors
   get competitorsArray(): FormArray {
     return this.formGroup.get("salesLeadCompetitorsList") as FormArray;
   }
@@ -256,22 +303,33 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.f.salesLeadCompetitorsList?.push(competitor);
     this.competitorsArray.updateValueAndValidity();
   }
+  //#endregion
 
   remove(i: number, type: string) {
     if (type === "competitor") this.competitorsArray.removeAt(i);
     else if (type === "activityLog") this.activityLogArray.removeAt(i);
     else return;
   }
-  // sent to U/W
-  checkSentUW(e: any) {
-    e.target.checked
-      ? this.f.sendToUW?.patchValue(true)
-      : this.f.sendToUW?.patchValue(false);
+
+  documentsList(e: File[]) {
+    this.documentsToUpload = e;
   }
-  documentsList(e: any) {}
-  submitForm() {
+  validationChecker(): boolean {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    if (this.formGroup.invalid) return false;
+    return true;
+  }
+  //#endregion edit
+  taskDateFrom(e: any) {}
+  taskDateTo(e: any) {}
+
+  //#endregion
+
+  submitForm(form: FormGroup<ISalesLeadForm>) {
     this.submitted = true;
-    console.log(this.f.existingPolExpDate?.invalid);
+    if (!this.validationChecker()) return;
+    const formData = new FormData();
   }
 
   ngOnDestroy(): void {

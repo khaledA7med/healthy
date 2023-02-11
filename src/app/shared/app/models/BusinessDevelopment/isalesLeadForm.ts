@@ -39,17 +39,19 @@ export interface ISalesLeadForm {
   name?: FormControl<string | null>;
   policyDetails?: FormControl<string | null>;
   policyRequierments?: FormControl<string | null>;
-  policyRequiermentsList?: FormControl<FormGroup<IPolicyRequirement>>;
+  policyRequiermentsList?: FormArray<FormGroup<IPolicyRequirement>>;
   preferedInsurComapnies?: FormControl<string[] | null>;
   producer?: FormControl<string | null>;
   producerID?: FormControl<number | null>;
   quotingRequirementsList?: FormArray<FormGroup<IQoutingRequirement>>;
   sNo?: FormControl<number | null>;
+  companyName?: FormControl<string | null>; // for check Requirements
   salesActivityLogChecked?: FormControl<boolean | null>;
   salesLeadCompetitorChecked?: FormControl<boolean | null>;
   selectedPolicyCompany?: FormControl<string | null>;
   selectedQuotingCompany?: FormControl<string | null>;
   sendToUW?: FormControl<Boolean | null>;
+
   salesLeadCompetitorsList?: FormArray<FormGroup<ICompetitors>>;
   salesActivityLogList?: FormArray<FormGroup<IActivityLog>>;
 }
