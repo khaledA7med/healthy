@@ -65,7 +65,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //insurance details
       classOfBusiness: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
-      estimatedPremium: new FormControl(0),
+      estimatedPremium: new FormControl(),
       deadLine: new FormControl({ value: null, disabled: true }),
       chDeadline: new FormControl(0),
       chDeadlinebool: new FormControl(false),
@@ -115,16 +115,14 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.f.clientID?.patchValue(e?.id);
   }
   getLineOfBusiness(e: string) {
-    let sub = this.businessDevService.lineOfBusiness(e).subscribe({
-      next: (
-        res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>
-      ) => {
+    let sub = this.businessDevService.lineOfBusiness(e).subscribe(
+      (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
         this.lineOfBussArr = res.body?.data?.content!;
       },
-      error: (err) => {
+      (err) => {
         this.message.popup("Sorry!", err.message!, "warning");
-      },
-    });
+      }
+    );
     this.subscribes.push(sub);
   }
 
@@ -346,6 +344,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     console.log(e.from);
     console.log(e.to);
   }
+  getEstimatedPer($event: any) {}
 
   //#endregion
 

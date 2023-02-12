@@ -89,14 +89,13 @@
                       <label for="client" class="asterisk-input">
                         {{ uiState.isClient ? "Client" : "Group" }}</label
                       >
-                      <div class="input-group input-group-sm">
+                      <div class="input-group input-group-sm is-invalid">
                         <ng-select
-                          #clintSelect
                           id="client"
                           formControlName="name"
                           bindValue="name"
                           bindLabel="name"
-                          class="form-control form-control-sm"
+                          class="form-control form-control-sm is-invalid"
                           aria-describedby="inputGroup-sizing-sm"
                           (change)="getClientId($event)"
                           [loading]="formData ? false : true"
@@ -196,7 +195,7 @@
                           >
                           <ng-select
                             id="classOfInc"
-                            class="form-control-sm"
+                            class="form-control-sm is-invalid"
                             placeholder="Select Class Of Insurance"
                             formControlName="classOfBusiness"
                             bindValue="name"
@@ -228,7 +227,7 @@
                           >
                           <ng-select
                             id="lineOfBus"
-                            class="form-control-sm"
+                            class="form-control-sm is-invalid"
                             placeholder="Select Lien Of Business"
                             formControlName="lineOfBusiness"
                             bindValue="name"
@@ -257,10 +256,12 @@
                           <label for="estPremium">Estimated Premium</label>
                           <div class="input-group input-group-sm">
                             <input
-                              type="number"
-                              class="form-control form-control-sm"
+                              type="text"
+                              class="form-control form-control-sm text-right"
                               aria-describedby="inputGroup-sizing-sm"
+                              InputMask
                               formControlName="estimatedPremium"
+                              placeholder="0.00"
                             />
                             <span
                               class="input-group-text"
@@ -1080,7 +1081,9 @@
                 <div class="ribbon-content mt-4 text-muted">
                   <div class="row my-2">
                     <!--  -->
-                    <div class="col-sm-12 col-md-6 d-flex flex-column mb-2">
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-4 d-flex flex-column mb-2"
+                    >
                       <label for="taskType" class="asterisk-input"
                         >Task Type</label
                       >
