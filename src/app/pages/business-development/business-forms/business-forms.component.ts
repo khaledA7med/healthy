@@ -23,6 +23,9 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { EventService } from "src/app/core/services/event.service";
+import { ActivatedRoute } from "@angular/router";
+import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
   selector: "app-business-forms",
@@ -41,20 +44,31 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   uiState = {
     isClient: true, // Choose client Or Group
     isCurrentIns: false,
+    editId: "",
   };
   @ViewChild("dropzone") dropzone!: any;
 
   constructor(
     private tables: MasterTableService,
     private businessDevService: BusinessDevelopmentService,
-    private message: MessagesService
+    private message: MessagesService,
+    private eventService: EventService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.BusinessDevelopmentForm);
-  }
+    this.route.paramMap.subscribe((res) => {
+      if (res.get("id")) {
+        this.uiState.editId = res.get("id")!;
 
+        // this.eventService.broadcast(reserved.isLoading, true);
+      }
+      console.log(this.uiState.editId);
+    });
+  }
+  //#region form
   initForm() {
     this.formGroup = new FormGroup<ISalesLeadForm>({
       //lead details
@@ -100,6 +114,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   get f() {
     return this.formGroup.controls;
   }
+  //#endregion
+
+  //#region leadType
   changeToClient() {
     this.uiState.isClient = true;
 
@@ -114,6 +131,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   getClientId(e: any) {
     this.f.clientID?.patchValue(e?.id);
   }
+
+  //#endregion
+
+  //#region insurance Details
   getLineOfBusiness(e: string) {
     let sub = this.businessDevService.lineOfBusiness(e).subscribe(
       (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
@@ -140,7 +161,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.chDeadline?.patchValue(0);
     }
   }
-  // is current insurance
+  //#endregion
+
+  //#region  current insurance
   toggleCurInsured(e: any) {
     let controls = [
       this.f.existingPolExpDate,
@@ -166,6 +189,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       });
     }
   }
+  //#endregion
 
   //#region requirment
   get quotingControlArray() {
@@ -322,10 +346,20 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   // remove inputs array form activity log and competitor
-  remove(i: number, name: string) {
-    if (name === "competitor") this.competitorsArray.removeAt(i);
-    else if (name === "activityLog") this.activityLogArray.removeAt(i);
-    else return;
+  remove(i: number, name: string, isEdit: boolean) {
+    switch (isEdit) {
+      case true:
+        if (name === "competitor") this.competitorsArray.enable();
+        else if (name === "activityLog") this.activityLogArray.enable();
+        break;
+      case false:
+        if (name === "competitor") this.competitorsArray.removeAt(i);
+        else if (name === "activityLog") this.activityLogArray.removeAt(i);
+        break;
+
+      default:
+        break;
+    }
   }
 
   documentsList(e: File[]) {
@@ -344,7 +378,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     console.log(e.from);
     console.log(e.to);
   }
-  getEstimatedPer($event: any) {}
 
   //#endregion
 

@@ -55,7 +55,7 @@
                   <div class="row my-2">
                     <!-- col check client | group -->
                     <div
-                      class="col-sm-2 col-md-5 col-lg-2 d-flex flex-column my-1"
+                      class="col-sm-2 col-md-2 col-lg-2 my-2 d-flex flex-column"
                     >
                       <div class="form-check mb-2">
                         <input
@@ -85,7 +85,9 @@
                     </div>
                     <!-- /col -->
                     <!-- col select client | group -->
-                    <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
+                    <div
+                      class="col-sm-5 col-md-5 col-lg-10 my-2 d-flex flex-column"
+                    >
                       <label for="client" class="asterisk-input">
                         {{ uiState.isClient ? "Client" : "Group" }}</label
                       >
@@ -143,7 +145,9 @@
                     </div>
                     <!-- /col -->
                     <!-- col producer -->
-                    <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
+                    <div
+                      class="col-sm-5 col-md-5 col-lg-10 my-2 d-flex flex-column"
+                    >
                       <label for="producer" class="asterisk-input">
                         Producer</label
                       >
@@ -187,8 +191,9 @@
                     </div>
                     <div class="ribbon-content mt-4 text-muted">
                       <div class="row">
+                        <!-- col Class of insurance -->
                         <div
-                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label for="classOfInc" class="asterisk-input">
                             Class of Insurance</label
@@ -219,8 +224,10 @@
                             Required
                           </div>
                         </div>
+                        <!-- /col -->
+                        <!-- line of business -->
                         <div
-                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label for="lineOfBus" class="asterisk-input">
                             Line of Business</label
@@ -250,14 +257,16 @@
                             Required
                           </div>
                         </div>
+                        <!-- /col -->
+                        <!-- col estimated pre -->
                         <div
-                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label for="estPremium">Estimated Premium</label>
                           <div class="input-group input-group-sm">
                             <input
                               type="text"
-                              class="form-control form-control-sm text-right"
+                              class="form-control form-control-sm input-right"
                               aria-describedby="inputGroup-sizing-sm"
                               InputMask
                               formControlName="estimatedPremium"
@@ -270,9 +279,10 @@
                             >
                           </div>
                         </div>
+                        <!-- /col -->
                         <!-- col Deadline -->
                         <div
-                          class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
+                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label
                             for="deadline"
@@ -302,7 +312,9 @@
                               (click)="d.toggle()"
                               formControlName="deadLine"
                               [ngClass]="{
-                                'is-invalid': submitted && f.deadLine?.invalid
+                                'is-invalid':
+                                  (f.deadLine?.touched || submitted) &&
+                                  f.deadLine?.invalid
                               }"
                               readonly
                             />
@@ -324,8 +336,8 @@
                           </div>
                         </div>
                         <!-- /col -->
-                        <!-- col Insurance Companies -->
-                        <div class="col-sm-12 my-2 d-flex flex-column">
+                        <!-- col Preferred Insurance Companies -->
+                        <div class="col-12 my-2 d-flex flex-column">
                           <label for="PrefInCompnies"
                             >Preferred Insurance Companies</label
                           >
@@ -346,7 +358,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col Acc Details -->
-                        <div class="col-sm-12 my-2 d-flex flex-column">
+                        <div class="col-12 my-2 d-flex flex-column">
                           <label for="accDetails" class="asterisk-input"
                             >Account Details (Business size ...etc)</label
                           >
@@ -357,18 +369,19 @@
                             formControlName="policyDetails"
                             [ngClass]="{
                               'is-invalid':
-                                submitted && f.policyDetails?.invalid
+                                (f.policyDetails?.touched || submitted) &&
+                                f.policyDetails?.invalid
                             }"
                           ></textarea>
-                        </div>
-                        <div
-                          class="invalid-feedback fw-bold d-block"
-                          *ngIf="
-                            (f.policyDetails?.touched || submitted) &&
-                            f.policyDetails?.invalid
-                          "
-                        >
-                          Required
+                          <div
+                            class="invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.policyDetails?.touched || submitted) &&
+                              f.policyDetails?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <!-- /col -->
                       </div>
@@ -410,7 +423,9 @@
                               formControlName="existingPolExpDate"
                               [ngClass]="{
                                 'is-invalid':
-                                  submitted && f.existingPolExpDate?.invalid
+                                  (f.existingPolExpDate?.touched ||
+                                    submitted) &&
+                                  f.existingPolExpDate?.invalid
                               }"
                               readonly
                             />
@@ -448,7 +463,8 @@
                             formControlName="currentPolicyNo"
                             [ngClass]="{
                               'is-invalid':
-                                submitted && f.currentPolicyNo?.invalid
+                                (f.currentPolicyNo?.touched || submitted) &&
+                                f.currentPolicyNo?.invalid
                             }"
                           />
                           <div
@@ -474,14 +490,15 @@
                           </label>
                           <ng-select
                             id="curIncBroker"
-                            class="form-control-sm"
+                            class="form-control-sm is-invalid"
                             placeholder="Select Current Broker"
                             formControlName="currentBroker"
                             bindLabel="name"
                             bindValue="name"
                             [ngClass]="{
                               'is-invalid':
-                                submitted && f.currentBroker?.invalid
+                                (f.currentBroker?.touched || submitted) &&
+                                f.currentBroker?.invalid
                             }"
                             [items]="
                               (formData | async)?.InsuranceBrokersList?.content!
@@ -518,7 +535,8 @@
                             bindValue="name"
                             [ngClass]="{
                               'is-submitted':
-                                submitted && f.currentInsurer?.invalid
+                                (f.currentInsurer?.touched || submitted) &&
+                                f.currentInsurer?.invalid
                             }"
                             [items]="
                               (formData | async)?.InsuranceCompanyName?.content!
@@ -554,7 +572,8 @@
                             formControlName="existingPolDetails"
                             [ngClass]="{
                               'is-invalid':
-                                submitted && f.existingPolDetails?.invalid
+                                (f.existingPolDetails?.touched || submitted) &&
+                                f.existingPolDetails?.invalid
                             }"
                           ></textarea>
                           <div
@@ -951,9 +970,8 @@
                                     <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
-                                      (click)="remove(i, 'activityLog')"
                                     >
-                                      <i class="ri-delete-bin-2-line"></i>
+                                      <i></i>
                                     </button>
                                   </div>
                                 </td>
@@ -1010,7 +1028,9 @@
                                       formControlName="competitor"
                                       [ngClass]="{
                                         'is-invalid':
-                                          submitted &&
+                                          (competitorControls(i, 'competitor')
+                                            .touched ||
+                                            submitted) &&
                                           competitorControls(i, 'competitor')
                                             .invalid
                                       }"
@@ -1044,9 +1064,22 @@
                                     <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
-                                      (click)="remove(i, 'competitor')"
                                     >
-                                      <i class="ri-delete-bin-2-line"></i>
+                                      <ng-container
+                                        *ngIf="
+                                          uiState.editId;
+                                          then edit;
+                                          else remove
+                                        "
+                                      >
+                                      </ng-container>
+
+                                      <ng-template #edit>
+                                        <i class="ri-edit-bin-2-line">\</i>
+                                      </ng-template>
+                                      <ng-template #remove>
+                                        <i class="ri-delete-bin-2-line">\</i>
+                                      </ng-template>
                                     </button>
                                   </div>
                                 </td>
