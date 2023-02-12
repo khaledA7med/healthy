@@ -8,6 +8,7 @@ import { CachingService } from "./caching.service";
 
 @Injectable({
   providedIn: "root",
+  providedIn: "root",
 })
 export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
