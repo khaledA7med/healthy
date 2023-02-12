@@ -28,17 +28,10 @@ export enum BaseData {
   PolicyEndorsTypes = "PolicyEndorsTypes",
   ClientsList = "ClientsList",
   InsuranceCompanies = "InsuranceCompanies",
-  PolicyStatus = "PolicyStatus",
-  PolicyEndorsTypes = "PolicyEndorsTypes",
-  ClientsList = "ClientsList",
-  InsuranceCompanies = "InsuranceCompanies",
   CServiceStatus = "CServiceStatus",
   PendingReason = "PendingReason",
   TypeOfCustomerServices = "TypeOfCustomerServices",
-  InsuranceCompanies = "InsuranceCompanies",
-  PolicyEndorsTypes = "PolicyEndorsTypes",
   AllClients = "AllClients",
-  InsurClasses = "InsurClasses",
   InsuranceCompanyName = "InsuranceCompanyName",
   InsuranceBrokersList = "InsuranceBrokersList",
   LogType = "LogType",
@@ -72,26 +65,15 @@ export interface IBaseMasterTable {
   AllUsers?: Caching<IGenericResponseType[]>;
   TypeOfCustomerServices?: Caching<IGenericResponseType[]>;
   SalesleadStatus?: Caching<IGenericResponseType[]>;
-  PolicyStatus?: Caching<IGenericResponseType[]>;
   PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
   ClientsList?: Caching<IGenericResponseType[]>;
   InsuranceCompanies?: Caching<IGenericResponseType[]>;
-  InsuranceCompanies?: Caching<IGenericResponseType[]>;
-  PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
+  PolicyStatus?: Caching<IGenericResponseType[]>;
   AllClients?: Caching<IGenericResponseType[]>;
   InsurClasses?: Caching<IGenericResponseType[]>;
   InsuranceCompanyName?: Caching<IGenericResponseType[]>;
   InsuranceBrokersList?: Caching<IGenericResponseType[]>;
   LogType?: Caching<IGenericResponseType[]>;
-  PolicyStatus?: Caching<IGenericResponseType[]>;
-  PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
-  ClientsList?: Caching<IGenericResponseType[]>;
-  AllClients?: Caching<IGenericResponseType[]>;
-  InsurClasses?: Caching<IGenericResponseType[]>;
-  InsuranceCompanyName?: Caching<IGenericResponseType[]>;
-  InsuranceBrokersList?: Caching<IGenericResponseType[]>;
-  LogType?: Caching<IGenericResponseType[]>;
-  InsuranceCompanies?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {
