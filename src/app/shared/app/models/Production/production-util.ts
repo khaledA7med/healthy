@@ -88,3 +88,22 @@ export function refundChecker(params: any) {
     ? ["input-text-right", "text-danger"]
     : ["input-text-right"];
 }
+
+export interface IPolicyClient {
+  sNo?: string;
+  status?: string;
+  fullName?: string;
+  producer?: string;
+}
+
+export interface IPoliciesRef {
+  sNo: string;
+  insurComp: string;
+  className: string;
+  lineOfBusiness: string;
+  accNo: string;
+  policyNo: string;
+  periodFrom: string;
+  periodTo: string;
+  policiesSNo: string;
+}
