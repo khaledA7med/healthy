@@ -8,7 +8,6 @@ import { CachingService } from "./caching.service";
 
 @Injectable({
   providedIn: "root",
-  providedIn: "root",
 })
 export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
@@ -179,6 +178,28 @@ export class MasterTableService {
           name: BaseData.SalesleadStatus,
         },
       ],
+      ProductionForm: [
+        {
+          route: ApiRoutes.MasterTable.Production.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.endorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+      ],
       Production: [
         {
           route: ApiRoutes.MasterTable.Production.policyStatus,
@@ -288,6 +309,9 @@ export class MasterTableService {
         break;
       case MODULES.BusinessDevelopment:
         this.dataSrc = data.BusinessDevelopment;
+        break;
+      case MODULES.ProductionForm:
+        this.dataSrc = data.ProductionForm;
         break;
       case MODULES.CustomerService:
         this.dataSrc = data.CustomerService;
