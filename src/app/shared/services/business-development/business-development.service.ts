@@ -7,6 +7,10 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IBusinessDevelopment } from "../../app/models/BusinessDevelopment/ibusiness-development";
 import { IBusinessDevelopmentFilters } from "../../app/models/BusinessDevelopment/ibusiness-development-filters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
+import {
+  Caching,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 import { IChangeLeadStatusRequest } from "../../app/models/BusinessDevelopment/ibusiness-development-req";
 import { ISalesLeadFollowUps } from "../../app/models/BusinessDevelopment/ibusiness-development-followups";
 import { IRequirement } from "../../app/models/BusinessDevelopment/irequirement";
@@ -52,14 +56,11 @@ export class BusinessDevelopmentService {
     );
   }
 
-  changeStatus(
-    lead: string,
-    status: string
-  ): Observable<HttpResponse<IBaseResponse<any>>> {
+  saveNote(data: {}): Observable<HttpResponse<IBaseResponse<any>>> {
     return this.http.post(
-      this.env + ApiRoutes.BusinessDevelopment.changeStatus,
-      {},
-      { params: { LeadNo: lead, status }, observe: "response" }
+      this.env + ApiRoutes.BusinessDevelopment.saveNote,
+      data,
+      { observe: "response" }
     );
   }
 
@@ -82,13 +83,6 @@ export class BusinessDevelopmentService {
       { observe: "response" }
     );
   }
-
-  // getClintDetails(sno: number): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
-  // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.details, {
-  // 		observe: "response",
-  // 		params: { sno },
-  // 	});
-  // }
 
   // getClientById(id: string): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
   // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.edit, { params: { id }, observe: "response" });
