@@ -36,6 +36,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			pageSize: 50,
 			orderBy: "sNo",
 			orderDir: "asc",
+			status: ["Active"],
 		} as IProductionFilters,
 		gridReady: false,
 		submitted: false,
