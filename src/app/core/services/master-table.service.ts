@@ -178,6 +178,40 @@ export class MasterTableService {
           name: BaseData.SalesleadStatus,
         },
       ],
+      Production: [
+        {
+          route: ApiRoutes.MasterTable.Production.policyStatus,
+          name: BaseData.PolicyStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.policyEndorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.clientsList,
+          name: BaseData.ClientsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.AllUsers,
+          name: BaseData.AllUsers,
+        },
+      ],
       ProductionForm: [
         {
           route: ApiRoutes.MasterTable.Production.producers,
@@ -188,7 +222,7 @@ export class MasterTableService {
           name: BaseData.Branch,
         },
         {
-          route: ApiRoutes.MasterTable.Production.insuranceClasses,
+          route: ApiRoutes.MasterTable.Production.InsurClasses,
           name: BaseData.InsurClasses,
         },
         {
@@ -196,7 +230,7 @@ export class MasterTableService {
           name: BaseData.InsuranceCompanies,
         },
         {
-          route: ApiRoutes.MasterTable.Production.endorsTypes,
+          route: ApiRoutes.MasterTable.Production.policyEndorsTypes,
           name: BaseData.PolicyEndorsTypes,
         },
       ],
@@ -248,6 +282,12 @@ export class MasterTableService {
         break;
       case MODULES.BusinessDevelopmentForm:
         this.dataSrc = data.BusinessDevelopmentForm;
+        break;
+      case MODULES.ProductionForm:
+        this.dataSrc = data.ProductionForm;
+        break;
+      case MODULES.Production:
+        this.dataSrc = data.Production;
         break;
       case MODULES.CustomerService:
         this.dataSrc = data.CustomerService;

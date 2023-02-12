@@ -21,18 +21,20 @@ export enum BaseData {
   CommericalNo = "CommericalNo",
   GroupsList = "GroupsList",
   ClientStatus = "ClientStatus",
+  InsurClasses = "InsurClasses",
   AllUsers = "AllUsers",
   SalesleadStatus = "SalesleadStatus",
-  InsurClasses = "InsurClasses",
-  InsuranceCompanyName = "InsuranceCompanyName",
-  InsuranceBrokersList = "InsuranceBrokersList",
-  LogType = "LogType",
-  AllClients = "AllClients",
+  PolicyStatus = "PolicyStatus",
+  PolicyEndorsTypes = "PolicyEndorsTypes",
+  ClientsList = "ClientsList",
+  InsuranceCompanies = "InsuranceCompanies",
   CServiceStatus = "CServiceStatus",
   PendingReason = "PendingReason",
   TypeOfCustomerServices = "TypeOfCustomerServices",
-  InsuranceCompanies = "InsuranceCompanies",
-  PolicyEndorsTypes = "PolicyEndorsTypes",
+  AllClients = "AllClients",
+  InsuranceCompanyName = "InsuranceCompanyName",
+  InsuranceBrokersList = "InsuranceBrokersList",
+  LogType = "LogType",
 }
 
 export interface IBaseMasterTable {
@@ -63,13 +65,15 @@ export interface IBaseMasterTable {
   AllUsers?: Caching<IGenericResponseType[]>;
   TypeOfCustomerServices?: Caching<IGenericResponseType[]>;
   SalesleadStatus?: Caching<IGenericResponseType[]>;
+  PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
+  ClientsList?: Caching<IGenericResponseType[]>;
+  InsuranceCompanies?: Caching<IGenericResponseType[]>;
+  PolicyStatus?: Caching<IGenericResponseType[]>;
   AllClients?: Caching<IGenericResponseType[]>;
   InsurClasses?: Caching<IGenericResponseType[]>;
   InsuranceCompanyName?: Caching<IGenericResponseType[]>;
   InsuranceBrokersList?: Caching<IGenericResponseType[]>;
   LogType?: Caching<IGenericResponseType[]>;
-  InsuranceCompanies?: Caching<IGenericResponseType[]>;
-  PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

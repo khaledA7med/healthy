@@ -1,6 +1,7 @@
 import { ClientStatus } from "./../models/Clients/clientUtil";
 import { CellEvent } from "ag-grid-community";
 import { SalesLeadStatus } from "../models/BusinessDevelopment/business-development-util";
+import { IPolicyStatus } from "../models/Production/production-util";
 
 export default class StatusCellRender
 {
@@ -58,6 +59,25 @@ export default class StatusCellRender
 				return `<span class='badge bg-danger'>${ e.value }</span>`;
 			default:
 				return `<span class='badge bg-dark'>${ e.value }</span>`;
+		}
+	}
+
+	public static policyStatus(e: CellEvent): string {
+		switch (e.value) {
+			case IPolicyStatus.active:
+				return `<span class='badge badge-soft-success'>${e.value}</span>`;
+			case IPolicyStatus.pending:
+				return `<span class='badge badge-soft-warning'>${e.value}</span>`;
+			case IPolicyStatus.expired:
+				return `<span class='badge badge-soft-danger'>${e.value}</span>`;
+			case IPolicyStatus.approvedByProduction:
+				return `<span class='badge badge-soft-info'>${e.value}</span>`;
+			case IPolicyStatus.rejectedByProduction:
+				return `<span class='badge badge-soft-danger'>${e.value}</span>`;
+			case IPolicyStatus.rejectedByFinance:
+				return `<span class='badge badge-soft-primary'>${e.value}</span>`;
+			default:
+				return `<span class='badge badge-soft-info'>${e.value}</span>`;
 		}
 	}
 }

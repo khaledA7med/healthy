@@ -1,0 +1,382 @@
+<!-- Client details modal -->
+
+<ng-template #details let-modal>
+    <div class="modal-header py-3">
+        <h4 class="modal-title">Details</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+
+    <div class="modal-body bg-light p-3">
+
+        <div class="row">
+            <div class="col-lg-4 my-2">
+                <!-- Start Client Details Table -->
+                <div class="card details-tables pb-3">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Client Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive table-card">
+                            <table class="table table-borderless mb-0">
+                                <tbody id="client-information-table">
+                                    <tr>
+                                        <th class="fw-semibold">Request No :</th>
+                                        <td>{{ uiState.policyDetails.requestNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Client ID :</th>
+                                        <td>{{ uiState.policyDetails.clientNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Client Name :</th>
+                                        <td>{{ uiState.policyDetails.clientName }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Producer (Salesman) :</th>
+                                        <td>{{ uiState.policyDetails.producer }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Policy Holder :</th>
+                                        <td>{{ uiState.policyDetails.policyHolder }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Client Details Table -->
+                <!-- Start INVOICE DETAILS Table -->
+                <div class="card details-tables">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Invoice Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive table-card">
+                            <table class="table table-borderless mb-0">
+                                <tbody id="policy-invoice-details-table-fh">
+                                    <tr>
+                                        <th class="fw-semibold">Sum Insured :</th>
+                                        <td>{{ uiState.policyDetails.sumInsur | currency: 'SAR': 'code' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Client DN/CN No. :</th>
+                                        <td>{{ uiState.policyDetails.clientDncnno }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Net Premium :</th>
+                                        <td>{{ uiState.policyDetails.netPremium | currency: 'SAR' : 'code'
+                                            }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Policy Fees :</th>
+                                        <td><input type="checkbox" id="Deduct" disabled
+                                                [checked]="uiState.policyDetails.deductFees === 1"><label for="Deduct"
+                                                class="mx-2">Deduct</label>{{ uiState.policyDetails.fees | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">VAT (%) :</th>
+                                        <td>{{ uiState.policyDetails.vatPerc }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">VAT Value :</th>
+                                        <td>{{ uiState.policyDetails.vatValue | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Totlal Premium :</th>
+                                        <td>{{ uiState.policyDetails.totalPremium | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Company Comm. DN/CN No. :</th>
+                                        <td>{{ uiState.policyDetails.compCommDncnno }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Commission (%) :</th>
+                                        <td>{{ uiState.policyDetails.compCommPerc }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Company Commission :</th>
+                                        <td>{{ uiState.policyDetails.compComm | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Commission VAT :</th>
+                                        <td>{{ uiState.policyDetails.compCommVat | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End INVOICE DETAILS Table -->
+
+            </div>
+            <hr class="d-block d-md-none">
+            <div class="col-lg-4 my-2">
+                <!-- Start Issue Type Table -->
+                <div class="card details-tables">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Issue Type</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive table-card">
+                            <table class="table table-borderless mb-0">
+                                <tbody id="policy-issue-type-table-fh">
+                                    <tr>
+                                        <th class="fw-semibold">A/C No :</th>
+                                        <td>{{ uiState.policyDetails.accNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Policy No :</th>
+                                        <td>{{ uiState.policyDetails.policyNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Endors. Type :</th>
+                                        <td>{{ uiState.policyDetails.endorsType }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Endors. No :</th>
+                                        <td>{{ uiState.policyDetails.endorsNo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Issued By :</th>
+                                        <td>{{ uiState.policyDetails.insurComp }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Class of Insurance :</th>
+                                        <td>{{ uiState.policyDetails.className }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Line of Business :</th>
+                                        <td>{{ uiState.policyDetails.lineOfBusiness }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Minimum Dreiver Age :</th>
+                                        <td>{{ uiState.policyDetails.minDriverAge }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Issue Date :</th>
+                                        <td>{{ uiState.policyDetails.issueDate | date:"mediumDate" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Inception Date :</th>
+                                        <td>{{ uiState.policyDetails.periodFrom | date:"mediumDate" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Expiry Date :</th>
+                                        <td>{{ uiState.policyDetails.periodTo | date:"mediumDate" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Claim DeadLine :</th>
+                                        <td>{{ uiState.policyDetails.claimNoOfDays }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">CS Deadline :</th>
+                                        <td>{{ uiState.policyDetails.csnoOfDays }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="fw-semibold">Remarks :</th>
+                                        <td>{{ uiState.policyDetails.remarks }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Issue Type Table -->
+            </div>
+            <hr class="d-block d-md-none">
+            <div class="col-lg-4 my-2">
+                <!-- Start PAYMENT TERMS Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Payment Terms</h6>
+                    </div>
+                    <div class="card-body table-responsive table-card">
+                        <table class="table table-nowrap mb-0 overflow-auto">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>(%)</th>
+                                    <th>Amount</th>
+                                    <th>VAT Amount</th>
+                                    <th>Policy Fees</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payment-terms-table">
+                                <ng-container *ngIf="uiState.policyDetails.policiesPaymentsSchedules?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.policiesPaymentsSchedules">
+                                        <td>{{ item.payDate | date:"mediumDate" }}</td>
+                                        <td>{{ item.percentage }}</td>
+                                        <td>{{ item.amount | currency:
+                                            'SAR' : 'code' }}</td>
+                                        <td>{{ item.vatAmount | currency:
+                                            'SAR' : 'code' }}</td>
+                                        <td>{{ item.policyFees | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="uiState.policyDetails.policiesPaymentsSchedules?.length == 0">
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="alert alert-danger text-center" role="alert">
+                                                No Data Found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End PAYMENT TERMS Table -->
+
+                <!-- Start PRODUCERS COMMISSIONS Table -->
+                <div class="card my-3">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Producers Commissions</h6>
+                    </div>
+                    <div class="card-body table-responsive table-card">
+                        <table class="table table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producer</th>
+                                    <th>(%)</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <!-- policiesProducersCommissions -->
+                            <tbody id="producers-commissions-table">
+                                <ng-container *ngIf="uiState.policyDetails.policiesProducersCommissions?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.policiesProducersCommissions">
+                                        <td>{{ item.producer }}</td>
+                                        <td>{{ item.percentage }}</td>
+                                        <td>{{ item.amount | currency:
+                                            'SAR' : 'code' }}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="uiState.policyDetails.policiesProducersCommissions?.length == 0">
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="alert alert-danger text-center" role="alert">
+                                                No Data Found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End PRODUCERS COMMISSIONS Table -->
+                <!-- Start Documents  -->
+                <div class="card my-3">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Documents</h6>
+                    </div>
+                    <div class="">
+                        <table class="table table-responsive table-borderless align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="table-header">File Name</th>
+                                    <th class="table-header">Type</th>
+                                    <th class="table-header">Size</th>
+                                    <th class="table-header">Upload Date</th>
+                                    <th class="table-header">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="policy-documents-table">
+                                <ng-container *ngIf="uiState.policyDetails.documentList?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.documentLists; let index = index">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm me-2">
+                                                    <div
+                                                        class="avatar-title bg-soft-primary {{item.colorName}} rounded fs-20">
+                                                        <i *ngIf="item.type !== 'image'"
+                                                            class="ri-file-{{ item.className }}"></i>
+                                                        <img *ngIf="item.type == 'image'" [src]="item.data" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div>{{ item.name }}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{ (item.contentDescription?.split("/"))![0] }}</td>
+                                        <td>{{ item.size }}</td>
+                                        <td>31/1/2023</td>
+                                        <td>
+                                            <div ngbDropdown placement="top-right" class="dropdown">
+                                                <button type="button" class="btn btn-sm btn-soft-info text-center"
+                                                    ngbDropdownToggle>
+                                                    <i class="ri-equalizer-fill text-center"></i>
+                                                </button>
+                                                <div ngbDropdownMenu>
+                                                    <button ngbDropdownItem class="text-muted"
+                                                        (click)="downloadFile(item?.data!)">
+                                                        <i class="ri-download-2-fill me-2"></i>
+                                                        View
+                                                    </button>
+                                                    <button ngbDropdownItem class="text-muted"
+                                                        (click)="downloadFile(item?.data!)">
+                                                        <i class="ri-download-2-fill me-2"></i>
+                                                        Download
+                                                    </button>
+
+                                                    <button ngbDropdownItem (click)="deleteFile(index, item?.data!)"
+                                                        class="text-muted">
+                                                        <i class="ri-delete-bin-fill me-2"></i>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="uiState.policyDetails.documentList?.length == 0">
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="alert alert-danger text-center" role="alert">
+                                                No Data Found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End Documents  -->
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!-- Close Btn -->
+        <button type="button" class="btn btn-sm btn-light" class="btn btn-sm btn-light"
+            (click)="modal.close('Close click')">
+            Close
+        </button>
+        <!-- Change status Btn -->
+        <div ngbDropdown placement="top-right" class="dropdown d-flex justify-content-center align-items-center">
+            <button type="button" class="btn btn-sm btn-soft-info" ngbDropdownToggle>
+                <i class="ri-more-fill align-middle"></i>
+            </button>
+            <div ngbDropdownMenu>
+                <button ngbDropdownItem>
+                    Approve
+                </button>
+                <button ngbDropdownItem>
+                    Reject
+                </button>
+                <button ngbDropdownItem disabled *ngIf="!uiState.policyDetails">
+                    No Action
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

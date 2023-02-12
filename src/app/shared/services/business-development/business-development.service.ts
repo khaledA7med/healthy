@@ -39,11 +39,8 @@ export class BusinessDevelopmentService {
   ): Observable<HttpResponse<IBaseResponse<any>>> {
     return this.http.post(
       this.env + ApiRoutes.BusinessDevelopment.changeStatus,
-      {},
-      {
-        params: { LeadNo: data.LeadNo, status: data.status },
-        observe: "response",
-      }
+      data,
+      { observe: "response" }
     );
   }
 

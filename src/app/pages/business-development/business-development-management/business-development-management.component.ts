@@ -21,6 +21,8 @@ import { DragulaService } from "ng2-dragula";
 import AppUtils from "src/app/shared/app/util";
 import { SweetAlertResult } from "sweetalert2";
 import { ISalesLeadFollowUps } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-followups";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
 	selector: "app-business-development-management",
@@ -115,7 +117,8 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private router: Router
+		private router: Router,
+		private eventService: EventService
 	) {}
 
 	ngOnInit(): void {
@@ -128,6 +131,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
+			if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, true);
 			let sub = this.businssDevelopmenService.getAllSalesLeads(this.uiState.filters).subscribe(
 				(res: HttpResponse<IBaseResponse<IBusinessDevelopment[]>>) => {
 					this.uiState.salesLead.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
@@ -137,9 +141,11 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 					this.gridApi.hideOverlay();
 					this.uiState.gridReady = true;
 					this.cardsDataFiltering();
+					if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
 				},
 				(err: HttpErrorResponse) => {
 					this.message.popup("Oops!", err.message, "error");
+					if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
 				}
 			);
 			this.subscribes.push(sub);
@@ -210,15 +216,12 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	onPageChange(params: GridReadyEvent) {
 		if (this.uiState.gridReady) {
 			this.uiState.filters.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
-			// this.gridApi.setRowCount(this.uiState.salesLead.totalPages);
-			// this.gridApi.paginationGoToPage(this.uiState.filters.pageNumber);
 		}
 	}
 
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		this.gridApi.sizeColumnsToFit();
 		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
 		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
 
@@ -230,6 +233,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
 			horizontal.update();
 		}
+		if ((this, this.uiState.salesLead.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 
 	draggableHandler(): void {
@@ -237,7 +241,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			revertOnSpill: true,
 		});
 		let sub = this.dragulaService.dropModel(this.uiState.dragulaInit).subscribe(({ item, target, source }) => {
-			this.message.confirm("Yes, Sure!", "Are You Sure To Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
+			this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
 				if (result.isConfirmed) {
 					this.changeStatus(item, target.id);
 				} else {
@@ -258,9 +262,9 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	changeStatus(lead: IBusinessDevelopment, status: string): void {
-		console.log("called");
+		if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, true);
 		let dataSubmit = {
-			LeadNo: lead.leadNo!,
+			leadNo: lead.leadNo!,
 			status: "",
 		};
 		switch (status) {
@@ -291,9 +295,12 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 				this.gridApi.setDatasource(this.dataSource);
 				if (res.body?.status) this.message.toast(res.body!.message!, "success");
 				else this.message.toast(res.body!.message!, "error");
+
+				if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
 			},
 			(err: HttpErrorResponse) => {
 				this.message.popup("Oops!", err.message, "error");
+				if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
 			}
 		);
 		this.subscribes.push(sub);
@@ -408,22 +415,24 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 
 	sendFollowUp() {
 		this.ff["no"].patchValue(this.uiState.followUpData.leadNo);
-		console.log(this.followUpForm.value);
 		this.uiState.submitted = true;
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
+			this.eventService.broadcast(reserved.isLoading, true);
 			let sub = this.businssDevelopmenService.saveNote(this.followUpForm.value).subscribe(
 				(res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
-					console.log(res);
 					if (res.body?.status) {
 						this.message.toast(res.body!.message!, "success");
 						this.followUpForm.reset();
 						this.loadFollowUpData(this.uiState.followUpData.leadNo);
 					} else this.message.toast(res.body!.message!, "error");
+
+					this.eventService.broadcast(reserved.isLoading, false);
 				},
 				(err: HttpErrorResponse) => {
 					this.message.popup("Oops!", err.message, "error");
+					this.eventService.broadcast(reserved.isLoading, false);
 				}
 			);
 			this.subscribes.push(sub);
