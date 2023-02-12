@@ -178,6 +178,28 @@ export class MasterTableService {
           name: BaseData.SalesleadStatus,
         },
       ],
+      ProductionForm: [
+        {
+          route: ApiRoutes.MasterTable.Production.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Production.endorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+      ],
     };
 
     switch (module) {
@@ -190,10 +212,6 @@ export class MasterTableService {
       case MODULES.BusinessDevelopment:
         this.dataSrc = data.BusinessDevelopment;
         break;
-      case MODULES.BusinessDevelopmentForm:
-        this.dataSrc = data.BusinessDevelopmentForm;
-        break;
-
       default:
         break;
     }

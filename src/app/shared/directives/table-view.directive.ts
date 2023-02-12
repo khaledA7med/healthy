@@ -1,8 +1,8 @@
 import { Directive, ElementRef, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
-import { EventService } from "../core/services/event.service";
-import { localStorageKeys } from "../core/models/localStorageKeys";
-import { reserved } from "../core/models/reservedWord";
+import { EventService } from "../../core/services/event.service";
+import { localStorageKeys } from "../../core/models/localStorageKeys";
+import { reserved } from "../../core/models/reservedWord";
 
 @Directive({
   selector: "[appTableView]",

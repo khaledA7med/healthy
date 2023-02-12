@@ -1,5 +1,8 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { IPolicyCommissionList, IPolicyPaymentsList } from "./ipolicy-payments";
+import {
+  IPolicyCommissionListForms,
+  IPolicyPaymentsListForms,
+} from "./ipolicy-payments";
 
 export interface IProductionForms {
   sNo?: FormControl<string | null>;
@@ -13,6 +16,7 @@ export interface IProductionForms {
   clientNo?: FormControl<string | null>;
   oasisPolRef?: FormControl<string | null>;
   issueType?: FormControl<string | null>;
+  paymentType?: FormControl<string | null>;
   accNo?: FormControl<string | null>;
   policyNo?: FormControl<string | null>;
   endorsType?: FormControl<string | null>;
@@ -28,25 +32,25 @@ export interface IProductionForms {
   remarks?: FormControl<string | null>;
   clientDNCNNo?: FormControl<string | null>;
   compCommDNCNNo?: FormControl<string | null>;
-  sumInsur?: FormControl<string | null>;
-  netPremium?: FormControl<string | null>;
-  fees?: FormControl<string | null>;
+  sumInsur?: FormControl<number | null>;
+  netPremium?: FormControl<number | null>;
+  fees?: FormControl<number | null>;
   deductFees?: FormControl<boolean | null>;
-  vatPerc?: FormControl<string | null>;
-  vatValue?: FormControl<string | null>;
-  totalPremium?: FormControl<string | null>;
-  compComm?: FormControl<string | null>;
-  compCommPerc?: FormControl<string | null>;
-  compCommVAT?: FormControl<string | null>;
-  compCommAmount?: FormControl<string | null>;
-  producerCommPerc?: FormControl<string | null>;
-  producerComm?: FormControl<string | null>;
+  vatPerc?: FormControl<number | null>;
+  vatValue?: FormControl<number | null>;
+  totalPremium?: FormControl<number | null>;
+  compComm?: FormControl<number | null>;
+  compCommPerc?: FormControl<number | null>;
+  compCommVAT?: FormControl<number | null>;
+  compCommAmount?: FormControl<number | null>;
+  producerCommPerc?: FormControl<number | null>;
+  producerComm?: FormControl<number | null>;
   branch?: FormControl<string | null>;
   renewal?: FormControl<string | null>;
   renewalOf?: FormControl<string | null>;
   endorsRequestType?: FormControl<string | null>;
   periodFrom?: FormControl<string | null>;
   periodTo?: FormControl<string | null>;
-  paymentTermsList?: FormArray<FormGroup<IPolicyPaymentsList>>;
-  producersCommissionsList?: FormArray<FormGroup<IPolicyCommissionList>>;
+  paymentTermsList?: FormArray<FormGroup<IPolicyPaymentsListForms>>;
+  producersCommissionsList?: FormArray<FormGroup<IPolicyCommissionListForms>>;
 }
