@@ -10,13 +10,10 @@ import { NgbModal, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { EventService } from "src/app/core/services/event.service";
-import {
-  searchByClientCols,
-  searchByRequestCols,
-} from "src/app/shared/app/grid/policyFormCols";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
 import { searchBy } from "src/app/shared/app/models/Production/production-util";
 import AppUtils from "src/app/shared/app/util";
+import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
 @Component({
   selector: "app-policies-forms",
@@ -47,6 +44,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   docs: any[] = [];
   @ViewChild("dropzone") dropzone!: any;
+  @ViewChild(PolicyRequestsListComponent)
+  dataSource!: PolicyRequestsListComponent;
   subscribes: Subscription[] = [];
 
   constructor(
