@@ -14,7 +14,7 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Delivery Status",
 		field: "policyStatus",
-		cellRenderer: StatusCellRender.salesLeadStatus,
+		cellRenderer: StatusCellRender.policyStatus,
 	},
 	{
 		headerName: "Our Ref",
