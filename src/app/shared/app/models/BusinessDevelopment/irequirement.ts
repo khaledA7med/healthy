@@ -1,5 +1,5 @@
 import { FormControl } from "@angular/forms";
-export interface IQoutingRequirement {
+export interface IRequirement {
   sNo?: FormControl<number | null>;
   leadNo?: FormControl<string | null>;
   itemCheck?: FormControl<Boolean | null>;
