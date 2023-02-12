@@ -150,7 +150,7 @@
                       >
                       <ng-select
                         id="Producer"
-                        class="form-control-sm"
+                        class="form-control-sm is-invalid"
                         placeholder="Select Producer"
                         formControlName="producer"
                         bindValue="name"
@@ -614,7 +614,7 @@
                               id="inputGroup-sizing-sm"
                               title="Search Company"
                               type="button"
-                              (click)="getQuotRequirements()"
+                              (click)="getQuotRequirements('quoting')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -640,14 +640,6 @@
                               </tr>
                             </thead>
                             <tbody formArrayName="quotingRequirementsList">
-                              <!-- <ng-container
-                                *ngFor="
-                                  let c of quotingControlArray.controls;
-                                  index as i
-                                "
-                                  *ngFor="let item of uiState.quotingCompanyArr"
-
-                              > -->
                               <tr
                                 *ngFor="
                                   let c of quotingControlArray.controls;
@@ -663,7 +655,6 @@
                                     />
                                   </td>
                                   <td>
-                                    <!-- {{ item.insuranceCopmany }} -->
                                     {{
                                       quotingControls(i, "insuranceCopmany")
                                         .value
@@ -674,7 +665,6 @@
                                     />
                                   </td>
                                   <td>
-                                    <!-- {{ item.item }} -->
                                     {{ quotingControls(i, "item").value }}
 
                                     <input
@@ -684,7 +674,6 @@
                                   </td>
                                 </ng-container>
                               </tr>
-                              <!-- </ng-container> -->
                               <tr
                                 *ngIf="
                                   quotingControlArray.controls.length === 0
@@ -719,6 +708,7 @@
                               placeholder="Select company"
                               bindLabel="name"
                               bindValue="name"
+                              formControlName="companyName"
                               [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
@@ -728,6 +718,7 @@
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
+                              (click)="getQuotRequirements('policy')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -1102,6 +1093,14 @@
                         [submitted]="submitted"
                         (dateChange)="taskDateTo($event)"
                       ></app-gregorian-picker>
+                    </div>
+                    <div class="col-12 d-flex flex-column mb-2">
+                      <label>Task Description</label>
+
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="3"
+                      ></textarea>
                     </div>
                   </div>
                 </div>

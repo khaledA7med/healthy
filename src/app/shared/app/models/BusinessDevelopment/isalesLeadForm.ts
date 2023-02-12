@@ -1,8 +1,7 @@
 import { IActivityLog } from "./iactivity-log";
 import { ICompetitors } from "./icompetitors";
-import { IQoutingRequirement } from "./iqoutingReq";
+import { IRequirement } from "./irequirement";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { IPolicyRequirement } from "./ipolicyReq";
 
 export interface ISalesLeadForm {
   branch?: FormControl<string | null>;
@@ -39,11 +38,11 @@ export interface ISalesLeadForm {
   name?: FormControl<string | null>;
   policyDetails?: FormControl<string | null>;
   policyRequierments?: FormControl<string | null>;
-  policyRequiermentsList?: FormArray<FormGroup<IPolicyRequirement>>;
+  policyRequiermentsList?: FormArray<FormGroup<IRequirement>>;
   preferedInsurComapnies?: FormControl<string[] | null>;
   producer?: FormControl<string | null>;
   producerID?: FormControl<number | null>;
-  quotingRequirementsList?: FormArray<FormGroup<IQoutingRequirement>>;
+  quotingRequirementsList?: FormArray<FormGroup<IRequirement>>;
   sNo?: FormControl<number | null>;
   companyName?: FormControl<string | null>; // for check Requirements
   salesActivityLogChecked?: FormControl<boolean | null>;
