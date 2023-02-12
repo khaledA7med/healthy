@@ -53,6 +53,13 @@ export const ApiRoutes = {
 	MasterMethods: {
 		downloadDocument: "/Documents/Download",
 		deleteDocument: "/Documents/Delete",
+		Production: {
+			producers: LookUpTables + BaseData.Producers,
+			insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+			insuranceClasses: LookUpTables + BaseData.InsurClasses,
+			branch: LookUpTables + BaseData.Branch,
+			endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+		},
 	},
 	Clients: {
 		search: "/ClientRegistry/Clients/Search",
