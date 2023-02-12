@@ -11,7 +11,10 @@ import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { EventService } from "src/app/core/services/event.service";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
-import { searchBy } from "src/app/shared/app/models/Production/production-util";
+import {
+  issueType,
+  searchBy,
+} from "src/app/shared/app/models/Production/production-util";
 import AppUtils from "src/app/shared/app/util";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
@@ -30,6 +33,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     editId: "",
     policy: {
       searching: searchBy,
+      issueType: issueType,
     },
     requestSearch: {
       clientName: "",
@@ -39,6 +43,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     clientSearch: {
       clientName: "",
       clientID: "",
+    },
+    policySearch: {
+      clientName: "",
+      clientID: "",
+      status: "active",
     },
   };
 
@@ -61,13 +70,30 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.formGroup = new FormGroup<IProductionForms>({
       sNo: new FormControl(null),
-      searchType: new FormControl(searchBy.client),
+      searchType: new FormControl(this.uiState.policy.searching.client),
       producer: new FormControl(null, Validators.required),
       chPolicyHolder: new FormControl(false),
       policyHolder: new FormControl({ value: null, disabled: true }),
-      requestInfo: new FormControl(null),
+      requestNo: new FormControl(null),
       clientInfo: new FormControl(null, Validators.required),
+      clientNo: new FormControl(null, Validators.required),
       clientName: new FormControl(null, Validators.required),
+      issueType: new FormControl(this.uiState.policy.issueType.new),
+      oasisPolRef: new FormControl(null),
+      accNo: new FormControl(null, Validators.required),
+      policyNo: new FormControl(null, Validators.required),
+      endorsType: new FormControl({ value: null, disabled: true }),
+      endorsNo: new FormControl({ value: null, disabled: true }),
+      insurComp: new FormControl(null, Validators.required),
+      className: new FormControl(null, Validators.required),
+      lineOfBusiness: new FormControl(null, Validators.required),
+      minDriverAge: new FormControl({ value: null, disabled: true }),
+      issueDate: new FormControl(null, Validators.required),
+      periodFrom: new FormControl(null, Validators.required),
+      periodTo: new FormControl(null, Validators.required),
+      claimNoOfDays: new FormControl(null),
+      csNoOfDays: new FormControl(null),
+      remarks: new FormControl(null),
     });
   }
 
@@ -89,9 +115,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   searchByEvt(): void {
     if (this.f.searchType?.value === this.uiState.policy.searching.request)
-      this.f.requestInfo?.setValidators(Validators.required);
-    else this.f.requestInfo?.clearValidators();
-    this.f.requestInfo?.updateValueAndValidity();
+      this.f.requestNo?.setValidators(Validators.required);
+    else this.f.requestNo?.clearValidators();
+    this.f.requestNo?.updateValueAndValidity();
   }
 
   openModal(modal: TemplateRef<NgbModalOptions>) {
@@ -105,6 +131,43 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   setRange(e: any) {
     this.uiState.requestSearch.dateFrom = this.appUtils.dateFormater(e.from);
     this.uiState.requestSearch.dateTo = this.appUtils.dateFormater(e.to);
+  }
+
+  issueDate(e: any) {
+    this.f.issueDate?.patchValue(e.gon);
+    this.f.periodFrom?.patchValue(e.gon);
+    e.gon = {
+      day: e.gon.day - 1,
+      month: e.gon.month,
+      year: e.gon.year + 1,
+    };
+    this.f.periodTo?.patchValue(e.gon);
+  }
+
+  inceptionDate(e: any) {
+    this.f.periodFrom?.patchValue(e.gon);
+    e.gon = {
+      day: e.gon.day - 1,
+      month: e.gon.month,
+      year: e.gon.year + 1,
+    };
+    this.f.periodTo?.patchValue(e.gon);
+  }
+
+  expiryDate(e: any) {
+    this.f.periodTo?.patchValue(e.gon);
+  }
+
+  fillRequestDataToForm(e: any) {
+    console.log(e);
+  }
+
+  fillClientDataToForm(e: any) {
+    console.log(e);
+  }
+
+  fillPolicyDataToForm(e: any) {
+    console.log(e);
   }
 
   documentsList(e: any) {}

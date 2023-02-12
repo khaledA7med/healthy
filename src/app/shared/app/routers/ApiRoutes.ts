@@ -75,6 +75,8 @@ export const ApiRoutes = {
   Production: {
     search: "",
     clientByRequest: "/Production/Policy/SearchClientByRequest",
+    searchClient: LookUpTables + "ActiveClient",
+    searchPolicies: "/Production/Policy/SearchClientPolicies",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
