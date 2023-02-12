@@ -63,7 +63,6 @@ export default class StatusCellRender
 	}
 
 	public static policyStatus(e: CellEvent): string {
-		console.log(e);
 		switch (e.value) {
 			case IPolicyStatus.active:
 				return `<span class='badge badge-soft-success'>${e.value}</span>`;

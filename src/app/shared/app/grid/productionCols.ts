@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { PoliciesManagementControlsComponent } from "src/app/pages/production/policies-management/policies-management-controls.component";
+import { refundChecker } from "../models/Production/production-util";
 import GlobalCellRender from "./globalCellRender";
 import StatusCellRender from "./statusCellRender";
 
@@ -14,7 +15,7 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Delivery Status",
 		field: "policyStatus",
-		cellRenderer: StatusCellRender.policyStatus,
+		// cellRenderer: StatusCellRender.policyStatus,
 	},
 	{
 		headerName: "Our Ref",
@@ -84,6 +85,8 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Sum Insured",
 		field: "sumInsur",
+		valueFormatter: GlobalCellRender.currencyFormater,
+		cellClass: refundChecker,
 	},
 	{
 		headerName: "Net Premium",
