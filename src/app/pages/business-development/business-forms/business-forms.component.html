@@ -1,5 +1,11 @@
-<form [formGroup]="formGroup" autocomplete="of" id="AddLeadForm">
-  <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
+<form
+  [formGroup]="formGroup"
+  autocomplete="off"
+  (ngSubmit)="submitForm(formGroup)"
+  id="AddLeadForm"
+>
+  {{ formGroup.value | json }}
+  <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4,5">
     <!-- start sales lead details acc   -->
     <ngb-panel id="1" title="Sales Lead Details" cardClass="open my-4">
       <ng-template ngbPanelContent>
@@ -47,16 +53,18 @@
                   <!-- /row -->
                   <!-- Client | Group & Producer row  -->
                   <div class="row my-2">
+                    <!-- col check client | group -->
                     <div
                       class="col-sm-2 col-md-5 col-lg-2 d-flex flex-column my-1"
                     >
                       <div class="form-check mb-2">
                         <input
+                          name="check"
                           class="form-check-input"
                           type="radio"
-                          value="Client"
                           id="client"
-                          [checked]="uiState.isClient"
+                          (change)="changeToClient()"
+                          checked
                         />
                         <label for="client" class="form-check-label"
                           >Client</label
@@ -64,53 +72,113 @@
                       </div>
                       <div class="form-check">
                         <input
+                          name="check"
                           class="form-check-input"
                           type="radio"
-                          value="Group"
-                          id="client"
+                          id="group"
+                          (change)="changeToGroup()"
                         />
-                        <label for="client" class="form-check-label"
+                        <label for="group" class="form-check-label"
                           >Group</label
                         >
                       </div>
                     </div>
+                    <!-- /col -->
+                    <!-- col select client | group -->
                     <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
-                      <label for="client" class="asterisk-input"> Client</label>
+                      <label for="client" class="asterisk-input">
+                        {{ uiState.isClient ? "Client" : "Group" }}</label
+                      >
                       <div class="input-group input-group-sm">
                         <ng-select
+                          #clintSelect
                           id="client"
+                          formControlName="name"
+                          bindValue="name"
+                          bindLabel="name"
                           class="form-control form-control-sm"
                           aria-describedby="inputGroup-sizing-sm"
-                          placeholder="Select Client"
+                          (change)="getClientId($event)"
+                          [loading]="formData ? false : true"
+                          [items]="
+                            uiState.isClient
+                              ? (formData | async)?.AllClients?.content!
+                              : (formData | async)?.GroupsList?.content!
+                          "
+                          [ngClass]="{
+                            'is-submitted': submitted && f.name?.invalid
+                          }"
+                          placeholder="{{
+                            uiState.isClient ? 'Select Client' : 'Select Group'
+                          }}"
                         >
+                          <ng-template ng-option-tmp let-item="item">
+                            <div>{{ item.id }} | {{ item.name }}</div>
+                          </ng-template>
                         </ng-select>
-
                         <button
                           class="input-group-text btn-outline-success btn-sm"
                           id="inputGroup-sizing-sm"
-                          title="Add New Client"
+                          [title]="
+                            uiState.isClient
+                              ? 'Add New Client'
+                              : 'Add New Group'
+                          "
+                          [routerLink]="
+                            uiState.isClient
+                              ? '/clients/create'
+                              : '/clients/groups'
+                          "
                         >
                           <i class="ri-user-add-line align-middle"></i>
                         </button>
                       </div>
+                      <div
+                        class="invalid-feedback fw-bold d-block"
+                        *ngIf="
+                          (f.name?.touched || submitted) && f.name?.invalid
+                        "
+                      >
+                        Required
+                      </div>
                     </div>
+                    <!-- /col -->
+                    <!-- col producer -->
                     <div class="col-sm-10 col-md-7 col-lg-5 d-flex flex-column">
                       <label for="producer" class="asterisk-input">
                         Producer</label
                       >
                       <ng-select
                         id="Producer"
-                        class="form-control-sm"
+                        class="form-control-sm is-invalid"
                         placeholder="Select Producer"
+                        formControlName="producer"
+                        bindValue="name"
+                        bindLabel="name"
+                        [loading]="formData ? false : true"
+                        [items]="(formData | async)?.Producers?.content!"
+                        [ngClass]="{
+                          'is-submitted': submitted && f.producer?.invalid
+                        }"
                       >
                       </ng-select>
+                      <div
+                        class="invalid-feedback fw-bold d-block"
+                        *ngIf="
+                          (f.producer?.touched || submitted) &&
+                          f.producer?.invalid
+                        "
+                      >
+                        Required
+                      </div>
                     </div>
+                    <!-- /col -->
                   </div>
                   <!-- /row -->
                 </div>
               </div>
             </div>
-            <!-- insurance Det & Currently Insured row  -->
+            <!-- insurance Details & Currently Insured row  -->
             <div class="row my-2">
               <div class="col-lg-6 my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
@@ -130,21 +198,58 @@
                             id="classOfInc"
                             class="form-control-sm"
                             placeholder="Select Class Of Insurance"
+                            formControlName="classOfBusiness"
+                            bindValue="name"
+                            bindLabel="name"
+                            [loading]="formData ? false : true"
+                            [items]="(formData | async)?.InsurClasses?.content!"
+                            [ngClass]="{
+                              'is-submitted':
+                                submitted && f.classOfBusiness?.invalid
+                            }"
+                            (change)="getLineOfBusiness($event?.name)"
                           >
                           </ng-select>
+                          <div
+                            class="invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.classOfBusiness?.touched || submitted) &&
+                              f.classOfBusiness?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <div
                           class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
                         >
                           <label for="lineOfBus" class="asterisk-input">
-                            Class of Insurance</label
+                            Line of Business</label
                           >
                           <ng-select
                             id="lineOfBus"
                             class="form-control-sm"
                             placeholder="Select Lien Of Business"
+                            formControlName="lineOfBusiness"
+                            bindValue="name"
+                            bindLabel="name"
+                            [loading]="formData ? false : true"
+                            [items]="lineOfBussArr"
+                            [ngClass]="{
+                              'is-submitted':
+                                submitted && f.lineOfBusiness?.invalid
+                            }"
                           >
                           </ng-select>
+                          <div
+                            class="invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.lineOfBusiness?.touched || submitted) &&
+                              f.lineOfBusiness?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <div
                           class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
@@ -155,6 +260,7 @@
                               type="number"
                               class="form-control form-control-sm"
                               aria-describedby="inputGroup-sizing-sm"
+                              formControlName="estimatedPremium"
                             />
                             <span
                               class="input-group-text"
@@ -167,7 +273,13 @@
                         <div
                           class="col-sm-12 col-md-6 col-lg-6 my-2 d-flex flex-column"
                         >
-                          <label for="deadline">Deadline</label>
+                          <label
+                            for="deadline"
+                            [ngClass]="{
+                              'asterisk-input': f.chDeadlinebool?.value
+                            }"
+                            >Deadline</label
+                          >
                           <div class="input-group input-group-sm">
                             <span
                               class="input-group-text"
@@ -176,17 +288,22 @@
                               <input
                                 type="checkbox"
                                 class="form-check-input-sm"
-                                (change)="toggleDate($event)"
+                                formControlName="chDeadlinebool"
+                                (change)="toggleDeadline($event)"
                             /></span>
 
                             <input
                               type="text"
                               ngbDatepicker
                               #d="ngbDatepicker"
-                              formControlName="deadline"
                               placeholder="yyyy-mm-dd"
                               class="form-control form-control-sm"
                               (click)="d.toggle()"
+                              formControlName="deadLine"
+                              [ngClass]="{
+                                'is-invalid': submitted && f.deadLine?.invalid
+                              }"
+                              readonly
                             />
 
                             <button
@@ -194,6 +311,15 @@
                               type="button"
                               (click)="d.toggle()"
                             ></button>
+                          </div>
+                          <div
+                            class="invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.deadLine?.touched || submitted) &&
+                              f.deadLine?.invalid
+                            "
+                          >
+                            Required
                           </div>
                         </div>
                         <!-- /col -->
@@ -206,7 +332,14 @@
                             id="PrefInCompnies"
                             class="form-control-sm"
                             placeholder="Choose Companies"
+                            formControlName="preferedInsurComapnies"
+                            bindLabel="name"
+                            bindValue="name"
                             [multiple]="true"
+                            [items]="
+                              (formData | async)?.InsuranceCompanyName?.content!
+                            "
+                            [loading]="formData ? false : true"
                           >
                           </ng-select>
                         </div>
@@ -220,7 +353,21 @@
                             id="accDetails"
                             class="form-control form-control-sm"
                             rows="3"
+                            formControlName="policyDetails"
+                            [ngClass]="{
+                              'is-invalid':
+                                submitted && f.policyDetails?.invalid
+                            }"
                           ></textarea>
+                        </div>
+                        <div
+                          class="invalid-feedback fw-bold d-block"
+                          *ngIf="
+                            (f.policyDetails?.touched || submitted) &&
+                            f.policyDetails?.invalid
+                          "
+                        >
+                          Required
                         </div>
                         <!-- /col -->
                       </div>
@@ -236,7 +383,7 @@
                       <input
                         type="checkbox"
                         class="form-check-input-sm me-1"
-                        (change)="toggleCurInsured()"
+                        (change)="toggleCurInsured($event)"
                       />
                       <span>Currently Insured</span>
                     </div>
@@ -244,7 +391,13 @@
                       <div class="row">
                         <!-- col Expiry Date   -->
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                          <label for="expiryDate">Expiry Date</label>
+                          <label
+                            for="expiryDate"
+                            [ngClass]="{
+                              'asterisk-input': uiState.isCurrentIns
+                            }"
+                            >Expiry Date</label
+                          >
                           <div class="input-group input-group-sm">
                             <input
                               type="text"
@@ -253,6 +406,12 @@
                               placeholder="yyyy-mm-dd"
                               class="form-control form-control-sm"
                               (click)="d2.toggle()"
+                              formControlName="existingPolExpDate"
+                              [ngClass]="{
+                                'is-invalid':
+                                  submitted && f.existingPolExpDate?.invalid
+                              }"
+                              readonly
                             />
 
                             <button
@@ -260,48 +419,130 @@
                               type="button"
                               (click)="d2.toggle()"
                             ></button>
+                            <div
+                              class="invalid-feedback fw-bold d-block"
+                              *ngIf="
+                                (f.existingPolExpDate?.touched || submitted) &&
+                                f.existingPolExpDate?.invalid
+                              "
+                            >
+                              Required
+                            </div>
                           </div>
                         </div>
                         <!-- /col -->
                         <!-- col Policy No  -->
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                          <label for="policyNo">Policy No</label>
+                          <label
+                            for="policyNo"
+                            [ngClass]="{
+                              'asterisk-input': uiState.isCurrentIns
+                            }"
+                            >Policy No</label
+                          >
                           <input
                             id="policyNo"
                             type="text"
                             class="form-control form-control-sm"
+                            formControlName="currentPolicyNo"
+                            [ngClass]="{
+                              'is-invalid':
+                                submitted && f.currentPolicyNo?.invalid
+                            }"
                           />
+                          <div
+                            class="is-invalid invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.currentPolicyNo?.touched || submitted) &&
+                              f.currentPolicyNo?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
+
                         <!-- /col -->
                         <!-- col current insurance broker -->
                         <div class="col-sm-12 my-2">
-                          <label for="curIncBroker"
+                          <label
+                            for="curIncBroker"
+                            [ngClass]="{
+                              'asterisk-input': uiState.isCurrentIns
+                            }"
                             >Current Insurance Broker
                           </label>
                           <ng-select
                             id="curIncBroker"
                             class="form-control-sm"
                             placeholder="Select Current Broker"
+                            formControlName="currentBroker"
+                            bindLabel="name"
+                            bindValue="name"
+                            [ngClass]="{
+                              'is-invalid':
+                                submitted && f.currentBroker?.invalid
+                            }"
+                            [items]="
+                              (formData | async)?.InsuranceBrokersList?.content!
+                            "
+                            [loading]="formData ? false : true"
                           >
                           </ng-select>
+                          <div
+                            class="is-invalid invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.currentBroker?.touched || submitted) &&
+                              f.currentBroker?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <!-- /col -->
                         <!-- col current insurance company -->
                         <div class="col-sm-12 my-2">
-                          <label for="curIncCompany"
+                          <label
+                            for="curIncCompany "
+                            [ngClass]="{
+                              'asterisk-input': uiState.isCurrentIns
+                            }"
                             >Current Insurance Company
                           </label>
                           <ng-select
                             id="curIncCompany"
                             class="form-control-sm"
                             placeholder="Select Current Company"
+                            formControlName="currentInsurer"
+                            bindLabel="name"
+                            bindValue="name"
+                            [ngClass]="{
+                              'is-submitted':
+                                submitted && f.currentInsurer?.invalid
+                            }"
+                            [items]="
+                              (formData | async)?.InsuranceCompanyName?.content!
+                            "
+                            [loading]="formData ? false : true"
                           >
                           </ng-select>
+                          <div
+                            class="is-invalid invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.currentInsurer?.touched || submitted) &&
+                              f.currentInsurer?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <!-- /col -->
                         <!-- col  existing policy details -->
                         <div class="col-sm-12 my-2 d-flex flex-column">
-                          <label for="polDetails"
+                          <label
+                            for="polDetails"
+                            [ngClass]="{
+                              'asterisk-input': uiState.isCurrentIns
+                            }"
                             >Existing Policy Details (Business
                             size,...etc)</label
                           >
@@ -309,7 +550,21 @@
                             id="polDetails"
                             class="form-control form-control-sm"
                             rows="4"
+                            formControlName="existingPolDetails"
+                            [ngClass]="{
+                              'is-invalid':
+                                submitted && f.existingPolDetails?.invalid
+                            }"
                           ></textarea>
+                          <div
+                            class="is-invalid invalid-feedback fw-bold d-block"
+                            *ngIf="
+                              (f.existingPolDetails?.touched || submitted) &&
+                              f.existingPolDetails?.invalid
+                            "
+                          >
+                            Required
+                          </div>
                         </div>
                         <!-- /col -->
                       </div>
@@ -347,6 +602,10 @@
                               class="form-control form-control-sm"
                               aria-describedby="inputGroup-sizing-sm"
                               placeholder="Select company"
+                              bindLabel="name"
+                              bindValue="name"
+                              formControlName="companyName"
+                              [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
 
@@ -354,6 +613,8 @@
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
+                              type="button"
+                              (click)="getQuotRequirements('quoting')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -369,7 +630,8 @@
                                   <div>
                                     <input
                                       type="checkbox"
-                                      class="text-dark form-check-input"
+                                      class="form-check-input"
+                                      (change)="checkAllCompanies($event)"
                                     />
                                   </div>
                                 </th>
@@ -377,7 +639,50 @@
                                 <th>Item</th>
                               </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody formArrayName="quotingRequirementsList">
+                              <tr
+                                *ngFor="
+                                  let c of quotingControlArray.controls;
+                                  index as i
+                                "
+                              >
+                                <ng-container [formGroupName]="i">
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      formControlName="itemCheck"
+                                      class="form-check-input"
+                                    />
+                                  </td>
+                                  <td>
+                                    {{
+                                      quotingControls(i, "insuranceCopmany")
+                                        .value
+                                    }}
+                                    <input
+                                      type="hidden"
+                                      formControlName="insuranceCopmany"
+                                    />
+                                  </td>
+                                  <td>
+                                    {{ quotingControls(i, "item").value }}
+
+                                    <input
+                                      type="hidden"
+                                      formControlName="item"
+                                    />
+                                  </td>
+                                </ng-container>
+                              </tr>
+                              <tr
+                                *ngIf="
+                                  quotingControlArray.controls.length === 0
+                                "
+                                class="my-1 text-center text-dark fw-bold no-item-contact"
+                              >
+                                <td colspan="100">No items show</td>
+                              </tr>
+                            </tbody>
                           </table>
                         </div>
                         <!-- col end table -->
@@ -401,13 +706,19 @@
                               class="form-control form-control-sm"
                               aria-describedby="inputGroup-sizing-sm"
                               placeholder="Select company"
+                              bindLabel="name"
+                              bindValue="name"
+                              formControlName="companyName"
+                              [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
 
                             <button
+                              type="button"
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
+                              (click)="getQuotRequirements('policy')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -463,69 +774,148 @@
                     <div class="ribbon ribbon-info round-shape">
                       Activity Log
                     </div>
-                    <button
-                      class="btn btn-sm btn-success bg-gradient waves-effect custom-btn"
-                    >
-                      Add Log
-                    </button>
 
-                    <div class="ribbon-content mt-4 text-muted">
+                    <div class="ribbon-content mt-2 text-muted">
+                      <div class="d-flex justify-content-end">
+                        <button
+                          (click)="addActivityLog()"
+                          type="button"
+                          class="btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light"
+                        >
+                          Add Log
+                        </button>
+                      </div>
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                            <tr>
+                              <th>Type</th>
+                              <th>Date</th>
+                              <th>Note</th>
+                              <th>Action</th>
+                            </tr>
                           </thead>
-                          <tbody>
-                            <td>
-                              <div>
-                                <ng-select
-                                  class="form-control-sm"
-                                  placeholder="log Type"
-                                  dropdownPosition="top"
-                                ></ng-select>
-                              </div>
-                            </td>
-                            <td>
-                              <div
-                                class="input-group input-group-sm custom-inp-group"
-                              >
-                                <input
-                                  type="text"
-                                  ngbDatepicker
-                                  #d3="ngbDatepicker"
-                                  placeholder="yyyy-mm-dd"
-                                  class="form-control form-control-sm"
-                                  (click)="d3.toggle()"
-                                />
+                          <tbody formArrayName="salesActivityLogList">
+                            <tr
+                              *ngFor="
+                                let c of activityLogArray.controls;
+                                index as i
+                              "
+                            >
+                              <ng-container [formGroupName]="i">
+                                <td>
+                                  <div>
+                                    <ng-select
+                                      appendTo="body"
+                                      class="form-control-sm"
+                                      placeholder="log Type"
+                                      dropdownPosition="top"
+                                      formControlName="logType"
+                                      bindLabel="name"
+                                      bindValue="name"
+                                      [ngClass]="{
+                                        'is-submitted':
+                                          submitted &&
+                                          activityLogControls(i, 'logType')
+                                            .invalid
+                                      }"
+                                      [items]="
+                                        (formData | async)?.LogType?.content!
+                                      "
+                                      [loading]="formData ? false : true"
+                                    ></ng-select>
 
-                                <button
-                                  class="btn btn-outline-secondary ri-calendar-2-line"
-                                  type="button"
-                                  (click)="d3.toggle()"
-                                ></button>
-                              </div>
-                            </td>
-                            <td>
-                              <div>
-                                <textarea
-                                  class="form-control form-control-sm"
-                                  rows="1"
-                                ></textarea>
-                              </div>
-                            </td>
-                            <td class="text-center">
-                              <div>
-                                <button
-                                  type="button"
-                                  class="btn btn-sm btn-soft-danger"
-                                >
-                                  <i class="ri-delete-bin-2-line"></i>
-                                </button>
-                              </div>
-                            </td>
+                                    <div
+                                      class="invalid-feedback fw-bold d-block"
+                                      *ngIf="
+                                        (activityLogControls(i, 'logType')
+                                          .touched ||
+                                          submitted) &&
+                                        activityLogControls(i, 'logType')
+                                          .invalid
+                                      "
+                                    >
+                                      Required
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div
+                                    class="input-group input-group-sm custom-inp-group"
+                                  >
+                                    <input
+                                      type="text"
+                                      ngbDatepicker
+                                      #d3="ngbDatepicker"
+                                      placeholder="yyyy-mm-dd"
+                                      class="form-control form-control-sm"
+                                      (click)="d3.toggle()"
+                                      formControlName="logDate"
+                                      [ngClass]="{
+                                        'is-invalid':
+                                          submitted &&
+                                          activityLogControls(i, 'logDate')
+                                            .invalid
+                                      }"
+                                    />
+
+                                    <button
+                                      class="btn btn-outline-secondary ri-calendar-2-line"
+                                      type="button"
+                                      (click)="d3.toggle()"
+                                    ></button>
+                                  </div>
+                                  <div
+                                    class="invalid-feedback fw-bold d-block"
+                                    *ngIf="
+                                      (activityLogControls(i, 'logDate')
+                                        .touched ||
+                                        submitted) &&
+                                      activityLogControls(i, 'logDate').invalid
+                                    "
+                                  >
+                                    Required
+                                  </div>
+                                </td>
+                                <td>
+                                  <div>
+                                    <textarea
+                                      class="form-control form-control-sm"
+                                      rows="1"
+                                      formControlName="logNotes"
+                                      [ngClass]="{
+                                        'is-invalid':
+                                          submitted &&
+                                          activityLogControls(i, 'logNotes')
+                                            .invalid
+                                      }"
+                                    ></textarea>
+                                  </div>
+                                  <div
+                                    class="invalid-feedback fw-bold d-block"
+                                    *ngIf="
+                                      (activityLogControls(i, 'logNotes')
+                                        .touched ||
+                                        submitted) &&
+                                      activityLogControls(i, 'logNotes').invalid
+                                    "
+                                  >
+                                    Required
+                                  </div>
+                                </td>
+                                <td class="text-center">
+                                  <div>
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-soft-danger"
+                                      (click)="remove(i, 'activityLog')"
+                                    >
+                                      <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                              </ng-container>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -541,47 +931,84 @@
                     <div class="ribbon ribbon-info round-shape">
                       Competitors
                     </div>
-                    <button
-                      class="btn btn-sm btn-success bg-gradient waves-effect custom-btn"
-                    >
-                      Add Competitors
-                    </button>
-                    <div class="ribbon-content mt-4 text-muted">
+
+                    <div class="ribbon-content mt-2 text-muted">
+                      <div class="d-flex justify-content-end">
+                        <button
+                          (click)="addCompetitor()"
+                          type="button"
+                          class="ms-auto btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light"
+                        >
+                          Add Competitors
+                        </button>
+                      </div>
                       <div class="table-responsive">
                         <table class="table table-nowrap mt-2">
                           <thead class="table-light text-center">
-                            <th>Competitors</th>
-                            <th>Note</th>
-                            <th>Action</th>
+                            <tr>
+                              <th>Competitors</th>
+                              <th>Note</th>
+                              <th>Action</th>
+                            </tr>
                           </thead>
-                          <tbody>
-                            <td>
-                              <div>
-                                <input
-                                  type="text"
-                                  class="form-control form-control-sm py-0"
-                                />
-                              </div>
-                            </td>
+                          <tbody formArrayName="salesLeadCompetitorsList">
+                            <tr
+                              *ngFor="
+                                let c of competitorsArray.controls;
+                                index as i
+                              "
+                            >
+                              <ng-container [formGroupName]="i">
+                                <td>
+                                  <div>
+                                    <input
+                                      type="text"
+                                      class="form-control form-control-sm py-0"
+                                      formControlName="competitor"
+                                      [ngClass]="{
+                                        'is-invalid':
+                                          submitted &&
+                                          competitorControls(i, 'competitor')
+                                            .invalid
+                                      }"
+                                    />
+                                  </div>
+                                  <div
+                                    class="invalid-feedback fw-bold d-block"
+                                    *ngIf="
+                                      (competitorControls(i, 'competitor')
+                                        .touched ||
+                                        submitted) &&
+                                      competitorControls(i, 'competitor')
+                                        .invalid
+                                    "
+                                  >
+                                    Required
+                                  </div>
+                                </td>
 
-                            <td>
-                              <div>
-                                <textarea
-                                  class="form-control form-control-sm"
-                                  rows="1"
-                                ></textarea>
-                              </div>
-                            </td>
-                            <td class="text-center">
-                              <div>
-                                <button
-                                  type="button"
-                                  class="btn btn-sm btn-soft-danger"
-                                >
-                                  <i class="ri-delete-bin-2-line"></i>
-                                </button>
-                              </div>
-                            </td>
+                                <td>
+                                  <div>
+                                    <textarea
+                                      class="form-control form-control-sm"
+                                      rows="1"
+                                      formControlName="competitorNotes"
+                                    ></textarea>
+                                  </div>
+                                </td>
+                                <td class="text-center">
+                                  <div>
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-soft-danger"
+                                      (click)="remove(i, 'competitor')"
+                                    >
+                                      <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                              </ng-container>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -596,9 +1023,98 @@
       </ng-template>
     </ngb-panel>
     <!-- end lead activities acc  -->
+    <!-- start tasks acc on edit mood -->
+    <ngb-panel id="4" title="New Activities" cardClass="open my-4">
+      <ng-template ngbPanelContent>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse show"
+          aria-labelledby="headingThree"
+        >
+          <div class="container-fluid mb-3">
+            <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
+              <div class="card-body">
+                <div class="ribbon ribbon-info round-shape">Tasks</div>
+                <div class="ribbon-content mt-4 text-muted">
+                  <div class="row my-2">
+                    <!--  -->
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="taskType" class="asterisk-input"
+                        >Task Type</label
+                      >
+                      <ng-select
+                        id="taskType"
+                        class="form-control-sm"
+                        placeholder="Select Task Type"
+                        bindLabel="name"
+                        bindValue="name"
+                        [items]="(formData | async)?.LogType?.content!"
+                        [loading]="formData ? false : true"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="taskName" class="asterisk-input"
+                        >Task Name</label
+                      >
+                      <input
+                        id="taskName"
+                        class="form-control form-control-sm"
+                        placeholder="Select Task Type"
+                      />
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label for="assigned" class="asterisk-input"
+                        >Assigned To
+                      </label>
+                      <ng-select
+                        id="assigned"
+                        class="form-control-sm"
+                        placeholder="Select Task Type"
+                        bindLabel="name"
+                        bindValue="name"
+                        [items]="(formData | async)?.Producers?.content!"
+                        [loading]="formData ? false : true"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label class="asterisk-input">Task Date From</label>
+                      <app-gregorian-picker
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="taskDateFrom($event)"
+                      ></app-gregorian-picker>
+                    </div>
+                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                      <label class="asterisk-input">Task Date To</label>
+                      <app-gregorian-picker
+                        [required]="true"
+                        [submitted]="submitted"
+                        (dateChange)="taskDateTo($event)"
+                      ></app-gregorian-picker>
+                    </div>
+                    <div class="col-12 d-flex flex-column mb-2">
+                      <label>Task Description</label>
+
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="3"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+    <!-- end tasks acc -->
+
     <!-- start Document acc -->
-    <ngb-panel id="4" title="Documents" cardClass="open my-4">
-      <ng-template ngbPanelContent="6">
+    <ngb-panel id="5" title="Documents" cardClass="open my-4">
+      <ng-template ngbPanelContent>
         <app-dropzone
           [UploadedFiles]="docs"
           (files)="documentsList($event)"
@@ -616,7 +1132,12 @@
         <div class="row my-2">
           <div class="col-sm-4">
             <div class="form-check">
-              <input type="checkbox" id="sentTo" class="form-check-input" />
+              <input
+                type="checkbox"
+                formControlName="sendToUW"
+                id="sentTo"
+                class="form-check-input"
+              />
               <label for="sentTo">Send to U / W</label>
             </div>
           </div>
@@ -624,6 +1145,11 @@
             <ng-select
               placeholder="Choose Branch"
               class="form-control form-control-sm"
+              formControlName="branch"
+              bindLabel="name"
+              bindValue="name"
+              [items]="(formData | async)?.Branch?.content!"
+              [loading]="formData ? false : true"
             >
             </ng-select>
           </div>
@@ -645,6 +1171,7 @@
             type="button"
             id="sa-warning"
             class="btn btn-sm btn-soft-danger"
+            (click)="dropzone.clearImages()"
           >
             <i class="ri-delete-bin-2-line"></i>
             Clear
