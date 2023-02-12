@@ -59,3 +59,9 @@ export interface IPoliciesRef {
 	periodTo: string;
 	policiesSNo: string;
 }
+
+export function refundChecker(params: any) {
+	return params.data && (params.data.endorsType === "Refund" || params.data.endorsType === "Cancellation")
+		? ["input-text-right", "text-danger"]
+		: ["input-text-right"];
+}

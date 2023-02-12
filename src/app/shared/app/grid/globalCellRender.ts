@@ -1,3 +1,4 @@
+import { formatCurrency } from "@angular/common";
 import { CellEvent, ValueFormatterParams } from "ag-grid-community";
 
 export default class GlobalCellRender {
@@ -16,11 +17,7 @@ export default class GlobalCellRender {
 		}
 	}
 
-	public static currencyFormater(e: CellEvent): string {
-		if (e.data.endorsType === "Refund" || e.data.endorsType === "Cancellation") {
-			return `<span class='input-text-right d-block me-4' style="color: red">${e.value}</span>`;
-		} else {
-			return `<span class='input-text-right d-block me-4'>${e.value}</span>`;
-		}
+	public static currencyFormater(e: ValueFormatterParams) {
+		return formatCurrency(+e.value, "en-US", "", "", "1.2-2");
 	}
 }
