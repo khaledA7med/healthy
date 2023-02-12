@@ -44,7 +44,8 @@ export interface ISalesLeadForm {
   producerID?: FormControl<number | null>;
   quotingRequirementsList?: FormArray<FormGroup<IRequirement>>;
   sNo?: FormControl<number | null>;
-  companyName?: FormControl<string | null>; // for check Requirements
+  companyNameQuot?: FormControl<string | null>; // for check Requirements
+  companyNamePol?: FormControl<string | null>; // for check Requirements
   salesActivityLogChecked?: FormControl<boolean | null>;
   salesLeadCompetitorChecked?: FormControl<boolean | null>;
   selectedPolicyCompany?: FormControl<string | null>;

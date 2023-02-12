@@ -41,8 +41,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   uiState = {
     isClient: true, // Choose client Or Group
     isCurrentIns: false,
-    quotingCompanyArr: [] as IRequirement[],
-    policyCompanyArr: [],
   };
   @ViewChild("dropzone") dropzone!: any;
 
@@ -84,7 +82,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       // Policy Issuance
       policyRequiermentsList: new FormArray<FormGroup<IRequirement>>([]),
       // for get data only
-      companyName: new FormControl(null),
+      companyNameQuot: new FormControl(null),
+      companyNamePol: new FormControl(null),
       //activity Log
       salesActivityLogList: new FormArray<FormGroup<IActivityLog>>([]),
       //competitors
@@ -109,7 +108,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
   changeToGroup() {
     this.uiState.isClient = false;
-
     this.f.name?.reset();
     this.f.clientID?.reset();
   }
@@ -178,46 +176,71 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   quotingControls(i: number, control: string): AbstractControl {
     return this.quotingControlArray.controls[i].get(control)!;
   }
-
-  getQuotRequirements(name: string) {
-    if (
-      this.f.companyName?.value &&
-      this.f.classOfBusiness?.value &&
-      this.f.lineOfBusiness?.value
-    ) {
-      let data = {
-        className: this.f.classOfBusiness?.value,
-        lineOfBusiness: this.f.lineOfBusiness?.value,
-        companyName: this.f.companyName?.value,
-      };
-      let sub = this.businessDevService.quotRequirements(data).subscribe({
-        next: (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-          res.body?.data!.map((c) => this.createQuotingArray(c));
-        },
-        error: (err: HttpErrorResponse) => {
-          this.message.popup("Sorry!", err.message!, "warning");
-        },
-      });
-      this.subscribes.push(sub);
-    } else {
-      this.message.toast(
-        "Please Select \n Class of Insurance, Line of Business and Quoting Company",
-        "warning"
-      );
-    }
+  get policyControlArray() {
+    return this.formGroup.get("policyRequiermentsList") as FormArray;
+  }
+  policyControls(i: number, control: string): AbstractControl {
+    return this.policyControlArray.controls[i].get(control)!;
   }
 
-  createQuotingArray(data?: IRequirement) {
-    let quoting = new FormGroup<any>({
+  getRequirements(name: string): void {
+    let data = {
+      className: this.f.classOfBusiness?.value,
+      lineOfBusiness: this.f.lineOfBusiness?.value,
+      companyName:
+        name == "quoting"
+          ? this.f.companyNameQuot?.value
+          : name == "policy"
+          ? this.f.companyNamePol?.value
+          : "",
+    };
+    name == "quoting"
+      ? this.getQuotingReq(data)
+      : name == "policy"
+      ? this.getPolicyReq(data)
+      : "";
+  }
+  getQuotingReq(data: {}) {
+    let sub = this.businessDevService.quotRequirements(data).subscribe(
+      (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
+        res.body?.data!.map((c) => this.createReqFormArr("quoting", c));
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Sorry!", err.message!, "warning");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+  getPolicyReq(data: {}) {
+    let sub = this.businessDevService.policyRequirements(data).subscribe(
+      (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
+        res.body?.data!.map((c) => this.createReqFormArr("policy", c));
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Sorry!", err.message!, "warning");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  createReqFormArr(name: string, data?: IRequirement) {
+    let formArrayCon = new FormGroup<IRequirement>({
       itemCheck: new FormControl(data?.itemCheck || false),
       insuranceCopmany: new FormControl(data?.insuranceCopmany || null),
       item: new FormControl(data?.item || null),
     });
-    this.f.quotingRequirementsList?.push(quoting);
-    this.quotingControlArray.updateValueAndValidity();
+    if (name == "quoting") {
+      this.f.quotingRequirementsList?.push(formArrayCon);
+      this.quotingControlArray.updateValueAndValidity();
+    } else if (name == "policy") {
+      this.f.policyRequiermentsList?.push(formArrayCon);
+      this.policyControlArray.updateValueAndValidity();
+    } else {
+      return;
+    }
   }
 
-  checkAllCompanies(e: any) {
+  checkAllCompaniesQuot(e: any) {
     if (e.target.checked) {
       this.quotingControlArray?.controls?.forEach((c) => {
         c?.get("itemCheck")?.patchValue(true);
@@ -228,6 +251,18 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       });
     }
   }
+  checkAllCompaniesPol(e: any) {
+    if (e.target.checked) {
+      this.policyControlArray?.controls?.forEach((c) => {
+        c?.get("itemCheck")?.patchValue(true);
+      });
+    } else {
+      this.policyControlArray?.controls?.forEach((c) => {
+        c?.get("itemCheck")?.patchValue(false);
+      });
+    }
+  }
+
   //#endregion
 
   //#region  Activity Log
@@ -288,9 +323,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  remove(i: number, type: string) {
-    if (type === "competitor") this.competitorsArray.removeAt(i);
-    else if (type === "activityLog") this.activityLogArray.removeAt(i);
+  // remove inputs array form activity log and competitor
+  remove(i: number, name: string) {
+    if (name === "competitor") this.competitorsArray.removeAt(i);
+    else if (name === "activityLog") this.activityLogArray.removeAt(i);
     else return;
   }
 
@@ -306,6 +342,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion edit
   taskDateFrom(e: any) {}
   taskDateTo(e: any) {}
+  dateRange(e: { from: any; to: any }) {
+    console.log(e.from);
+    console.log(e.to);
+  }
 
   //#endregion
 

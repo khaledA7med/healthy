@@ -86,6 +86,15 @@ export class BusinessDevelopmentService {
       { observe: "response" }
     );
   }
+  policyRequirements(data: {}): Observable<
+    HttpResponse<IBaseResponse<IRequirement[]>>
+  > {
+    return this.http.post(
+      this.env + ApiRoutes.BusinessDevelopment.policyRequirements,
+      data,
+      { observe: "response" }
+    );
+  }
 
   // getClientById(id: string): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
   // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.edit, { params: { id }, observe: "response" });

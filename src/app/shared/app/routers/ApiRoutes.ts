@@ -84,6 +84,7 @@ export const ApiRoutes = {
     saveNote: "/BusinessDevelopment/SalesLeads/SaveNote",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
     quotingRequirements: "/BusinessDevelopment/SalesLeads/QuotingRequirments",
+    policyRequirements: "/BusinessDevelopment/SalesLeads/PolicyRequirments",
   },
   Production: {
     search: "",

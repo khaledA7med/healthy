@@ -10,6 +10,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
 import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.module";
+import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 export const routes: Routes = [{ path: "", component: BusinessFormsComponent }];
 
 @NgModule({
@@ -22,6 +23,7 @@ export const routes: Routes = [{ path: "", component: BusinessFormsComponent }];
     NgbCollapseModule,
     GregorianPickerModule,
     DropzoneModule,
+    RangePickerModule,
   ],
 })
 export class BusinessFormsModule {}

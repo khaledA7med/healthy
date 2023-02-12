@@ -604,7 +604,7 @@
                               placeholder="Select company"
                               bindLabel="name"
                               bindValue="name"
-                              formControlName="companyName"
+                              formControlName="companyNameQuot"
                               [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
@@ -614,7 +614,7 @@
                               id="inputGroup-sizing-sm"
                               title="Search Company"
                               type="button"
-                              (click)="getQuotRequirements('quoting')"
+                              (click)="getRequirements('quoting')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -631,7 +631,7 @@
                                     <input
                                       type="checkbox"
                                       class="form-check-input"
-                                      (change)="checkAllCompanies($event)"
+                                      (change)="checkAllCompaniesQuot($event)"
                                     />
                                   </div>
                                 </th>
@@ -708,7 +708,7 @@
                               placeholder="Select company"
                               bindLabel="name"
                               bindValue="name"
-                              formControlName="companyName"
+                              formControlName="companyNamePol"
                               [items]="f.preferedInsurComapnies?.value!"
                             >
                             </ng-select>
@@ -718,7 +718,7 @@
                               class="input-group-text btn-outline-success btn-sm"
                               id="inputGroup-sizing-sm"
                               title="Search Company"
-                              (click)="getQuotRequirements('policy')"
+                              (click)="getRequirements('policy')"
                             >
                               <i class="ri-search-line align-middle"></i>
                             </button>
@@ -735,6 +735,7 @@
                                     <input
                                       type="checkbox"
                                       class="text-dark form-check-input"
+                                      (change)="checkAllCompaniesPol($event)"
                                     />
                                   </div>
                                 </th>
@@ -742,7 +743,48 @@
                                 <th>Item</th>
                               </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody formArrayName="policyRequiermentsList">
+                              <tr
+                                *ngFor="
+                                  let c of policyControlArray.controls;
+                                  index as i
+                                "
+                              >
+                                <ng-container [formGroupName]="i">
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      formControlName="itemCheck"
+                                      class="form-check-input"
+                                    />
+                                  </td>
+                                  <td>
+                                    {{
+                                      policyControls(i, "insuranceCopmany")
+                                        .value
+                                    }}
+                                    <input
+                                      type="hidden"
+                                      formControlName="insuranceCopmany"
+                                    />
+                                  </td>
+                                  <td>
+                                    {{ policyControls(i, "item").value }}
+
+                                    <input
+                                      type="hidden"
+                                      formControlName="item"
+                                    />
+                                  </td>
+                                </ng-container>
+                              </tr>
+                              <tr
+                                *ngIf="policyControlArray.controls.length === 0"
+                                class="my-1 text-center text-dark fw-bold no-item-contact"
+                              >
+                                <td colspan="100">No items show</td>
+                              </tr>
+                            </tbody>
                           </table>
                         </div>
                         <!-- col end table -->
@@ -1038,7 +1080,7 @@
                 <div class="ribbon-content mt-4 text-muted">
                   <div class="row my-2">
                     <!--  -->
-                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                    <div class="col-sm-12 col-md-6 d-flex flex-column mb-2">
                       <label for="taskType" class="asterisk-input"
                         >Task Type</label
                       >
@@ -1053,7 +1095,9 @@
                       >
                       </ng-select>
                     </div>
-                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-4 d-flex flex-column mb-2"
+                    >
                       <label for="taskName" class="asterisk-input"
                         >Task Name</label
                       >
@@ -1063,7 +1107,9 @@
                         placeholder="Select Task Type"
                       />
                     </div>
-                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-4 d-flex flex-column mb-2"
+                    >
                       <label for="assigned" class="asterisk-input"
                         >Assigned To
                       </label>
@@ -1078,22 +1124,16 @@
                       >
                       </ng-select>
                     </div>
-                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
-                      <label class="asterisk-input">Task Date From</label>
-                      <app-gregorian-picker
-                        [required]="true"
-                        [submitted]="submitted"
-                        (dateChange)="taskDateFrom($event)"
-                      ></app-gregorian-picker>
+
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-4 d-flex flex-column mb-2"
+                    >
+                      <label class="asterisk-input">Task Date</label>
+                      <app-range-picker
+                        (dateChange)="dateRange($event)"
+                      ></app-range-picker>
                     </div>
-                    <div class="col-sm-6 col-md-4 d-flex flex-column mb-2">
-                      <label class="asterisk-input">Task Date To</label>
-                      <app-gregorian-picker
-                        [required]="true"
-                        [submitted]="submitted"
-                        (dateChange)="taskDateTo($event)"
-                      ></app-gregorian-picker>
-                    </div>
+
                     <div class="col-12 d-flex flex-column mb-2">
                       <label>Task Description</label>
 
