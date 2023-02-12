@@ -42,6 +42,16 @@ export const ApiRoutes = {
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
       logType: LookUpTables + BaseData.LogType,
     },
+    CustomerService: {
+      AllClients: LookUpTables + BaseData.AllClients,
+      Branch: LookUpTables + BaseData.Branch,
+      InsuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      CServiceStatus: LookUpTables + BaseData.CServiceStatus,
+      PendingReason: LookUpTables + BaseData.PendingReason,
+      AllUsers: LookUpTables + BaseData.AllUsers,
+      InsurClasses: LookUpTables + BaseData.InsurClasses,
+      TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
+    },
     Production: {
       producers: LookUpTables + BaseData.Producers,
       insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
@@ -82,7 +92,10 @@ export const ApiRoutes = {
     searchPolicies: "/Production/Policy/SearchClientPolicies",
   },
   CustomerService: {
-    search: "",
+    search: "/CustomerService/Requests/Search",
+    followUp: "/CustomerService/Requests/CSFollwUp",
+    saveNote: "/CustomerService/Requests/SaveNote",
+    changeStatus: "/CustomerService/Requests/CSchangeStatus",
     create: "",
     edit: "",
     delete: "",

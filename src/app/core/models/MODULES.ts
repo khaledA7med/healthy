@@ -10,4 +10,6 @@ export enum MODULES {
   BusinessDevelopment = "BusinessDevelopment",
   BusinessDevelopmentForm = "BusinessDevelopmentForm",
   ProductionForm = "ProductionForm",
+  CustomerService = "CustomerService",
+  CustomerServiceForm = "CustomerServiceForm",
 }
