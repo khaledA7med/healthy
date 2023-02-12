@@ -86,6 +86,8 @@ export class ProductionService {
       { observe: "response" }
     );
   }
+  private readonly env: string = environment.baseURL;
+  constructor(private http: HttpClient) {}
 
   downloadDocument(data: IDocumentReq): Observable<HttpResponse<any>> {
     return this.http.post(

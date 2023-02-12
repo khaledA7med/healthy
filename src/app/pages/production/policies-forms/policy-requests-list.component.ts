@@ -35,7 +35,16 @@ import { ProductionService } from "src/app/shared/services/production/production
 @Component({
   selector: "app-policy-requests-list",
   template: `
-    <div class="ag-theme-alpine" appTableView>
+    <div
+      class="ag-theme-alpine d-none"
+      appTableView
+      [ngClass]="{
+        'd-block':
+          uiState.clientSearch.length > 0 && uiState.requests.length > 0,
+        'd-none':
+          uiState.clientSearch.length === 0 && uiState.requests.length === 0
+      }"
+    >
       <ag-grid-angular
         id="gridScrollbar"
         style="width: 100%; height: 75vh"
