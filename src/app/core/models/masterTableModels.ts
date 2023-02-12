@@ -29,6 +29,8 @@ export enum BaseData {
   CServiceStatus = "CServiceStatus",
   PendingReason = "PendingReason",
   TypeOfCustomerServices = "TypeOfCustomerServices",
+  InsuranceCompanies = "InsuranceCompanies",
+  PolicyEndorsTypes = "PolicyEndorsTypes",
 }
 
 export interface IBaseMasterTable {
@@ -62,6 +64,8 @@ export interface IBaseMasterTable {
   InsurClasses?: Caching<IGenericResponseType[]>;
   TypeOfCustomerServices?: Caching<IGenericResponseType[]>;
   SalesleadStatus?: Caching<IGenericResponseType[]>;
+  InsuranceCompanies?: Caching<IGenericResponseType[]>;
+  PolicyEndorsTypes?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

@@ -48,6 +48,13 @@ export const ApiRoutes = {
       InsurClasses: LookUpTables + BaseData.InsurClasses,
       TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
     },
+    Production: {
+      producers: LookUpTables + BaseData.Producers,
+      insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      insuranceClasses: LookUpTables + BaseData.InsurClasses,
+      branch: LookUpTables + BaseData.Branch,
+      endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
