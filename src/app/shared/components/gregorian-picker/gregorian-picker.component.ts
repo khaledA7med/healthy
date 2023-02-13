@@ -24,7 +24,7 @@ export class GregorianPickerComponent implements OnChanges {
 
   @Input() submitted: boolean = false;
   @Input() required: boolean = false;
-
+  @Input() disabled: boolean = false;
   @Output() dateChange: EventEmitter<any> = new EventEmitter();
 
   constructor(
