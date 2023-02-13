@@ -135,7 +135,7 @@ export class BusinessDevelopmentControlsComponent {
 
   Edit() {
     this._Router.navigate([
-      AppRoutes.Client.clientEdit,
+      AppRoutes.BusinessDevelopment.edit,
       this.params.data.identity,
     ]);
   }

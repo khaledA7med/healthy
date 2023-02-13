@@ -1,3 +1,4 @@
+import { MasterMethodsService } from "./../../../shared/services/master-methods.service";
 import { IRequirement } from "../../../shared/app/models/BusinessDevelopment/irequirement";
 import { IActivityLog } from "./../../../shared/app/models/BusinessDevelopment/iactivity-log";
 import { ICompetitors } from "./../../../shared/app/models/BusinessDevelopment/icompetitors";
@@ -26,11 +27,13 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { EventService } from "src/app/core/services/event.service";
 import { ActivatedRoute } from "@angular/router";
 import { reserved } from "src/app/core/models/reservedWord";
+import AppUtils from "src/app/shared/app/util";
 
 @Component({
   selector: "app-business-forms",
   templateUrl: "./business-forms.component.html",
   styleUrls: ["./business-forms.component.scss"],
+  providers: [AppUtils],
 })
 export class BusinessFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<ISalesLeadForm>;
@@ -51,9 +54,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   constructor(
     private tables: MasterTableService,
     private businessDevService: BusinessDevelopmentService,
+    private masterService: MasterMethodsService,
     private message: MessagesService,
-    private eventService: EventService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private utils: AppUtils,
+
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +71,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
         // this.eventService.broadcast(reserved.isLoading, true);
       }
-      console.log(this.uiState.editId);
     });
   }
   //#region form
@@ -79,9 +84,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //insurance details
       classOfBusiness: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
-      estimatedPremium: new FormControl(),
+      estimatedPremium: new FormControl(null),
       deadLine: new FormControl({ value: null, disabled: true }),
-      chDeadline: new FormControl(0),
       chDeadlinebool: new FormControl(false),
       preferedInsurComapnies: new FormControl([]),
       policyDetails: new FormControl(null, Validators.required),
@@ -136,7 +140,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
   //#region insurance Details
   getLineOfBusiness(e: string) {
-    let sub = this.businessDevService.lineOfBusiness(e).subscribe(
+    let sub = this.masterService.getLineOfBusiness(e).subscribe(
       (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
         this.lineOfBussArr = res.body?.data?.content!;
       },
@@ -152,13 +156,11 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.deadLine?.enable();
       this.f.deadLine?.setValidators(Validators.required);
       this.f.deadLine?.updateValueAndValidity();
-      this.f.chDeadline?.patchValue(1);
     } else {
       this.f.deadLine?.disable();
       this.f.deadLine?.clearValidators();
       this.f.deadLine?.updateValueAndValidity();
       this.f.deadLine?.reset();
-      this.f.chDeadline?.patchValue(0);
     }
   }
   //#endregion
@@ -189,6 +191,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  // polExpiryDates(e: { gon: any; hijri: any }) {
+  //   this.f.existingPolExpDate?.patchValue(e.gon);
+  // }
   //#endregion
 
   //#region requirment
@@ -216,6 +222,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
           ? this.f.companyNamePol?.value
           : "",
     };
+
     name == "quoting"
       ? this.getQuotingReq(data)
       : name == "policy"
@@ -225,7 +232,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   getQuotingReq(data: {}) {
     let sub = this.businessDevService.quotRequirements(data).subscribe(
       (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-        res.body?.data!.map((c) => this.createReqFormArr("quoting", c));
+        res.body?.data?.map((c) => this.createReqFormArr("quoting", c));
       },
       (err: HttpErrorResponse) => {
         this.message.popup("Sorry!", err.message!, "warning");
@@ -236,7 +243,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   getPolicyReq(data: {}) {
     let sub = this.businessDevService.policyRequirements(data).subscribe(
       (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-        res.body?.data!.map((c) => this.createReqFormArr("policy", c));
+        res.body?.data?.map((c) => {
+          this.createReqFormArr("policy", c);
+        });
       },
       (err: HttpErrorResponse) => {
         this.message.popup("Sorry!", err.message!, "warning");
@@ -255,6 +264,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.quotingRequirementsList?.push(formArrayCon);
       this.quotingControlArray.updateValueAndValidity();
     } else if (name == "policy") {
+      console.log("sad");
       this.f.policyRequiermentsList?.push(formArrayCon);
       this.policyControlArray.updateValueAndValidity();
     } else {
@@ -313,6 +323,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.f.salesActivityLogList?.push(activityLog);
     this.activityLogArray.updateValueAndValidity();
   }
+
+  // activityLogDate(e: { gon: any; hijri: any }, i: number) {
+  //   this.activityLogControls(i, "logDate").patchValue(e.gon);
+  // }
   //#endregion
 
   //#region  Competitors
@@ -345,12 +359,23 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  // remove inputs array form activity log and competitor
-  remove(i: number, name: string, isEdit: boolean) {
+  documentsList(e: File[]) {
+    this.documentsToUpload = e;
+  }
+
+  //#endregion
+
+  // #region edit
+  dateRange(e: { from: any; to: any }) {
+    console.log(e.from);
+    console.log(e.to);
+  }
+  // remove and edit inputs array form activity log and competitor
+  toggleBtn(i: number, name: string, isEdit: boolean) {
     switch (isEdit) {
       case true:
-        if (name === "competitor") this.competitorsArray.enable();
-        else if (name === "activityLog") this.activityLogArray.enable();
+        if (name === "competitor") this.competitorsArray.at(i).enable();
+        else if (name === "activityLog") this.activityLogArray.at(i).enable();
         break;
       case false:
         if (name === "competitor") this.competitorsArray.removeAt(i);
@@ -361,31 +386,119 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         break;
     }
   }
-
-  documentsList(e: File[]) {
-    this.documentsToUpload = e;
+  //#endregion
+  //#region save Sales Lead
+  saveSalesLead(data: FormData): void {
+    this.businessDevService.saveSalesLead(data).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) => {
+        console.log("Success", res);
+        this.message.toast(res.body?.message!, "success");
+      },
+      (err) => {
+        console.log("Error", err);
+        this.message.popup("Sorry!", err.message!, "warning");
+      }
+    );
   }
+
   validationChecker(): boolean {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     if (this.formGroup.invalid) return false;
     return true;
   }
-  //#endregion edit
-  taskDateFrom(e: any) {}
-  taskDateTo(e: any) {}
-  dateRange(e: { from: any; to: any }) {
-    console.log(e.from);
-    console.log(e.to);
-  }
-
-  //#endregion
 
   submitForm(form: FormGroup<ISalesLeadForm>) {
     this.submitted = true;
     if (!this.validationChecker()) return;
     const formData = new FormData();
+    formData.append("LeadType", form.value?.leadType!);
+    formData.append("ClientID", form.value?.clientID?.toString()!);
+    formData.append("Name", form.value?.name!);
+    formData.append("Producer", form.value?.producer!);
+    formData.append("ClassOfBusiness", form.value?.classOfBusiness!);
+    formData.append("LineOfBusiness", form.value?.lineOfBusiness!);
+    formData.append(
+      "EstimatedPremium",
+      form.value?.estimatedPremium !== null
+        ? form.value?.estimatedPremium?.toString()!
+        : "0"
+    );
+    formData.append("ChDeadlinebool", form.value?.chDeadlinebool?.toString()!); // boolean
+    formData.append("DeadLine", this.utils.dateFormater(form.value?.deadLine!));
+    formData.append("PolicyDetails", form.value?.policyDetails!);
+    formData.append(
+      "ExistingPolExpDate",
+      this.utils.dateFormater(form.value?.existingPolExpDate)
+    );
+    formData.append("CurrentPolicyNo", form.value?.currentPolicyNo!);
+    formData.append("CurrentBroker", form.value?.currentBroker!);
+    formData.append("CurrentInsurer", form.value?.currentInsurer!);
+    formData.append("ExistingPolDetails", form.value?.existingPolDetails!);
+    formData.append("SendToUW", form.value?.sendToUW?.toString()!); // boolean
+    formData.append("Branch", form.value?.branch!);
+
+    // PreferredIncCompanies Array
+    form.value?.preferedInsurComapnies?.forEach((el, i) => {
+      formData.append(`PreferedInsurComapnies[${i}]`, el);
+    });
+
+    // quoting requirement array
+    form.value.quotingRequirementsList?.forEach((el, i) => {
+      formData.append(
+        `QuotingRequirementsList[${i}].itemCheck`,
+        el.itemCheck?.toString()!
+      ); // boolean
+      formData.append(
+        `QuotingRequirementsList[${i}].insuranceCopmany`,
+        el.insuranceCopmany!
+      );
+      formData.append(
+        `QuotingRequirementsList[${i}].insuranceCopmany`,
+        el.item!
+      );
+    });
+
+    // policy requirement array
+    form.value.policyRequiermentsList?.forEach((el, i) => {
+      formData.append(
+        `PolicyRequiermentsList[${i}].itemCheck`,
+        el.itemCheck?.toString()!
+      ); // boolean
+      formData.append(
+        `PolicyRequiermentsList[${i}].insuranceCopmany`,
+        el.insuranceCopmany!
+      );
+      formData.append(`PolicyRequiermentsList[${i}].item`, el.item!);
+    });
+
+    // activity log array
+    form.value.salesActivityLogList?.forEach((el, i) => {
+      formData.append(`SalesActivityLogList[${i}].logType`, el.logType!);
+      formData.append(
+        `SalesActivityLogList[${i}].logDate`,
+        this.utils.dateFormater(el.logDate)
+      );
+      formData.append(`SalesActivityLogList[${i}].logNotes`, el.logNotes!);
+    });
+
+    // competitors array
+    form.value.salesLeadCompetitorsList?.forEach((el, i) => {
+      formData.append(
+        `SalesLeadCompetitorsList[${i}].competitor`,
+        el.competitor!
+      );
+      formData.append(
+        `SalesLeadCompetitorsList[${i}].competitorNotes`,
+        el.competitorNotes!
+      );
+    });
+    // document array
+    this.documentsToUpload.forEach((el) => formData.append("Documents", el));
+
+    this.saveSalesLead(formData);
   }
+  //#endregion
 
   ngOnDestroy(): void {
     this.subscribes.forEach((sub) => sub.unsubscribe());

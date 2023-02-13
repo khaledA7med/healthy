@@ -7,7 +7,7 @@ export interface ISalesLeadForm {
   branch?: FormControl<string | null>;
   chClientResult?: FormControl<boolean | null>;
   chCurrentInsurer?: FormControl<boolean | null>;
-  chDeadline?: FormControl<number | null>;
+
   chDeadlinebool?: FormControl<boolean | null>;
   chListRequirements?: FormControl<string | null>;
   chQuoatation?: FormControl<boolean | null>;

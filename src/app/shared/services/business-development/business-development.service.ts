@@ -91,4 +91,20 @@ export class BusinessDevelopmentService {
       { observe: "response" }
     );
   }
+
+  saveSalesLead(body: FormData): Observable<HttpResponse<IBaseResponse<any>>> {
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.BusinessDevelopment.save,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
+  getSalesLeadById(id: string): Observable<HttpResponse<IBaseResponse<any>>> {
+    return this.http.get<IBaseResponse<any>>(
+      this.env + ApiRoutes.BusinessDevelopment.edit,
+      { params: { id }, observe: "response" }
+    );
+  }
 }

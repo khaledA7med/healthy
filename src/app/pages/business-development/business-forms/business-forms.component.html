@@ -86,7 +86,7 @@
                     <!-- /col -->
                     <!-- col select client | group -->
                     <div
-                      class="col-sm-5 col-md-5 col-lg-10 my-2 d-flex flex-column"
+                      class="col-sm-5 col-md-5 col-lg-5 my-2 d-flex flex-column"
                     >
                       <label for="client" class="asterisk-input">
                         {{ uiState.isClient ? "Client" : "Group" }}</label
@@ -146,7 +146,7 @@
                     <!-- /col -->
                     <!-- col producer -->
                     <div
-                      class="col-sm-5 col-md-5 col-lg-10 my-2 d-flex flex-column"
+                      class="col-sm-5 col-md-5 col-lg-5 my-2 d-flex flex-column"
                     >
                       <label for="producer" class="asterisk-input">
                         Producer</label
@@ -869,7 +869,7 @@
                                   <div>
                                     <ng-select
                                       appendTo="body"
-                                      class="form-control-sm"
+                                      class="form-control-sm is-invalid"
                                       placeholder="log Type"
                                       dropdownPosition="top"
                                       formControlName="logType"
@@ -915,7 +915,9 @@
                                       formControlName="logDate"
                                       [ngClass]="{
                                         'is-invalid':
-                                          submitted &&
+                                          (activityLogControls(i, 'logDate')
+                                            .touched ||
+                                            submitted) &&
                                           activityLogControls(i, 'logDate')
                                             .invalid
                                       }"
@@ -947,7 +949,9 @@
                                       formControlName="logNotes"
                                       [ngClass]="{
                                         'is-invalid':
-                                          submitted &&
+                                          (activityLogControls(i, 'logNotes')
+                                            .touched ||
+                                            submitted) &&
                                           activityLogControls(i, 'logNotes')
                                             .invalid
                                       }"
@@ -968,10 +972,26 @@
                                 <td class="text-center">
                                   <div>
                                     <button
+                                      *ngIf="
+                                        uiState.editId &&
+                                        activityLogArray.controls[i].disabled
+                                      "
+                                      type="button"
+                                      class="btn btn-sm btn-soft-info me-2"
+                                      (click)="
+                                        toggleBtn(i, 'activityLog', true)
+                                      "
+                                    >
+                                      <i class="ri-edit-2-line"></i>
+                                    </button>
+                                    <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
+                                      (click)="
+                                        toggleBtn(i, 'activityLog', false)
+                                      "
                                     >
-                                      <i></i>
+                                      <i class="ri-delete-bin-2-line"></i>
                                     </button>
                                   </div>
                                 </td>
@@ -1062,24 +1082,24 @@
                                 <td class="text-center">
                                   <div>
                                     <button
+                                      *ngIf="
+                                        uiState.editId &&
+                                        competitorsArray.controls[i].disabled
+                                      "
+                                      type="button"
+                                      class="btn btn-sm btn-soft-info me-2"
+                                      (click)="toggleBtn(i, 'competitor', true)"
+                                    >
+                                      <i class="ri-edit-2-line"></i>
+                                    </button>
+                                    <button
                                       type="button"
                                       class="btn btn-sm btn-soft-danger"
+                                      (click)="
+                                        toggleBtn(i, 'competitor', false)
+                                      "
                                     >
-                                      <ng-container
-                                        *ngIf="
-                                          uiState.editId;
-                                          then edit;
-                                          else remove
-                                        "
-                                      >
-                                      </ng-container>
-
-                                      <ng-template #edit>
-                                        <i class="ri-edit-bin-2-line">\</i>
-                                      </ng-template>
-                                      <ng-template #remove>
-                                        <i class="ri-delete-bin-2-line">\</i>
-                                      </ng-template>
+                                      <i class="ri-delete-bin-2-line"></i>
                                     </button>
                                   </div>
                                 </td>
