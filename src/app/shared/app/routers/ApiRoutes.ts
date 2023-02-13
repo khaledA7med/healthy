@@ -61,7 +61,6 @@ export const ApiRoutes = {
       producers: LookUpTables + BaseData.Producers,
       insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
       InsurClasses: LookUpTables + BaseData.InsurClasses,
-      LineOfBusiness: LookUpTables + "LineOfBusiness",
       AllUsers: LookUpTables + BaseData.AllUsers,
       insuranceClasses: LookUpTables + BaseData.InsurClasses,
       endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
@@ -70,6 +69,7 @@ export const ApiRoutes = {
   MasterMethods: {
     downloadDocument: "/Documents/Download",
     deleteDocument: "/Documents/Delete",
+    lineOfBusiness: LookUpTables + "LineOfBusiness",
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",

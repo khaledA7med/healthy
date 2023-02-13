@@ -49,50 +49,59 @@
         </div>
         <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForm">
-                <!-- clinet Name -->
+                <!-- Policy Status -->
                 <div class="col-12 mb-2">
-                    <label for="clientName" class="form-label">Client Name:</label>
-                    <input type="text" class="form-control" id="clientName" placeholder="Full Name"
-                        formControlName="clientName" />
-                </div>
-                <!-- Client Group -->
-                <div class="col-12 mb-2">
-                    <label for="clinetGroup" class="form-label">Client Group:</label>
-                    <ng-select [items]="(lookupData | async)?.GroupsList?.content!"
+                    <label for="policyStatus" class="form-label">Policy Status:</label>
+                    <ng-select [items]="(lookupData | async)?.PolicyStatus?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="clinetGroup" formControlName="groupName">
+                        [multiple]="true" bindValue="name" id="policyStatus" formControlName="status">
                     </ng-select>
                 </div>
-                <!-- Client Status -->
-                <div class="col-12 mb-2">
-                    <label for="salesleadStatus" class="form-label">Client Status:</label>
-
-                    <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!"
-                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" [multiple]="true" id="salesleadStatus" formControlName="status">
-                    </ng-select>
-                </div>
-                <!-- Lead Type -->
-                <!-- <div class="col-12 mb-2">
-                    <label for="leadType" class="form-label">Lead Type:</label>
-                    <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true"
-                        [searchable]="true" bindLabel="name" bindValue="name" id="leadType" formControlName="leadType">
-                    </ng-select>
-                </div> -->
                 <!-- Branch -->
                 <div class="col-12 mb-2">
-                    <label for="branch" class="form-label">Branch:</label>
+                    <label for="branchName" class="form-label">Branch:</label>
                     <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branchName"
                         formControlName="branch">
                     </ng-select>
                 </div>
-                <!-- ClassOfBusiness -->
+                <!-- Our Ref -->
                 <div class="col-12 mb-2">
-                    <label for="classOfBusiness" class="form-label">Class Of Business:</label>
+                    <label for="ourRefInput" class="form-label">Our Ref:</label>
+                    <input type="text" class="form-control" id="ourRefInput" placeholder="Our Ref"
+                        formControlName="ourRef" />
+                </div>
+                <!-- Client Name -->
+                <div class="col-12 mb-2">
+                    <label for="clientName" class="form-label">Client Name:</label>
+                    <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="clientName" formControlName="clientName">
+                    </ng-select>
+                </div>
+                <!-- Producer -->
+                <div class="col-12 mb-2">
+                    <label for="producerName" class="form-label">Producer:</label>
+                    <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
+                        id="producerName" formControlName="producer">
+                    </ng-select>
+                </div>
+                <!-- Insurance Company -->
+                <div class="col-12 mb-2">
+                    <label for="insurCompany" class="form-label">Insurance Company:</label>
+                    <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="insurCompany" formControlName="insurCompany">
+                    </ng-select>
+                </div>
+                <!-- classOfInsurance -->
+                <div class="col-12 mb-2">
+                    <label for="classOfInsurance" class="form-label">Class Of Insurance</label>
                     <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="classOfBusiness" formControlName="classOfBusiness">
+                        bindValue="name" id="classOfInsurance" (change)="getLineOfBusiness($event)"
+                        formControlName="classOfInsurance">
                     </ng-select>
                 </div>
                 <!-- producer -->
@@ -103,14 +112,7 @@
                         formControlName="producer">
                     </ng-select>
                 </div>
-                <!-- User -->
-                <div class="col-12 mb-2">
-                    <label for="user" class="form-label">User:</label>
-                    <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="user"
-                        formControlName="user">
-                    </ng-select>
-                </div>
+
                 <!-- DeadLine Range -->
                 <div class="col-12 mb-2">
                     <label for="user" class="form-label">Deadline Range:</label>

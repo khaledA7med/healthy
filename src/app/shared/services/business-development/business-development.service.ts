@@ -1,4 +1,3 @@
-import { IClientPreview } from "./../../app/models/Clients/iclient-preview";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -92,21 +91,4 @@ export class BusinessDevelopmentService {
       { observe: "response" }
     );
   }
-
-  // getClientById(id: string): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
-  // 	return this.http.get<IBaseResponse<IClientPreview>>(this.env + ApiRoutes.Clients.edit, { params: { id }, observe: "response" });
-  // }
-
-  // saveClient(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
-  // 	return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Clients.save, body, {
-  // 		observe: "response",
-  // 	});
-  // }
-
-  // deleteDocument(data: string): Observable<HttpResponse<IBaseResponse<null>>> {
-  // 	return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Clients.deleteDocument, { path: data }, { observe: "response" });
-  // }
-  // downloadDocument(data: string): Observable<HttpResponse<any>> {
-  // 	return this.http.post(this.env + ApiRoutes.Clients.downloadDocument, { path: data }, { observe: "response", responseType: "blob" });
-  // }
 }

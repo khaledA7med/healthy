@@ -1,7 +1,7 @@
 import { IBaseFilters } from "../App/IBaseFilters";
 
 export interface IProductionFilters extends IBaseFilters {
-	status?: string;
+	status?: string[];
 	leadType?: string;
 	name?: string;
 	producer?: string;
