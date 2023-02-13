@@ -49,10 +49,6 @@ export class ProductionService {
 	}
 	//#endregion
 
-	getLineOfBusiness(classOfInc: string): Observable<HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>> {
-		return this.http.post(this.env + ApiRoutes.Production.lineOfBusiness, {}, { params: { ClassName: classOfInc }, observe: "response" });
-	}
-
 	getPolicyById(sno: number): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
 		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.details, { params: { sno }, observe: "response" });
 	}

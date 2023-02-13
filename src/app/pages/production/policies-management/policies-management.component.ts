@@ -6,7 +6,7 @@ import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
@@ -36,7 +36,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			pageSize: 50,
 			orderBy: "sNo",
 			orderDir: "asc",
-			status: ["Active"],
+			// status: ["Active"],
 		} as IProductionFilters,
 		gridReady: false,
 		submitted: false,
@@ -44,6 +44,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			list: [] as IPolicy[],
 			totalPages: 0,
 		},
+		lineOfBusinessList: [] as IGenericResponseType[],
 	};
 
 	filterForm!: FormGroup;
@@ -164,14 +165,13 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 	private initFilterForm(): void {
 		this.filterForm = new FormGroup({
-			clientName: new FormControl(null),
-			groupName: new FormControl(null),
-			status: new FormControl([]),
-			leadType: new FormControl(null),
+			status: new FormControl(["Active"]),
 			branch: new FormControl(null),
-			classOfBusiness: new FormControl(null),
+			ourRef: new FormControl(null),
+			clientName: new FormControl(null),
 			producer: new FormControl(null),
-			user: new FormControl(null),
+			insurCompany: new FormControl(null),
+			classOfInsurance: new FormControl(null),
 			deadlineFrom: new FormControl(null),
 			deadlineTo: new FormControl(null),
 			savedOnFrom: new FormControl(null),
@@ -186,6 +186,16 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 	getLookupData() {
 		this.lookupData = this.table.getBaseData(MODULES.Production);
+	}
+
+	getLineOfBusiness(e: IGenericResponseType) {
+		// let sub = this.productionService.getLineOfBusiness(e.name).subscribe(
+		// 	(res: HttpResponse<IBaseResponse<any>>) => {
+		// 		this.uiState.lineOfBusinessList = res.body?.data!.content;
+		// 	},
+		// 	(err: HttpErrorResponse) => {}
+		// );
+		// this.subscribes.push(sub);
 	}
 
 	modifyFilterReq() {
