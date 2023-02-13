@@ -1,40 +1,38 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header border-0">
-                <div class="row g-4 align-items-center">
-                    <div class="col-sm-auto ms-auto">
-                        <div class="hstack gap-2">
-                            <button type="button" class="btn btn-info  btn-sm" (click)="openFilterOffcanvas()">
-                                <i class="ri-filter-3-line align-bottom me-1"></i>
-                                Filters
-                            </button>
-                            <a type="button" [routerLink]="'/' + uiState.routerLink.forms"
-                                class="btn btn-success add-btn btn-sm" id="create-btn" asp-action="CSRegistry"
-                                asp-controller="CustomerService">
-                                <i class="ri-add-line align-bottom me-1"></i> New Request
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2 d-flex justify-content-start">
-                        <div class="my-1 mx-1">Show : </div>
-                        <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false"
-                            id="pagingSizeSelect" [(ngModel)]="uiState.filters.pageSize">
-                            <ng-option [value]="25">25</ng-option>
-                            <ng-option [value]="50">50</ng-option>
-                            <ng-option [value]="100">100</ng-option>
-                            <ng-option [value]="150">150</ng-option>
-                            <ng-option [value]="200">200</ng-option>
-                        </ng-select>
-                        <div class="my-1 mx-1">entries </div>
-                    </div>
-                </div>
-            </div>
+<div class="row justify-content-between align-items-center mb-3">
+
+    <div class="col-2 form-group row align-items-center">
+        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
+
+        <div class="col-sm-4">
+            <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
+                [(ngModel)]="uiState.filters.pageSize">
+                <ng-option [value]="25">25</ng-option>
+                <ng-option [value]="50">50</ng-option>
+                <ng-option [value]="100">100</ng-option>
+                <ng-option [value]="150">150</ng-option>
+                <ng-option [value]="200">200</ng-option>
+            </ng-select>
+
         </div>
     </div>
+
+
+
+    <div class="col-3 d-flex justify-content-end">
+
+        <button type="button" class="btn btn-sm btn-info mx-2 d-flex align-items-center"
+            (click)="openFilterOffcanvas()">
+            <i class="ri-filter-3-line align-bottom me-1"></i>
+            Filters
+        </button>
+        <a type="button" [routerLink]="'/' + uiState.routerLink.forms"
+            class="btn btn-sm btn-success  d-flex align-items-center" id="create-btn" asp-action="CSRegistry"
+            asp-controller="CustomerService">
+            <i class="ri-add-line align-bottom me-1"></i> New Request
+        </a>
+    </div>
 </div>
+
 <div class="ag-theme-alpine" appTableView>
     <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
@@ -49,11 +47,11 @@
             <button type="button" class="btn-close" aria-label="Close"
                 (click)="offcanvas.dismiss('Cross click')"></button>
         </div>
-        <div class="offcanvas-body mb-5">
+        <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForms">
                 <!-- Client Name -->
-                <div class="mb-4">
-                    <label for="Client" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                <div class="mb-3">
+                    <label for="Client" class="form-label text-muted fw-bold fs-13">
                         Client Name:
                     </label>
                     <ng-select id="client" class="is-invalid" placeholder="Select Client Name"
@@ -62,106 +60,108 @@
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="Status" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Status</label>
+                <div class="mb-3">
+                    <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
                     <ng-select id="Status" class="is-invalid" placeholder="Select Status"
                         [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="id">
+                        bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="Type" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Type</label>
+                <div class="mb-3">
+                    <label for="Type" class="form-label text-muted fw-bold fs-13">Type</label>
                     <ng-select id="Type" class="is-invalid" placeholder="Select Type"
                         [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" [multiple]="true"
-                        formControlName="type" bindLabel="name" bindValue="id">
+                        formControlName="type" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="duration" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                <div class="mb-3">
+                    <label for="duration" class="form-label text-muted fw-bold fs-13">
                         Waiting Period above :
                     </label>
                     <div class="input-group">
                         <span class="input-group-text">
-                            <label class="m-checkbox m-checkbox--solid">
-                                <input id="Checkduration" type="checkbox" (change)="CheckdurationEvt($event)"> Waiting
+                            <label
+                                class="m-checkbox m-checkbox--solid m-0 p-0 d-flex justify-content-center align-items-center">
+                                <input id="Checkduration" type="checkbox" (change)="CheckdurationEvt($event)"
+                                    class="mx-2"> Waiting
                                 Period above
-                                <span></span>
                             </label>
                         </span>
-                        <input name="duration" type="number" formControlName="duration" class="form-control m-input"
-                            id="duration" min="0" placeholder="">
-                        <span class="input-group-text"> W. Day(s)</span>
+                        <input name="duration" type="number" formControlName="duration" class="form-control text-center"
+                            id="duration" min="0" placeholder="" style="max-height: unset !important;">
+                        <span class="input-group-text py-1">W. Day(s)</span>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="RequestNo" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">
+                <div class="mb-3">
+                    <label for="RequestNo" class="form-label text-muted fw-bold fs-13">
                         Request No :
                     </label>
-                    <input name="RequestNo" type="text" class="form-control" id="RequestNo" placeholder="">
+                    <input name="RequestNo" type="text" class="form-control" id="RequestNo" placeholder="Request No">
                 </div>
 
-                <div class="mb-4">
-                    <label for="Branch" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Branch</label>
+                <div class="mb-3">
+                    <label for="Branch" class="form-label text-muted fw-bold fs-13">Branch</label>
                     <ng-select id="Branch" class="is-invalid" placeholder="Select Branch" formControlName="branch"
                         [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="id">
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="InsuranceCompany"
-                        class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Insurance Company :</label>
+                <div class="mb-3">
+                    <label for="InsuranceCompany" class="form-label text-muted fw-bold fs-13">Insurance
+                        Company :</label>
                     <ng-select id="insuranceCompany" class="is-invalid" placeholder="Select Insurance Company"
                         [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                        formControlName="insuranceCompany" bindLabel="name" bindValue="id">
+                        formControlName="insuranceCompany" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="PendingReason" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Pending
+                <div class="mb-3">
+                    <label for="PendingReason" class="form-label text-muted fw-bold fs-13">Pending
                         Reason : </label>
                     <ng-select id="PendingReason" class="is-invalid" placeholder="Select Pending Reason"
                         [items]="(lookupData | async)?.PendingReason?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="pendingReason" bindLabel="name"
-                        bindValue="id">
+                        bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="ClassOfBusniess" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3">Class
+                <div class="mb-3">
+                    <label for="ClassOfBusniess" class="form-label text-muted fw-bold fs-13">Class
                         Of Busniess : </label>
                     <ng-select id="ClassOfBusniess" class="is-invalid" placeholder="Select Class Of Busniess"
                         [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="classOfBusniess" bindLabel="name"
-                        bindValue="id">
+                        bindValue="name">
                     </ng-select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="CreatedBy" class="form-label text-muted text-uppercase fw-bold fs-13 mb-3"> Created
+                <div class="mb-3">
+                    <label for="CreatedBy" class="form-label text-muted fw-bold fs-13"> Created
                         by: </label>
                     <ng-select id="CreatedBy" class="is-invalid" placeholder="Created By"
                         [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="createdBy" bindLabel="name"
-                        bindValue="id">
+                        bindValue="name">
                     </ng-select>
                 </div>
 
 
                 <!-- Issue -->
 
-                <div class="mb-4 mb-5">
-                    <label for="Deadline" class="form-label text-muted text-uppercase fw-bold fs-13">
-                        Dead line:
+                <div class="mb-3">
+                    <label for="Deadline" class="form-label text-muted fw-bold fs-13">
+                        Deadline:
                     </label>
-                    <app-gregorian-picker (dateChange)="setDeadLineFilter($event)"
-                        [submitted]="submitted"></app-gregorian-picker>
+                    <!-- <app-gregorian-picker (dateChange)="setDeadLineFilter($event)"
+                        [submitted]="submitted"></app-gregorian-picker> -->
+                    <app-range-picker #datePicker (dateChange)="setDeadLineFilter($event)"></app-range-picker>
                 </div>
                 <div class="col-12 mh-100"></div>
             </form>
@@ -169,7 +169,7 @@
         <!-- submit and clear btn -->
         <div class="offcanvas-footer border-top row mb-3 mx-1">
             <div class="col-6 mt-2">
-                <button class="btn btn-light btn-sm w-100" (click)="clearFilter()">
+                <button class="btn btn-light btn-sm w-100" (click)="clearFilter(); datePicker.clearDateRange()">
                     Clear Filter
                 </button>
             </div>

@@ -6,6 +6,7 @@ import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentReq } from "../../app/models/App/IDocumentReq";
 import { IPolicy } from "../../app/models/Production/i-policy";
+import { IChangePolicyStatusRequest } from "../../app/models/Production/i-policy-change-status-req";
 import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
 import { IProductionFilters } from "../../app/models/Production/iproduction-filters";
 import { IFilterByRequest, IPoliciesRef, IPolicyClient, IPolicyRequests } from "../../app/models/Production/production-util";
@@ -49,8 +50,14 @@ export class ProductionService {
 	}
 	//#endregion
 
-	getPolicyById(sno: number): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
-		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.details, { params: { sno }, observe: "response" });
+	getPolicyById(id: string): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
+		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.details, { params: { id }, observe: "response" });
+	}
+
+	changeStatus(data: IChangePolicyStatusRequest): Observable<HttpResponse<IBaseResponse<null>>> {
+		return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Production.changeStatus, data, {
+			observe: "response",
+		});
 	}
 
 	downloadDocument(data: IDocumentReq): Observable<HttpResponse<any>> {

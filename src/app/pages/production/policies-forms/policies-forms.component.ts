@@ -29,6 +29,7 @@ import {
   searchBy,
 } from "src/app/shared/app/models/Production/production-util";
 import AppUtils from "src/app/shared/app/util";
+import { MessagesService } from "src/app/shared/services/messages.service";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
 @Component({
@@ -69,7 +70,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vat: 0,
       total: 0,
     },
-    totalPerc: 100,
+    paymentTermHandler: {
+      fees: 0,
+      vat: 0,
+      totalPerc: 100,
+    },
   };
 
   docs: any[] = [];
@@ -81,12 +86,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private eventService: EventService,
     private appUtils: AppUtils,
-    private tables: MasterTableService
+    private tables: MasterTableService,
+    private message: MessagesService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.ProductionForm);
+    this.vatCalcHandlers();
   }
 
   initForm(): void {
@@ -125,7 +132,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       sumInsur: new FormControl(null),
       netPremium: new FormControl(null),
       fees: new FormControl(null, [Validators.max(1000)]),
-      deductFees: new FormControl({ value: false, disabled: false }),
+      deductFees: new FormControl({ value: false, disabled: true }),
       vatPerc: new FormControl(+reserved.DefaultVATPerc),
       vatValue: new FormControl(null),
       totalPremium: new FormControl(null),
@@ -183,7 +190,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       month: e.gon.month,
       year: e.gon.year + 1,
     };
-    this.f.periodTo?.patchValue(e.gon);
+    if (this.f.periodTo?.enabled) this.f.periodTo?.patchValue(e.gon);
   }
 
   inceptionDate(e: any) {
@@ -193,7 +200,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       month: e.gon.month,
       year: e.gon.year + 1,
     };
-    this.f.periodTo?.patchValue(e.gon);
+    if (this.f.periodTo?.enabled) this.f.periodTo?.patchValue(e.gon);
   }
 
   expiryDate(e: any) {
@@ -266,7 +273,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.oasisPolRef!,
     ];
     this.removeValidatorAndUpdate(validators);
-    // resetValidationByPolicyRef();
   }
 
   renewalIssue(): void {
@@ -324,6 +330,26 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  endorsTypeTogglerEvt(e: any) {
+    switch (e) {
+      case "Extension":
+        this.f.deductFees?.enable();
+        this.f.paymentTermsList?.enable();
+        break;
+      case "Refund":
+        this.f.deductFees?.enable();
+        this.f.paymentTermsList?.clear();
+        this.f.paymentTermsList?.disable();
+        break;
+      default:
+        this.f.deductFees?.disable();
+        this.f.deductFees?.reset();
+        this.f.paymentTermsList?.enable();
+        break;
+    }
+    this.vatHandler();
+  }
+
   //#endregion
 
   //#region Invoices Details
@@ -353,7 +379,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.totalPaymentRow();
   }
   vatHandler(): void {
-    if (this.f.endorsType?.value === "Refund" && this.f.deductFees?.value) {
+    if (this.f.endorsType?.value === "Refund" && !this.f.deductFees?.value) {
       this.f.vatValue?.patchValue(
         +this.f.netPremium?.value! -
           (+this.f.fees?.value! * +this.f.vatPerc?.value!) / 100
@@ -380,6 +406,18 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
       );
   }
+
+  vatCalcHandlers(): void {
+    let sub = this.f.vatValue?.valueChanges.subscribe(() => {
+      if (this.f.paymentTermsList?.length) {
+        for (let i = 0; i < this.paymentTermsArrayControls.length; i++) {
+          let vat = this.paymentsControls(i, "vatAmount");
+          vat?.patchValue(0);
+        }
+      }
+    });
+    this.subscribes.push(sub!);
+  }
   //#endregion
 
   //#region Payment Terms
@@ -388,6 +426,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.paymentTermsList.markAllAsTouched();
       return;
     }
+    if (!this.f.netPremium?.value!) {
+      this.message.popup("Oo !", "Please fill Invoices Details", "warning");
+      return;
+    }
+
     let payment = new FormGroup<IPolicyPaymentsListForms>({
       payDate: new FormControl(data?.payDate || null, Validators.required),
       amount: new FormControl(data?.amount || null),
@@ -423,11 +466,15 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       emitEvent: false,
       OnlySelf: true,
     };
-    this.uiState.totalPerc = 100 - +this.uiState.paymentTermsTotals.percentage;
+    this.paymentRecalcEvtHandler();
+
     this.f.paymentTermsList?.controls.forEach((el) => {
       let sub1 = el.controls.percentage?.valueChanges.subscribe((elm) => {
-        if (+elm! > this.uiState.totalPerc)
-          el.controls.percentage?.patchValue(this.uiState.totalPerc, handler);
+        if (+elm! > this.uiState.paymentTermHandler.totalPerc)
+          el.controls.percentage?.patchValue(
+            this.uiState.paymentTermHandler.totalPerc,
+            handler
+          );
         el.controls.amount?.patchValue(
           +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
         );
@@ -437,6 +484,22 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         el.controls.vatAmount?.patchValue(
           +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
         );
+        if (
+          +el.controls.policyFees?.value! >=
+          +this.uiState.paymentTermHandler.fees
+        ) {
+          el.controls.policyFees?.patchValue(
+            +this.uiState.paymentTermHandler.fees
+          );
+        }
+
+        if (
+          +el.controls.vatAmount?.value! >= +this.uiState.paymentTermHandler.vat
+        ) {
+          el.controls.vatAmount?.patchValue(
+            +this.uiState.paymentTermHandler.vat
+          );
+        }
       });
       this.subscribes.push(sub1!);
     });
@@ -458,35 +521,68 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         ),
         fees: el.reduce((prev: any, next: any) => +prev + +next.policyFees, 0),
         vat: el.reduce((prev: any, next: any) => +prev + +next.vatAmount, 0),
-        total: el.reduce((prev: any, next: any) => +prev + +next.rowTotal, 0),
+        total: el.reduce(
+          (prev: any, next: any) =>
+            +prev + +next.amount + +next.policyFees + +next.vatAmount,
+          0
+        ),
       };
     });
     this.subscribes.push(sub);
   }
 
-  paymentTermsHandler(i: number, e: string) {
-    // this.paymentsControls();
+  paymentTermsHandler(): void {
+    if (this.f.paymentTermsList?.length) {
+      for (let i = 0; i < this.paymentTermsArrayControls.length; i++) {
+        let perc = this.paymentsControls(i, "percentage").value,
+          net = this.paymentsControls(i, "amount");
+        net.patchValue(this.f.netPremium?.value! * (perc / 100));
+      }
+    }
   }
 
-  paymentPercTermsHandler(i: number, con: string, e: Event) {
-    // console.log(+this.uiState.paymentTermsTotals.percentage);
-    // let elm = +(e.target as HTMLInputElement).value,
-    //   perc = 101 - +this.uiState.paymentTermsTotals.percentage;
-    // console.log(perc);
-    // if (+elm > +perc) {
-    //   this.paymentsControls(i, con).patchValue(+perc);
-    //   return;
-    // }
+  paymentTermsValueHandler(i: number, con: string, e: Event) {
+    let elm = (e.target as HTMLInputElement).value,
+      val!: any;
+    if (con === "policyFees") val = +this.f.fees?.value!;
+    else if (con === "vatAmount") val = +this.f.vatValue?.value!;
+    if (+elm.replace(/,/g, "") > +val) {
+      this.paymentsControls(i, con).patchValue(val);
+      return;
+    }
   }
-  paymentFeesHandler(i: number, con: string, e: Event) {
-    let elm = (e.target as HTMLInputElement).value;
+
+  paymentRecalcEvtHandler(): void {
+    this.uiState.paymentTermHandler.totalPerc =
+      100 - +this.uiState.paymentTermsTotals.percentage;
+    this.uiState.paymentTermHandler.fees =
+      +this.f.fees?.value! - +this.uiState.paymentTermsTotals.fees;
+    this.uiState.paymentTermHandler.vat =
+      +this.f.vatValue?.value! - +this.uiState.paymentTermsTotals.vat;
   }
-  paymentVatTermsHandler(i: number, con: string, e: Event) {
-    let elm = (e.target as HTMLInputElement).value;
+
+  get paymentTermsListBool(): boolean {
+    return (
+      this.f.endorsType?.value === "Refund" ||
+      (this.f.fees?.value! === this.uiState.paymentTermsTotals.fees &&
+        this.f.vatValue?.value! === this.uiState.paymentTermsTotals.vat &&
+        this.uiState.paymentTermsTotals.percentage === 100)
+    );
   }
 
   removePayment(i: number) {
-    this.uiState.totalPerc += this.paymentsControls(i, "percentage").value;
+    this.uiState.paymentTermHandler.totalPerc += this.paymentsControls(
+      i,
+      "percentage"
+    ).value;
+    this.uiState.paymentTermHandler.fees += this.paymentsControls(
+      i,
+      "policyFees"
+    ).value;
+    this.uiState.paymentTermHandler.vat += this.paymentsControls(
+      i,
+      "vatAmount"
+    ).value;
     this.paymentTermsArrayControls.removeAt(i);
   }
   //#endregion

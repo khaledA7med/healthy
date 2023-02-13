@@ -11,7 +11,7 @@ const routes: Routes = [
 		loadChildren: () => import("./policies-management/policies-management.module").then((m) => m.PoliciesManagementModule),
 	},
 	{
-		path: AppRoutes.Production.base + "/:sno",
+		path: AppRoutes.Production.details + "/:sno",
 		outlet: "details",
 		loadChildren: () => import("./../../shared/components/poilcy-preview/poilcy-preview.module").then((m) => m.PoilcyPreviewModule),
 	},

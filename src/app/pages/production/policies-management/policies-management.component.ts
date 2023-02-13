@@ -16,6 +16,7 @@ import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
 import { IProductionFilters } from "src/app/shared/app/models/Production/iproduction-filters";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
+import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 
@@ -36,7 +37,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			pageSize: 50,
 			orderBy: "sNo",
 			orderDir: "asc",
-			// status: ["Active"],
+			status: ["Active"],
 		} as IProductionFilters,
 		gridReady: false,
 		submitted: false,
@@ -45,6 +46,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			totalPages: 0,
 		},
 		lineOfBusinessList: [] as IGenericResponseType[],
+		filterByAmount: false,
 	};
 
 	filterForm!: FormGroup;
@@ -76,20 +78,20 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	};
 
 	constructor(
-		private _Router: Router,
 		private productionService: ProductionService,
+		private masterService: MasterMethodsService,
 		private tableRef: ElementRef,
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private router: Router,
 		private eventService: EventService
 	) {}
 
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.getLookupData();
+		this.disableAmountFilter();
 	}
 
 	dataSource: IDatasource = {
@@ -166,17 +168,33 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	private initFilterForm(): void {
 		this.filterForm = new FormGroup({
 			status: new FormControl(["Active"]),
-			branch: new FormControl(null),
-			ourRef: new FormControl(null),
-			clientName: new FormControl(null),
-			producer: new FormControl(null),
-			insurCompany: new FormControl(null),
-			classOfInsurance: new FormControl(null),
-			deadlineFrom: new FormControl(null),
-			deadlineTo: new FormControl(null),
-			savedOnFrom: new FormControl(null),
-			savedOnTo: new FormControl(null),
-			expireIn: new FormControl(null),
+			branch: new FormControl(""),
+			ourRef: new FormControl(""),
+			clientName: new FormControl(""),
+			producer: new FormControl(""),
+			insurCompany: new FormControl(""),
+			classOfInsurance: new FormControl(""),
+			lineOfBusiness: new FormControl(""),
+			policyNo: new FormControl(""),
+			endorsNo: new FormControl(""),
+			policyEndorsType: new FormControl(""),
+			clientDNCNNo: new FormControl(""),
+			companyCommisionDNCNNo: new FormControl(""),
+			ourDNCNNo: new FormControl(""),
+			createdBy: new FormControl(""),
+			issueFrom: new FormControl(null),
+			issueTo: new FormControl(null),
+			financeApproveFrom: new FormControl(null),
+			financeApproveTo: new FormControl(null),
+			inceptionFrom: new FormControl(null),
+			inceptionTo: new FormControl(null),
+			financeEntryFrom: new FormControl(null),
+			financeEntryTo: new FormControl(null),
+			amount: new FormControl(this.uiState.filterByAmount),
+			field: new FormControl(""),
+			operatordList: new FormControl(""),
+			amountNo: new FormControl(""),
+			amountNo2: new FormControl(""),
 		});
 	}
 
@@ -189,30 +207,61 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	getLineOfBusiness(e: IGenericResponseType) {
-		// let sub = this.productionService.getLineOfBusiness(e.name).subscribe(
-		// 	(res: HttpResponse<IBaseResponse<any>>) => {
-		// 		this.uiState.lineOfBusinessList = res.body?.data!.content;
-		// 	},
-		// 	(err: HttpErrorResponse) => {}
-		// );
-		// this.subscribes.push(sub);
+		let sub = this.masterService.getLineOfBusiness(e.name).subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				this.uiState.lineOfBusinessList = res.body?.data!.content;
+			},
+			(err: HttpErrorResponse) => {}
+		);
+		this.subscribes.push(sub);
 	}
 
 	modifyFilterReq() {
 		this.uiState.filters = {
 			...this.uiState.filters,
 			...this.filterForm.value,
+			amount: JSON.stringify(this.f["amount"].value),
+			amountNo: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo"].value) : "",
+			amountNo2: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo2"].value) : "",
 		};
 	}
 
-	setDeadLineFilter(e: any) {
-		this.f["deadlineFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["deadlineTo"].setValue(this.appUtils.dateFormater(e.to));
+	setIssueRangeFilter(e: any) {
+		this.f["issueFrom"].setValue(this.appUtils.dateFormater(e.from));
+		this.f["issueTo"].setValue(this.appUtils.dateFormater(e.to));
 	}
 
-	setSavedOnFilter(e: any) {
-		this.f["savedOnFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["savedOnTo"].setValue(this.appUtils.dateFormater(e.to));
+	setFinApprovedRangeFilter(e: any) {
+		this.f["financeApproveFrom"].setValue(this.appUtils.dateFormater(e.from));
+		this.f["financeApproveTo"].setValue(this.appUtils.dateFormater(e.to));
+	}
+
+	setInceptionRangeFilter(e: any) {
+		this.f["inceptionFrom"].setValue(this.appUtils.dateFormater(e.from));
+		this.f["inceptionTo"].setValue(this.appUtils.dateFormater(e.to));
+	}
+
+	setFinEntryRangeFilter(e: any) {
+		this.f["financeEntryFrom"].setValue(this.appUtils.dateFormater(e.from));
+		this.f["financeEntryTo"].setValue(this.appUtils.dateFormater(e.to));
+	}
+
+	disableAmountFilter() {
+		if (this.f["amount"].value === false) {
+			this.f["field"].reset();
+			this.f["operatordList"].reset();
+			this.f["amountNo"].reset();
+			this.f["amountNo2"].reset();
+			this.f["field"].disable();
+			this.f["operatordList"].disable();
+			this.f["amountNo"].disable();
+			this.f["amountNo2"].disable();
+		} else {
+			this.f["field"].enable();
+			this.f["operatordList"].enable();
+			this.f["amountNo"].enable();
+			this.f["amountNo2"].enable();
+		}
 	}
 
 	onPolicyFilters(): void {
@@ -227,11 +276,5 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-	}
-
-	// Don't Forget to Delete The following lines and the HTML BUtton
-	route: string = AppRoutes.Production.base;
-	openPolicyDetailsTest(sno: number) {
-		this._Router.navigate([{ outlets: { details: [this.route, sno] } }]);
 	}
 }

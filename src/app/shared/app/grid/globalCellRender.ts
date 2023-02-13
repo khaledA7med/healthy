@@ -20,4 +20,12 @@ export default class GlobalCellRender {
 	public static currencyFormater(e: ValueFormatterParams) {
 		return formatCurrency(+e.value, "en-US", "", "", "1.2-2");
 	}
+
+	public static NotifyChecker(e: ValueFormatterParams): string {
+		if (e.value == 1) {
+			return `<div class="text-primary fs-20 text-center"><i class="ri-checkbox-fill"></i></div>`;
+		} else {
+			return `<div class="fs-20 text-center"><i class="ri-checkbox-blank-line"></i></div>`;
+		}
+	}
 }
