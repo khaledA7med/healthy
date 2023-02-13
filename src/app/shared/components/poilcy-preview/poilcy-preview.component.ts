@@ -6,9 +6,11 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
+import Swal from "sweetalert2";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentList } from "../../app/models/App/IDocument";
 import { IDocumentReq } from "../../app/models/App/IDocumentReq";
+import { IChangePolicyStatusRequest } from "../../app/models/Production/i-policy-change-status-req";
 import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
 import AppUtils from "../../app/util";
 import { MessagesService } from "../../services/messages.service";
@@ -22,7 +24,7 @@ import { ProductionService } from "../../services/production/production.service"
 })
 export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 	uiState = {
-		sno: 0,
+		sno: "",
 		policyDetails: {} as IPolicyPreview,
 		updatedState: false,
 		documentList: [],
@@ -59,15 +61,15 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 
 	getSNO(): void {
 		this.route.paramMap.subscribe((res) => {
-			this.uiState.sno = Number(res.get("sno")!);
+			this.uiState.sno = res.get("sno")!;
 		});
 	}
 
-	getPolicyDetails(sno: number): void {
-		let sub = this.productinService.getPolicyById(sno).subscribe({
+	getPolicyDetails(id: string): void {
+		let sub = this.productinService.getPolicyById(id).subscribe({
 			next: (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
 				this.uiState.policyDetails = res.body?.data!;
-				// AppUtils.nullValues(this.uiState.policyDetails);
+				AppUtils.nullValues(this.uiState.policyDetails);
 				// this.customizeClientDocuments();
 			},
 			error: (error: HttpErrorResponse) => {
@@ -165,81 +167,80 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	// changeStatus(newStatus: string): void {
-	// 	let reqBody = {
-	// 		clientId: this.uiState.sno,
-	// 		status: newStatus,
-	// 	};
+	changeStatus(newStatus: string): void {
+		let reqBody = {
+			sNo: this.uiState.sno,
+			status: newStatus,
+		};
 
-	// 	if (newStatus === ClientStatus.Rejected) {
-	// 		this.changeStatusWithMsg(reqBody);
-	// 	} else {
-	// 		this.message.confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning").then((result: any) => {
-	// 			if (result.isConfirmed) {
-	// 				let sub = this.clientService.changeStatus(reqBody).subscribe({
-	// 					next: (res: HttpResponse<IBaseResponse<null>>) => {
-	// 						this.message.toast(res.body?.message!, "success");
-	// 						this.uiState.updatedState = true;
-	// 						this.previewModalRef.close();
-	// 						this.backToMainRoute();
-	// 					},
-	// 					error: (error: HttpErrorResponse) => {
-	// 						this.message.popup("Oops!", error.message, "error");
-	// 					},
-	// 				});
-	// 				this.subscribes.push(sub);
-	// 			}
-	// 		});
-	// 	}
-	// }
+		if (newStatus === "Reject") {
+			this.changeStatusWithMsg(reqBody);
+		} else {
+			this.message.confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning").then((result: any) => {
+				if (result.isConfirmed) {
+					let sub = this.productinService.changeStatus(reqBody).subscribe({
+						next: (res: HttpResponse<IBaseResponse<null>>) => {
+							this.message.toast(res.body?.message!, "success");
+							this.uiState.updatedState = true;
+							this.previewModalRef.close();
+							this.backToMainRoute();
+						},
+						error: (error: HttpErrorResponse) => {
+							this.message.popup("Oops!", error.message, "error");
+						},
+					});
+					this.subscribes.push(sub);
+				}
+			});
+		}
+	}
 
-	// changeStatusWithMsg(reqBody: IChangeStatusRequest) {
-	// 	return Swal.fire({
-	// 		title: "Type Rejection Reason",
-	// 		input: "text",
-	// 		inputAttributes: {
-	// 			required: "true",
-	// 		},
-	// 		validationMessage: "Required",
-	// 		showCancelButton: true,
-	// 		background: "var(--vz-modal-bg)",
-	// 		customClass: {
-	// 			confirmButton: "btn btn-success btn-sm w-xs me-2 mt-2",
-	// 			cancelButton: "btn btn-ghost-danger btn-sm w-xs mt-2",
-	// 			input: "customize-swlInput",
-	// 			validationMessage: "fs-6 bg-transparent  m-1 p-1",
-	// 		},
-	// 		confirmButtonText: `Reject`,
-	// 		buttonsStyling: false,
-	// 		showCloseButton: true,
-	// 		showLoaderOnConfirm: true,
-	// 		allowOutsideClick: false,
-	// 		preConfirm: (inputValue: string) => {
-	// 			reqBody = {
-	// 				...reqBody,
-	// 				rejectionReason: inputValue,
-	// 			};
-	// 		},
-	// 	}).then((result) => {
-	// 		if (result.isConfirmed) {
-	// 			let sub = this.clientService.changeStatus(reqBody).subscribe({
-	// 				next: (res: HttpResponse<IBaseResponse<null>>) => {
-	// 					this.message.toast(res.body?.message!, "success");
-	// 					this.uiState.updatedState = true;
-	// 					this.previewModalRef.close();
-	// 					this.backToMainRoute();
-	// 				},
-	// 				error: (error: HttpErrorResponse) => {
-	// 					this.message.popup("Oops!", error.message, "error");
-	// 				},
-	// 			});
-	// 			this.subscribes.push(sub);
-	// 		}
-	// 	});
-	// }
+	changeStatusWithMsg(reqBody: IChangePolicyStatusRequest) {
+		return Swal.fire({
+			title: "Type Rejection Reason",
+			input: "text",
+			inputAttributes: {
+				required: "true",
+			},
+			validationMessage: "Required",
+			showCancelButton: true,
+			background: "var(--vz-modal-bg)",
+			customClass: {
+				confirmButton: "btn btn-success btn-sm w-xs me-2 mt-2",
+				cancelButton: "btn btn-ghost-danger btn-sm w-xs mt-2",
+				input: "customize-swlInput",
+				validationMessage: "fs-6 bg-transparent  m-1 p-1",
+			},
+			confirmButtonText: `Reject`,
+			buttonsStyling: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+			preConfirm: (inputValue: string) => {
+				reqBody = {
+					...reqBody,
+					rejectionReason: inputValue,
+				};
+			},
+		}).then((result) => {
+			if (result.isConfirmed) {
+				let sub = this.productinService.changeStatus(reqBody).subscribe({
+					next: (res: HttpResponse<IBaseResponse<null>>) => {
+						this.message.toast(res.body?.message!, "success");
+						this.uiState.updatedState = true;
+						this.previewModalRef.close();
+						this.backToMainRoute();
+					},
+					error: (error: HttpErrorResponse) => {
+						this.message.popup("Oops!", error.message, "error");
+					},
+				});
+				this.subscribes.push(sub);
+			}
+		});
+	}
 
 	// To Do back to main route when close modal
-
 	backToMainRoute() {
 		this.previewModalRef.hidden.subscribe(() => {
 			this.router.navigate([{ outlets: { details: null } }], {

@@ -367,10 +367,10 @@
                 <i class="ri-more-fill align-middle"></i>
             </button>
             <div ngbDropdownMenu>
-                <button ngbDropdownItem>
+                <button ngbDropdownItem [disabled]="uiState.policyDetails.done===1" (click)="changeStatus('Approve')">
                     Approve
                 </button>
-                <button ngbDropdownItem>
+                <button ngbDropdownItem [disabled]="uiState.policyDetails.reject ===1" (click)="changeStatus('Reject')">
                     Reject
                 </button>
                 <button ngbDropdownItem disabled *ngIf="!uiState.policyDetails">

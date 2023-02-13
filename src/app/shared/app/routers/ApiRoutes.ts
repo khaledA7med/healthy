@@ -60,10 +60,12 @@ export const ApiRoutes = {
 			clientsList: LookUpTables + BaseData.ClientsList,
 			producers: LookUpTables + BaseData.Producers,
 			insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
-			InsurClasses: LookUpTables + BaseData.InsurClasses,
-			AllUsers: LookUpTables + BaseData.AllUsers,
+			insurClasses: LookUpTables + BaseData.InsurClasses,
+			allUsers: LookUpTables + BaseData.AllUsers,
 			insuranceClasses: LookUpTables + BaseData.InsurClasses,
 			endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+			productionFieldList: LookUpTables + BaseData.ProductionFieldList,
+			productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
 		},
 	},
 	MasterMethods: {
@@ -103,6 +105,7 @@ export const ApiRoutes = {
 		searchClient: LookUpTables + "ActiveClient",
 		searchPolicies: "/Production/Policy/SearchClientPolicies",
 		lineOfBusiness: "/LookupTables/LineOfBusiness",
+		changeStatus: "",
 	},
 	CustomerService: {
 		search: "/CustomerService/Requests/Search",
