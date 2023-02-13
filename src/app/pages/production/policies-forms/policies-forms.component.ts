@@ -69,6 +69,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vat: 0,
       total: 0,
     },
+    totalPerc: 100,
   };
 
   docs: any[] = [];
@@ -422,13 +423,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       emitEvent: false,
       OnlySelf: true,
     };
+    this.uiState.totalPerc = 100 - +this.uiState.paymentTermsTotals.percentage;
     this.f.paymentTermsList?.controls.forEach((el) => {
       let sub1 = el.controls.percentage?.valueChanges.subscribe((elm) => {
-        if (+elm! > 100 - +this.uiState.paymentTermsTotals.percentage)
-          el.controls.percentage?.patchValue(
-            100 - +this.uiState.paymentTermsTotals.percentage,
-            handler
-          );
+        if (+elm! > this.uiState.totalPerc)
+          el.controls.percentage?.patchValue(this.uiState.totalPerc, handler);
         el.controls.amount?.patchValue(
           +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
         );
@@ -465,7 +464,29 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
+  paymentTermsHandler(i: number, e: string) {
+    // this.paymentsControls();
+  }
+
+  paymentPercTermsHandler(i: number, con: string, e: Event) {
+    // console.log(+this.uiState.paymentTermsTotals.percentage);
+    // let elm = +(e.target as HTMLInputElement).value,
+    //   perc = 101 - +this.uiState.paymentTermsTotals.percentage;
+    // console.log(perc);
+    // if (+elm > +perc) {
+    //   this.paymentsControls(i, con).patchValue(+perc);
+    //   return;
+    // }
+  }
+  paymentFeesHandler(i: number, con: string, e: Event) {
+    let elm = (e.target as HTMLInputElement).value;
+  }
+  paymentVatTermsHandler(i: number, con: string, e: Event) {
+    let elm = (e.target as HTMLInputElement).value;
+  }
+
   removePayment(i: number) {
+    this.uiState.totalPerc += this.paymentsControls(i, "percentage").value;
     this.paymentTermsArrayControls.removeAt(i);
   }
   //#endregion
