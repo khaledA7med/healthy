@@ -92,8 +92,10 @@ export class BusinessDevelopmentService {
     );
   }
 
-  saveSalesLead(body: FormData): Observable<HttpResponse<IBaseResponse<any>>> {
-    return this.http.post<IBaseResponse<any>>(
+  saveSalesLead(
+    body: FormData
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.BusinessDevelopment.save,
       body,
       {

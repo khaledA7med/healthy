@@ -972,10 +972,7 @@
                                 <td class="text-center">
                                   <div>
                                     <button
-                                      *ngIf="
-                                        uiState.editId &&
-                                        activityLogArray.controls[i].disabled
-                                      "
+                                      *ngIf="uiState.editId"
                                       type="button"
                                       class="btn btn-sm btn-soft-info me-2"
                                       (click)="
@@ -1082,10 +1079,7 @@
                                 <td class="text-center">
                                   <div>
                                     <button
-                                      *ngIf="
-                                        uiState.editId &&
-                                        competitorsArray.controls[i].disabled
-                                      "
+                                      *ngIf="uiState.editId"
                                       type="button"
                                       class="btn btn-sm btn-soft-info me-2"
                                       (click)="toggleBtn(i, 'competitor', true)"

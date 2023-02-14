@@ -1,3 +1,4 @@
+import { ISalesLeadDetails } from "./../../../shared/app/models/BusinessDevelopment/isalesLeadDetails";
 import { MasterMethodsService } from "./../../../shared/services/master-methods.service";
 import { IRequirement } from "../../../shared/app/models/BusinessDevelopment/irequirement";
 import { IActivityLog } from "./../../../shared/app/models/BusinessDevelopment/iactivity-log";
@@ -68,7 +69,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
         this.uiState.editId = res.get("id")!;
-
+        this.getSalesLead(this.uiState.editId);
         // this.eventService.broadcast(reserved.isLoading, true);
       }
     });
@@ -109,10 +110,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //others
       branch: new FormControl(null),
       sendToUW: new FormControl(false),
-      isPolicyRequierments: new FormControl(false), //
-      isQuotingRequierments: new FormControl(false), //
-      salesActivityLogChecked: new FormControl(false), //
-      salesLeadCompetitorChecked: new FormControl(false), //
     });
   }
   get f() {
@@ -139,8 +136,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region insurance Details
-  getLineOfBusiness(e: string) {
-    let sub = this.masterService.getLineOfBusiness(e).subscribe(
+  getLineOfBusiness(className: string) {
+    let sub = this.masterService.getLineOfBusiness(className).subscribe(
       (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
         this.lineOfBussArr = res.body?.data?.content!;
       },
@@ -243,9 +240,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   getPolicyReq(data: {}) {
     let sub = this.businessDevService.policyRequirements(data).subscribe(
       (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-        res.body?.data?.map((c) => {
-          this.createReqFormArr("policy", c);
-        });
+        res.body?.data?.map((c) => this.createReqFormArr("policy", c));
       },
       (err: HttpErrorResponse) => {
         this.message.popup("Sorry!", err.message!, "warning");
@@ -264,7 +259,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.quotingRequirementsList?.push(formArrayCon);
       this.quotingControlArray.updateValueAndValidity();
     } else if (name == "policy") {
-      console.log("sad");
       this.f.policyRequiermentsList?.push(formArrayCon);
       this.policyControlArray.updateValueAndValidity();
     } else {
@@ -317,8 +311,15 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       logDate: new FormControl(data?.logDate || null, Validators.required),
       logNotes: new FormControl(data?.logNotes || null, Validators.required),
     });
-
-    !data ? activityLog.reset() : activityLog.disable();
+    // for edit
+    if (data) {
+      activityLog
+        .get("logDate")
+        ?.patchValue(this.utils.dateStructFormat(data?.logDate) as any);
+      activityLog.disable();
+    } else {
+      activityLog.reset();
+    }
 
     this.f.salesActivityLogList?.push(activityLog);
     this.activityLogArray.updateValueAndValidity();
@@ -366,10 +367,87 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   // #region edit
+  getSalesLead(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.businessDevService.getSalesLeadById(id).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) => {
+        console.log(res.body!);
+        if (res.body?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.patchValuesWhenEdit(res.body?.data);
+        } else {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.popup("Sorry!", res.body?.message!, "error");
+        }
+      },
+      (err: HttpErrorResponse) => {
+        console.log(err);
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Error", err.message!, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  patchValuesWhenEdit(salesLead: ISalesLeadDetails) {
+    this.uiState.editId = salesLead.sNo.toString();
+    this.formGroup.patchValue({
+      // lead details
+      leadType: salesLead.leadType,
+      clientID: salesLead?.clientID,
+      name: salesLead?.name,
+      producer: salesLead?.producer,
+      // insurance details
+      classOfBusiness: salesLead?.classOfBusiness,
+      lineOfBusiness: salesLead?.lineOfBusiness,
+      estimatedPremium: salesLead?.estimatedPremium,
+      chDeadlinebool: salesLead?.chDeadlinebool,
+      deadLine: this.utils.dateStructFormat(salesLead.deadLine) as any, //
+      preferedInsurComapnies: salesLead?.preferedInsurComapnies,
+      policyDetails: salesLead?.policyDetails,
+      // currently insured
+      existingPolExpDate: this.utils.dateStructFormat(
+        salesLead.existingPolExpDate
+      ) as any,
+      currentPolicyNo: salesLead?.currentPolicyNo,
+      currentBroker: salesLead?.currentBroker,
+      currentInsurer: salesLead.currentInsurer,
+      existingPolDetails: salesLead?.existingPolDetails,
+      // others
+      sendToUW: salesLead.sendToUW,
+      branch: salesLead.branch,
+      // for edit
+      sNo: salesLead.sNo,
+      leadNo: salesLead.leadNo,
+    });
+
+    // quoting requirement
+    salesLead.quotingRequirementsList?.forEach((el) =>
+      this.createReqFormArr("quoting", el)
+    );
+
+    // policy requirement
+    salesLead.policyRequiermentsList?.forEach((el) =>
+      this.createReqFormArr("policy", el)
+    );
+
+    // activity Log
+    salesLead.salesActivityLogList?.forEach((el) => {
+      this.addActivityLog(el);
+    });
+
+    // competitors
+    salesLead.salesLeadCompetitorsList?.forEach((el) => this.addCompetitor(el));
+
+    // documents
+    this.docs = salesLead.documentList!;
+  }
+
   dateRange(e: { from: any; to: any }) {
     console.log(e.from);
     console.log(e.to);
   }
+
   // remove and edit inputs array form activity log and competitor
   toggleBtn(i: number, name: string, isEdit: boolean) {
     switch (isEdit) {
@@ -381,24 +459,31 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         if (name === "competitor") this.competitorsArray.removeAt(i);
         else if (name === "activityLog") this.activityLogArray.removeAt(i);
         break;
-
       default:
         break;
     }
   }
   //#endregion
+
   //#region save Sales Lead
   saveSalesLead(data: FormData): void {
-    this.businessDevService.saveSalesLead(data).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
-        console.log("Success", res);
-        this.message.toast(res.body?.message!, "success");
+    let sub = this.businessDevService.saveSalesLead(data).subscribe(
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.message.toast(res.body.message!, "success");
+          this.resetForm();
+          this.eventService.broadcast(reserved.isLoading, false);
+        } else {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.popup("Sorry!", res.body?.message!, "warning");
+        }
       },
       (err) => {
-        console.log("Error", err);
-        this.message.popup("Sorry!", err.message!, "warning");
+        this.message.popup("Error", err.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
       }
     );
+    this.subscribes.push(sub);
   }
 
   validationChecker(): boolean {
@@ -407,15 +492,31 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     if (this.formGroup.invalid) return false;
     return true;
   }
+  resetForm(): void {
+    this.formGroup.reset();
+    this.f.quotingRequirementsList?.clear();
+    this.f.policyRequiermentsList?.clear();
+    this.f.salesActivityLogList?.clear();
+    this.f.salesLeadCompetitorsList?.clear();
+    this.submitted = false;
+  }
 
   submitForm(form: FormGroup<ISalesLeadForm>) {
     this.submitted = true;
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const formData = new FormData();
+
+    if (this.uiState.editId) {
+      formData.append("sNo", this.uiState.editId);
+      formData.append("LeadNo", form.value.leadNo!);
+    }
+    // lead type
     formData.append("LeadType", form.value?.leadType!);
     formData.append("ClientID", form.value?.clientID?.toString()!);
     formData.append("Name", form.value?.name!);
     formData.append("Producer", form.value?.producer!);
+    // insurance details
     formData.append("ClassOfBusiness", form.value?.classOfBusiness!);
     formData.append("LineOfBusiness", form.value?.lineOfBusiness!);
     formData.append(
@@ -424,24 +525,34 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         ? form.value?.estimatedPremium?.toString()!
         : "0"
     );
-    formData.append("ChDeadlinebool", form.value?.chDeadlinebool?.toString()!); // boolean
+    formData.append("ChDeadlinebool", form.value?.chDeadlinebool?.toString()!); // boolean //check
     formData.append("DeadLine", this.utils.dateFormater(form.value?.deadLine!));
+    form.value?.preferedInsurComapnies?.forEach((el, i) => {
+      formData.append(`PreferedInsurComapnies[${i}]`, el);
+    });
     formData.append("PolicyDetails", form.value?.policyDetails!);
+
+    // currently insured
     formData.append(
       "ExistingPolExpDate",
       this.utils.dateFormater(form.value?.existingPolExpDate)
     );
-    formData.append("CurrentPolicyNo", form.value?.currentPolicyNo!);
-    formData.append("CurrentBroker", form.value?.currentBroker!);
-    formData.append("CurrentInsurer", form.value?.currentInsurer!);
-    formData.append("ExistingPolDetails", form.value?.existingPolDetails!);
-    formData.append("SendToUW", form.value?.sendToUW?.toString()!); // boolean
-    formData.append("Branch", form.value?.branch!);
-
-    // PreferredIncCompanies Array
-    form.value?.preferedInsurComapnies?.forEach((el, i) => {
-      formData.append(`PreferedInsurComapnies[${i}]`, el);
-    });
+    formData.append(
+      "CurrentPolicyNo",
+      form.value?.currentPolicyNo! ? form.value?.currentPolicyNo! : ""
+    );
+    formData.append(
+      "CurrentBroker",
+      form.value?.currentBroker! ? form.value?.currentBroker! : ""
+    );
+    formData.append(
+      "CurrentInsurer",
+      form.value?.currentInsurer! ? form.value?.currentInsurer! : ""
+    );
+    formData.append(
+      "ExistingPolDetails",
+      form.value?.existingPolDetails! ? form.value?.existingPolDetails! : ""
+    );
 
     // quoting requirement array
     form.value.quotingRequirementsList?.forEach((el, i) => {
@@ -472,7 +583,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       formData.append(`PolicyRequiermentsList[${i}].item`, el.item!);
     });
 
-    // activity log array
+    // activity log array with check
     form.value.salesActivityLogList?.forEach((el, i) => {
       formData.append(`SalesActivityLogList[${i}].logType`, el.logType!);
       formData.append(
@@ -481,8 +592,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       );
       formData.append(`SalesActivityLogList[${i}].logNotes`, el.logNotes!);
     });
+    formData.append(
+      "SalesActivityLogChecked",
+      form.value.salesActivityLogList?.length !== 0 ? "true" : "false"
+    );
 
-    // competitors array
+    // competitors array with check
     form.value.salesLeadCompetitorsList?.forEach((el, i) => {
       formData.append(
         `SalesLeadCompetitorsList[${i}].competitor`,
@@ -493,8 +608,17 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         el.competitorNotes!
       );
     });
+    formData.append(
+      "SalesLeadCompetitorChecked",
+      form.value.salesLeadCompetitorsList?.length !== 0 ? "true" : "false"
+    );
+
     // document array
     this.documentsToUpload.forEach((el) => formData.append("Documents", el));
+
+    // others
+    formData.append("SendToUW", form.value?.sendToUW?.toString()!); // boolean
+    formData.append("Branch", form.value?.branch!);
 
     this.saveSalesLead(formData);
   }
