@@ -17,6 +17,24 @@ export default class GlobalCellRender {
 		}
 	}
 
+	public static getBusinessDateCount(startDate: Date, endDate: Date) {
+		let elapsed: any, daysBeforeFirstSunday: any, daysAfterLastSunday: any;
+		let ifThen = function (a: any, b: any, c: any) {
+			return a == b ? c : a;
+		};
+
+		elapsed = endDate.getTime() - startDate.getTime();
+		elapsed /= 86400000;
+
+		daysBeforeFirstSunday = (7 - startDate.getDay()) % 7;
+		daysAfterLastSunday = endDate.getDay();
+
+		elapsed -= daysBeforeFirstSunday + daysAfterLastSunday;
+		elapsed = (elapsed / 7) * 5;
+		elapsed += ifThen(daysBeforeFirstSunday - 1, -1, 0) + ifThen(daysAfterLastSunday, 6, 5);
+		return Math.ceil(elapsed).toString();
+	}
+
 	public static currencyFormater(e: ValueFormatterParams) {
 		return formatCurrency(+e.value, "en-US", "", "", "1.2-2");
 	}

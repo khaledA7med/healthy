@@ -53,6 +53,11 @@ export const ApiRoutes = {
 			InsurClasses: LookUpTables + BaseData.InsurClasses,
 			TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
 		},
+		CustomerServiceForm: {
+			policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+			allClients: LookUpTables + BaseData.AllClients,
+			insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+		},
 		Production: {
 			policyStatus: LookUpTables + BaseData.PolicyStatus,
 			branch: LookUpTables + BaseData.Branch,
@@ -112,6 +117,7 @@ export const ApiRoutes = {
 		followUp: "/CustomerService/Requests/CSFollwUp",
 		saveNote: "/CustomerService/Requests/SaveNote",
 		changeStatus: "/CustomerService/Requests/CSchangeStatus",
+		statusCount: "/CustomerService/Requests/StatusCount",
 		create: "",
 		edit: "",
 		delete: "",
