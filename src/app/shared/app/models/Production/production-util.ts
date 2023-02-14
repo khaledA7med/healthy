@@ -9,18 +9,6 @@ export enum issueType {
   endorsement = "endorsement",
 }
 
-export interface IFilterByRequest {
-  dateFrom?: string;
-  dateTo?: string;
-  clientName?: string;
-}
-
-export interface IFilterByRequest {
-  dateFrom?: string;
-  dateTo?: string;
-  clientName?: string;
-}
-
 export enum IPolicyStatus {
   active = "Active",
   pending = "Pending",
@@ -53,11 +41,34 @@ export interface IPolicyRequests {
   producer?: string;
 }
 
-export interface IPolicyClient {
-  sNo?: string;
-  status?: string;
-  fullName?: string;
-  producer?: string;
+export interface IPolicyRequestResponse {
+  clientPolicy: {
+    accNo: string;
+    policyNo: string;
+    insurComp: string;
+    className: string;
+    lineOfBusiness: string;
+    periodTo: string;
+    compCommPerc: string;
+    producerCommPerc: string;
+  };
+  clientData: {
+    sNo: string;
+    oasisPolRef: string;
+    clientNo: string;
+    clientName: string;
+    producer: string;
+    endorsType: string;
+    endorsNo: string;
+    issueDate: Date;
+    minDriverAge: string;
+    numberOfBeneficiaries: string;
+    periodFrom: Date;
+    claimNoOfDays: string;
+    csNoOfDays: string;
+    sumInsur: string;
+    remarks: string;
+  };
 }
 
 export interface IPolicyClient {
@@ -88,13 +99,6 @@ export interface IPoliciesRef {
   vatPerc?: string;
   policyFees?: string;
   clientName?: string;
-  producer?: string;
-}
-
-export interface IPolicyClient {
-  sNo?: string;
-  status?: string;
-  fullName?: string;
   producer?: string;
 }
 

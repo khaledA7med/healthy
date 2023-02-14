@@ -19,24 +19,27 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import {
   IPolicyCommissionListForms,
   IPolicyPaymentsListForms,
 } from "src/app/shared/app/models/Production/ipolicy-payments";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
 import {
+  IPolicyRequestResponse,
+  IPolicyRequests,
   issueType,
   searchBy,
 } from "src/app/shared/app/models/Production/production-util";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { ProductionService } from "src/app/shared/services/production/production.service";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
 @Component({
   selector: "app-policies-forms",
   templateUrl: "./policies-forms.component.html",
   styleUrls: ["./policies-forms.component.scss"],
-  providers: [AppUtils],
 })
 export class PoliciesFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IProductionForms>;
@@ -75,6 +78,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vat: 0,
       totalPerc: 100,
     },
+    producerCommission: {
+      producers: [] as any,
+      commissionTotals: {
+        percentage: 0,
+        amount: 0,
+      },
+    },
   };
 
   docs: any[] = [];
@@ -87,13 +97,24 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private appUtils: AppUtils,
     private tables: MasterTableService,
-    private message: MessagesService
+    private message: MessagesService,
+    private productionService: ProductionService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.formData = this.tables.getBaseData(MODULES.ProductionForm);
+    this.formDataHandler();
     this.vatCalcHandlers();
+  }
+
+  formDataHandler(): void {
+    this.formData = this.tables.getBaseData(MODULES.ProductionForm);
+    let sub = this.formData.subscribe((res) => {
+      this.uiState.producerCommission.producers = res.Producers?.content.filter(
+        (el) => !el.name.startsWith("Direct Business")
+      );
+    });
+    this.subscribes.push(sub);
   }
 
   initForm(): void {
@@ -139,6 +160,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       compCommPerc: new FormControl(null),
       compCommAmount: new FormControl(null),
       compCommVAT: new FormControl(null),
+      producerCommPerc: new FormControl(null),
+      producerComm: new FormControl(null),
       paymentTermsList: new FormArray<FormGroup<IPolicyPaymentsListForms>>([]),
       producersCommissionsList: new FormArray<
         FormGroup<IPolicyCommissionListForms>
@@ -207,8 +230,55 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.periodTo?.patchValue(e.gon);
   }
 
-  fillRequestDataToForm(e: any) {
-    console.log(e);
+  fillRequestDataToForm(e: IPolicyRequests) {
+    this.productionService
+      .fillRequestData(e.policySerial!, e.clientPolicySNo!)
+      .subscribe(
+        (res: IBaseResponse<IPolicyRequestResponse>) => {
+          console.log(res);
+          if (res.status) {
+            let client = res.data?.clientData,
+              policy = res.data?.clientPolicy;
+            this.formGroup.patchValue({
+              requestNo: e.requestNo,
+              clientInfo: `${client?.clientNo} | ${client?.clientName}`,
+              clientName: client?.clientNo,
+              clientNo: client?.clientNo,
+              producer: client?.producer,
+              oasisPolRef: client?.oasisPolRef,
+              accNo: policy?.accNo,
+              policyNo: policy?.policyNo,
+              endorsType: client?.endorsType,
+              endorsNo: client?.endorsNo,
+              insurComp: policy?.insurComp,
+              className: policy?.className,
+              lineOfBusiness: policy?.lineOfBusiness,
+              minDriverAge: client?.minDriverAge,
+              claimNoOfDays: +client?.claimNoOfDays!,
+              csNoOfDays: +client?.csNoOfDays!,
+              remarks: client?.remarks,
+            });
+
+            this.f.issueDate?.patchValue(
+              this.appUtils.dateStructFormat(client?.issueDate!) as any
+            );
+            this.f.periodFrom?.patchValue(
+              this.appUtils.dateStructFormat(client?.periodFrom!) as any
+            );
+            this.f.periodTo?.patchValue(
+              this.appUtils.dateStructFormat(policy?.periodTo!) as any
+            );
+            if (client?.endorsType !== "Policy") {
+              this.f.issueType?.patchValue("endorsement");
+              this.f.endorsType?.patchValue(client?.endorsType!);
+              this.endorsementIssue();
+            }
+          } else this.message.popup("Oops!", res.message!, "error");
+        },
+        (err) => {
+          this.message.popup("Oops!", err.message, "error");
+        }
+      );
   }
 
   fillClientDataToForm(e: any) {
@@ -418,6 +488,17 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     });
     this.subscribes.push(sub!);
   }
+
+  producerCommissionsListeners(e?: Event): void {
+    let elm = (e?.target as HTMLInputElement).value;
+    if (+elm! > 100) {
+      this.f.producerCommPerc?.patchValue(100);
+      return;
+    }
+    this.f.producerComm?.patchValue(
+      this.f.compCommAmount?.value! * (+this.f.producerCommPerc?.value! / 100)
+    );
+  }
   //#endregion
 
   //#region Payment Terms
@@ -587,6 +668,90 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  //#region Producer Commissions
+  addProducerCommission(data?: IPolicyCommissionListForms): void {
+    if (this.f.producersCommissionsList?.invalid) {
+      this.f.producersCommissionsList.markAllAsTouched();
+      return;
+    }
+
+    let commission = new FormGroup<IPolicyCommissionListForms>({
+      producer: new FormControl(data?.producer || null, Validators.required),
+      amount: new FormControl(data?.amount || null),
+      percentage: new FormControl(data?.percentage || null, [
+        Validators.max(100),
+        Validators.min(0),
+        Validators.required,
+      ]),
+      rowTotal: new FormControl(null),
+    });
+    if (!data) commission.reset();
+    else commission.disable();
+
+    this.f.producersCommissionsList?.push(commission);
+    this.producersCommissionsArrayControls.updateValueAndValidity();
+    this.totalCommissionRow();
+  }
+
+  get producersCommissionsArrayControls(): FormArray {
+    return this.formGroup.get("producersCommissionsList") as FormArray;
+  }
+
+  commissionControls(i: number, control: string): AbstractControl {
+    return this.producersCommissionsArrayControls.controls[i].get(control)!;
+  }
+
+  totalCommissionRow() {
+    const handler = {
+      emitEvent: false,
+      OnlySelf: true,
+    };
+    this.f.producersCommissionsList?.controls.forEach((el) => {
+      let sub1 = el.controls.percentage?.valueChanges.subscribe((elm) => {
+        if (+elm! > +this.f.producerCommPerc?.value!)
+          el.controls.percentage?.patchValue(
+            +this.f.producerCommPerc?.value!,
+            handler
+          );
+        el.controls.amount?.patchValue(
+          +this.f.producerComm?.value! * (+el.controls.percentage?.value! / 100)
+        );
+      });
+      this.subscribes.push(sub1!);
+    });
+    let sub = this.producersCommissionsArrayControls.valueChanges.subscribe(
+      (el) => {
+        this.uiState.producerCommission.commissionTotals = {
+          percentage: el.reduce(
+            (prev: any, next: any) => +prev + +next.percentage,
+            0
+          ),
+          amount: el.reduce((prev: any, next: any) => +prev + +next.amount, 0),
+        };
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  get commissionListBool(): boolean {
+    return (
+      +this.f.producerCommPerc?.value! <= 0 ||
+      +this.f.compCommAmount?.value! <= 0 ||
+      +this.f.compCommPerc?.value! <= 0 ||
+      +this.uiState.producerCommission.commissionTotals.percentage >=
+        +this.f.producerCommPerc?.value!
+    );
+  }
+
+  removeCommission(i: number) {
+    this.uiState.producerCommission.commissionTotals.percentage +=
+      this.commissionControls(i, "percentage").value;
+    this.uiState.producerCommission.commissionTotals.amount +=
+      this.commissionControls(i, "amount").value;
+    this.producersCommissionsArrayControls.removeAt(i);
+  }
+
+  //#endregion
   documentsList(e: any) {}
 
   onSubmit(e: any) {

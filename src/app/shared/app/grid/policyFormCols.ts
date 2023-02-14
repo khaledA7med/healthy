@@ -23,12 +23,12 @@ export const searchByRequestCols: ColDef[] = [
   },
   {
     headerName: "Class Of Business",
-    field: "className",
+    field: "classOfBusiness",
     minWidth: 180,
   },
   {
     headerName: "Line Of Business",
-    field: "lineofBusiness",
+    field: "lineOfBusiness",
     minWidth: 180,
   },
   {
