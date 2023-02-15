@@ -108,6 +108,7 @@ export const ApiRoutes = {
     searchClient: LookUpTables + "ActiveClient",
     searchPolicies: "/Production/Policy/SearchClientPolicies",
     fillRequestData: "/Production/Policy/FillRequestData",
+    loadPolicyData: "/Production/Policy/LoadPolicyData",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
     changeStatus: "",
   },

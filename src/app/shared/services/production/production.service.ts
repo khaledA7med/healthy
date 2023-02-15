@@ -88,6 +88,17 @@ export class ProductionService {
     );
   }
 
+  loadPolicyData(
+    policySno: string,
+    polRef: string
+  ): Observable<IBaseResponse<IPolicyPreview>> {
+    return this.http.post<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.loadPolicyData,
+      {},
+      { params: { PolicySNo: policySno, polRef } }
+    );
+  }
+
   //#endregion
 
   getPolicyById(
