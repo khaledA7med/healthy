@@ -12,7 +12,11 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { NgbModal, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbModal,
+  NgbModalOptions,
+  NgbModalRef,
+} from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -24,8 +28,12 @@ import {
   IPolicyCommissionListForms,
   IPolicyPaymentsListForms,
 } from "src/app/shared/app/models/Production/ipolicy-payments";
+import { IPolicyPreview } from "src/app/shared/app/models/Production/ipolicy-preview";
+import { IProducersCommissionsList } from "src/app/shared/app/models/Production/iproducers-commissions-list";
 import { IProductionForms } from "src/app/shared/app/models/Production/iproduction-forms";
 import {
+  IPoliciesRef,
+  IPolicyClient,
   IPolicyRequestResponse,
   IPolicyRequests,
   issueType,
@@ -45,6 +53,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IProductionForms>;
   formData!: Observable<IBaseMasterTable>;
   submitted: boolean = false;
+
+  modalRef!: NgbModalRef;
+
   uiState = {
     editMode: false,
     editId: "",
@@ -186,6 +197,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   searchByEvt(): void {
+    this.resetForm();
     if (this.f.searchType?.value === this.uiState.policy.searching.request)
       this.f.requestNo?.setValidators(Validators.required);
     else this.f.requestNo?.clearValidators();
@@ -193,7 +205,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   openModal(modal: TemplateRef<NgbModalOptions>) {
-    this.modalService.open(modal, {
+    this.modalRef = this.modalService.open(modal, {
       centered: true,
       size: "xl",
       backdrop: "static",
@@ -231,32 +243,35 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   fillRequestDataToForm(e: IPolicyRequests) {
-    this.productionService
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
       .fillRequestData(e.policySerial!, e.clientPolicySNo!)
       .subscribe(
         (res: IBaseResponse<IPolicyRequestResponse>) => {
-          console.log(res);
           if (res.status) {
+            this.endorsementIssue();
             let client = res.data?.clientData,
               policy = res.data?.clientPolicy;
+
             this.formGroup.patchValue({
               requestNo: e.requestNo,
-              clientInfo: `${client?.clientNo} | ${client?.clientName}`,
-              clientName: client?.clientNo,
+              clientInfo: `${e?.clientID} | ${e?.clientName}`,
+              clientName: e.clientName!,
               clientNo: client?.clientNo,
-              producer: client?.producer,
+              producer: e?.producer,
               oasisPolRef: client?.oasisPolRef,
               accNo: policy?.accNo,
               policyNo: policy?.policyNo,
-              endorsType: client?.endorsType,
+              endorsType: e?.endorsType,
               endorsNo: client?.endorsNo,
               insurComp: policy?.insurComp,
               className: policy?.className,
               lineOfBusiness: policy?.lineOfBusiness,
-              minDriverAge: client?.minDriverAge,
+              minDriverAge: +client?.minDriverAge!,
               claimNoOfDays: +client?.claimNoOfDays!,
               csNoOfDays: +client?.csNoOfDays!,
               remarks: client?.remarks,
+              issueType: "endorsement",
             });
 
             this.f.issueDate?.patchValue(
@@ -268,25 +283,77 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             this.f.periodTo?.patchValue(
               this.appUtils.dateStructFormat(policy?.periodTo!) as any
             );
-            if (client?.endorsType !== "Policy") {
-              this.f.issueType?.patchValue("endorsement");
-              this.f.endorsType?.patchValue(client?.endorsType!);
-              this.endorsementIssue();
-            }
+
+            this.uiState.policySearch.clientName = e.clientName!;
+            this.uiState.policySearch.clientID = e.clientName!;
+
+            this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
         },
         (err) => {
           this.message.popup("Oops!", err.message, "error");
         }
       );
+    this.subscribes.push(sub);
   }
 
-  fillClientDataToForm(e: any) {
-    console.log(e);
+  fillClientDataToForm(e: IPolicyClient) {
+    this.formGroup.patchValue({
+      clientInfo: `${e.sNo} | ${e.fullName}`,
+      clientName: e.fullName,
+      clientNo: e.sNo,
+      producer: e.producer,
+    });
+    this.uiState.policySearch.clientName = e.fullName!;
+    this.uiState.policySearch.clientID = e.sNo!;
+    this.modalRef.close();
   }
 
-  fillPolicyDataToForm(e: any) {
+  fillPolicyDataToForm(e: IPoliciesRef) {
     console.log(e);
+    let sub = this.productionService
+      .loadPolicyData(e.policiesSNo, e.sNo)
+      .subscribe(
+        (res: IBaseResponse<IPolicyPreview>) => {
+          if (res.status) {
+            let data = res.data;
+            this.formGroup.patchValue({
+              oasisPolRef: data?.oasisPolRef,
+              accNo: data?.accNo,
+              policyNo: data?.policyNo,
+              endorsType: data?.endorsType,
+              endorsNo: data?.endorsNo,
+              insurComp: data?.insurComp,
+              className: data?.className,
+              lineOfBusiness: data?.lineOfBusiness,
+              minDriverAge: data?.minDriverAge!,
+              claimNoOfDays: data?.claimNoOfDays,
+              csNoOfDays: data?.csnoOfDays,
+              remarks: data?.remarks,
+              compCommPerc: data?.compCommPerc,
+              producerCommPerc: data?.producerCommPerc,
+            });
+
+            this.f.issueDate?.patchValue(
+              this.appUtils.dateStructFormat(data?.issueDate!) as any
+            );
+            this.f.periodFrom?.patchValue(
+              this.appUtils.dateStructFormat(data?.periodFrom!) as any
+            );
+            this.f.periodTo?.patchValue(
+              this.appUtils.dateStructFormat(data?.periodTo!) as any
+            );
+
+            data?.producersCommissionsList.forEach((com) =>
+              this.addProducerCommission(com)
+            );
+          } else this.message.popup("Oops!", res.message!, "warning");
+          console.log(res);
+        },
+        (err) => this.message.popup("Oops!", err.message, "error")
+      );
+    this.subscribes.push(sub);
   }
 
   //#region Policy Details Handlers
@@ -444,6 +511,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
           +this.f.compCommAmount?.value! *
             (this.f.producerCommPerc?.value! / 100)
         );
+        this.commissionHandler();
       }
     }
     this.totalPaymentRow();
@@ -498,6 +566,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.producerComm?.patchValue(
       this.f.compCommAmount?.value! * (+this.f.producerCommPerc?.value! / 100)
     );
+    this.commissionHandler();
   }
   //#endregion
 
@@ -669,7 +738,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Producer Commissions
-  addProducerCommission(data?: IPolicyCommissionListForms): void {
+  addProducerCommission(data?: IProducersCommissionsList): void {
     if (this.f.producersCommissionsList?.invalid) {
       this.f.producersCommissionsList.markAllAsTouched();
       return;
@@ -685,8 +754,12 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       ]),
       rowTotal: new FormControl(null),
     });
+
     if (!data) commission.reset();
     else commission.disable();
+
+    if (this.f.producersCommissionsList?.length === 0)
+      commission.controls.producer?.patchValue(this.f.producer?.value!);
 
     this.f.producersCommissionsList?.push(commission);
     this.producersCommissionsArrayControls.updateValueAndValidity();
@@ -733,10 +806,19 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
+  commissionHandler(): void {
+    if (this.f.producersCommissionsList?.length) {
+      for (let i = 0; i < this.producersCommissionsArrayControls.length; i++) {
+        let perc = this.commissionControls(i, "percentage").value,
+          net = this.commissionControls(i, "amount");
+        net.patchValue(this.f.producerComm?.value! * (perc / 100));
+      }
+    }
+  }
+
   get commissionListBool(): boolean {
     return (
       +this.f.producerCommPerc?.value! <= 0 ||
-      +this.f.compCommAmount?.value! <= 0 ||
       +this.f.compCommPerc?.value! <= 0 ||
       +this.uiState.producerCommission.commissionTotals.percentage >=
         +this.f.producerCommPerc?.value!

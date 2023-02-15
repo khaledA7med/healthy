@@ -209,8 +209,8 @@
                                 </tr>
                             </thead>
                             <tbody id="payment-terms-table">
-                                <ng-container *ngIf="uiState.policyDetails.policiesPaymentsSchedules?.length !== 0">
-                                    <tr *ngFor="let item of uiState.policyDetails.policiesPaymentsSchedules">
+                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.paymentTermsList">
                                         <td>{{ item.payDate | date:"mediumDate" }}</td>
                                         <td>{{ item.percentage }}</td>
                                         <td>{{ item.amount | currency:
@@ -221,7 +221,7 @@
                                             'SAR' : 'code' }}</td>
                                     </tr>
                                 </ng-container>
-                                <ng-container *ngIf="uiState.policyDetails.policiesPaymentsSchedules?.length == 0">
+                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length == 0">
                                     <tr>
                                         <td colspan="100">
                                             <div class="alert alert-danger text-center" role="alert">
@@ -252,15 +252,15 @@
                             </thead>
                             <!-- policiesProducersCommissions -->
                             <tbody id="producers-commissions-table">
-                                <ng-container *ngIf="uiState.policyDetails.policiesProducersCommissions?.length !== 0">
-                                    <tr *ngFor="let item of uiState.policyDetails.policiesProducersCommissions">
+                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.producersCommissionsList">
                                         <td>{{ item.producer }}</td>
                                         <td>{{ item.percentage }}</td>
                                         <td>{{ item.amount | currency:
                                             'SAR' : 'code' }}</td>
                                     </tr>
                                 </ng-container>
-                                <ng-container *ngIf="uiState.policyDetails.policiesProducersCommissions?.length == 0">
+                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length == 0">
                                     <tr>
                                         <td colspan="100">
                                             <div class="alert alert-danger text-center" role="alert">
