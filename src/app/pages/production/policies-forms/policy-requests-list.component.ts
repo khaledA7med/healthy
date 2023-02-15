@@ -58,9 +58,11 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
 
   gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
-    pagination: false,
+    pagination: true,
     rowModelType: "infinite",
     editType: "fullRow",
+    paginationAutoPageSize: true,
+    cacheBlockSize: 500,
     animateRows: true,
     defaultColDef: {
       flex: 1,
@@ -73,7 +75,7 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
     onRowClicked: (e) => this.onRowClicked(e),
   };
 
-  subscribes!: Subscription;
+  subscribes: Subscription[] = [];
 
   constructor(
     private tableRef: ElementRef,
@@ -127,11 +129,9 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
                 this.uiState.requests,
                 this.uiState.requests.length
               );
-              if (this.uiState.requests.length === 0) {
+              if (this.uiState.requests.length === 0)
                 this.gridApi.showNoRowsOverlay();
-              } else {
-                this.gridApi.hideOverlay();
-              }
+              else this.gridApi.hideOverlay();
             } else {
               this.message.popup("Oops!", res.message!, "warning");
               this.gridApi.hideOverlay();
@@ -142,7 +142,7 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
             this.message.popup("Oops!", err.message, "error");
           }
         );
-      this.subscribes.add(sub);
+      this.subscribes.push(sub);
     },
   };
 
@@ -158,7 +158,6 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
               this.uiState.clients,
               this.uiState.clients.length
             );
-
             if (this.uiState.clients.length === 0)
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
@@ -172,7 +171,7 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
           this.message.popup("Oops!", err.message, "error");
         }
       );
-      this.subscribes.add(sub);
+      this.subscribes.push(sub);
     },
   };
 
@@ -202,7 +201,7 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
           this.message.popup("Oops!", err.message, "error");
         }
       );
-      this.subscribes.add(sub);
+      this.subscribes.push(sub);
     },
   };
 
@@ -221,6 +220,6 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    this.subscribes && this.subscribes.unsubscribe();
+    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }
