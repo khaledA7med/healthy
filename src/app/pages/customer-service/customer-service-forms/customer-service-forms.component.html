@@ -191,8 +191,8 @@
                                 <div class="accordion-info mb-2">
                                     <label for="netPremium">Net Premium</label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control input-text-right" name="netPremium"
-                                            placeholder="0.00" aria-label="netPremium" id="netPremium"
+                                        <input type="text" class="form-control form-control-sm input-text-right"
+                                            name="netPremium" placeholder="0.00" aria-label="netPremium" id="netPremium"
                                             formControlName="netPremium"
                                             [ngClass]="{'is-submitted': (f.netPremium?.touched || submitted) && f.netPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
@@ -224,7 +224,7 @@
                                 <!-- VAT -->
                                 <div class="accordion-info mb-2">
                                     <div class="lables">
-                                        <label for="vatPerc" class="">VAT</label>
+                                        <label for="vatPerc">VAT</label>
                                     </div>
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
@@ -245,8 +245,9 @@
                                         <label for="totalPremium">Total Premium</label>
                                     </div>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control input-text-right" name="totalPremium"
-                                            id="totalPremium" placeholder="0.00" formControlName="totalPremium" readonly
+                                        <input type="text" class="form-control form-control-sm input-text-right"
+                                            name="totalPremium" id="totalPremium" placeholder="0.00"
+                                            formControlName="totalPremium" readonly
                                             [ngClass]="{'is-submitted': (f.totalPremium?.touched || submitted) && f.totalPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
                                     </div>
