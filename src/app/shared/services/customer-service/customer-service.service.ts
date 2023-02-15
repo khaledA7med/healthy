@@ -8,6 +8,9 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { ICustomerServiceFollowUp } from "../../app/models/CustomerService/icustomer-service-followup";
 import { IChangeCsStatusRequest } from "../../app/models/CustomerService/icustomer-service-req";
+import { ICustomerServicePolicySearch } from "../../app/models/CustomerService/icustomer-service-policy-search";
+import { CSPolicySearchRequest } from "../../app/models/CustomerService/icustomer-service-policy-search-req";
+import { CSPolicyData } from "../../app/models/CustomerService/icustomer-service-policy";
 
 @Injectable({
 	providedIn: "root",
@@ -32,6 +35,7 @@ export class CustomerServiceService {
 			}
 		);
 	}
+
 	saveNote(data: {}): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.post(this.env + ApiRoutes.CustomerService.saveNote, data, { observe: "response" });
 	}
@@ -42,5 +46,38 @@ export class CustomerServiceService {
 
 	statusCount(): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.get(this.env + ApiRoutes.CustomerService.statusCount, { observe: "response" });
+	}
+
+	searchPolicy(data: CSPolicySearchRequest): Observable<HttpResponse<IBaseResponse<CSPolicyData[]>>> {
+		return this.http.post<IBaseResponse<CSPolicyData[]>>(this.env + ApiRoutes.CustomerService.searchPolicies, data, { observe: "response" });
+	}
+
+	getEndorsTypeByPolicy(endorsType: string, policyNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+		return this.http.post(
+			this.env + ApiRoutes.CustomerService.endorseTypeByPolicy,
+			{
+				endorsType,
+				policyNo,
+			},
+			{ observe: "response" }
+		);
+	}
+
+	getCSRequirments(
+		endorsType: string,
+		insuranceCompName: string,
+		classofInsurance: string,
+		lineOfBusiness: string
+	): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+		return this.http.post(
+			this.env + ApiRoutes.CustomerService.csRequirments,
+			{
+				endorsType,
+				insuranceCompName,
+				classofInsurance,
+				lineOfBusiness,
+			},
+			{ observe: "response" }
+		);
 	}
 }

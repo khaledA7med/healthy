@@ -13,7 +13,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                 <label for="id" class="asterisk-input">Client ID</label>
                                 <input type="text" id="clientID" class="form-control form-control-sm"
-                                    formControlName="clinetID"
+                                    formControlName="clientID"
                                     [ngClass]="{'is-invalid':(f.clientID?.touched || submitted) && f.clientID?.invalid}"
                                     placeholder="Client ID" readonly>
                                 <div class="invalid-feedback fw-bold"
@@ -30,8 +30,8 @@
                                         [ngClass]="{'is-invalid':(f.clientName?.touched || submitted) && f.clientName?.invalid}"
                                         class="form-control form-control-sm" placeholder="Client Name">
                                     <button class="btn btn-info btn-sm d-flex align-items-center"
-                                        id="clientInfoModalBtn" type="button" data-bs-toggle="modal"
-                                        data-bs-target=".search-Policies-form-modal">
+                                        id="clientInfoModalBtn" type="button"
+                                        (click)="openSearchClientDialoge(content)">
                                         <i class="ri-user-search-fill mx-1"></i>
                                         Search
                                     </button>
@@ -75,7 +75,8 @@
                                         formControlName="endorsType" class="is-invalid"
                                         [ngClass]="{'is-submitted': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
                                         [items]="(formData | async)?.PolicyEndorsTypes?.content!" bindLabel="name"
-                                        bindValue="name" [loading]="formData ? false : true">
+                                        bindValue="name" [loading]="formData ? false : true"
+                                        (change)="getSimilarAndRequir($event)">
                                     </ng-select>
                                     <div class="invalid-feedback fw-bold"
                                         *ngIf=" (f.endorsType?.touched || submitted) && f.endorsType?.invalid">
@@ -111,14 +112,19 @@
                                 <!-- Expiry Date -->
                                 <div class="accordion-info mb-2">
                                     <label for="expiryDate" class="asterisk-input">Expiry Date</label>
-                                    <input type="text" class="format-date-picker form-control form-control-sm" readonly
+                                    <app-gregorian-picker [model]="f.existingPolExpDate?.value" [required]="true"
+                                        [disabled]="true" [submitted]="submitted"></app-gregorian-picker>
+
+                                    <!-- 
+                                        (dateChange)="issueDate($event)"
+                                        <input type="text" class="format-date-picker form-control form-control-sm" readonly
                                         name="expiryDate" id="expiryDate" placeholder="yyyy/mm/dd"
                                         formControlName="existingPolExpDate"
                                         [ngClass]="{'is-invalid':(f.existingPolExpDate?.touched || submitted) && f.existingPolExpDate?.invalid}">
                                     <div class="invalid-feedback fw-bold"
                                         *ngIf=" (f.existingPolExpDate?.touched || submitted) && f.existingPolExpDate?.invalid">
                                         Required
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <!-- CS Special Conditions -->
@@ -159,7 +165,10 @@
                                 <!-- DeadLine -->
                                 <div class="accordion-info mb-2">
                                     <label for="deadLine" class="asterisk-input">DeadLine</label>
-                                    <div class="input-group input-group-sm">
+                                    <app-gregorian-picker [model]="f.existingPolExpDate?.value" [required]="true"
+                                        [submitted]="submitted"
+                                        (dateChange)="deadlineDate($event)"></app-gregorian-picker>
+                                    <!-- <div class="input-group input-group-sm">
 
                                         <input type="text" ngbDatepicker #d="ngbDatepicker" placeholder="yyyy-mm-dd"
                                             class="form-control form-control-sm" (click)="d.toggle()"
@@ -175,7 +184,7 @@
                                                       f.dateOfDeadline?.invalid
                                                     ">
                                         Required
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <!-- Request Details -->
@@ -228,8 +237,10 @@
                                     </div>
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
-                                            <ng-select id="vatPerc" name="VAT" placeholder="0%" [items]="vats"
-                                                bindLabel="name" bindValue="id" formControlName="vatPerc">
+                                            <ng-select id="vatPerc" name="VAT" placeholder="0%"
+                                                [items]="(formData | async)?.VATPercentage?.content!" bindLabel="name"
+                                                bindValue="name" [loading]="formData ? false : true"
+                                                formControlName="vatPerc">
                                             </ng-select>
                                         </div>
                                         <input type="text" id="vatPercValue" name="vatPercValue"
@@ -351,7 +362,8 @@
             <div class="lables form-group row">
                 <label class="col-sm-2 col-form-label" for="branch">Branch</label>
                 <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
-                    [items]="branches" bindLabel="name" bindValue="id" [(ngModel)]="branchSelect">
+                    [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                    [loading]="formData ? false : true" placeholder="Branch">
                 </ng-select>
             </div>
         </div>
@@ -372,3 +384,56 @@
     </div>
     <!-- end Buttons -->
 </form>
+
+
+
+<!-- Search Dialoge -->
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Policy Search</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <form [formGroup]="searchClientForm" (ngSubmit)="submitSearchPolicy()">
+        <div class="modal-body" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="col-lg-10 col-md-10 col-sm-12 row">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="clientNo">Client No</label>
+                        <!-- <input id="clientNo" class="form-control form-control-sm" formControlName="clientNo" /> -->
+                        <ng-select id="clientNo" placeholder="Select Endors Type" formControlName="clientNo"
+                            [items]="(formData | async)?.AllClients?.content!" bindLabel="name" bindValue="id"
+                            [loading]="formData ? false : true">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="insuranceCompName">Insurance Company</label>
+                        <!-- <input id="insuranceCompName" class="form-control form-control-sm"
+                            formControlName="insuranceCompName" /> -->
+                        <ng-select id="insuranceCompName" placeholder="Select Endors Type"
+                            formControlName="insuranceCompName"
+                            [items]="(formData | async)?.InsuranceCompanies?.content!" bindLabel="name" bindValue="name"
+                            [loading]="formData ? false : true">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="policyNo">Policy No</label>
+                        <input id="policyNo" class="form-control form-control-sm" formControlName="policyNo"
+                            style="height: 30px;" />
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary btn-sm d-flex justify-content-center w-100"
+                        style="height: 30px;"
+                        [disabled]="ff['clientNo'].errors && ff['policyNo'].errors && ff['insuranceCompName'].errors"><i
+                            class="ri-search-line mx-1"></i>Search</button>
+
+                </div>
+            </div>
+            <div class="ag-theme-alpine" appTableView>
+                <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
+                </ag-grid-angular>
+            </div>
+        </div>
+    </form>
+</ng-template>

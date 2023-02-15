@@ -289,6 +289,14 @@ export class MasterTableService {
 					route: ApiRoutes.MasterTable.CustomerServiceForm.insuranceCompanies,
 					name: BaseData.InsuranceCompanies,
 				},
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.vatPercentage,
+					name: BaseData.VATPercentage,
+				},
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.branch,
+					name: BaseData.Branch,
+				},
 			],
 		};
 

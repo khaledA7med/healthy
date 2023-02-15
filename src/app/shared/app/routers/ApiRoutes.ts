@@ -57,6 +57,8 @@ export const ApiRoutes = {
 			policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
 			allClients: LookUpTables + BaseData.AllClients,
 			insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+			vatPercentage: LookUpTables + BaseData.VATPercentage,
+			branch: LookUpTables + BaseData.Branch,
 		},
 		Production: {
 			policyStatus: LookUpTables + BaseData.PolicyStatus,
@@ -119,6 +121,9 @@ export const ApiRoutes = {
 		saveNote: "/CustomerService/Requests/SaveNote",
 		changeStatus: "/CustomerService/Requests/CSchangeStatus",
 		statusCount: "/CustomerService/Requests/StatusCount",
+		searchPolicies: "/CustomerService/Requests/PolicesSearch",
+		endorseTypeByPolicy: "/CustomerService/Requests/GetEndorseTypeByPolicy",
+		csRequirments: "/CustomerService/Requests/CSRequirements",
 		create: "",
 		edit: "",
 		delete: "",
