@@ -471,12 +471,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     );
 
     // policy requirement
-    salesLead.policyRequiermentsList?.forEach((el) =>
+    salesLead.policyRequiermentsList?.map((el) =>
       this.createReqFormArr("policy", el)
     );
 
     // activity Log
-    salesLead.salesActivityLogList?.forEach((el) => {
+    salesLead.salesActivityLogList?.map((el) => {
       this.addActivityLog(el);
     });
 
