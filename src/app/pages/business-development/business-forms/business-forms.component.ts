@@ -1,3 +1,4 @@
+import { AppRoutes } from "./../../../shared/app/routers/appRouters";
 import { ISalesLeadDetails } from "./../../../shared/app/models/BusinessDevelopment/isalesLeadDetails";
 import { MasterMethodsService } from "./../../../shared/services/master-methods.service";
 import { IRequirement } from "../../../shared/app/models/BusinessDevelopment/irequirement";
@@ -26,7 +27,7 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { EventService } from "src/app/core/services/event.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { reserved } from "src/app/core/models/reservedWord";
 import AppUtils from "src/app/shared/app/util";
 
@@ -34,7 +35,6 @@ import AppUtils from "src/app/shared/app/util";
   selector: "app-business-forms",
   templateUrl: "./business-forms.component.html",
   styleUrls: ["./business-forms.component.scss"],
-  providers: [AppUtils],
 })
 export class BusinessFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<ISalesLeadForm>;
@@ -47,8 +47,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
   uiState = {
     isClient: true, // Choose client Or Group
-    isCurrentIns: false,
     editId: "",
+    editMode: false,
   };
   @ViewChild("dropzone") dropzone!: any;
 
@@ -59,6 +59,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     private message: MessagesService,
     private route: ActivatedRoute,
     private utils: AppUtils,
+    private router: Router,
 
     private eventService: EventService
   ) {}
@@ -69,8 +70,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((res) => {
       if (res.get("id")) {
         this.uiState.editId = res.get("id")!;
+        this.uiState.editMode = true;
         this.getSalesLead(this.uiState.editId);
-        // this.eventService.broadcast(reserved.isLoading, true);
       }
     });
   }
@@ -91,6 +92,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       preferedInsurComapnies: new FormControl([]),
       policyDetails: new FormControl(null, Validators.required),
       //currently insurance
+      isCurrentInsured: new FormControl(false), // use it when edit only to check
       existingPolExpDate: new FormControl({ value: null, disabled: true }),
       currentPolicyNo: new FormControl({ value: null, disabled: true }),
       currentBroker: new FormControl({ value: null, disabled: true }),
@@ -110,6 +112,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //others
       branch: new FormControl(null),
       sendToUW: new FormControl(false),
+      // for edit
+      leadNo: new FormControl(""),
     });
   }
   get f() {
@@ -120,7 +124,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#region leadType
   changeToClient() {
     this.uiState.isClient = true;
-
     this.f.name?.reset();
     this.f.clientID?.reset();
   }
@@ -163,7 +166,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region  current insurance
-  toggleCurInsured(e: any) {
+  toggleCurInsured() {
     let controls = [
       this.f.existingPolExpDate,
       this.f.currentPolicyNo,
@@ -171,15 +174,13 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.currentInsurer,
       this.f.existingPolDetails,
     ];
-    if (e.target.checked) {
-      this.uiState.isCurrentIns = true;
+    if (this.f.isCurrentInsured?.value) {
       controls.forEach((c) => {
         c?.enable();
         c?.setValidators(Validators.required);
         c?.updateValueAndValidity();
       });
     } else {
-      this.uiState.isCurrentIns = false;
       controls.forEach((c) => {
         c?.disable();
         c?.clearValidators();
@@ -360,6 +361,22 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  // remove and edit inputs array form activity log and competitor
+  toggleBtn(i: number, name: string, isEdit: boolean) {
+    switch (isEdit) {
+      case true:
+        if (name === "competitor") this.competitorsArray.at(i).enable();
+        else if (name === "activityLog") this.activityLogArray.at(i).enable();
+        break;
+      case false:
+        if (name === "competitor") this.competitorsArray.removeAt(i);
+        else if (name === "activityLog") this.activityLogArray.removeAt(i);
+        break;
+      default:
+        break;
+    }
+  }
+
   documentsList(e: File[]) {
     this.documentsToUpload = e;
   }
@@ -402,13 +419,15 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       lineOfBusiness: salesLead?.lineOfBusiness,
       estimatedPremium: salesLead?.estimatedPremium,
       chDeadlinebool: salesLead?.chDeadlinebool,
-      deadLine: this.utils.dateStructFormat(salesLead.deadLine) as any, //
+      deadLine: salesLead.deadLine
+        ? (this.utils.dateStructFormat(salesLead.deadLine) as any)
+        : {}, //
       preferedInsurComapnies: salesLead?.preferedInsurComapnies,
       policyDetails: salesLead?.policyDetails,
       // currently insured
-      existingPolExpDate: this.utils.dateStructFormat(
-        salesLead.existingPolExpDate
-      ) as any,
+      existingPolExpDate: salesLead.existingPolDetails
+        ? (this.utils.dateStructFormat(salesLead.existingPolExpDate) as any)
+        : {},
       currentPolicyNo: salesLead?.currentPolicyNo,
       currentBroker: salesLead?.currentBroker,
       currentInsurer: salesLead.currentInsurer,
@@ -417,9 +436,34 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       sendToUW: salesLead.sendToUW,
       branch: salesLead.branch,
       // for edit
-      sNo: salesLead.sNo,
       leadNo: salesLead.leadNo,
     });
+
+    this.getLineOfBusiness(salesLead.classOfBusiness!);
+
+    // to checked chDeadlineBool
+    if (salesLead.chDeadline == 1) {
+      this.f.chDeadlinebool?.patchValue(true);
+      this.f.deadLine?.enable();
+    }
+    // to enable currently insured inputs
+    if (salesLead.currentBroker) {
+      this.f.isCurrentInsured?.patchValue(true);
+      let controls = [
+        this.f.existingPolExpDate,
+        this.f.currentPolicyNo,
+        this.f.currentBroker,
+        this.f.currentInsurer,
+        this.f.existingPolDetails,
+      ];
+      controls.forEach((c) => {
+        c?.enable();
+        c?.setValidators(Validators.required);
+        c?.updateValueAndValidity();
+      });
+    }
+
+    //
 
     // quoting requirement
     salesLead.quotingRequirementsList?.forEach((el) =>
@@ -448,21 +492,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     console.log(e.to);
   }
 
-  // remove and edit inputs array form activity log and competitor
-  toggleBtn(i: number, name: string, isEdit: boolean) {
-    switch (isEdit) {
-      case true:
-        if (name === "competitor") this.competitorsArray.at(i).enable();
-        else if (name === "activityLog") this.activityLogArray.at(i).enable();
-        break;
-      case false:
-        if (name === "competitor") this.competitorsArray.removeAt(i);
-        else if (name === "activityLog") this.activityLogArray.removeAt(i);
-        break;
-      default:
-        break;
-    }
-  }
   //#endregion
 
   //#region save Sales Lead
@@ -471,6 +500,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.message.toast(res.body.message!, "success");
+          if (this.uiState.editMode) {
+            this.router.navigate([AppRoutes.BusinessDevelopment.base]);
+          }
           this.resetForm();
           this.eventService.broadcast(reserved.isLoading, false);
         } else {
@@ -527,9 +559,11 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     );
     formData.append("ChDeadlinebool", form.value?.chDeadlinebool?.toString()!); // boolean //check
     formData.append("DeadLine", this.utils.dateFormater(form.value?.deadLine!));
+
     form.value?.preferedInsurComapnies?.forEach((el, i) => {
       formData.append(`PreferedInsurComapnies[${i}]`, el);
     });
+
     formData.append("PolicyDetails", form.value?.policyDetails!);
 
     // currently insured
@@ -564,10 +598,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         `QuotingRequirementsList[${i}].insuranceCopmany`,
         el.insuranceCopmany!
       );
-      formData.append(
-        `QuotingRequirementsList[${i}].insuranceCopmany`,
-        el.item!
-      );
+      formData.append(`QuotingRequirementsList[${i}].item`, el.item!);
     });
 
     // policy requirement array

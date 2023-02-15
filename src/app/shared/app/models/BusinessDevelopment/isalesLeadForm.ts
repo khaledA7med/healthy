@@ -21,6 +21,7 @@ export interface ISalesLeadForm {
   policyDetails?: FormControl<string | null>;
 
   // currently insured
+  isCurrentInsured?: FormControl<boolean | null>;
   existingPolExpDate?: FormControl<string | null>;
   currentPolicyNo?: FormControl<string | null>;
   currentBroker?: FormControl<string | null>;

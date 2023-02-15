@@ -53,9 +53,26 @@
                   <!-- /row -->
                   <!-- Client | Group & Producer row  -->
                   <div class="row my-2">
+                    <!-- col client id -->
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-3 my-2 d-flex flex-column"
+                      *ngIf="uiState.editMode"
+                    >
+                      <label for="clientId">Client ID</label>
+                      <input
+                        type="text"
+                        id="clientId"
+                        class="form-control form-control-sm"
+                        formControlName="clientID"
+                        readonly
+                      />
+                    </div>
+                    <!-- /col -->
+
                     <!-- col check client | group -->
                     <div
-                      class="col-sm-2 col-md-2 col-lg-2 my-2 d-flex flex-column"
+                      class="col-sm-2 my-2 d-flex flex-column"
+                      *ngIf="!uiState.editMode"
                     >
                       <div class="form-check mb-2">
                         <input
@@ -86,13 +103,21 @@
                     <!-- /col -->
                     <!-- col select client | group -->
                     <div
-                      class="col-sm-5 col-md-5 col-lg-5 my-2 d-flex flex-column"
+                      class="my-2 d-flex flex-column"
+                      [ngClass]="{
+                        'col-sm-12 col-md-6 col-lg-3': uiState.editMode,
+                        'col-sm-5': !uiState.editMode
+                      }"
                     >
-                      <label for="client" class="asterisk-input">
+                      <label
+                        for="client"
+                        [ngClass]="{ 'asterisk-input': !uiState.editMode }"
+                      >
                         {{ uiState.isClient ? "Client" : "Group" }}</label
                       >
                       <div class="input-group input-group-sm is-invalid">
                         <ng-select
+                          [readonly]="uiState.editMode"
                           id="client"
                           formControlName="name"
                           bindValue="name"
@@ -118,6 +143,7 @@
                           </ng-template>
                         </ng-select>
                         <button
+                          *ngIf="!uiState.editMode"
                           class="input-group-text btn-outline-success btn-sm"
                           id="inputGroup-sizing-sm"
                           [title]="
@@ -144,9 +170,30 @@
                       </div>
                     </div>
                     <!-- /col -->
+
+                    <!-- col lead No -->
+                    <div
+                      class="col-sm-12 col-md-6 col-lg-3 my-2 d-flex flex-column"
+                      *ngIf="uiState.editMode"
+                    >
+                      <label for="clientId">Lead No</label>
+                      <input
+                        type="text"
+                        id="clientId"
+                        class="form-control form-control-sm"
+                        formControlName="leadNo"
+                        readonly
+                      />
+                    </div>
+                    <!-- /col -->
+
                     <!-- col producer -->
                     <div
-                      class="col-sm-5 col-md-5 col-lg-5 my-2 d-flex flex-column"
+                      class="my-2 d-flex flex-column"
+                      [ngClass]="{
+                        'col-sm-12 col-md-6 col-lg-3': uiState.editMode,
+                        'col-sm-5': !uiState.editMode
+                      }"
                     >
                       <label for="producer" class="asterisk-input">
                         Producer</label
@@ -192,13 +239,15 @@
                     <div class="ribbon-content mt-4 text-muted">
                       <div class="row">
                         <!-- col Class of insurance -->
-                        <div
-                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
-                        >
-                          <label for="classOfInc" class="asterisk-input">
+                        <div class="col-md-6 my-2 d-flex flex-column">
+                          <label
+                            for="classOfInc"
+                            [ngClass]="{ 'asterisk-input': !uiState.editMode }"
+                          >
                             Class of Insurance</label
                           >
                           <ng-select
+                            [readonly]="uiState.editMode"
                             id="classOfInc"
                             class="form-control-sm is-invalid"
                             placeholder="Select Class Of Insurance"
@@ -226,9 +275,7 @@
                         </div>
                         <!-- /col -->
                         <!-- line of business -->
-                        <div
-                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
-                        >
+                        <div class="col-md-6 my-2 d-flex flex-column">
                           <label for="lineOfBus" class="asterisk-input">
                             Line of Business</label
                           >
@@ -259,9 +306,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col estimated pre -->
-                        <div
-                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
-                        >
+                        <div class="col-md-6 my-2 d-flex flex-column">
                           <label for="estPremium">Estimated Premium</label>
                           <div class="input-group input-group-sm">
                             <input
@@ -281,9 +326,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col Deadline -->
-                        <div
-                          class="col-sm-12 col-md-12 col-lg-6 my-2 d-flex flex-column"
-                        >
+                        <div class="col-md-6 my-2 d-flex flex-column">
                           <label
                             for="deadline"
                             [ngClass]="{
@@ -397,7 +440,8 @@
                       <input
                         type="checkbox"
                         class="form-check-input-sm me-1"
-                        (change)="toggleCurInsured($event)"
+                        (change)="toggleCurInsured()"
+                        formControlName="isCurrentInsured"
                       />
                       <span>Currently Insured</span>
                     </div>
@@ -408,7 +452,7 @@
                           <label
                             for="expiryDate"
                             [ngClass]="{
-                              'asterisk-input': uiState.isCurrentIns
+                              'asterisk-input': f.isCurrentInsured?.value
                             }"
                             >Expiry Date</label
                           >
@@ -452,7 +496,7 @@
                           <label
                             for="policyNo"
                             [ngClass]="{
-                              'asterisk-input': uiState.isCurrentIns
+                              'asterisk-input': f.isCurrentInsured?.value
                             }"
                             >Policy No</label
                           >
@@ -484,7 +528,7 @@
                           <label
                             for="curIncBroker"
                             [ngClass]="{
-                              'asterisk-input': uiState.isCurrentIns
+                              'asterisk-input': f.isCurrentInsured?.value
                             }"
                             >Current Insurance Broker
                           </label>
@@ -496,7 +540,7 @@
                             bindLabel="name"
                             bindValue="name"
                             [ngClass]="{
-                              'is-invalid':
+                              'is-submitted':
                                 (f.currentBroker?.touched || submitted) &&
                                 f.currentBroker?.invalid
                             }"
@@ -522,13 +566,13 @@
                           <label
                             for="curIncCompany "
                             [ngClass]="{
-                              'asterisk-input': uiState.isCurrentIns
+                              'asterisk-input': f.isCurrentInsured?.value
                             }"
                             >Current Insurance Company
                           </label>
                           <ng-select
                             id="curIncCompany"
-                            class="form-control-sm"
+                            class="form-control-sm is-invalid"
                             placeholder="Select Current Company"
                             formControlName="currentInsurer"
                             bindLabel="name"
@@ -560,7 +604,7 @@
                           <label
                             for="polDetails"
                             [ngClass]="{
-                              'asterisk-input': uiState.isCurrentIns
+                              'asterisk-input': f.isCurrentInsured?.value
                             }"
                             >Existing Policy Details (Business
                             size,...etc)</label
@@ -972,7 +1016,7 @@
                                 <td class="text-center">
                                   <div>
                                     <button
-                                      *ngIf="uiState.editId"
+                                      *ngIf="uiState.editMode"
                                       type="button"
                                       class="btn btn-sm btn-soft-info me-2"
                                       (click)="
@@ -1079,7 +1123,7 @@
                                 <td class="text-center">
                                   <div>
                                     <button
-                                      *ngIf="uiState.editId"
+                                      *ngIf="uiState.editMode"
                                       type="button"
                                       class="btn btn-sm btn-soft-info me-2"
                                       (click)="toggleBtn(i, 'competitor', true)"
@@ -1114,7 +1158,12 @@
     </ngb-panel>
     <!-- end lead activities acc  -->
     <!-- start tasks acc on edit mood -->
-    <ngb-panel id="4" title="New Activities" cardClass="open my-4">
+    <ngb-panel
+      id="4"
+      title="New Activities"
+      cardClass="open my-4"
+      *ngIf="uiState.editMode"
+    >
       <ng-template ngbPanelContent>
         <div
           id="collapseOne"
@@ -1231,7 +1280,7 @@
               <label for="sentTo">Send to U / W</label>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-4" *ngIf="!uiState.editMode">
             <ng-select
               placeholder="Choose Branch"
               class="form-control form-control-sm"
