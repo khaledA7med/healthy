@@ -11,8 +11,9 @@ export interface IPolicyPaymentsListForms {
 }
 
 export interface IPolicyCommissionListForms {
-  policiesSNo: FormControl<number | null>;
-  producer: FormControl<string | null>;
-  percentage: FormControl<number | null>;
-  amount: FormControl<number | null>;
+  policiesSNo?: FormControl<number | null>;
+  producer?: FormControl<string | null>;
+  percentage?: FormControl<number | null>;
+  amount?: FormControl<number | null>;
+  rowTotal?: FormControl<number | null>;
 }
