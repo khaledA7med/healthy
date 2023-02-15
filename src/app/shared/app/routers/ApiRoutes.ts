@@ -109,6 +109,7 @@ export const ApiRoutes = {
 		clientByRequest: "/Production/Policy/SearchClientByRequest",
 		searchClient: LookUpTables + "ActiveClient",
 		searchPolicies: "/Production/Policy/SearchClientPolicies",
+		fillRequestData: "/Production/Policy/FillRequestData",
 		lineOfBusiness: "/LookupTables/LineOfBusiness",
 		changeStatus: "",
 	},
