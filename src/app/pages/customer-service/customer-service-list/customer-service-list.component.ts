@@ -1,9 +1,9 @@
 import { CustomerServiceService } from "./../../../shared/services/customer-service/customer-service.service";
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, StatusPanelDef } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
@@ -21,6 +21,7 @@ import AppUtils from "src/app/shared/app/util";
 import { ICustomerServiceFollowUp } from "src/app/shared/app/models/CustomerService/icustomer-service-followup";
 import { CustomerServiceStatus } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
+import { IChangeCsStatusRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-req";
 RangePickerModule;
 
 @Component({
@@ -30,7 +31,7 @@ RangePickerModule;
 	providers: [AppUtils],
 	encapsulation: ViewEncapsulation.None,
 })
-export class CustomerServiceListComponent implements OnInit, OnDestroy {
+export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDestroy {
 	submitted = false;
 
 	@ViewChild("filter") CsFilter!: ElementRef;
@@ -57,6 +58,12 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 		followUpData: {
 			list: [] as ICustomerServiceFollowUp[],
 			requestNo: "",
+		},
+		statusCount: {
+			pendingCount: 0,
+			newRequestCount: 0,
+			closeCount: 0,
+			canceledCount: 0,
 		},
 	};
 
@@ -101,6 +108,8 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 		private router: Router
 	) {}
 
+	ngAfterViewInit(): void {}
+
 	ngOnInit(): void {
 		this.initFollowUpForm();
 		this.initFilterForm();
@@ -117,6 +126,7 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 					this.uiState.customerService.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
 					this.uiState.customerService.list = res.body?.data!;
+					this.statusCount();
 
 					params.successCallback(this.uiState.customerService.list, this.uiState.customerService.totalPages);
 					this.uiState.gridReady = true;
@@ -180,7 +190,7 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	//  filter Section
+	//#region filter Section
 	openFilterOffcanvas(): void {
 		this.offcanvasService.open(this.CsFilter, { position: "end" });
 	}
@@ -243,6 +253,7 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 	clearFilter() {
 		this.filterForms.reset();
 	}
+	//#endregion
 
 	//#region FollowUp Cancvas
 	private initFollowUpForm(): void {
@@ -309,19 +320,21 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 	//#endregion
 
 	changeStatus(CS: ICustomerService, status: string): void {
-		let dataSubmit = {
+		let dataSubmit: IChangeCsStatusRequest = {
+			sno: CS.sno!,
 			reqNo: CS.requestNo!,
-			status: "",
+			status,
 		};
 		switch (status) {
-			case "pending":
+			case CustomerServiceStatus.Pending:
 				dataSubmit.status = CustomerServiceStatus.Pending;
 				break;
-			case "close":
+			case CustomerServiceStatus.Close:
 				dataSubmit.status = CustomerServiceStatus.Close;
 				break;
-			case "cancel":
+			case CustomerServiceStatus.Cancel:
 				dataSubmit.status = CustomerServiceStatus.Cancel;
+				dataSubmit.reason = CS.rejectionReason;
 				break;
 			default:
 				dataSubmit.status = status;
@@ -337,7 +350,52 @@ export class CustomerServiceListComponent implements OnInit, OnDestroy {
 				this.message.popup("Oops!", err.message, "error");
 			}
 		);
+
 		this.subscribes.push(sub);
+	}
+
+	statusCount(): void {
+		let sub = this.customerService.statusCount().subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				if (res.body?.status) {
+					this.uiState.statusCount = res.body.data;
+					this.drawStatusCount();
+				} else this.message.toast(res.body!.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
+		);
+
+		this.subscribes.push(sub);
+	}
+
+	drawStatusCount() {
+		let parent = document.getElementsByClassName("ag-paging-panel")[0];
+		let child = document.createElement("div");
+		child.setAttribute("id", "statusCount");
+		let statusCountChecker = document.getElementById("statusCount");
+		if (statusCountChecker) {
+			parent.removeChild(statusCountChecker);
+		}
+		let childContent = `<div class=" col-12 d-flex align-items-center">
+					<div class="badge bg-secondary mx-1">
+					Pending <span>${this.uiState.statusCount?.pendingCount!}</span>
+					</div>
+					<div class="badge bg-warning mx-1">
+					New Request <span>${this.uiState.statusCount?.newRequestCount!}</span>
+					</div>
+					<div class="badge bg-success mx-1">
+					Close <span>${this.uiState.statusCount?.closeCount!}</span>
+					</div>
+					<div class="badge bg-danger mx-1">
+					Canceled <span>${this.uiState.statusCount?.canceledCount!}</span>
+					</div>
+					</div>`;
+		child.classList.add("col", "my-2");
+		child.innerHTML = "";
+		child.innerHTML = childContent;
+		parent.prepend(child);
 	}
 
 	ngOnDestroy(): void {

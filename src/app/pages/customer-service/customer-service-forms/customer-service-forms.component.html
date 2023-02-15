@@ -1,4 +1,5 @@
-<form class="mb-4" id="CustomerServiceForm" autocomplete="off">
+<form class="mb-4" id="CustomerServiceForm" [formGroup]="formGroup" (ngSubmit)="submitForm(formGroup)"
+    autocomplete="off">
     <ngb-accordion #acc="ngbAccordion" activeIds="1,2,3,4">
 
         <!-- Client Details -->
@@ -9,52 +10,48 @@
                         <div class="row my-2">
 
                             <!-- ID -->
-                            <div class="col-lg-4 col-md-12">
-                                <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="id" class="">
-                                            Client ID
-                                        </label>
-                                    </div>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" id="clientID" aria-label="ID"
-                                            class="form-control form-control-sm" readonly>
-                                    </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                                <label for="id" class="asterisk-input">Client ID</label>
+                                <input type="text" id="clientID" class="form-control form-control-sm"
+                                    formControlName="clinetID"
+                                    [ngClass]="{'is-invalid':(f.clientID?.touched || submitted) && f.clientID?.invalid}"
+                                    placeholder="Client ID" readonly>
+                                <div class="invalid-feedback fw-bold"
+                                    *ngIf=" (f.clientID?.touched || submitted) && f.clientID?.invalid">
+                                    Required
                                 </div>
                             </div>
 
                             <!-- Client Info -->
-                            <div class="col-lg-4 col-md-12">
-                                <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="ClientName">Client Name</label>
-                                    </div>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" id="ClientName" name="ClientName" required readonly
-                                            aria-label="Client Info" class="form-control form-control-sm"
-                                            placeholder="Client Name">
-                                        <button class="btn btn-info btn-sm d-flex align-items-center"
-                                            id="clientInfoModalBtn" type="button" data-bs-toggle="modal"
-                                            data-bs-target=".search-Policies-form-modal">
-                                            <i class="ri-user-search-fill mx-1"></i>
-                                            Search
-                                        </button>
-                                    </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                                <label for="ClientName" class="asterisk-input">Client Name</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="ClientName" formControlName="clientName" readonly
+                                        [ngClass]="{'is-invalid':(f.clientName?.touched || submitted) && f.clientName?.invalid}"
+                                        class="form-control form-control-sm" placeholder="Client Name">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center"
+                                        id="clientInfoModalBtn" type="button" data-bs-toggle="modal"
+                                        data-bs-target=".search-Policies-form-modal">
+                                        <i class="ri-user-search-fill mx-1"></i>
+                                        Search
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback fw-bold"
+                                    *ngIf=" (f.clientName?.touched || submitted) && f.clientName?.invalid">
+                                    Required
                                 </div>
                             </div>
 
                             <!-- Producer ( Salesman )-->
-                            <div class="col-lg-4 col-md-12">
-                                <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="producer">Producer (Salesman)</label>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm" name="producer" readonly
-                                        placeholder="Producer." id="producer" aria-label="Producer">
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                                <label for="producer" class="asterisk-input">Producer (Salesman)</label>
+                                <input type="text" class="form-control form-control-sm" readonly placeholder="Producer."
+                                    formControlName="producer"
+                                    [ngClass]="{'is-invalid':(f.producer?.touched || submitted) && f.producer?.invalid}">
+                                <div class="invalid-feedback fw-bold"
+                                    *ngIf=" (f.producer?.touched || submitted) && f.producer?.invalid">
+                                    Required
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
                             </div>
 
                         </div>
@@ -70,138 +67,158 @@
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row my-2">
-                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
-
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                 <!-- Endors Type -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="endorsType">Endors Type</label>
-                                    </div>
-                                    <ng-select id="endorsType" class="is-invalid" [searchable]="false"
-                                        placeholder="Select Endors Type" formControlName="branch" [items]="branches"
-                                        bindLabel="name" bindValue="id" [(ngModel)]="branchSelect">
+                                    <label for="endorsType" class="asterisk-input">Endors Type</label>
+                                    <ng-select id="endorsType" placeholder="Select Endors Type"
+                                        formControlName="endorsType" class="is-invalid"
+                                        [ngClass]="{'is-submitted': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
+                                        [items]="(formData | async)?.PolicyEndorsTypes?.content!" bindLabel="name"
+                                        bindValue="name" [loading]="formData ? false : true">
                                     </ng-select>
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.endorsType?.touched || submitted) && f.endorsType?.invalid">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- Policy No -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="policyNo" class="">
-                                            Policy
-                                            No
-                                        </label>
+                                    <label for="policyNo" class="asterisk-input">Policy No</label>
+                                    <input type="text" class="form-control form-control-sm" readonly
+                                        placeholder="Policy No." id="policyNo" aria-label="Policy No"
+                                        formControlName="policyNo"
+                                        [ngClass]="{'is-invalid':(f.policyNo?.touched || submitted) && f.policyNo?.invalid}">
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.policyNo?.touched || submitted) && f.policyNo?.invalid">
+                                        Required
                                     </div>
-                                    <input type="text" class="form-control form-control-sm" name="policyNo" readonly
-                                        placeholder="Policy No." id="policyNo" aria-label="Policy No">
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- Issued By -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="issuedBy">Issued By</label>
-                                    </div>
+                                    <label for="issuedBy" class="asterisk-input">Issued By</label>
                                     <input type="text" class="form-control form-control-sm" name="issuedBy" readonly
-                                        placeholder="Issued By." id="issuedBy" aria-label="Issued By">
+                                        placeholder="Issued By." id="issuedBy" formControlName="insurComp"
+                                        [ngClass]="{'is-invalid':(f.insurComp?.touched || submitted) && f.insurComp?.invalid}">
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.insurComp?.touched || submitted) && f.insurComp?.invalid">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- Expiry Date -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="expiryDate">Expiry Date</label>
-                                    </div>
+                                    <label for="expiryDate" class="asterisk-input">Expiry Date</label>
                                     <input type="text" class="format-date-picker form-control form-control-sm" readonly
                                         name="expiryDate" id="expiryDate" placeholder="yyyy/mm/dd"
-                                        aria-label="Expiry Date">
+                                        formControlName="existingPolExpDate"
+                                        [ngClass]="{'is-invalid':(f.existingPolExpDate?.touched || submitted) && f.existingPolExpDate?.invalid}">
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.existingPolExpDate?.touched || submitted) && f.existingPolExpDate?.invalid">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- CS Special Conditions -->
-                                <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="csSpecialConditions">CS Special Conditions</label>
-                                    </div>
+                                <!-- <div class="accordion-info mb-2">
+                                        <label for="csSpecialConditions" class="asterisk-input">CS Special Conditions</label>
                                     <textarea class="form-control form-control-sm" name="csSpecialConditions"
-                                        id="csSpecialConditions" readonly rows="2"></textarea>
-                                </div>
+                                        id="csSpecialConditions" readonly rows="2" formControlName="cSSpecialConditions"></textarea>
+                                </div> -->
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                 <!-- Class Of Insurance -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="classOfInsurance">Class Of Insurance</label>
-                                    </div>
+                                    <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
                                     <input type="text" class="form-control form-control-sm" name="classOfInsurance"
                                         readonly placeholder="Class Of Insurance." id="classOfInsurance"
-                                        aria-label="Class Of Insurance">
+                                        formControlName="classOfBusiness"
+                                        [ngClass]="{'is-submitted': (f.classOfBusiness?.touched || submitted) && f.classOfBusiness?.invalid}">
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.classOfBusiness?.touched || submitted) && f.classOfBusiness?.invalid">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- Line Of Business -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="lineOfBusiness">Line Of Business</label>
-                                    </div>
+                                    <label for="lineOfBusiness" class="asterisk-input">Line Of Business</label>
                                     <input type="text" class="form-control form-control-sm" name="lineOfBusiness"
                                         readonly placeholder="Line Of Business." id="lineOfBusiness"
-                                        aria-label="Line Of Business">
+                                        formControlName="lineOfBusiness"
+                                        [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid}">
+                                    <div class="invalid-feedback fw-bold"
+                                        *ngIf=" (f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- DeadLine -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="deadLine">DeadLine</label>
+                                    <label for="deadLine" class="asterisk-input">DeadLine</label>
+                                    <div class="input-group input-group-sm">
+
+                                        <input type="text" ngbDatepicker #d="ngbDatepicker" placeholder="yyyy-mm-dd"
+                                            class="form-control form-control-sm" (click)="d.toggle()"
+                                            formControlName="dateOfDeadline" [ngClass]="{
+                                                      'is-invalid': submitted && f.dateOfDeadline?.invalid
+                                                    }" readonly />
+
+                                        <button class="btn btn-outline-secondary ri-calendar-2-line" type="button"
+                                            (click)="d.toggle()"></button>
                                     </div>
-                                    <app-gregorian-picker [required]="true"
-                                        [submitted]="submitted"></app-gregorian-picker>
-                                    <!-- (dateChange)="DeadLineDate($event)" -->
+                                    <div class="invalid-feedback fw-bold d-block" *ngIf="
+                                                      (f.dateOfDeadline?.touched || submitted) &&
+                                                      f.dateOfDeadline?.invalid
+                                                    ">
+                                        Required
+                                    </div>
                                 </div>
-                                <span class="invalid-feedback d-none mt-0">Required</span>
 
                                 <!-- Request Details -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="requestDetails">Request Details</label>
-                                    </div>
+                                    <label for="requestDetails" class="asterisk-input">Request Details</label>
                                     <textarea class="form-control form-control-sm" name="requestDetails"
-                                        id="requestDetails" rows="5"></textarea>
+                                        id="requestDetails" rows="2" formControlName="requestDetails"></textarea>
                                 </div>
                             </div>
 
                             <!-- Net Premium -->
-                            <div class="col-lg-4 col-md-6 col-ms-12 mb-2">
+                            <div class="col-lg-4 col-md-6 col-ms-12 my-1">
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="netPremium">Net Premium</label>
-                                    </div>
+                                    <label for="netPremium">Net Premium</label>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control input-text-right" name="netPremium"
                                             placeholder="0.00" aria-label="netPremium" id="netPremium"
-                                            aria-describedby="SAR">
+                                            formControlName="netPremium"
+                                            [ngClass]="{'is-submitted': (f.netPremium?.touched || submitted) && f.netPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
+                                        <div class="invalid-feedback fw-bold d-block"
+                                            *ngIf=" (f.netPremium?.touched || submitted) &&  f.netPremium?.invalid ">
+                                            Required
+                                        </div>
                                     </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
                                 </div>
-
                                 <!-- Policy Fees -->
                                 <div class="accordion-info mb-2">
-                                    <div class="lables">
-                                        <label for="policyFees" class="">
-                                            Policy
-                                            Fees
-                                        </label>
-                                    </div>
+                                    <label for="policyFees">
+                                        Policy
+                                        Fees
+                                    </label>
                                     <div class="input-group input-group-sm">
                                         <input type="text" id="policyFees" name="policyFees"
                                             class="form-control form-control-sm input-text-right" placeholder="0.00"
-                                            aria-label="policyFees">
+                                            formControlName="policyFees"
+                                            [ngClass]="{'is-submitted': (f.policyFees?.touched || submitted) && f.policyFees?.invalid}">
                                         <span class="input-group-text" id="">SAR</span>
                                     </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                    <div class="invalid-feedback fw-bold d-block"
+                                        *ngIf="(f.policyFees?.touched || submitted) &&  f.policyFees?.invalid">
+                                        Required
+                                    </div>
                                 </div>
 
                                 <!-- VAT -->
@@ -212,15 +229,14 @@
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
                                             <ng-select id="vatPerc" name="VAT" placeholder="0%" [items]="vats"
-                                                bindLabel="name" bindValue="id" [(ngModel)]="vatSelect">
+                                                bindLabel="name" bindValue="id" formControlName="vatPerc">
                                             </ng-select>
                                         </div>
                                         <input type="text" id="vatPercValue" name="vatPercValue"
                                             class="form-control form-control-sm input-text-right"
-                                            aria-label="vatPercentValue" placeholder="0.00" readonly>
+                                            formControlName="vatValue" placeholder="0.00" readonly>
                                         <span class="input-group-text" id="">SAR</span>
                                     </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
                                 </div>
 
                                 <!-- Total Premium -->
@@ -230,11 +246,14 @@
                                     </div>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control input-text-right" name="totalPremium"
-                                            id="totalPremium" placeholder="0.00" aria-label="totalPremium"
-                                            aria-describedby="SAR" readonly>
+                                            id="totalPremium" placeholder="0.00" formControlName="totalPremium" readonly
+                                            [ngClass]="{'is-submitted': (f.totalPremium?.touched || submitted) && f.totalPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
                                     </div>
-                                    <span class="invalid-feedback d-none mt-0">Required</span>
+                                    <div class="invalid-feedback fw-bold d-block"
+                                        *ngIf="(f.totalPremium?.touched || submitted) &&  f.totalPremium?.invalid">
+                                        Required
+                                    </div>
                                 </div>
 
                             </div>

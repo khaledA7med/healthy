@@ -276,6 +276,20 @@ export class MasterTableService {
 					name: BaseData.TypeOfCustomerServices,
 				},
 			],
+			CustomerServiceForm: [
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.policyEndorsTypes,
+					name: BaseData.PolicyEndorsTypes,
+				},
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.allClients,
+					name: BaseData.AllClients,
+				},
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.insuranceCompanies,
+					name: BaseData.InsuranceCompanies,
+				},
+			],
 		};
 
 		switch (module) {
@@ -299,6 +313,9 @@ export class MasterTableService {
 				break;
 			case MODULES.CustomerService:
 				this.dataSrc = data.CustomerService;
+				break;
+			case MODULES.CustomerServiceForm:
+				this.dataSrc = data.CustomerServiceForm;
 				break;
 			default:
 				break;
