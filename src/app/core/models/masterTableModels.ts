@@ -37,6 +37,7 @@ export enum BaseData {
 	LogType = "LogType",
 	ProductionFieldList = "ProductionFieldList",
 	ProductionOperatordList = "ProductionOperatordList",
+	VATPercentage = "VATPercentage",
 }
 
 export interface IBaseMasterTable {
@@ -78,6 +79,7 @@ export interface IBaseMasterTable {
 	LogType?: Caching<IGenericResponseType[]>;
 	ProductionFieldList?: Caching<IGenericResponseType[]>;
 	ProductionOperatordList?: Caching<IGenericResponseType[]>;
+	VATPercentage?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {
