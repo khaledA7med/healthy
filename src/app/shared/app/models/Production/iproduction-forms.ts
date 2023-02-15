@@ -24,7 +24,7 @@ export interface IProductionForms {
   insurComp?: FormControl<string | null>;
   className?: FormControl<string | null>;
   lineOfBusiness?: FormControl<string | null>;
-  minDriverAge?: FormControl<string | null>;
+  minDriverAge?: FormControl<number | null>;
   issueDate?: FormControl<string | null>;
   expiryDate?: FormControl<string | null>;
   claimNoOfDays?: FormControl<number | null>;

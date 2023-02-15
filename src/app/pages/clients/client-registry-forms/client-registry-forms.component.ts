@@ -29,7 +29,6 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
   selector: "app-client-registry-forms",
   templateUrl: "./client-registry-forms.component.html",
   styleUrls: ["./client-registry-forms.component.scss"],
-  providers: [AppUtils],
 })
 export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClientForms>;
@@ -429,7 +428,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     formData.append("IDNo", clientForm.value.idNo!);
     formData.append(
       "IDExpiryDate",
-      this.dateFormater(clientForm.value.idExpiryDate!)
+      this.util.dateFormater(clientForm.value.idExpiryDate!)
     );
     formData.append("Nationality", clientForm.value.nationality!);
     formData.append("SourceofIncome", clientForm.value.sourceofIncome!);
@@ -438,20 +437,20 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     formData.append("MarketSegment", clientForm.value.marketSegment!);
     formData.append(
       "DateOfIncorporation",
-      this.dateFormater(clientForm.value.dateOfIncorporation!)
+      this.util.dateFormater(clientForm.value.dateOfIncorporation!)
     );
     formData.append(
       "DateOfIncorporationHijri",
-      this.dateFormater(clientForm.value.dateOfIncorporationHijri!)
+      this.util.dateFormater(clientForm.value.dateOfIncorporationHijri!)
     );
     formData.append("CommericalNo", clientForm.value.commericalNo!);
     formData.append(
       "ExpiryDate",
-      this.dateFormater(clientForm.value.expiryDate!)
+      this.util.dateFormater(clientForm.value.expiryDate!)
     );
     formData.append(
       "ExpiryDateHijri",
-      this.dateFormater(clientForm.value.expiryDateHijri!)
+      this.util.dateFormater(clientForm.value.expiryDateHijri!)
     );
     formData.append("SponsorID", clientForm.value.sponsorID!);
     formData.append("UnifiedNo", clientForm.value.unifiedNo!);
@@ -556,13 +555,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   // @@@@ Date Events @@@@ //
   //#region Dates
-  dateFormater(dt: any) {
-    let date = "";
-    if (dt) {
-      date = new Date(`${dt.year}/${dt.month}/${dt.day}`).toLocaleDateString();
-    }
-    return date;
-  }
   retailExpiryDate(e: { gon: any; hijri: any }): void {
     this.f.idExpiryDate?.patchValue(e.gon);
   }
