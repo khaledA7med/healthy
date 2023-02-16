@@ -117,6 +117,7 @@ export const ApiRoutes = {
     fillRequestData: "/Production/Policy/FillRequestData",
     loadPolicyData: "/Production/Policy/LoadPolicyData",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
+    save: "/Production/Policy/Save",
     changeStatus: "",
   },
   CustomerService: {

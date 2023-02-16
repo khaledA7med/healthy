@@ -1,10 +1,6 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import {
-  Caching,
-  IGenericResponseType,
-} from "src/app/core/models/masterTableModels";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentReq } from "../../app/models/App/IDocumentReq";
@@ -96,6 +92,14 @@ export class ProductionService {
       this.env + ApiRoutes.Production.loadPolicyData,
       {},
       { params: { PolicySNo: policySno, polRef } }
+    );
+  }
+
+  savePolicy(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.save,
+      body,
+      { observe: "response" }
     );
   }
 
