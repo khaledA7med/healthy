@@ -1,5 +1,6 @@
-export interface IChangeCsStatusRequest
-{
-    reqNo: string;
-    status: string;
+export interface IChangeCsStatusRequest {
+	sno: number;
+	reqNo: string;
+	status: string;
+	reason?: string;
 }

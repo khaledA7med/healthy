@@ -1,57 +1,83 @@
-import { ICustomerServiceFilters } from 'src/app/shared/app/models/CustomerService/icustomer-service-filter';
-import { ICustomerService } from './../../app/models/CustomerService/icustomer-service';
-import { Injectable } from '@angular/core';
+import { ICustomerServiceFilters } from "src/app/shared/app/models/CustomerService/icustomer-service-filter";
+import { ICustomerService } from "./../../app/models/CustomerService/icustomer-service";
+import { Injectable } from "@angular/core";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { ICustomerServiceFollowUp } from '../../app/models/CustomerService/icustomer-service-followup';
-import { IChangeCsStatusRequest } from '../../app/models/CustomerService/icustomer-service-req';
+import { ICustomerServiceFollowUp } from "../../app/models/CustomerService/icustomer-service-followup";
+import { IChangeCsStatusRequest } from "../../app/models/CustomerService/icustomer-service-req";
+import { ICustomerServicePolicySearch } from "../../app/models/CustomerService/icustomer-service-policy-search";
+import { CSPolicySearchRequest } from "../../app/models/CustomerService/icustomer-service-policy-search-req";
+import { CSPolicyData } from "../../app/models/CustomerService/icustomer-service-policy";
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: "root",
 })
-export class CustomerServiceService
-{
-  private readonly env = environment.baseURL;
+export class CustomerServiceService {
+	private readonly env = environment.baseURL;
 
-  constructor (private http: HttpClient) { }
+	constructor(private http: HttpClient) {}
 
-  getCustomerService (
-    customerServiceFilters: ICustomerServiceFilters
-  ): Observable<HttpResponse<IBaseResponse<ICustomerService[]>>>
-  {
-    return this.http.post<IBaseResponse<ICustomerService[]>>(
-      this.env + ApiRoutes.CustomerService.search,
-      customerServiceFilters,
-      {
-        observe: "response",
-      }
-    );
-  }
+	getCustomerService(customerServiceFilters: ICustomerServiceFilters): Observable<HttpResponse<IBaseResponse<ICustomerService[]>>> {
+		return this.http.post<IBaseResponse<ICustomerService[]>>(this.env + ApiRoutes.CustomerService.search, customerServiceFilters, {
+			observe: "response",
+		});
+	}
 
-  getFollowUps (requestNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>>
-  {
-    return this.http.post<IBaseResponse<ICustomerServiceFollowUp[]>>(
-      this.env + ApiRoutes.CustomerService.followUp,
-      { requestNo },
-      {
-        observe: "response",
-      }
-    );
-  }
-  saveNote (data: {}): Observable<HttpResponse<IBaseResponse<any>>>
-  {
-    return this.http.post(this.env + ApiRoutes.CustomerService.saveNote, data, { observe: "response" });
-  }
+	getFollowUps(requestNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>> {
+		return this.http.post<IBaseResponse<ICustomerServiceFollowUp[]>>(
+			this.env + ApiRoutes.CustomerService.followUp,
+			{ requestNo },
+			{
+				observe: "response",
+			}
+		);
+	}
 
-  changeStatus (data: IChangeCsStatusRequest): Observable<HttpResponse<IBaseResponse<any>>>
-  {
-    return this.http.post(
-      this.env + ApiRoutes.BusinessDevelopment.changeStatus,
-      {},
-      { params: { reqNo: data.reqNo, status: data.status }, observe: "response" }
-    );
-  }
+	saveNote(data: {}): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.post(this.env + ApiRoutes.CustomerService.saveNote, data, { observe: "response" });
+	}
+
+	changeStatus(data: IChangeCsStatusRequest): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.post(this.env + ApiRoutes.CustomerService.changeStatus, data, { observe: "response" });
+	}
+
+	statusCount(): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.get(this.env + ApiRoutes.CustomerService.statusCount, { observe: "response" });
+	}
+
+	searchPolicy(data: CSPolicySearchRequest): Observable<HttpResponse<IBaseResponse<CSPolicyData[]>>> {
+		return this.http.post<IBaseResponse<CSPolicyData[]>>(this.env + ApiRoutes.CustomerService.searchPolicies, data, { observe: "response" });
+	}
+
+	getEndorsTypeByPolicy(endorsType: string, policyNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+		return this.http.post(
+			this.env + ApiRoutes.CustomerService.endorseTypeByPolicy,
+			{
+				endorsType,
+				policyNo,
+			},
+			{ observe: "response" }
+		);
+	}
+
+	getCSRequirments(
+		endorsType: string,
+		insuranceCompName: string,
+		classofInsurance: string,
+		lineOfBusiness: string
+	): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+		return this.http.post(
+			this.env + ApiRoutes.CustomerService.csRequirments,
+			{
+				endorsType,
+				insuranceCompName,
+				classofInsurance,
+				lineOfBusiness,
+			},
+			{ observe: "response" }
+		);
+	}
 }
