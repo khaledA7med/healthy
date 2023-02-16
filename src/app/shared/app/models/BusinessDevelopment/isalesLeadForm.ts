@@ -41,6 +41,7 @@ export interface ISalesLeadForm {
   // others
   branch?: FormControl<string | null>;
   sendToUW?: FormControl<Boolean | null>;
+  documentLists?: FormControl<string[] | null>;
 
   // for edit
   sNo?: FormControl<number | null>;
@@ -53,8 +54,6 @@ export interface ISalesLeadForm {
   chQuoatationSentToClient?: FormControl<boolean | null>;
   chRevisedQuoatation?: FormControl<boolean | null>;
   clientResultPremium?: FormControl<number | null>;
-  docSNo?: FormControl<number | null>;
-  documentLists?: FormControl<string[] | null>;
   estimatedPremiumAED?: FormControl<number | null>;
   estimatedPremiumUSD?: FormControl<number | null>;
   exRateAED?: FormControl<number | null>;

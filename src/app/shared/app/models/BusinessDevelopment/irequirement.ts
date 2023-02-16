@@ -6,3 +6,9 @@ export interface IRequirement {
   insuranceCopmany?: FormControl<string | null>;
   item?: FormControl<string | null>;
 }
+
+export interface IRequirementRequest {
+  className?: string | null;
+  lineOfBusiness?: string | null;
+  companyName?: string | null;
+}

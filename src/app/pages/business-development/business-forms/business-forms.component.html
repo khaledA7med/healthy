@@ -343,7 +343,7 @@
                                 type="checkbox"
                                 class="form-check-input-sm"
                                 formControlName="chDeadlinebool"
-                                (change)="toggleDeadline($event)"
+                                (change)="toggleDeadline()"
                             /></span>
 
                             <input
@@ -1310,7 +1310,7 @@
             type="button"
             id="sa-warning"
             class="btn btn-sm btn-soft-danger"
-            (click)="dropzone.clearImages()"
+            (click)="resetForm(); dropzone.clearImages()"
           >
             <i class="ri-delete-bin-2-line"></i>
             Clear

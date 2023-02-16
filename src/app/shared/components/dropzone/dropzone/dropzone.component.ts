@@ -1,12 +1,17 @@
+import { Subscription } from "rxjs";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import {
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
 } from "@angular/core";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 
 @Component({
   selector: "app-dropzone",
@@ -14,15 +19,20 @@ import { MessagesService } from "src/app/shared/services/messages.service";
   styleUrls: ["./dropzone.component.scss"],
   providers: [AppUtils],
 })
-export class DropzoneComponent implements OnChanges {
+export class DropzoneComponent implements OnChanges, OnDestroy {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
+  subscribes!: Subscription;
 
   @Input() UploadedFiles: any;
 
   @Output() files: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private message: MessagesService, public util: AppUtils) {}
+  constructor(
+    private message: MessagesService,
+    public util: AppUtils,
+    private masterMethod: MasterMethodsService
+  ) {}
 
   ngOnChanges(): void {
     if (this.UploadedFiles) this.documentsToDisplay = this.UploadedFiles;
@@ -61,18 +71,28 @@ export class DropzoneComponent implements OnChanges {
   }
 
   removeImage(item: any) {
+    console.log(item);
     this.message
       .confirm("Sure!", "You Want To Delete ?!", "danger", "question")
       .then((res: any) => {
         if (res.isConfirmed) {
           this.documentsToDisplay = this.documentsToDisplay.filter(
-            (doc) => doc.name !== item
+            (doc) => doc.name !== item.name
           );
           this.documentsToUpload = this.documentsToUpload.filter(
-            (doc) => doc.name !== item
+            (doc) => doc.name !== item.name
           );
-          this.message.toast("Delete!", "info");
-          this.emitingFiles();
+
+          // let sub = this.masterMethod.deleteFile(item.data).subscribe(
+          //   (res: HttpResponse<IBaseResponse<boolean>>) => {
+          //     this.message.toast("Delete!", "info");
+          //     this.emitingFiles();
+          //   },
+          //   (err: HttpErrorResponse) => {
+          //     this.message.popup("Error", err.message, "error");
+          //   }
+          // );
+          // this.subscribes = sub;
         }
       });
   }
@@ -100,5 +120,8 @@ export class DropzoneComponent implements OnChanges {
 
   emitingFiles() {
     this.files.emit(this.documentsToUpload);
+  }
+  ngOnDestroy() {
+    // this.subscribes.unsubscribe()
   }
 }
