@@ -1,4 +1,5 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { RequiermentsList } from "./icustomer-service-utils";
 
 export interface ICSForm {
 	sNo?: FormControl<number | null>;
@@ -35,9 +36,9 @@ export interface ICSForm {
 	documentsModel?: FormControl<string[] | null>;
 	documentLists?: FormControl<string[] | null>;
 	endorsements?: FormControl<string | null>;
-	requiermentsList?: FormControl<string | null>;
 	isRequierment?: FormControl<boolean | null>;
 	pending?: FormControl<boolean | null>;
 	pendingNote?: FormControl<string | null>;
 	producer?: FormControl<string | null>;
+	requiermentsList: FormArray<FormGroup<RequiermentsList>>;
 }
