@@ -1,3 +1,4 @@
+import { FlatpickrModule } from "angularx-flatpickr";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BusinessFormsComponent } from "./business-forms.component";
@@ -24,6 +25,7 @@ export const routes: Routes = [{ path: "", component: BusinessFormsComponent }];
     GregorianPickerModule,
     DropzoneModule,
     RangePickerModule,
+    FlatpickrModule,
   ],
 })
 export class BusinessFormsModule {}

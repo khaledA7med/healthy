@@ -1,3 +1,29 @@
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  FormGroup,
+  AbstractControl,
+  FormArray,
+  FormControl,
+  Validators,
+} from "@angular/forms";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { ActivatedRoute, Router } from "@angular/router";
+
+import { Observable, Subscription } from "rxjs";
+
+import {
+  Caching,
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import { MODULES } from "src/app/core/models/MODULES";
+
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
+import AppUtils from "src/app/shared/app/util";
 import { IRequirementRequest } from "./../../../shared/app/models/BusinessDevelopment/irequirement";
 import { AppRoutes } from "./../../../shared/app/routers/appRouters";
 import { ISalesLeadDetails } from "./../../../shared/app/models/BusinessDevelopment/isalesLeadDetails";
@@ -7,30 +33,6 @@ import { IActivityLog } from "./../../../shared/app/models/BusinessDevelopment/i
 import { ICompetitors } from "./../../../shared/app/models/BusinessDevelopment/icompetitors";
 import { BusinessDevelopmentService } from "./../../../shared/services/business-development/business-development.service";
 import { ISalesLeadForm } from "./../../../shared/app/models/BusinessDevelopment/isalesLeadForm";
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  Validators,
-} from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
-import {
-  Caching,
-  IBaseMasterTable,
-  IGenericResponseType,
-} from "src/app/core/models/masterTableModels";
-import { MasterTableService } from "src/app/core/services/master-table.service";
-import { MODULES } from "src/app/core/models/MODULES";
-
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { MessagesService } from "src/app/shared/services/messages.service";
-import { EventService } from "src/app/core/services/event.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { reserved } from "src/app/core/models/reservedWord";
-import AppUtils from "src/app/shared/app/util";
 
 @Component({
   selector: "app-business-forms",
@@ -50,6 +52,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     isClient: true, // Choose client Or Group
     editId: "",
     editMode: false,
+    showTime: false,
   };
   @ViewChild("dropzone") dropzone!: any;
 
@@ -61,7 +64,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private utils: AppUtils,
     private router: Router,
-
     private eventService: EventService
   ) {}
 
@@ -126,10 +128,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //competitors
       salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
       //others
-      branch: new FormControl(null),
+      branch: new FormControl("Riyadh"),
       sendToUW: new FormControl(false),
       // for edit
       leadNo: new FormControl(""),
+      selectedPolicyCompany: new FormControl(""),
+      selectedQuotingCompany: new FormControl(""),
     });
   }
   get f() {
@@ -178,29 +182,27 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region  current insurance
-  toggleCurInsured() {
-    let controls = [
+  get currentInsControls() {
+    return [
       this.f.existingPolExpDate,
       this.f.currentPolicyNo,
       this.f.currentBroker,
       this.f.currentInsurer,
       this.f.existingPolDetails,
     ];
+  }
+  toggleCurInsured() {
     if (this.f.isCurrentInsured?.value) {
-      controls.forEach((c) => {
+      this.currentInsControls.forEach((c) => {
         c?.enable();
       });
     } else {
-      controls.forEach((c) => {
+      this.currentInsControls.forEach((c) => {
         c?.disable();
         c?.reset();
       });
     }
   }
-
-  // polExpiryDates(e: { gon: any; hijri: any }) {
-  //   this.f.existingPolExpDate?.patchValue(e.gon);
-  // }
   //#endregion
 
   //#region requirment
@@ -245,7 +247,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f?.quotingRequirementsList?.value,
       data.companyName!
     );
-    console.log(check);
     if (!check) {
       let sub = this.businessDevService.quotRequirements(data).subscribe(
         (res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
@@ -422,7 +423,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
         }
       },
       (err: HttpErrorResponse) => {
-        console.log(err);
         this.eventService.broadcast(reserved.isLoading, false);
         this.message.popup("Error", err.message!, "error");
       }
@@ -445,13 +445,13 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       chDeadlinebool: salesLead?.chDeadlinebool,
       deadLine: salesLead.deadLine
         ? (this.utils.dateStructFormat(salesLead.deadLine) as any)
-        : {}, //
+        : "",
       preferedInsurComapnies: salesLead?.preferedInsurComapnies,
       policyDetails: salesLead?.policyDetails,
       // currently insured
-      existingPolExpDate: salesLead.existingPolDetails
+      existingPolExpDate: salesLead.existingPolExpDate
         ? (this.utils.dateStructFormat(salesLead.existingPolExpDate) as any)
-        : {},
+        : "",
       currentPolicyNo: salesLead?.currentPolicyNo,
       currentBroker: salesLead?.currentBroker,
       currentInsurer: salesLead.currentInsurer,
@@ -473,17 +473,8 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     // to enable currently insured inputs
     if (salesLead.currentBroker) {
       this.f.isCurrentInsured?.patchValue(true);
-      let controls = [
-        this.f.existingPolExpDate,
-        this.f.currentPolicyNo,
-        this.f.currentBroker,
-        this.f.currentInsurer,
-        this.f.existingPolDetails,
-      ];
-      controls.forEach((c) => {
+      this.currentInsControls.forEach((c) => {
         c?.enable();
-        c?.setValidators(Validators.required);
-        c?.updateValueAndValidity();
       });
     }
 
@@ -493,12 +484,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     );
 
     // policy requirement
-    salesLead.policyRequiermentsList?.map((el) =>
+    salesLead.policyRequiermentsList?.forEach((el) =>
       this.createReqFormArr("policy", el)
     );
 
     // activity Log
-    salesLead.salesActivityLogList?.map((el) => {
+    salesLead.salesActivityLogList?.forEach((el) => {
       this.addActivityLog(el);
     });
 
@@ -509,14 +500,16 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     this.docs = salesLead.documentList!;
 
     // sentToUW
-    this.f.sendToUW?.disable();
+    if (salesLead.sendToUW) this.f.sendToUW?.disable();
   }
 
+  //#endregion
+
+  // #region tasks
   dateRange(e: { from: any; to: any }) {
-    console.log(e.from);
-    console.log(e.to);
+    if (e.from && e.to) this.uiState.showTime = false;
+    else this.uiState.showTime = true;
   }
-
   //#endregion
 
   //#region save Sales Lead
@@ -559,6 +552,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
 
   submitForm(form: FormGroup<ISalesLeadForm>) {
+    let salesLeadForm = form.getRawValue();
     this.submitted = true;
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
@@ -566,56 +560,63 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
     if (this.uiState.editId) {
       formData.append("sNo", this.uiState.editId);
-      formData.append("LeadNo", form.value.leadNo!);
-      this.f.sendToUW?.enable();
+      formData.append("LeadNo", salesLeadForm.leadNo!);
     }
     // lead type
-    formData.append("LeadType", form.value?.leadType!);
-    formData.append("ClientID", form.value?.clientID?.toString()!);
-    formData.append("Name", form.value?.name!);
-    formData.append("Producer", form.value?.producer!);
+    formData.append("LeadType", salesLeadForm?.leadType!);
+    formData.append("ClientID", salesLeadForm?.clientID?.toString()!);
+    formData.append("Name", salesLeadForm?.name!);
+    formData.append("Producer", salesLeadForm?.producer!);
     // insurance details
-    formData.append("ClassOfBusiness", form.value?.classOfBusiness!);
-    formData.append("LineOfBusiness", form.value?.lineOfBusiness!);
+    formData.append("ClassOfBusiness", salesLeadForm?.classOfBusiness!);
+    formData.append("LineOfBusiness", salesLeadForm?.lineOfBusiness!);
     formData.append(
       "EstimatedPremium",
-      form.value?.estimatedPremium !== null
-        ? form.value?.estimatedPremium?.toString()!
+      salesLeadForm?.estimatedPremium !== null
+        ? salesLeadForm?.estimatedPremium?.toString()!
         : "0"
     );
-    formData.append("ChDeadlinebool", form.value?.chDeadlinebool?.toString()!); // boolean //check
-    formData.append("DeadLine", this.utils.dateFormater(form.value?.deadLine!));
+    formData.append(
+      "ChDeadlinebool",
+      salesLeadForm?.chDeadlinebool?.toString()!
+    ); // boolean //check
+    formData.append(
+      "DeadLine",
+      this.utils.dateFormater(salesLeadForm?.deadLine!)
+    );
 
-    form.value?.preferedInsurComapnies?.forEach((el, i) => {
+    salesLeadForm?.preferedInsurComapnies?.forEach((el, i) => {
       formData.append(`PreferedInsurComapnies[${i}]`, el);
     });
 
-    formData.append("PolicyDetails", form.value?.policyDetails!);
+    formData.append("PolicyDetails", salesLeadForm?.policyDetails!);
 
     // currently insured
     formData.append(
       "ExistingPolExpDate",
-      this.utils.dateFormater(form.value?.existingPolExpDate)
+      this.utils.dateFormater(salesLeadForm?.existingPolExpDate)
     );
     formData.append(
       "CurrentPolicyNo",
-      form.value?.currentPolicyNo! ? form.value?.currentPolicyNo! : ""
+      salesLeadForm?.currentPolicyNo! ? salesLeadForm?.currentPolicyNo! : ""
     );
     formData.append(
       "CurrentBroker",
-      form.value?.currentBroker! ? form.value?.currentBroker! : ""
+      salesLeadForm?.currentBroker! ? salesLeadForm?.currentBroker! : ""
     );
     formData.append(
       "CurrentInsurer",
-      form.value?.currentInsurer! ? form.value?.currentInsurer! : ""
+      salesLeadForm?.currentInsurer! ? salesLeadForm?.currentInsurer! : ""
     );
     formData.append(
       "ExistingPolDetails",
-      form.value?.existingPolDetails! ? form.value?.existingPolDetails! : ""
+      salesLeadForm?.existingPolDetails!
+        ? salesLeadForm?.existingPolDetails!
+        : ""
     );
 
     // quoting requirement array
-    form.value.quotingRequirementsList?.forEach((el, i) => {
+    salesLeadForm.quotingRequirementsList?.forEach((el, i) => {
       formData.append(
         `QuotingRequirementsList[${i}].itemCheck`,
         el.itemCheck?.toString()!
@@ -629,11 +630,11 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
     // policy requirement array
 
-    form.value.policyRequiermentsList?.forEach((el, i) => {
+    salesLeadForm.policyRequiermentsList?.forEach((el, i) => {
       formData.append(
         `PolicyRequiermentsList[${i}].itemCheck`,
         el.itemCheck?.toString()!
-      ); // boolean
+      );
       formData.append(
         `PolicyRequiermentsList[${i}].insuranceCopmany`,
         el.insuranceCopmany!
@@ -641,9 +642,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       formData.append(`PolicyRequiermentsList[${i}].item`, el.item!);
     });
 
-    // activity log array with check
-    this.activityLogArray.enable();
-    form.value.salesActivityLogList?.forEach((el, i) => {
+    // activity log array
+    // this.activityLogArray.enable();
+    salesLeadForm.salesActivityLogList?.forEach((el, i) => {
       formData.append(`SalesActivityLogList[${i}].logType`, el.logType!);
       formData.append(
         `SalesActivityLogList[${i}].logDate`,
@@ -651,34 +652,25 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       );
       formData.append(`SalesActivityLogList[${i}].logNotes`, el.logNotes!);
     });
-    // formData.append(
-    //   "SalesActivityLogChecked",
-    //   form.value.salesActivityLogList?.length !== 0 ? "true" : "false"
-    // );
 
     // competitors array with check
-    this.competitorsArray.enable();
-    form.value.salesLeadCompetitorsList?.forEach((el, i) => {
+    salesLeadForm.salesLeadCompetitorsList?.forEach((el, i) => {
       formData.append(
         `SalesLeadCompetitorsList[${i}].competitor`,
         el.competitor!
       );
       formData.append(
         `SalesLeadCompetitorsList[${i}].competitorNotes`,
-        el.competitorNotes!
+        el.competitorNotes ? el.competitorNotes : ""
       );
     });
-    // formData.append(
-    //   "SalesLeadCompetitorChecked",
-    //   form.value.salesLeadCompetitorsList?.length !== 0 ? "true" : "false"
-    // );
 
     // document array
     this.documentsToUpload.forEach((el) => formData.append("Documents", el));
 
     // others
-    formData.append("SendToUW", form.value?.sendToUW?.toString()!); // boolean
-    formData.append("Branch", form.value?.branch!);
+    formData.append("SendToUW", salesLeadForm?.sendToUW?.toString()!); // boolean
+    formData.append("Branch", salesLeadForm?.branch!);
 
     this.saveSalesLead(formData);
   }

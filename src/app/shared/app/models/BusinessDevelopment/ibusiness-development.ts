@@ -24,4 +24,5 @@ export interface IBusinessDevelopment {
   savedDate?: Date;
   updatedBy?: string;
   updatedOn?: Date;
+  identity?: string;
 }
