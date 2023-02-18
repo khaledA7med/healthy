@@ -32,7 +32,7 @@
                                 <div class="input-group input-group-sm">
                                     <input type="text" id="requestNo" formControlName="requestNo" readonly
                                         class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && submitted && f.requestNo?.invalid}"
+                                        [ngClass]="{'is-invalid': (f.searchType?.value === uiState.policy.searching.request) && uiState.submitted && f.requestNo?.invalid}"
                                         placeholder="Request Details">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
                                         (click)="openModal(request)">
@@ -50,7 +50,7 @@
                                 <div class="input-group input-group-sm">
                                     <input type="text" id="clientInfo" formControlName="clientInfo" readonly
                                         class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid' : submitted && f.clientInfo?.invalid}"
+                                        [ngClass]="{'is-invalid' : uiState.submitted && f.clientInfo?.invalid}"
                                         placeholder="Client Details">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
                                         [disabled]="(f.searchType?.value === uiState.policy.searching.request)"
@@ -66,7 +66,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                 <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
                                 <ng-select formControlName="producer" class="is-invalid"
-                                    [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
+                                    [ngClass]="{'is-submitted': (f.producer?.touched || uiState.submitted) && f.producer?.invalid}"
                                     [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
                                     [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
@@ -74,7 +74,7 @@
                                     </ng-template>
                                 </ng-select>
                                 <span class="invalid-feedback fw-bold mt-0"
-                                    *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">Required</span>
+                                    *ngIf="(f.producer?.touched || uiState.submitted) && f.producer?.invalid">Required</span>
                             </div>
 
                             <!-- Other Policy Holder -->
@@ -87,7 +87,7 @@
                                             formControlName="chPolicyHolder" (change)="chPolicyHolderEvt($event)">
                                     </div>
                                     <input type="text"
-                                        [ngClass]="{'is-invalid' : (f.policyHolder?.touched || submitted) && f.policyHolder?.invalid}"
+                                        [ngClass]="{'is-invalid' : (f.policyHolder?.touched || uiState.submitted) && f.policyHolder?.invalid}"
                                         id="otherPolicy" formControlName="policyHolder" class="form-control">
                                     <span class="invalid-feedback fw-bold mt-0">Required</span>
                                 </div>
@@ -142,7 +142,7 @@
                                     Policy Ref</label>
                                 <div class="input-group input-group-sm">
                                     <input type="text" id="oasisPolRef" formControlName="oasisPolRef" readonly
-                                        [ngClass]="{'is-invalid' : (f.oasisPolRef?.touched || submitted) && f.oasisPolRef?.invalid}"
+                                        [ngClass]="{'is-invalid' : (f.oasisPolRef?.touched || uiState.submitted) && f.oasisPolRef?.invalid}"
                                         class="form-control" placeholder="Policy Ref">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" id="ourPolicyRefBtn"
                                         type="button" (click)="openModal(policy)"
@@ -158,7 +158,7 @@
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="A-CNo" class="asterisk-input">A/C No</label>
                                 <input type="text" formControlName="accNo" class="form-control form-control-sm"
-                                    [ngClass]="{'is-invalid' : (f.accNo?.touched || submitted) && f.accNo?.invalid}"
+                                    [ngClass]="{'is-invalid' : (f.accNo?.touched || uiState.submitted) && f.accNo?.invalid}"
                                     placeholder="A/C No." id="A-CNo">
                                 <span class="invalid-feedback mt-0">Required</span>
                             </div>
@@ -168,7 +168,7 @@
                                 <label for="PolicyNo" class="asterisk-input">Policy
                                     No</label>
                                 <input type="text" class="form-control form-control-sm" formControlName="policyNo"
-                                    [ngClass]="{'is-invalid' : (f.policyNo?.touched || submitted) && f.policyNo?.invalid}"
+                                    [ngClass]="{'is-invalid' : (f.policyNo?.touched || uiState.submitted) && f.policyNo?.invalid}"
                                     placeholder="Policy No." id="PolicyNo">
                                 <span class="invalid-feedback mt-0">Required</span>
                             </div>
@@ -180,7 +180,7 @@
                                     Type</label>
                                 <ng-select formControlName="endorsType" (change)="endorsTypeTogglerEvt($event?.name)"
                                     placeholder="Endors Type" class="is-invalid"
-                                    [ngClass]="{'is-submitted': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
+                                    [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
                                     [items]="(formData | async)?.PolicyEndorsTypes?.content!" bindLabel="name"
                                     bindValue="name" [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
@@ -188,7 +188,7 @@
                                     </ng-template>
                                 </ng-select>
                                 <span class="invalid-feedback fw-bold mt-0"
-                                    *ngIf="(f.endorsType?.touched || submitted) && f.endorsType?.invalid">Required</span>
+                                    *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid">Required</span>
                             </div>
 
                             <!-- Endors No -->
@@ -197,7 +197,7 @@
                                     [ngClass]="{'asterisk-input' :f.issueType?.value === uiState.policy.issueType.endorsement}">Endors
                                     No</label>
                                 <input type="text" class="form-control form-control-sm" formControlName="endorsNo"
-                                    [ngClass]="{'is-invalid': (f.endorsNo?.touched || submitted) && f.endorsNo?.invalid}"
+                                    [ngClass]="{'is-invalid': (f.endorsNo?.touched || uiState.submitted) && f.endorsNo?.invalid}"
                                     placeholder="Endors No." id="endorsNo">
                                 <span class="invalid-feedback fw-bold mt-0">Required</span>
                             </div>
@@ -208,14 +208,14 @@
                                 <ng-select formControlName="insurComp" id="insurComp" placeholder="Insurance Company"
                                     [items]="(formData | async)?.InsuranceCompanies?.content!" bindLabel="name"
                                     bindValue="name" class="is-invalid"
-                                    [ngClass]="{'is-submitted': (f.insurComp?.touched || submitted) && f.insurComp?.invalid}"
+                                    [ngClass]="{'is-submitted': (f.insurComp?.touched || uiState.submitted) && f.insurComp?.invalid}"
                                     [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div>{{ item.name }}</div>
                                     </ng-template>
                                 </ng-select>
                                 <span class="invalid-feedback fw-bold mt-0"
-                                    *ngIf="(f.insurComp?.touched || submitted) && f.insurComp?.invalid">Required</span>
+                                    *ngIf="(f.insurComp?.touched || uiState.submitted) && f.insurComp?.invalid">Required</span>
                             </div>
 
                             <!-- Class Of Insurance -->
@@ -224,14 +224,14 @@
                                 <ng-select formControlName="className" id="className" placeholder="Class Of Business"
                                     [items]="(formData | async)?.InsurClasses?.content!" bindLabel="name"
                                     bindValue="name" class="is-invalid"
-                                    [ngClass]="{'is-submitted': (f.className?.touched || submitted) && f.className?.invalid}"
+                                    [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                                     (change)="getLineOfBusiness($event.name)" [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div>{{ item.name }}</div>
                                     </ng-template>
                                 </ng-select>
                                 <span class="invalid-feedback fw-bold mt-0"
-                                    *ngIf="(f.className?.touched || submitted) && f.className?.invalid">Required</span>
+                                    *ngIf="(f.className?.touched || uiState.submitted) && f.className?.invalid">Required</span>
                             </div>
 
                             <!-- Line Of Business -->
@@ -241,14 +241,14 @@
                                 <ng-select formControlName="lineOfBusiness" id="lineOfBusiness"
                                     placeholder="Line Of Business" class="is-invalid"
                                     [items]="uiState.policy.lineOfBusiness!" bindLabel="name" bindValue="name"
-                                    [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid}"
+                                    [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
                                     [loading]="formData ? false : true">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div>{{ item.name }}</div>
                                     </ng-template>
                                 </ng-select>
                                 <span class="invalid-feedback fw-bold mt-0"
-                                    *ngIf="(f.lineOfBusiness?.touched || submitted) && f.lineOfBusiness?.invalid">Required</span>
+                                    *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid">Required</span>
                             </div>
 
                             <!-- Minimum Driver Age -->
@@ -257,7 +257,7 @@
                                     [ngClass]="{'asterisk-input': f.minDriverAge?.enabled}">Minimum Driver Age</label>
                                 <div class="input-group input-group-sm">
                                     <input type="number" class="form-control" formControlName="minDriverAge"
-                                        [ngClass]="{'is-invalid': (f.minDriverAge?.touched || submitted) && f.minDriverAge?.invalid}"
+                                        [ngClass]="{'is-invalid': (f.minDriverAge?.touched || uiState.submitted) && f.minDriverAge?.invalid}"
                                         id="minDriverAge" placeholder="Minimum Driver Age"
                                         aria-label="Minimum Driver Age" aria-describedby="year">
                                     <span class="input-group-text" id="year">Years</span>
@@ -269,21 +269,23 @@
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label class="asterisk-input">Issue Date</label>
                                 <app-gregorian-picker [model]="f.issueDate?.value" [required]="true"
-                                    [submitted]="submitted" (dateChange)="issueDate($event)"></app-gregorian-picker>
+                                    [submitted]="uiState.submitted"
+                                    (dateChange)="issueDate($event)"></app-gregorian-picker>
                             </div>
 
                             <!-- Inception Date -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label class="asterisk-input">Inception Date</label>
                                 <app-gregorian-picker [model]="f.periodFrom?.value" [required]="true"
-                                    [submitted]="submitted" (dateChange)="inceptionDate($event)"></app-gregorian-picker>
+                                    [submitted]="uiState.submitted"
+                                    (dateChange)="inceptionDate($event)"></app-gregorian-picker>
                             </div>
 
                             <!-- Expiry Date -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label class="asterisk-input">Expiry Date</label>
                                 <app-gregorian-picker [model]="f.periodTo?.value" [disabled]="f.periodTo?.disabled!"
-                                    [required]="true" [submitted]="submitted"
+                                    [required]="true" [submitted]="uiState.submitted"
                                     (dateChange)="expiryDate($event)"></app-gregorian-picker>
                             </div>
 
@@ -351,7 +353,7 @@
                                                         <input id="clientDNCNNo" formControlName="clientDNCNNo"
                                                             class="form-control form-control-sm"
                                                             placeholder="Client DN/CN No."
-                                                            [ngClass]="{'is-invalid' : (f.clientDNCNNo?.touched || submitted) && f.clientDNCNNo?.invalid}" />
+                                                            [ngClass]="{'is-invalid' : (f.clientDNCNNo?.touched || uiState.submitted) && f.clientDNCNNo?.invalid}" />
                                                         <span class="invalid-feedback fw-bold mt-0">Required</span>
                                                     </div>
                                                     <div class="col-lg-12 my-2">
@@ -361,7 +363,7 @@
                                                         <input id="compCommDNCNNo" formControlName="compCommDNCNNo"
                                                             class="form-control form-control-sm"
                                                             placeholder="Company Comm .DN/CN No."
-                                                            [ngClass]="{'is-invalid' : (f.compCommDNCNNo?.touched || submitted) && f.compCommDNCNNo?.invalid}" />
+                                                            [ngClass]="{'is-invalid' : (f.compCommDNCNNo?.touched || uiState.submitted) && f.compCommDNCNNo?.invalid}" />
                                                         <span class="invalid-feedback fw-bold mt-0">Required</span>
                                                     </div>
                                                 </div>
@@ -417,7 +419,7 @@
 
                                                                 <input type="text" id="fees" formControlName="fees"
                                                                     (input)="formListeners($event)" InputMask
-                                                                    [max]="1000000"
+                                                                    [max]="1000"
                                                                     class="form-control form-control-sm input-text-right"
                                                                     pattern="" placeholder="0.00">
                                                                 <span class="input-group-text">SAR</span>
@@ -720,7 +722,7 @@
                                                                         <ng-select formControlName="producer"
                                                                             class="is-invalid" appendTo="body"
                                                                             placeholder="Choose Producer..."
-                                                                            [ngClass]="{'is-submitted': (commissionControls(i, 'producer').touched || submitted) && commissionControls(i, 'producer').invalid}"
+                                                                            [ngClass]="{'is-submitted': (commissionControls(i, 'producer').touched || uiState.submitted) && commissionControls(i, 'producer').invalid}"
                                                                             [items]="uiState.producerCommission.producers!"
                                                                             bindLabel="name" bindValue="name"
                                                                             [loading]="formData ? false : true">
@@ -731,14 +733,14 @@
                                                                             </ng-template>
                                                                         </ng-select>
                                                                         <span class="invalid-feedback fw-bold mt-0"
-                                                                            *ngIf="(commissionControls(i, 'producer').touched || submitted) && commissionControls(i, 'producer').invalid">Required</span>
+                                                                            *ngIf="(commissionControls(i, 'producer').touched || uiState.submitted) && commissionControls(i, 'producer').invalid">Required</span>
                                                                     </td>
                                                                     <td>
                                                                         <input type="number"
                                                                             class="form-control form-control-sm"
                                                                             placeholder="0.00%"
                                                                             formControlName="percentage"
-                                                                            [ngClass]="{'is-invalid': (commissionControls(i, 'percentage').touched || submitted) && commissionControls(i, 'percentage').invalid}" />
+                                                                            [ngClass]="{'is-invalid': (commissionControls(i, 'percentage').touched || uiState.submitted) && commissionControls(i, 'percentage').invalid}" />
                                                                         <span
                                                                             class="invalid-feedback fw-bold mt-0">Required</span>
                                                                     </td>
@@ -814,8 +816,7 @@
                         <i class="ri-save-2-fill"></i>
                         Save
                     </button>
-                    <button type="button" id="sa-warning" (click)="resetForm(); dropzone.clearImages()"
-                        class="btn btn-sm btn-soft-danger">
+                    <button type="button" id="sa-warning" (click)="resetForm()" class="btn btn-sm btn-soft-danger">
                         <i class="ri-delete-bin-2-line"></i>
                         Clear
                     </button>

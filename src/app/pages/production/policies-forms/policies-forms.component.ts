@@ -13,7 +13,7 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   NgbModal,
   NgbModalOptions,
@@ -47,6 +47,7 @@ import {
 } from "src/app/shared/app/models/Production/production-util";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
+import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/dropzone.component";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
@@ -60,7 +61,6 @@ import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 export class PoliciesFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IProductionForms>;
   formData!: Observable<IBaseMasterTable>;
-  submitted: boolean = false;
 
   modalRef!: NgbModalRef;
 
@@ -68,6 +68,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     editMode: false,
     editId: "",
     date: new Date(),
+    submitted: false as boolean,
     policy: {
       searching: searchBy,
       issueType: issueType,
@@ -110,13 +111,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   documentsToUpload: File[] = [];
   docs: any[] = [];
-  @ViewChild("dropzone") dropzone!: any;
+  @ViewChild(DropzoneComponent) dropzone!: DropzoneComponent;
   @ViewChild(PolicyRequestsListComponent)
   dataSource!: PolicyRequestsListComponent;
   subscribes: Subscription[] = [];
   constructor(
     private modalService: NgbModal,
     private router: Router,
+    private route: ActivatedRoute,
     private tables: MasterTableService,
     private productionService: ProductionService,
     private methods: MasterMethodsService,
@@ -129,6 +131,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.initForm();
     this.formDataHandler();
     this.calcHandlers();
+    let sub = this.route.paramMap.subscribe((res) => {
+      if (res.get("id")) {
+        this.uiState.editId = res.get("id")!;
+        this.eventService.broadcast(reserved.isLoading, true);
+        this.getPolicy(this.uiState.editId);
+      }
+    });
+    this.subscribes.push(sub);
   }
 
   formDataHandler(): void {
@@ -389,6 +399,22 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
+  getPolicy(id: string): void {
+    this.productionService.getPolicy(id).subscribe(
+      (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
+        if (res.body?.status) {
+        } else {
+          this.message.popup("Oops!", res.body?.message!, "warning");
+        }
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err) => {
+        this.message.popup("Oops!", err?.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+  }
+
   //#region Policy Details Handlers
   setValidatorAndUpdate(controls: FormControl[]) {
     controls.map((el) => {
@@ -566,33 +592,23 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       );
     } else {
       this.f.vatValue?.patchValue(
-        (+this.f.netPremium?.value! + +this.f.fees?.value!) *
-          (this.f.vatPerc?.value! / 100)
+        this.appUtils.currencyFormater(
+          (+this.f.netPremium?.value! + +this.f.fees?.value!) *
+            (this.f.vatPerc?.value! / 100)
+        )
       );
       this.f.totalPremium?.patchValue(
         +this.f.netPremium?.value! +
           +this.f.fees?.value! +
           +this.f.vatValue?.value!
       );
-
-      let val = Intl.NumberFormat(undefined, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      }).format(this.f.vatValue?.value!);
-
-      console.log({
-        net: this.f.netPremium?.value,
-        fees: this.f.fees?.value,
-        vat: this.f.vatValue?.value,
-        total: this.f.totalPremium?.value,
-        test: val,
-        test2: this.f.vatValue?.value!.toPrecision(2),
-      });
     }
 
     if (+this.f.compCommPerc?.value! > 0)
       this.f.compCommVAT?.patchValue(
-        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+        this.appUtils.currencyFormater(
+          +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+        )
       );
   }
 
@@ -618,17 +634,26 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   commissionsValues(): void {
     this.f.compCommAmount?.patchValue(
-      +this.f.netPremium?.value! * (+this.f.compCommPerc?.value! / 100)
+      this.appUtils.currencyFormater(
+        +this.f.netPremium?.value! * (+this.f.compCommPerc?.value! / 100)
+      )
     );
     this.f.compCommVAT?.patchValue(
-      +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+      this.appUtils.currencyFormater(
+        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+      )
     );
     this.f.producerComm?.patchValue(
-      this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
+      this.appUtils.currencyFormater(
+        this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
+      )
     );
     if (+this.f.producerCommPerc?.value! > 0) {
       this.f.producerComm?.patchValue(
-        +this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
+        this.appUtils.currencyFormater(
+          +this.f.compCommAmount?.value! *
+            (this.f.producerCommPerc?.value! / 100)
+        )
       );
       this.commissionHandler();
     }
@@ -699,13 +724,19 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             handler
           );
         el.controls.amount?.patchValue(
-          +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
         el.controls.policyFees?.patchValue(
-          +this.f.fees?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.fees?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
         el.controls.vatAmount?.patchValue(
-          +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
 
         if (
@@ -724,6 +755,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             +this.uiState.paymentTermHandler.vat
           );
         }
+        this.equalizerPaymentTerms();
       });
       this.subscribes.push(sub1!);
     });
@@ -756,11 +788,16 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   paymentTermsHandler(): void {
-    if (this.f.paymentTermsList?.length) {
-      for (let i = 0; i < this.paymentTermsArrayControls.length; i++) {
+    let len = this.paymentTermsArrayControls.length;
+    if (len) {
+      for (let i = 0; i < len; i++) {
         let perc = this.paymentsControls(i, "percentage").value,
           net = this.paymentsControls(i, "amount");
-        net.patchValue(this.f.netPremium?.value! * (perc / 100));
+        net.patchValue(
+          this.appUtils.currencyFormater(
+            this.f.netPremium?.value! * (perc / 100)
+          )
+        );
       }
     }
   }
@@ -771,7 +808,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     if (con === "policyFees") val = +this.f.fees?.value!;
     else if (con === "vatAmount") val = +this.f.vatValue?.value!;
     if (+elm.replace(/,/g, "") > +val) {
-      this.paymentsControls(i, con).patchValue(val);
+      this.paymentsControls(i, con).patchValue(
+        this.appUtils.currencyFormater(val)
+      );
       return;
     }
   }
@@ -783,6 +822,41 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       +this.f.fees?.value! - +this.uiState.paymentTermsTotals.fees;
     this.uiState.paymentTermHandler.vat =
       +this.f.vatValue?.value! - +this.uiState.paymentTermsTotals.vat;
+  }
+
+  equalizerPaymentTerms(): void {
+    let cls = this.paymentTermsArrayControls,
+      net =
+        +this.f.netPremium?.value! - this.uiState.paymentTermsTotals.netPremium,
+      fees = +this.f.fees?.value! - this.uiState.paymentTermsTotals.fees,
+      vat = +this.f.vatValue?.value! - this.uiState.paymentTermsTotals.vat,
+      total =
+        +this.f.totalPremium?.value! - this.uiState.paymentTermsTotals.total;
+
+    if (net > 0 && net < 1) {
+      cls
+        .at(-1)
+        .get("amount")
+        ?.patchValue(+cls.at(-1).get("amount")?.value + +net);
+    }
+    if (fees > 0 && fees < 1) {
+      cls
+        .at(-1)
+        .get("policyFees")
+        ?.patchValue(+cls.at(-1).get("policyFees")?.value + +fees);
+    }
+    if (net > 0 && net < 1) {
+      cls
+        .at(-1)
+        .get("vatAmount")
+        ?.patchValue(+cls.at(-1).get("vatAmount")?.value + +vat);
+    }
+    if (total > 0 && total < 1) {
+      cls
+        .at(-1)
+        .get("total")
+        ?.patchValue(+cls.at(-1).get("total")?.value + +net);
+    }
   }
 
   get paymentTermsListBool(): boolean {
@@ -861,7 +935,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             handler
           );
         el.controls.amount?.patchValue(
-          +this.f.producerComm?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.compCommAmount?.value! *
+              (+el.controls.percentage?.value! / 100)
+          )
         );
       });
       this.subscribes.push(sub1!);
@@ -885,7 +962,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.producersCommissionsArrayControls.length; i++) {
         let perc = this.commissionControls(i, "percentage").value,
           net = this.commissionControls(i, "amount");
-        net.patchValue(this.f.producerComm?.value! * (perc / 100));
+        net.patchValue(
+          this.appUtils.currencyFormater(
+            this.f.producerComm?.value! * (perc / 100)
+          )
+        );
       }
     }
   }
@@ -913,10 +994,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(policy: FormGroup<IProductionForms>) {
-    // console.log(policy.value.vatValue);
-    // console.log(policy.value.vatValue?.toFixed(2));
-    console.log(this.formGroup.valid);
-    this.submitted = true;
+    this.uiState.submitted = true;
     const formData = new FormData();
 
     let val = policy.getRawValue();
@@ -1036,7 +1114,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.paymentTermsList?.clear();
     this.f.producersCommissionsList?.clear();
     this.f.periodTo?.enable();
-    this.submitted = false;
+    this.documentsToUpload = [];
+    this.dropzone.clearImages();
+    this.uiState.submitted = false;
   }
 
   ngOnDestroy(): void {

@@ -118,6 +118,7 @@ export const ApiRoutes = {
     loadPolicyData: "/Production/Policy/LoadPolicyData",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
     save: "/Production/Policy/Save",
+    edit: "/Production/Policy/Edit",
     changeStatus: "",
   },
   CustomerService: {

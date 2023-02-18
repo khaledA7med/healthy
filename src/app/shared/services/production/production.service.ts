@@ -103,6 +103,15 @@ export class ProductionService {
     );
   }
 
+  getPolicy(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
+    return this.http.get<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.edit,
+      { params: { id }, observe: "response" }
+    );
+  }
+
   //#endregion
 
   getPolicyById(
