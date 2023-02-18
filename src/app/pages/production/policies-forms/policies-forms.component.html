@@ -577,6 +577,7 @@
                                                                 <ng-container [formGroupName]="i">
                                                                     <td>
                                                                         <app-gregorian-picker [required]="true"
+                                                                            [model]="paymentsControls(i, 'payDate').value"
                                                                             (dateChange)="paymentTermDates($event, i)"
                                                                             [submitted]="paymentsControls(i, 'payDate').invalid && paymentsControls(i, 'payDate').touched"></app-gregorian-picker>
                                                                     </td>

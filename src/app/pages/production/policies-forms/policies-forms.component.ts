@@ -30,6 +30,7 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IPaymentTermsList } from "src/app/shared/app/models/Production/ipayment-terms-list";
 import {
   IPolicyCommissionListForms,
   IPolicyPaymentsListForms,
@@ -359,38 +360,39 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         (res: IBaseResponse<IPolicyPreview>) => {
           if (res.status) {
             let data = res.data;
-            this.formGroup.patchValue({
-              oasisPolRef: data?.oasisPolRef,
-              accNo: data?.accNo,
-              policyNo: data?.policyNo,
-              // endorsType: data?.endorsType,
-              endorsNo: data?.endorsNo,
-              insurComp: data?.insurComp,
-              className: data?.className,
-              lineOfBusiness: data?.lineOfBusiness,
-              minDriverAge: data?.minDriverAge!,
-              claimNoOfDays: data?.claimNoOfDays,
-              csNoOfDays: data?.csnoOfDays,
-              remarks: data?.remarks,
-              compCommPerc: data?.compCommPerc,
-              producerCommPerc: data?.producerCommPerc,
-            });
+            // this.formGroup.patchValue({
+            //   oasisPolRef: data?.oasisPolRef,
+            //   accNo: data?.accNo,
+            //   policyNo: data?.policyNo,
+            //   // endorsType: data?.endorsType,
+            //   endorsNo: data?.endorsNo,
+            //   insurComp: data?.insurComp,
+            //   className: data?.className,
+            //   lineOfBusiness: data?.lineOfBusiness,
+            //   minDriverAge: data?.minDriverAge!,
+            //   claimNoOfDays: data?.claimNoOfDays,
+            //   csNoOfDays: data?.csnoOfDays,
+            //   remarks: data?.remarks,
+            //   compCommPerc: data?.compCommPerc,
+            //   producerCommPerc: data?.producerCommPerc,
+            // });
 
-            this.getLineOfBusiness(data?.className!, true);
+            // this.getLineOfBusiness(data?.className!, true);
 
-            this.f.issueDate?.patchValue(
-              this.appUtils.dateStructFormat(data?.issueDate!) as any
-            );
-            this.f.periodFrom?.patchValue(
-              this.appUtils.dateStructFormat(data?.periodFrom!) as any
-            );
-            this.f.periodTo?.patchValue(
-              this.appUtils.dateStructFormat(data?.periodTo!) as any
-            );
+            // this.f.issueDate?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.issueDate!) as any
+            // );
+            // this.f.periodFrom?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.periodFrom!) as any
+            // );
+            // this.f.periodTo?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.periodTo!) as any
+            // );
 
-            data?.producersCommissionsList.forEach((com) =>
-              this.addProducerCommission(com)
-            );
+            // data?.producersCommissionsList.forEach((com) =>
+            //   this.addProducerCommission(com)
+            // );
+            this.setPolicyDataToForm(data!);
             this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "warning");
         },
@@ -403,6 +405,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.productionService.getPolicy(id).subscribe(
       (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
         if (res.body?.status) {
+          this.setPolicyDataToForm(res.body?.data!);
         } else {
           this.message.popup("Oops!", res.body?.message!, "warning");
         }
@@ -415,20 +418,59 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     );
   }
 
-  //#region Policy Details Handlers
-  setValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.setValidators(Validators.required);
-      el.updateValueAndValidity();
+  setPolicyDataToForm(data: IPolicyPreview): void {
+    this.formGroup.patchValue({
+      sNo: this.uiState.editMode ? data.sNo : "0",
+      clientInfo: `${data.clientNo} | ${data.clientName}`,
+      producer: data.producer,
+      chPolicyHolder: data.chPolicyHolder,
+      policyHolder: data.policyHolder,
+      oasisPolRef: data.oasisPolRef,
+      accNo: data.accNo,
+      policyNo: data.policyNo,
+      endorsType: data.endorsType !== "Policy" ? data.endorsType : null,
+      endorsNo: data.endorsNo,
+      insurComp: data.insurComp,
+      className: data.className,
+      lineOfBusiness: data.lineOfBusiness,
+      minDriverAge: data.minDriverAge,
+      claimNoOfDays: data.claimNoOfDays,
+      csNoOfDays: data.csnoOfDays,
+      remarks: data.remarks,
+      clientDNCNNo: data.clientDNCNNo,
+      compCommDNCNNo: data.compCommDNCNNo,
+      sumInsur: data.sumInsur,
+      netPremium: data.netPremium,
+      fees: data.fees,
+      deductFees: data.deductFees,
+      vatPerc: data.vatPerc,
+      vatValue: data.vatValue,
+      totalPremium: data.totalPremium,
+      compCommPerc: data.compCommPerc,
+      compCommAmount: data.compCommAmount,
+      compCommVAT: data.compCommVAT,
+      producerCommPerc: data.producerCommPerc,
+      producerComm: data.producerComm,
     });
+    this.f.issueDate?.patchValue(
+      this.appUtils.dateStructFormat(data?.issueDate!) as any
+    );
+    this.f.periodFrom?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodFrom!) as any
+    );
+    this.f.periodTo?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodTo!) as any
+    );
+    this.getLineOfBusiness(data.className!, true);
+
+    data?.producersCommissionsList.forEach((com) =>
+      this.addProducerCommission(com)
+    );
+    data?.paymentTermsList.forEach((pay) => this.addPaymentTerm(pay));
+    this.docs = data.documentList!;
   }
 
-  removeValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.clearValidators();
-      el.updateValueAndValidity();
-    });
-  }
+  //#region Policy Details Handlers
 
   issueTypeToggler(e: Event) {
     let elem = this.f.issueType?.value;
@@ -464,13 +506,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.compCommPerc?.enable();
 
     this.f.oasisPolRef?.disable();
-
-    // let validators = [
-    //   this.f.endorsType!,
-    //   this.f.endorsNo!,
-    //   this.f.oasisPolRef!,
-    // ];
-    // this.removeValidatorAndUpdate(validators);
   }
 
   renewalIssue(): void {
@@ -490,9 +525,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.periodTo?.enable();
     this.f.compCommPerc?.enable();
     this.f.oasisPolRef?.enable();
-
-    // this.setValidatorAndUpdate([this.f.oasisPolRef!]);
-    // this.removeValidatorAndUpdate([this.f.endorsType!, this.f.endorsNo!]);
   }
 
   endorsementIssue(): void {
@@ -523,12 +555,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.compCommPerc?.reset();
 
     this.f.oasisPolRef?.enable();
-
-    // this.setValidatorAndUpdate([
-    //   this.f.oasisPolRef!,
-    //   this.f.endorsNo!,
-    //   this.f.endorsType!,
-    // ]);
   }
 
   endorsTypeTogglerEvt(e: any) {
@@ -669,7 +695,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Payment Terms
-  addPaymentTerm(data?: IPolicyPaymentsListForms) {
+  addPaymentTerm(data?: IPaymentTermsList) {
     if (this.f.paymentTermsList?.invalid) {
       this.f.paymentTermsList.markAllAsTouched();
       return;
@@ -678,9 +704,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.message.popup("Oo !", "Please fill Invoices Details", "warning");
       return;
     }
-
     let payment = new FormGroup<IPolicyPaymentsListForms>({
-      payDate: new FormControl(data?.payDate || null, Validators.required),
+      payDate: new FormControl(
+        (this.appUtils.dateStructFormat(data?.payDate!) as any) || null,
+        Validators.required
+      ),
       amount: new FormControl(data?.amount || null),
       percentage: new FormControl(data?.percentage || null, [
         Validators.max(100),
@@ -690,6 +718,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vatAmount: new FormControl(data?.vatAmount || null),
       rowTotal: new FormControl(null),
     });
+
     if (!data) payment.reset();
     else payment.disable();
 
@@ -999,23 +1028,23 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     let val = policy.getRawValue();
 
-    if (this.uiState.editMode) formData.append("sNo", this.uiState.editId);
+    if (this.uiState.editMode) formData.append("sNo", val.sNo!);
 
-    formData.append("RequestNo", val.requestNo!);
+    formData.append("RequestNo", val.requestNo! ?? "");
     formData.append("ClientNo", val.clientNo!);
     formData.append("ClientName", val.clientName!);
     formData.append("Producer", val.producer!);
-    formData.append("PolicyHolder", val.policyHolder!);
+    formData.append("PolicyHolder", val.policyHolder! ?? "");
     formData.append("CHPolicyHolder", val.chPolicyHolder?.toString()!);
-    formData.append("OasisPolRef", val.oasisPolRef!);
+    formData.append("OasisPolRef", val.oasisPolRef! ?? "");
     formData.append("IssueType", val.issueType!);
     formData.append("AccNo", val.accNo!);
     formData.append("PolicyNo", val.policyNo!);
-    formData.append("EndorsType", val.endorsType!);
-    formData.append("EndorsNo", val.endorsNo!);
-    formData.append("InsurComp", val.insurComp!);
-    formData.append("ClassName", val.className!);
-    formData.append("LineOfBusiness", val.lineOfBusiness!);
+    formData.append("EndorsType", val.endorsType! ?? "");
+    formData.append("EndorsNo", val.endorsNo! ?? "");
+    formData.append("InsurComp", val.insurComp! ?? "");
+    formData.append("ClassName", val.className! ?? "");
+    formData.append("LineOfBusiness", val.lineOfBusiness! ?? "");
     formData.append("MinDriverAge", val.minDriverAge?.toString() ?? "0");
 
     formData.append("IssueDate", this.appUtils.dateFormater(val.issueDate!));
@@ -1024,16 +1053,16 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     formData.append("ClaimNoOfDays", val.claimNoOfDays?.toString()! ?? "0");
     formData.append("CSNoOfDays", val.csNoOfDays?.toString()! ?? "0");
-    formData.append("Remarks", val.remarks!);
+    formData.append("Remarks", val.remarks! ?? "");
     formData.append("SumInsur", val.sumInsur?.toString()! ?? "0");
-    formData.append("ClientDNCNNo", val.clientDNCNNo!);
+    formData.append("ClientDNCNNo", val.clientDNCNNo! ?? "");
     formData.append("NetPremium", val.netPremium?.toString()! ?? "0");
     formData.append("Fees", val.fees?.toString()! ?? "0");
     formData.append("DeductFees", val.deductFees?.toString()! ?? "0");
     formData.append("VatPerc", val.vatPerc?.toString()! ?? "0");
     formData.append("VatValue", val.vatValue?.toString()! ?? "0");
     formData.append("TotalPremium", val.totalPremium?.toString()! ?? "0");
-    formData.append("CompCommDNCNNo", val.compCommDNCNNo!);
+    formData.append("CompCommDNCNNo", val.compCommDNCNNo! ?? "");
     formData.append("CompCommPerc", val.compCommPerc?.toString()! ?? "0");
     formData.append("CompCommVAT", val.compCommVAT?.toString()! ?? "0");
     formData.append("CompCommAmount", val.compCommAmount?.toString()! ?? "0");
@@ -1042,10 +1071,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       val.producerCommPerc?.toString()! ?? ""
     );
     formData.append("ProducerComm", val.producerComm?.toString()! ?? "0");
-    formData.append("Branch", val.branch!);
-    // formData.append('Renewal', val.renewal!)
-    // formData.append('RenewalOf', val.renewalOf!)
-    // formData.append('EndorsRequestType', val.endorsRequestType!)
+    formData.append("Branch", val.branch! ?? "");
 
     let terms = val.paymentTermsList!;
     for (let i = 0; i < terms.length; i++) {
@@ -1089,7 +1115,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     this.documentsToUpload.forEach((el) => formData.append("Documents", el));
 
-    this.productionService.savePolicy(formData).subscribe(
+    let sub = this.productionService.savePolicy(formData).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.message.toast(res.body.message!, "success");
@@ -1100,6 +1126,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       },
       (err) => this.message.popup("Sorry!", err.message!, "error")
     );
+    this.subscribes.push(sub);
   }
 
   validationChecker(): boolean {
