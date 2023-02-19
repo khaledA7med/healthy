@@ -283,33 +283,6 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("pending", "false");
 		formData.append("docSNo", "0");
 
-		let data = {
-			ClientID: form.value.clientID,
-			ClientName: form.value.clientName,
-			PolicyNo: form.value.policyNo,
-			PolicySerial: this.uiState.requestDetails.policiesSNo,
-			ClientPolicySNo: this.uiState.requestDetails.sNo,
-			EndorsType: form.value.endorsType,
-			InsurComp: form.value.insurComp,
-			ClassOfBusiness: form.value.classOfBusiness,
-			LineOfBusiness: form.value.lineOfBusiness,
-			ExistingPolExpDate: this.util.dateFormater(form.value.existingPolExpDate),
-			RequestDetails: form.value.requestDetails,
-			DateOfDeadline: this.util.dateFormater(form.value.dateOfDeadline),
-			NetPremium: form.value.netPremium,
-			VatPerc: form.value.vatPerc,
-			VatValue: form.value.vatValue,
-			PolicyFees: form.value.policyFees,
-			TotalPremium: form.value.totalPremium,
-			Branch: form.value.branch,
-			isRequierment: isRequierment,
-			notifyClient: 0,
-			notifyInsurer: 0,
-			sNo: 0,
-			pending: false,
-			docSNo: 0,
-		};
-
 		let sub = this.customerService.saveRequest(formData).subscribe(
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {
