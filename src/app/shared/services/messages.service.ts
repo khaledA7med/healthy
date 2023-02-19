@@ -27,6 +27,30 @@ export class MessagesService {
     });
   }
 
+  templateComfirmation(
+    title: string = "",
+    msg: string = "",
+    btnTitle: string = "",
+    btn: string = "primary",
+    icon: SweetAlertIcon = "warning"
+  ) {
+    const swal = Swal.mixin({
+      customClass: {
+        confirmButton: `btn btn-${btn} btn-sm mx-2`,
+        cancelButton: "btn btn-danger btn-sm mx-2",
+      },
+      background: "var(--vz-modal-bg)",
+      buttonsStyling: false,
+    });
+    return swal.fire({
+      title: title,
+      html: msg,
+      icon: icon,
+      showCancelButton: true,
+      confirmButtonText: btnTitle,
+    });
+  }
+
   popup(title: string, message: string, icon: SweetAlertIcon = "info") {
     return Swal.fire({
       title: title,

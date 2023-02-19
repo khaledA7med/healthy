@@ -112,6 +112,20 @@ export class ProductionService {
     );
   }
 
+  checkEndorsNo(
+    policy: string,
+    endors: string
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.checkEndorsNo,
+      {},
+      {
+        params: { policyNo: policy, endorsNo: endors },
+        observe: "response",
+      }
+    );
+  }
+
   //#endregion
 
   getPolicyById(
