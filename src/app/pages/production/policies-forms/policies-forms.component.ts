@@ -1,3 +1,4 @@
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -12,18 +13,24 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   NgbModal,
   NgbModalOptions,
   NgbModalRef,
 } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import {
+  Caching,
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IPaymentTermsList } from "src/app/shared/app/models/Production/ipayment-terms-list";
 import {
   IPolicyCommissionListForms,
   IPolicyPaymentsListForms,
@@ -39,7 +46,10 @@ import {
   issueType,
   searchBy,
 } from "src/app/shared/app/models/Production/production-util";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
+import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/dropzone.component";
+import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
@@ -52,16 +62,18 @@ import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 export class PoliciesFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IProductionForms>;
   formData!: Observable<IBaseMasterTable>;
-  submitted: boolean = false;
 
   modalRef!: NgbModalRef;
 
   uiState = {
     editMode: false,
     editId: "",
+    date: new Date(),
+    submitted: false as boolean,
     policy: {
       searching: searchBy,
       issueType: issueType,
+      lineOfBusiness: [] as IGenericResponseType[],
     },
     requestSearch: {
       clientName: "",
@@ -98,24 +110,36 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     },
   };
 
+  documentsToUpload: File[] = [];
   docs: any[] = [];
-  @ViewChild("dropzone") dropzone!: any;
+  @ViewChild(DropzoneComponent) dropzone!: DropzoneComponent;
   @ViewChild(PolicyRequestsListComponent)
   dataSource!: PolicyRequestsListComponent;
   subscribes: Subscription[] = [];
   constructor(
     private modalService: NgbModal,
+    private router: Router,
+    private route: ActivatedRoute,
+    private tables: MasterTableService,
+    private productionService: ProductionService,
+    private methods: MasterMethodsService,
     private eventService: EventService,
     private appUtils: AppUtils,
-    private tables: MasterTableService,
-    private message: MessagesService,
-    private productionService: ProductionService
+    private message: MessagesService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.formDataHandler();
-    this.vatCalcHandlers();
+    this.calcHandlers();
+    let sub = this.route.paramMap.subscribe((res) => {
+      if (res.get("id")) {
+        this.uiState.editId = res.get("id")!;
+        this.eventService.broadcast(reserved.isLoading, true);
+        this.getPolicy(this.uiState.editId);
+      }
+    });
+    this.subscribes.push(sub);
   }
 
   formDataHandler(): void {
@@ -126,6 +150,15 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       );
     });
     this.subscribes.push(sub);
+
+    let date = {
+      gon: {
+        year: this.uiState.date.getFullYear(),
+        month: this.uiState.date.getMonth() + 1,
+        day: this.uiState.date.getDate(),
+      },
+    };
+    this.issueDate(date);
   }
 
   initForm(): void {
@@ -134,7 +167,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       searchType: new FormControl(this.uiState.policy.searching.client),
       producer: new FormControl(null, Validators.required),
       chPolicyHolder: new FormControl(false),
-      policyHolder: new FormControl({ value: null, disabled: true }),
+      policyHolder: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
       requestNo: new FormControl(null),
       clientInfo: new FormControl(null, Validators.required),
       clientNo: new FormControl(null, Validators.required),
@@ -143,12 +179,21 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       oasisPolRef: new FormControl(null),
       accNo: new FormControl(null, Validators.required),
       policyNo: new FormControl(null, Validators.required),
-      endorsType: new FormControl({ value: null, disabled: true }),
-      endorsNo: new FormControl({ value: null, disabled: true }),
+      endorsType: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
+      endorsNo: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
       insurComp: new FormControl(null, Validators.required),
       className: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
-      minDriverAge: new FormControl({ value: null, disabled: true }),
+      minDriverAge: new FormControl(
+        { value: null, disabled: true },
+        Validators.required
+      ),
       issueDate: new FormControl(null, Validators.required),
       periodFrom: new FormControl(null, Validators.required),
       periodTo: new FormControl(null, Validators.required),
@@ -186,21 +231,19 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   chPolicyHolderEvt(e: Event) {
     let elem = e.target as HTMLInputElement;
-    if (elem.checked) {
-      this.f.policyHolder?.enable();
-      this.f.policyHolder?.setValidators(Validators.required);
-    } else {
-      this.f.policyHolder?.disable();
-      this.f.policyHolder?.clearValidators();
-    }
-    this.f.chPolicyHolder?.updateValueAndValidity();
+    if (elem.checked) this.f.policyHolder?.enable();
+    else this.f.policyHolder?.disable();
   }
 
   searchByEvt(): void {
-    this.resetForm();
     if (this.f.searchType?.value === this.uiState.policy.searching.request)
       this.f.requestNo?.setValidators(Validators.required);
-    else this.f.requestNo?.clearValidators();
+    else {
+      this.resetForm();
+      this.f.searchType?.patchValue("Client");
+      this.f.issueType?.patchValue("new");
+      this.f.requestNo?.clearValidators();
+    }
     this.f.requestNo?.updateValueAndValidity();
   }
 
@@ -311,65 +354,123 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   fillPolicyDataToForm(e: IPoliciesRef) {
-    console.log(e);
     let sub = this.productionService
       .loadPolicyData(e.policiesSNo, e.sNo)
       .subscribe(
         (res: IBaseResponse<IPolicyPreview>) => {
           if (res.status) {
             let data = res.data;
-            this.formGroup.patchValue({
-              oasisPolRef: data?.oasisPolRef,
-              accNo: data?.accNo,
-              policyNo: data?.policyNo,
-              endorsType: data?.endorsType,
-              endorsNo: data?.endorsNo,
-              insurComp: data?.insurComp,
-              className: data?.className,
-              lineOfBusiness: data?.lineOfBusiness,
-              minDriverAge: data?.minDriverAge!,
-              claimNoOfDays: data?.claimNoOfDays,
-              csNoOfDays: data?.csnoOfDays,
-              remarks: data?.remarks,
-              compCommPerc: data?.compCommPerc,
-              producerCommPerc: data?.producerCommPerc,
-            });
+            // this.formGroup.patchValue({
+            //   oasisPolRef: data?.oasisPolRef,
+            //   accNo: data?.accNo,
+            //   policyNo: data?.policyNo,
+            //   // endorsType: data?.endorsType,
+            //   endorsNo: data?.endorsNo,
+            //   insurComp: data?.insurComp,
+            //   className: data?.className,
+            //   lineOfBusiness: data?.lineOfBusiness,
+            //   minDriverAge: data?.minDriverAge!,
+            //   claimNoOfDays: data?.claimNoOfDays,
+            //   csNoOfDays: data?.csnoOfDays,
+            //   remarks: data?.remarks,
+            //   compCommPerc: data?.compCommPerc,
+            //   producerCommPerc: data?.producerCommPerc,
+            // });
 
-            this.f.issueDate?.patchValue(
-              this.appUtils.dateStructFormat(data?.issueDate!) as any
-            );
-            this.f.periodFrom?.patchValue(
-              this.appUtils.dateStructFormat(data?.periodFrom!) as any
-            );
-            this.f.periodTo?.patchValue(
-              this.appUtils.dateStructFormat(data?.periodTo!) as any
-            );
+            // this.getLineOfBusiness(data?.className!, true);
 
-            data?.producersCommissionsList.forEach((com) =>
-              this.addProducerCommission(com)
-            );
+            // this.f.issueDate?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.issueDate!) as any
+            // );
+            // this.f.periodFrom?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.periodFrom!) as any
+            // );
+            // this.f.periodTo?.patchValue(
+            //   this.appUtils.dateStructFormat(data?.periodTo!) as any
+            // );
+
+            // data?.producersCommissionsList.forEach((com) =>
+            //   this.addProducerCommission(com)
+            // );
+            this.setPolicyDataToForm(data!);
+            this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "warning");
-          console.log(res);
         },
         (err) => this.message.popup("Oops!", err.message, "error")
       );
     this.subscribes.push(sub);
   }
 
-  //#region Policy Details Handlers
-  setValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.setValidators(Validators.required);
-      el.updateValueAndValidity();
-    });
+  getPolicy(id: string): void {
+    this.productionService.getPolicy(id).subscribe(
+      (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
+        if (res.body?.status) {
+          this.setPolicyDataToForm(res.body?.data!);
+        } else {
+          this.message.popup("Oops!", res.body?.message!, "warning");
+        }
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err) => {
+        this.message.popup("Oops!", err?.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
   }
 
-  removeValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.clearValidators();
-      el.updateValueAndValidity();
+  setPolicyDataToForm(data: IPolicyPreview): void {
+    this.formGroup.patchValue({
+      sNo: this.uiState.editMode ? data.sNo : "0",
+      clientInfo: `${data.clientNo} | ${data.clientName}`,
+      producer: data.producer,
+      chPolicyHolder: data.chPolicyHolder,
+      policyHolder: data.policyHolder,
+      oasisPolRef: data.oasisPolRef,
+      accNo: data.accNo,
+      policyNo: data.policyNo,
+      endorsType: data.endorsType !== "Policy" ? data.endorsType : null,
+      endorsNo: data.endorsNo,
+      insurComp: data.insurComp,
+      className: data.className,
+      lineOfBusiness: data.lineOfBusiness,
+      minDriverAge: data.minDriverAge,
+      claimNoOfDays: data.claimNoOfDays,
+      csNoOfDays: data.csnoOfDays,
+      remarks: data.remarks,
+      clientDNCNNo: data.clientDNCNNo,
+      compCommDNCNNo: data.compCommDNCNNo,
+      sumInsur: data.sumInsur,
+      netPremium: data.netPremium,
+      fees: data.fees,
+      deductFees: data.deductFees,
+      vatPerc: data.vatPerc,
+      vatValue: data.vatValue,
+      totalPremium: data.totalPremium,
+      compCommPerc: data.compCommPerc,
+      compCommAmount: data.compCommAmount,
+      compCommVAT: data.compCommVAT,
+      producerCommPerc: data.producerCommPerc,
+      producerComm: data.producerComm,
     });
+    this.f.issueDate?.patchValue(
+      this.appUtils.dateStructFormat(data?.issueDate!) as any
+    );
+    this.f.periodFrom?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodFrom!) as any
+    );
+    this.f.periodTo?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodTo!) as any
+    );
+    this.getLineOfBusiness(data.className!, true);
+
+    data?.producersCommissionsList.forEach((com) =>
+      this.addProducerCommission(com)
+    );
+    data?.paymentTermsList.forEach((pay) => this.addPaymentTerm(pay));
+    this.docs = data.documentList!;
   }
+
+  //#region Policy Details Handlers
 
   issueTypeToggler(e: Event) {
     let elem = this.f.issueType?.value;
@@ -404,12 +505,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.periodTo?.enable();
     this.f.compCommPerc?.enable();
 
-    let validators = [
-      this.f.endorsType!,
-      this.f.endorsNo!,
-      this.f.oasisPolRef!,
-    ];
-    this.removeValidatorAndUpdate(validators);
+    this.f.oasisPolRef?.disable();
   }
 
   renewalIssue(): void {
@@ -428,9 +524,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.periodFrom?.enable();
     this.f.periodTo?.enable();
     this.f.compCommPerc?.enable();
-
-    this.setValidatorAndUpdate([this.f.oasisPolRef!]);
-    this.removeValidatorAndUpdate([this.f.endorsType!, this.f.endorsNo!]);
+    this.f.oasisPolRef?.enable();
   }
 
   endorsementIssue(): void {
@@ -460,11 +554,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.compCommPerc?.disable();
     this.f.compCommPerc?.reset();
 
-    this.setValidatorAndUpdate([
-      this.f.oasisPolRef!,
-      this.f.endorsNo!,
-      this.f.endorsType!,
-    ]);
+    this.f.oasisPolRef?.enable();
   }
 
   endorsTypeTogglerEvt(e: any) {
@@ -487,6 +577,20 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.vatHandler();
   }
 
+  getLineOfBusiness(cls: string, evt?: boolean) {
+    let sub = this.methods
+      .getLineOfBusiness(cls)
+      .subscribe(
+        (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
+          if (!evt) this.f.lineOfBusiness?.reset();
+          this.uiState.policy.lineOfBusiness = res.body?.data?.content!;
+        }
+      );
+    this.subscribes.push(sub);
+    if (cls === "Motor") this.f.minDriverAge?.enable();
+    else this.f.minDriverAge?.disable();
+  }
+
   //#endregion
 
   //#region Invoices Details
@@ -497,24 +601,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         this.f.compCommPerc?.patchValue(100);
         return;
       }
-      this.f.compCommAmount?.patchValue(
-        +this.f.netPremium?.value! * (+this.f.compCommPerc?.value! / 100)
-      );
-      this.f.compCommVAT?.patchValue(
-        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
-      );
-      this.f.producerComm?.patchValue(
-        this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
-      );
-      if (+this.f.producerCommPerc?.value! > 0) {
-        this.f.producerComm?.patchValue(
-          +this.f.compCommAmount?.value! *
-            (this.f.producerCommPerc?.value! / 100)
-        );
-        this.commissionHandler();
-      }
     }
     this.totalPaymentRow();
+    this.commissionsValues();
   }
   vatHandler(): void {
     if (this.f.endorsType?.value === "Refund" && !this.f.deductFees?.value) {
@@ -529,8 +618,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       );
     } else {
       this.f.vatValue?.patchValue(
-        (+this.f.netPremium?.value! + +this.f.fees?.value!) *
-          (this.f.vatPerc?.value! / 100)
+        this.appUtils.currencyFormater(
+          (+this.f.netPremium?.value! + +this.f.fees?.value!) *
+            (this.f.vatPerc?.value! / 100)
+        )
       );
       this.f.totalPremium?.patchValue(
         +this.f.netPremium?.value! +
@@ -541,11 +632,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     if (+this.f.compCommPerc?.value! > 0)
       this.f.compCommVAT?.patchValue(
-        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+        this.appUtils.currencyFormater(
+          +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+        )
       );
   }
 
-  vatCalcHandlers(): void {
+  calcHandlers(): void {
     let sub = this.f.vatValue?.valueChanges.subscribe(() => {
       if (this.f.paymentTermsList?.length) {
         for (let i = 0; i < this.paymentTermsArrayControls.length; i++) {
@@ -554,7 +647,42 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         }
       }
     });
+    let sub2 = this.f.compCommPerc?.valueChanges.subscribe((el) =>
+      this.commissionsValues()
+    );
+    let sub3 = this.f.producerCommPerc?.valueChanges.subscribe((el) =>
+      this.commissionsValues()
+    );
     this.subscribes.push(sub!);
+    this.subscribes.push(sub2!);
+    this.subscribes.push(sub3!);
+  }
+
+  commissionsValues(): void {
+    this.f.compCommAmount?.patchValue(
+      this.appUtils.currencyFormater(
+        +this.f.netPremium?.value! * (+this.f.compCommPerc?.value! / 100)
+      )
+    );
+    this.f.compCommVAT?.patchValue(
+      this.appUtils.currencyFormater(
+        +this.f.compCommAmount?.value! * (this.f.vatPerc?.value! / 100)
+      )
+    );
+    this.f.producerComm?.patchValue(
+      this.appUtils.currencyFormater(
+        this.f.compCommAmount?.value! * (this.f.producerCommPerc?.value! / 100)
+      )
+    );
+    if (+this.f.producerCommPerc?.value! > 0) {
+      this.f.producerComm?.patchValue(
+        this.appUtils.currencyFormater(
+          +this.f.compCommAmount?.value! *
+            (this.f.producerCommPerc?.value! / 100)
+        )
+      );
+      this.commissionHandler();
+    }
   }
 
   producerCommissionsListeners(e?: Event): void {
@@ -563,15 +691,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.producerCommPerc?.patchValue(100);
       return;
     }
-    this.f.producerComm?.patchValue(
-      this.f.compCommAmount?.value! * (+this.f.producerCommPerc?.value! / 100)
-    );
-    this.commissionHandler();
   }
   //#endregion
 
   //#region Payment Terms
-  addPaymentTerm(data?: IPolicyPaymentsListForms) {
+  addPaymentTerm(data?: IPaymentTermsList) {
     if (this.f.paymentTermsList?.invalid) {
       this.f.paymentTermsList.markAllAsTouched();
       return;
@@ -580,9 +704,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.message.popup("Oo !", "Please fill Invoices Details", "warning");
       return;
     }
-
     let payment = new FormGroup<IPolicyPaymentsListForms>({
-      payDate: new FormControl(data?.payDate || null, Validators.required),
+      payDate: new FormControl(
+        (this.appUtils.dateStructFormat(data?.payDate!) as any) || null,
+        Validators.required
+      ),
       amount: new FormControl(data?.amount || null),
       percentage: new FormControl(data?.percentage || null, [
         Validators.max(100),
@@ -592,6 +718,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vatAmount: new FormControl(data?.vatAmount || null),
       rowTotal: new FormControl(null),
     });
+
     if (!data) payment.reset();
     else payment.disable();
 
@@ -626,14 +753,21 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             handler
           );
         el.controls.amount?.patchValue(
-          +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.netPremium?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
         el.controls.policyFees?.patchValue(
-          +this.f.fees?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.fees?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
         el.controls.vatAmount?.patchValue(
-          +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.vatValue?.value! * (+el.controls.percentage?.value! / 100)
+          )
         );
+
         if (
           +el.controls.policyFees?.value! >=
           +this.uiState.paymentTermHandler.fees
@@ -650,6 +784,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             +this.uiState.paymentTermHandler.vat
           );
         }
+        this.equalizerPaymentTerms();
       });
       this.subscribes.push(sub1!);
     });
@@ -682,11 +817,16 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   paymentTermsHandler(): void {
-    if (this.f.paymentTermsList?.length) {
-      for (let i = 0; i < this.paymentTermsArrayControls.length; i++) {
+    let len = this.paymentTermsArrayControls.length;
+    if (len) {
+      for (let i = 0; i < len; i++) {
         let perc = this.paymentsControls(i, "percentage").value,
           net = this.paymentsControls(i, "amount");
-        net.patchValue(this.f.netPremium?.value! * (perc / 100));
+        net.patchValue(
+          this.appUtils.currencyFormater(
+            this.f.netPremium?.value! * (perc / 100)
+          )
+        );
       }
     }
   }
@@ -697,7 +837,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     if (con === "policyFees") val = +this.f.fees?.value!;
     else if (con === "vatAmount") val = +this.f.vatValue?.value!;
     if (+elm.replace(/,/g, "") > +val) {
-      this.paymentsControls(i, con).patchValue(val);
+      this.paymentsControls(i, con).patchValue(
+        this.appUtils.currencyFormater(val)
+      );
       return;
     }
   }
@@ -709,6 +851,41 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       +this.f.fees?.value! - +this.uiState.paymentTermsTotals.fees;
     this.uiState.paymentTermHandler.vat =
       +this.f.vatValue?.value! - +this.uiState.paymentTermsTotals.vat;
+  }
+
+  equalizerPaymentTerms(): void {
+    let cls = this.paymentTermsArrayControls,
+      net =
+        +this.f.netPremium?.value! - this.uiState.paymentTermsTotals.netPremium,
+      fees = +this.f.fees?.value! - this.uiState.paymentTermsTotals.fees,
+      vat = +this.f.vatValue?.value! - this.uiState.paymentTermsTotals.vat,
+      total =
+        +this.f.totalPremium?.value! - this.uiState.paymentTermsTotals.total;
+
+    if (net > 0 && net < 1) {
+      cls
+        .at(-1)
+        .get("amount")
+        ?.patchValue(+cls.at(-1).get("amount")?.value + +net);
+    }
+    if (fees > 0 && fees < 1) {
+      cls
+        .at(-1)
+        .get("policyFees")
+        ?.patchValue(+cls.at(-1).get("policyFees")?.value + +fees);
+    }
+    if (net > 0 && net < 1) {
+      cls
+        .at(-1)
+        .get("vatAmount")
+        ?.patchValue(+cls.at(-1).get("vatAmount")?.value + +vat);
+    }
+    if (total > 0 && total < 1) {
+      cls
+        .at(-1)
+        .get("total")
+        ?.patchValue(+cls.at(-1).get("total")?.value + +net);
+    }
   }
 
   get paymentTermsListBool(): boolean {
@@ -787,7 +964,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             handler
           );
         el.controls.amount?.patchValue(
-          +this.f.producerComm?.value! * (+el.controls.percentage?.value! / 100)
+          this.appUtils.currencyFormater(
+            +this.f.compCommAmount?.value! *
+              (+el.controls.percentage?.value! / 100)
+          )
         );
       });
       this.subscribes.push(sub1!);
@@ -811,7 +991,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.producersCommissionsArrayControls.length; i++) {
         let perc = this.commissionControls(i, "percentage").value,
           net = this.commissionControls(i, "amount");
-        net.patchValue(this.f.producerComm?.value! * (perc / 100));
+        net.patchValue(
+          this.appUtils.currencyFormater(
+            this.f.producerComm?.value! * (perc / 100)
+          )
+        );
       }
     }
   }
@@ -834,13 +1018,133 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   //#endregion
-  documentsList(e: any) {}
-
-  onSubmit(e: any) {
-    this.submitted = true;
+  documentsList(evt: any) {
+    this.documentsToUpload = evt;
   }
 
-  resetForm() {}
+  onSubmit(policy: FormGroup<IProductionForms>) {
+    this.uiState.submitted = true;
+    const formData = new FormData();
+
+    let val = policy.getRawValue();
+
+    if (this.uiState.editMode) formData.append("sNo", val.sNo!);
+
+    formData.append("RequestNo", val.requestNo! ?? "");
+    formData.append("ClientNo", val.clientNo!);
+    formData.append("ClientName", val.clientName!);
+    formData.append("Producer", val.producer!);
+    formData.append("PolicyHolder", val.policyHolder! ?? "");
+    formData.append("CHPolicyHolder", val.chPolicyHolder?.toString()!);
+    formData.append("OasisPolRef", val.oasisPolRef! ?? "");
+    formData.append("IssueType", val.issueType!);
+    formData.append("AccNo", val.accNo!);
+    formData.append("PolicyNo", val.policyNo!);
+    formData.append("EndorsType", val.endorsType! ?? "");
+    formData.append("EndorsNo", val.endorsNo! ?? "");
+    formData.append("InsurComp", val.insurComp! ?? "");
+    formData.append("ClassName", val.className! ?? "");
+    formData.append("LineOfBusiness", val.lineOfBusiness! ?? "");
+    formData.append("MinDriverAge", val.minDriverAge?.toString() ?? "0");
+
+    formData.append("IssueDate", this.appUtils.dateFormater(val.issueDate!));
+    formData.append("PeriodTo", this.appUtils.dateFormater(val.periodTo!));
+    formData.append("PeriodFrom", this.appUtils.dateFormater(val.periodFrom!));
+
+    formData.append("ClaimNoOfDays", val.claimNoOfDays?.toString()! ?? "0");
+    formData.append("CSNoOfDays", val.csNoOfDays?.toString()! ?? "0");
+    formData.append("Remarks", val.remarks! ?? "");
+    formData.append("SumInsur", val.sumInsur?.toString()! ?? "0");
+    formData.append("ClientDNCNNo", val.clientDNCNNo! ?? "");
+    formData.append("NetPremium", val.netPremium?.toString()! ?? "0");
+    formData.append("Fees", val.fees?.toString()! ?? "0");
+    formData.append("DeductFees", val.deductFees?.toString()! ?? "0");
+    formData.append("VatPerc", val.vatPerc?.toString()! ?? "0");
+    formData.append("VatValue", val.vatValue?.toString()! ?? "0");
+    formData.append("TotalPremium", val.totalPremium?.toString()! ?? "0");
+    formData.append("CompCommDNCNNo", val.compCommDNCNNo! ?? "");
+    formData.append("CompCommPerc", val.compCommPerc?.toString()! ?? "0");
+    formData.append("CompCommVAT", val.compCommVAT?.toString()! ?? "0");
+    formData.append("CompCommAmount", val.compCommAmount?.toString()! ?? "0");
+    formData.append(
+      "ProducerCommPerc",
+      val.producerCommPerc?.toString()! ?? ""
+    );
+    formData.append("ProducerComm", val.producerComm?.toString()! ?? "0");
+    formData.append("Branch", val.branch! ?? "");
+
+    let terms = val.paymentTermsList!;
+    for (let i = 0; i < terms.length; i++) {
+      formData.append(
+        `PaymentTermsList[${i}].payDate`,
+        this.appUtils.dateFormater(terms[i].payDate)
+      );
+      formData.append(
+        `PaymentTermsList[${i}].percentage`,
+        terms[i].percentage?.toString()! ?? ""
+      );
+      formData.append(
+        `PaymentTermsList[${i}].amount`,
+        terms[i].amount?.toString()! ?? ""
+      );
+      formData.append(
+        `PaymentTermsList[${i}].policyFees`,
+        terms[i].policyFees?.toString()! ?? ""
+      );
+      formData.append(
+        `PaymentTermsList[${i}].vatAmount`,
+        terms[i].vatAmount?.toString()! ?? ""
+      );
+    }
+
+    let commissions = val.producersCommissionsList!;
+    for (let i = 0; i < commissions.length; i++) {
+      formData.append(
+        `ProducersCommissionsList[${i}].producer`,
+        commissions[i].producer!
+      );
+      formData.append(
+        `ProducersCommissionsList[${i}].percentage`,
+        commissions[i].percentage?.toString()! ?? ""
+      );
+      formData.append(
+        `ProducersCommissionsList[${i}].amount`,
+        commissions[i].amount?.toString()! ?? ""
+      );
+    }
+
+    this.documentsToUpload.forEach((el) => formData.append("Documents", el));
+
+    let sub = this.productionService.savePolicy(formData).subscribe(
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.message.toast(res.body.message!, "success");
+          if (this.uiState.editId)
+            this.router.navigate([AppRoutes.Production.base]);
+          this.resetForm();
+        } else this.message.popup("Sorry!", res.body?.message!, "warning");
+      },
+      (err) => this.message.popup("Sorry!", err.message!, "error")
+    );
+    this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    if (this.formGroup.invalid) return false;
+    return true;
+  }
+
+  resetForm(): void {
+    this.formGroup.reset();
+    this.f.paymentTermsList?.clear();
+    this.f.producersCommissionsList?.clear();
+    this.f.periodTo?.enable();
+    this.documentsToUpload = [];
+    this.dropzone.clearImages();
+    this.uiState.submitted = false;
+  }
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

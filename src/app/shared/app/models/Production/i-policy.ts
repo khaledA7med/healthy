@@ -1,5 +1,5 @@
 export interface IPolicy {
-  sno?: number;
+  sNo?: string;
   policyStatus?: string;
   oasisPolRef?: string;
   docSno?: number;
@@ -16,6 +16,7 @@ export interface IPolicy {
   producer?: string;
   producerId?: string;
   bdmanager?: string;
+  chPolicyHolder?: boolean;
   policyHolder?: string;
   accNo?: string;
   policyNo?: string;
@@ -46,13 +47,15 @@ export interface IPolicy {
   vatPerc?: number;
   vatValue?: number;
   netPremium?: number;
-  deductFees?: number;
+  deductFees?: boolean;
   fees?: number;
   totalPremium?: number;
   paidPremium?: number;
   compComm?: number;
   compCommPerc?: number;
   compCommVat?: number;
+  compCommVAT?: number;
+  compCommAmount?: number;
   fullPremium?: number;
   producerComm?: number;
   producerCommPerc?: number;
@@ -63,7 +66,9 @@ export interface IPolicy {
   claimsSpecialConditions?: string;
   csspecialConditions?: string;
   clientDncnno?: string;
+  clientDNCNNo?: string;
   compCommDncnno?: string;
+  compCommDNCNNo?: string;
   totalPrdocCommPerc?: number;
   totalPrdocCommValue?: number;
   transDate?: Date;

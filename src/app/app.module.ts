@@ -1,5 +1,4 @@
-import { LOCALE_ID, NgModule } from "@angular/core";
-import sa from "@angular/common/locales/fr";
+import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -18,12 +17,10 @@ import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { interceptorProviders } from "./core/helpers";
 import { UrlSerializer } from "@angular/router";
 import { LowerCaseUrlSerializer } from "./core/helpers/LowerCaseUrlSerializer";
-import { registerLocaleData } from "@angular/common";
 
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, "assets/i18n/", ".json");
 }
-registerLocaleData(sa, "SAR");
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,7 +43,6 @@ registerLocaleData(sa, "SAR");
   providers: [
     interceptorProviders,
     { provide: UrlSerializer, useClass: LowerCaseUrlSerializer },
-    // { provide: LOCALE_ID, useValue: "SAR" },
   ],
   bootstrap: [AppComponent],
 })

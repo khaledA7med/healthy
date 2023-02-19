@@ -98,6 +98,13 @@ export class DropzoneComponent implements OnChanges {
     this.emitingFiles();
   }
 
+  clearImages() {
+    this.UploadedFiles = [];
+    this.documentsToDisplay = [];
+    this.documentsToUpload = [];
+    this.emitingFiles();
+  }
+
   emitingFiles() {
     this.files.emit(this.documentsToUpload);
   }
