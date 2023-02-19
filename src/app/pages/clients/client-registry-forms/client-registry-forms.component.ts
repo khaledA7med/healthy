@@ -533,7 +533,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
         // Hide Loader
         this.eventService.broadcast(reserved.isLoading, false);
       },
-      (err) => this.message.popup("Sorry!", err.message!, "warning")
+      (err) => this.message.popup("Sorry!", err.message!, "error")
     );
     this.subscribes.push(sub);
   }

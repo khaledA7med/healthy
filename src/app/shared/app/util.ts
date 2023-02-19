@@ -39,4 +39,13 @@ export default class AppUtils {
     }
     return date;
   }
+
+  public currencyFormater(val: number): number {
+    return +Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    })
+      .format(val)
+      .replace(/,/g, "");
+  }
 }
