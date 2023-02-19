@@ -8,11 +8,12 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.module";
 import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
+import { CustomerServiceListComponent } from "./customer-service-list.component";
 
 export const routes: Routes = [{ path: "", component: CustomerServiceFormsComponent }];
 
 @NgModule({
-	declarations: [CustomerServiceFormsComponent],
+	declarations: [CustomerServiceFormsComponent, CustomerServiceListComponent],
 	imports: [
 		CommonModule,
 		RouterModule.forChild(routes),

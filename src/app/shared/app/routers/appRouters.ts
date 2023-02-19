@@ -33,7 +33,7 @@ export const AppRoutes = {
 	},
 	Production: {
 		base: "production",
-		details: "policy-details",
+		details: "policy",
 		create: "production/create",
 		edit: "production/update/",
 	},

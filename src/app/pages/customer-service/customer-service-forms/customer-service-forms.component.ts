@@ -15,16 +15,14 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ICSForm } from "src/app/shared/app/models/CustomerService/icustomer-service-form";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
-import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
-import { CSPoicySearchCols } from "src/app/shared/app/grid/csPolicySearchCols";
-import { CSPolicySearchRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-policy-search-req";
 import { CSPolicyData } from "src/app/shared/app/models/CustomerService/icustomer-service-policy";
+import { CustomerServiceListComponent } from "../customer-service-list/customer-service-list.component";
+import { EndorsTypeByPolicy, RequiermentsList } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 
 @Component({
 	selector: "app-customer-service-forms",
 	templateUrl: "./customer-service-forms.component.html",
 	styleUrls: ["./customer-service-forms.component.scss"],
-	providers: [AppUtils],
 })
 export class CustomerServiceFormsComponent implements OnInit {
 	submitted = false;
@@ -32,6 +30,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 	formGroup!: FormGroup<ICSForm>;
 	documentsToUpload: File[] = [];
 	docs: any[] = [];
+	@ViewChild(CustomerServiceListComponent)
+	dataSource!: CustomerServiceListComponent;
 	subscribes: Subscription[] = [];
 
 	uiState = {
@@ -42,25 +42,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 			list: [] as CSPolicyData[],
 			totalPages: 0,
 		},
-	};
-
-	gridApi: GridApi = <GridApi>{};
-	gridOpts: GridOptions = {
-		pagination: true,
-		rowModelType: "infinite",
-		editType: "fullRow",
-		paginationAutoPageSize: true,
-		cacheBlockSize: 500,
-		animateRows: true,
-		columnDefs: CSPoicySearchCols,
-		defaultColDef: {
-			flex: 1,
-			minWidth: 100,
-			sortable: false,
-		},
-		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
-		onGridReady: (e) => this.onGridReady(e),
-		onRowClicked: (e) => this.onRowClicked(e),
+		endorsTypes: [] as EndorsTypeByPolicy[],
 	};
 
 	@ViewChild("dropzone") dropzone!: any;
@@ -94,7 +76,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 			ariaLabelledBy: "modal-basic-title",
 			centered: true,
 			backdrop: "static",
-			fullscreen: true,
+			size: "xl",
 		});
 
 		this.searchClientModal.hidden.subscribe(() => {
@@ -115,51 +97,6 @@ export class CustomerServiceFormsComponent implements OnInit {
 		return this.searchClientForm.controls;
 	}
 
-	submitSearchPolicy() {
-		this.gridApi.setDatasource(this.dataSource);
-	}
-
-	dataSource: IDatasource = {
-		getRows: (params: IGetRowsParams) => {
-			this.gridApi.showLoadingOverlay();
-			let dataTOSubmit: CSPolicySearchRequest = {
-				clientNo: this.ff["clientNo"].value !== null ? this.ff["clientNo"].value : 0,
-				policyNo: this.ff["policyNo"].value !== null ? this.ff["policyNo"].value : "",
-				insuranceCompName: this.ff["insuranceCompName"].value !== null ? this.ff["insuranceCompName"].value : "",
-			};
-			let sub = this.customerService.searchPolicy(dataTOSubmit).subscribe(
-				(res: HttpResponse<IBaseResponse<CSPolicyData[]>>) => {
-					if (res.status) {
-						this.uiState.policyList.totalPages = res.body?.data!.length!;
-						this.uiState.policyList.list = res.body?.data!;
-						params.successCallback(this.uiState.policyList.list, this.uiState.policyList.totalPages);
-						if (this.uiState.policyList.list.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
-			this.subscribes.push(sub);
-		},
-	};
-
-	onRowClicked(e: RowClickedEvent) {
-		this.uiState.requestDetails = e.data;
-		this.modalService.dismissAll();
-		this.fillCSFormData();
-	}
-
-	onGridReady(param: GridReadyEvent) {
-		this.gridApi = param.api;
-		this.gridApi.sizeColumnsToFit();
-		this.gridApi.showNoRowsOverlay();
-	}
-
 	deadlineDate(e: any) {
 		this.f.dateOfDeadline?.patchValue(e.gon);
 		this.f.dateOfDeadline?.patchValue(e.gon);
@@ -171,10 +108,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.f.dateOfDeadline?.patchValue(e.gon);
 	}
 
-	fillCSFormData() {
+	fillCSFormData(e: CSPolicyData) {
+		this.modalService.dismissAll();
+		this.uiState.requestDetails = e;
 		this.formGroup.patchValue({
 			clientID: this.uiState.requestDetails.clientNo!,
-			clientName: this.uiState.requestDetails.className!,
+			clientName: this.uiState.requestDetails.clientName!,
 			producer: this.uiState.requestDetails.producer!,
 			classOfBusiness: this.uiState.requestDetails.className!,
 			policyNo: this.uiState.requestDetails.policyNo!,
@@ -207,13 +146,14 @@ export class CustomerServiceFormsComponent implements OnInit {
 			totalPremium: new FormControl(null),
 			cSSpecialConditions: new FormControl(null),
 			branch: new FormControl(null),
+			requiermentsList: new FormArray<FormGroup<RequiermentsList>>([]),
 		});
 	}
 
 	get f() {
 		return this.formGroup.controls;
 	}
-
+	// -------------------------------------------------------------------------------------------
 	getSimilarAndRequir(e: any) {
 		this.getEndorsTypeByPolicy(e.name, this.uiState.requestDetails.policyNo!);
 		this.getCSRequirments(
@@ -226,8 +166,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 
 	getEndorsTypeByPolicy(endorsType: string, policyNo: string) {
 		let sub = this.customerService.getEndorsTypeByPolicy(endorsType, policyNo).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				console.log(res);
+			(res: HttpResponse<IBaseResponse<EndorsTypeByPolicy[]>>) => {
+				this.uiState.endorsTypes = res.body?.data!;
 			},
 			(err: HttpErrorResponse) => {
 				this.message.popup("Oops!", err.message, "error");
@@ -237,15 +177,58 @@ export class CustomerServiceFormsComponent implements OnInit {
 	}
 
 	getCSRequirments(endorsType: string, insuranceCompName: string, classofInsurance: string, lineOfBusiness: string) {
+		this.f.requiermentsList.clear();
 		let sub = this.customerService.getCSRequirments(endorsType, insuranceCompName, classofInsurance, lineOfBusiness).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				console.log(res);
+			(res: HttpResponse<IBaseResponse<string[]>>) => {
+				let data = [] as RequiermentsList[];
+				res.body?.data!.map((item: string) => {
+					data.push({
+						itemCheck: new FormControl(false),
+						itemValue: new FormControl(item),
+					});
+				});
+				data.map((c: any) => this.createReqFormArr(c));
 			},
 			(err: HttpErrorResponse) => {
 				this.message.popup("Oops!", err.message, "error");
 			}
 		);
 		this.subscribes.push(sub);
+	}
+
+	get requirmentsControlArray() {
+		return this.formGroup.get("requiermentsList") as FormArray;
+	}
+
+	requirmentsControls(i: number, control: string): AbstractControl {
+		return this.requirmentsControlArray.controls[i].get(control)!;
+	}
+
+	createReqFormArr(c: RequiermentsList) {
+		let formCon = new FormGroup<RequiermentsList>({
+			itemCheck: c.itemCheck,
+			itemValue: c.itemValue,
+		});
+		this.f.requiermentsList?.push(formCon);
+		this.requirmentsControlArray.updateValueAndValidity();
+	}
+
+	checkAllRequirments(e: any) {
+		if (e.target.checked) {
+			this.requirmentsControlArray?.controls?.forEach((c) => {
+				c?.get("itemCheck")?.patchValue(true);
+			});
+		} else {
+			this.requirmentsControlArray?.controls?.forEach((c) => {
+				c?.get("itemCheck")?.patchValue(false);
+			});
+		}
+	}
+	// --------------------------------------------------------------------------------------------------------------------
+
+	vatHandler(): void {
+		this.f.vatValue?.patchValue((+this.f.netPremium?.value! + +this.f.policyFees?.value!) * (this.f.vatPerc?.value! / 100));
+		this.f.totalPremium?.patchValue(+this.f.netPremium?.value! + +this.f.policyFees?.value! + +this.f.vatValue?.value!);
 	}
 
 	validationChecker(): boolean {
@@ -257,10 +240,69 @@ export class CustomerServiceFormsComponent implements OnInit {
 
 	submitForm(form: FormGroup<ICSForm>) {
 		this.submitted = true;
+		let isRequierment = form.value.requiermentsList!.some((e) => {
+			return e.itemCheck === true;
+		});
 		if (!this.validationChecker()) return;
+		this.eventService.broadcast(reserved.isLoading, true);
 		const formData = new FormData();
+		formData.append("ClientID", form.value.clientID ? form.value.clientID.toString() : "");
+		formData.append("ClientName", form.value.clientName ? form.value.clientName : "");
+		formData.append("PolicyNo", form.value.policyNo ? form.value.policyNo : "");
+
 		formData.append("PolicySerial", this.uiState.requestDetails.policiesSNo ? this.uiState.requestDetails.policiesSNo.toString() : "");
 		formData.append("ClientPolicySNo", this.uiState.requestDetails.sNo ? this.uiState.requestDetails.sNo.toString() : "");
+		formData.append("EndorsType", form.value.endorsType ? form.value.endorsType : "");
+
+		formData.append("InsurComp", form.value.insurComp ? form.value.insurComp : "");
+		formData.append("ClassOfBusiness", form.value.classOfBusiness ? form.value.classOfBusiness : "");
+		formData.append("LineOfBusiness", form.value.lineOfBusiness ? form.value.lineOfBusiness : "");
+		formData.append("ExistingPolExpDate", form.value.existingPolExpDate ? this.util.dateFormater(form.value.existingPolExpDate) : "");
+		formData.append("RequestDetails", form.value.requestDetails ? form.value.requestDetails : "");
+		formData.append("DateOfDeadline", form.value.dateOfDeadline ? this.util.dateFormater(form.value.dateOfDeadline!) : "");
+
+		formData.append("NetPremium", form.value.netPremium ? form.value.netPremium?.toString()! : "");
+		formData.append("VatPerc", form.value.vatPerc ? form.value.vatPerc?.toString()! : "");
+		formData.append("VatValue", form.value.vatValue ? form.value.vatValue?.toString()! : "");
+		formData.append("PolicyFees", form.value.policyFees ? form.value.policyFees?.toString()! : "");
+		formData.append("TotalPremium", form.value.totalPremium ? form.value.totalPremium?.toString()! : "");
+		formData.append("Branch", form.value.branch ? form.value.branch! : "");
+		form.value.requiermentsList!.forEach((e, i) => {
+			formData.append(`RequiermentsList[${i}].checked`, String(e.itemCheck!));
+			formData.append(`RequiermentsList[${i}].item`, e.itemValue!);
+		});
+
+		this.documentsToUpload.forEach((el) => {
+			console.log("Documents", el);
+			formData.append("DocumentsModel", el);
+		});
+		formData.append("isRequierment", isRequierment ? "true" : "false");
+		formData.append("notifyClient", "0");
+		formData.append("notifyInsurer", "0");
+		formData.append("sNo", "0");
+		formData.append("pending", "false");
+		formData.append("docSNo", "0");
+
+		let sub = this.customerService.saveRequest(formData).subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				if (res.body?.status) {
+					this.message.toast(res.body.message!, "success");
+					// if (this.uiState.editId) this.router.navigate([AppRoutes.Client.base]);
+					this.resetForm();
+				} else this.message.popup("Sorry!", res.body?.message!, "warning");
+				// Hide Loader
+				this.eventService.broadcast(reserved.isLoading, false);
+			},
+			(err) => this.message.popup("Sorry!", err.message!, "warning")
+		);
+		this.subscribes.push(sub);
+	}
+
+	resetForm(): void {
+		this.formGroup.reset();
+		this.submitted = false;
+		this.uiState.requestDetails = {};
+		this.uiState.endorsTypes = [];
 	}
 
 	documentsList(evt: File[]) {

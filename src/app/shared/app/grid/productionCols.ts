@@ -1,4 +1,4 @@
-import { ColDef } from "ag-grid-community";
+import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import { PoliciesManagementControlsComponent } from "src/app/pages/production/policies-management/policies-management-controls.component";
 import { refundChecker } from "../models/Production/production-util";
 import GlobalCellRender from "./globalCellRender";
@@ -119,7 +119,8 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Net Premium + Fees",
 		field: "netPremium",
-		cellRenderer: (params: CellEvent) => formatCurrency(+params.value + +params.data.fees, "en-US", "", "", "1.2-2"),
+		cellRenderer: (params: CellEvent) => formatCurrency(+params.value + +params.data?.fees, "en-US", "", "", "1.2-2"),
+		sortable: false,
 		cellClass: refundChecker,
 		minWidth: 150,
 	},
@@ -151,7 +152,8 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Outstanding Premium",
 		field: "totalPremium",
-		cellRenderer: (params: CellEvent) => formatCurrency(+params.value - +params.data.paidPremium, "en-US", "", "", "1.2-2"),
+		cellRenderer: (params: CellEvent) => formatCurrency(+params.value - +params.data?.paidPremium, "en-US", "", "", "1.2-2"),
+		sortable: false,
 		cellClass: refundChecker,
 		minWidth: 180,
 	},

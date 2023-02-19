@@ -52,6 +52,7 @@ import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/d
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
+import { SweetAlertResult } from "sweetalert2";
 import { PolicyRequestsListComponent } from "./policy-requests-list.component";
 
 @Component({
@@ -206,18 +207,18 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       }),
       clientDNCNNo: new FormControl(null, Validators.required),
       compCommDNCNNo: new FormControl(null, Validators.required),
-      sumInsur: new FormControl(null),
-      netPremium: new FormControl(null),
-      fees: new FormControl(null, [Validators.max(1000)]),
+      sumInsur: new FormControl(0),
+      netPremium: new FormControl(0),
+      fees: new FormControl(0, [Validators.max(1000)]),
       deductFees: new FormControl({ value: false, disabled: true }),
       vatPerc: new FormControl(+reserved.DefaultVATPerc),
-      vatValue: new FormControl(null),
-      totalPremium: new FormControl(null),
-      compCommPerc: new FormControl(null),
-      compCommAmount: new FormControl(null),
-      compCommVAT: new FormControl(null),
-      producerCommPerc: new FormControl(null),
-      producerComm: new FormControl(null),
+      vatValue: new FormControl(0),
+      totalPremium: new FormControl(0),
+      compCommPerc: new FormControl(0),
+      compCommAmount: new FormControl(0),
+      compCommVAT: new FormControl(0),
+      producerCommPerc: new FormControl(0),
+      producerComm: new FormControl(0),
       paymentTermsList: new FormArray<FormGroup<IPolicyPaymentsListForms>>([]),
       producersCommissionsList: new FormArray<
         FormGroup<IPolicyCommissionListForms>
@@ -336,6 +337,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         },
         (err) => {
           this.message.popup("Oops!", err.message, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
         }
       );
     this.subscribes.push(sub);
@@ -354,49 +356,22 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   fillPolicyDataToForm(e: IPoliciesRef) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.productionService
       .loadPolicyData(e.policiesSNo, e.sNo)
       .subscribe(
         (res: IBaseResponse<IPolicyPreview>) => {
           if (res.status) {
             let data = res.data;
-            // this.formGroup.patchValue({
-            //   oasisPolRef: data?.oasisPolRef,
-            //   accNo: data?.accNo,
-            //   policyNo: data?.policyNo,
-            //   // endorsType: data?.endorsType,
-            //   endorsNo: data?.endorsNo,
-            //   insurComp: data?.insurComp,
-            //   className: data?.className,
-            //   lineOfBusiness: data?.lineOfBusiness,
-            //   minDriverAge: data?.minDriverAge!,
-            //   claimNoOfDays: data?.claimNoOfDays,
-            //   csNoOfDays: data?.csnoOfDays,
-            //   remarks: data?.remarks,
-            //   compCommPerc: data?.compCommPerc,
-            //   producerCommPerc: data?.producerCommPerc,
-            // });
-
-            // this.getLineOfBusiness(data?.className!, true);
-
-            // this.f.issueDate?.patchValue(
-            //   this.appUtils.dateStructFormat(data?.issueDate!) as any
-            // );
-            // this.f.periodFrom?.patchValue(
-            //   this.appUtils.dateStructFormat(data?.periodFrom!) as any
-            // );
-            // this.f.periodTo?.patchValue(
-            //   this.appUtils.dateStructFormat(data?.periodTo!) as any
-            // );
-
-            // data?.producersCommissionsList.forEach((com) =>
-            //   this.addProducerCommission(com)
-            // );
             this.setPolicyDataToForm(data!);
             this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "warning");
+          this.eventService.broadcast(reserved.isLoading, false);
         },
-        (err) => this.message.popup("Oops!", err.message, "error")
+        (err) => {
+          this.message.popup("Oops!", err.message, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
       );
     this.subscribes.push(sub);
   }
@@ -404,11 +379,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   getPolicy(id: string): void {
     this.productionService.getPolicy(id).subscribe(
       (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
-        if (res.body?.status) {
-          this.setPolicyDataToForm(res.body?.data!);
-        } else {
-          this.message.popup("Oops!", res.body?.message!, "warning");
-        }
+        if (res.body?.status) this.setPolicyDataToForm(res.body?.data!);
+        else this.message.popup("Oops!", res.body?.message!, "warning");
         this.eventService.broadcast(reserved.isLoading, false);
       },
       (err) => {
@@ -462,12 +434,15 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.appUtils.dateStructFormat(data?.periodTo!) as any
     );
     this.getLineOfBusiness(data.className!, true);
-
+    this.totalPaymentRow();
+    this.totalCommissionRow();
     data?.producersCommissionsList.forEach((com) =>
       this.addProducerCommission(com)
     );
     data?.paymentTermsList.forEach((pay) => this.addPaymentTerm(pay));
     this.docs = data.documentList!;
+
+    this.eventService.broadcast(reserved.isLoading, false);
   }
 
   //#region Policy Details Handlers
@@ -1022,11 +997,128 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.documentsToUpload = evt;
   }
 
-  onSubmit(policy: FormGroup<IProductionForms>) {
+  //#region
+
+  onSubmit(): void {
     this.uiState.submitted = true;
+    // if (!this.validationChecker()) return;
+    if (!this.financeChecker()) return;
+    this.financeValueChecker();
+  }
+
+  validationChecker(): boolean {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  financeChecker(): boolean {
+    let totals = this.uiState.paymentTermsTotals,
+      coms = this.uiState.producerCommission.commissionTotals,
+      values = {
+        net: this.f.netPremium?.value,
+        fees: this.f.fees?.value,
+        vat: this.f.vatValue?.value,
+        total: this.f.totalPremium?.value,
+        producerCom: this.f.producerComm?.value,
+        producerComPerc: this.f.producerCommPerc?.value,
+      };
+
+    if (
+      totals.fees !== values.fees ||
+      totals.netPremium !== values.net ||
+      totals.vat !== values.vat
+    ) {
+      if (
+        this.f.endorsType?.value !== "Refund" &&
+        this.f.endorsType?.value !== "Cancellation"
+      ) {
+        this.message.popup(
+          "Attention!",
+          "Payment Schedule Totals Not Correct!",
+          "warning"
+        );
+        return false;
+      }
+    }
+    if (
+      coms.amount !== values.producerCom ||
+      coms.percentage !== values.producerComPerc
+    ) {
+      this.message.popup(
+        "Attention!",
+        "Producer Commissions Schedule Totals Not Correct!",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  financeValueChecker(): void {
+    let arr = [];
+    let msg = "";
+
+    if (this.f.netPremium?.value === 0) arr.push("Net Premium Value = 0");
+    if (this.f.compCommAmount?.value === 0)
+      arr.push("Company Commission Value = 0");
+
+    if (arr) {
+      for (let i = 0; i < arr.length; i++)
+        msg += `<li class='text-start'>${arr[i]}</li>`;
+
+      this.message
+        .templateComfirmation(
+          "Are You Sure Want Countinue ?!",
+          `<ul>${msg}</ul>`,
+          "Yes, Sure !",
+          undefined,
+          "question"
+        )
+        .then((res: SweetAlertResult) => {
+          if (res.isConfirmed) this.checkPolicyEndorsNo();
+        });
+    } else this.checkPolicyEndorsNo();
+  }
+
+  checkPolicyEndorsNo(): void {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .checkEndorsNo(this.f.policyNo?.value!, this.f.endorsNo?.value!)
+      .subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message
+            .templateComfirmation(
+              "Attention!",
+              res.body.message!,
+              "Continue",
+              "info",
+              "question"
+            )
+            .then((res: SweetAlertResult) => {
+              if (res.isConfirmed) this.sendFormRequestData();
+            });
+        } else this.sendFormRequestData();
+      });
+    this.subscribes.push(sub);
+  }
+
+  sendFormRequestData(): void {
+    // Display Submitting Loader
+    this.eventService.broadcast(reserved.isLoading, true);
+
     const formData = new FormData();
 
-    let val = policy.getRawValue();
+    let val = this.formGroup.getRawValue();
 
     if (this.uiState.editMode) formData.append("sNo", val.sNo!);
 
@@ -1123,17 +1215,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             this.router.navigate([AppRoutes.Production.base]);
           this.resetForm();
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
+        this.eventService.broadcast(reserved.isLoading, false);
       },
-      (err) => this.message.popup("Sorry!", err.message!, "error")
+      (err) => {
+        this.message.popup("Sorry!", err.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
     );
     this.subscribes.push(sub);
-  }
-
-  validationChecker(): boolean {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    if (this.formGroup.invalid) return false;
-    return true;
   }
 
   resetForm(): void {
@@ -1145,6 +1234,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.dropzone.clearImages();
     this.uiState.submitted = false;
   }
+  //#endregion
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

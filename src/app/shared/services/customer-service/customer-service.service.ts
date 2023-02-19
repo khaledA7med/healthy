@@ -11,6 +11,7 @@ import { IChangeCsStatusRequest } from "../../app/models/CustomerService/icustom
 import { ICustomerServicePolicySearch } from "../../app/models/CustomerService/icustomer-service-policy-search";
 import { CSPolicySearchRequest } from "../../app/models/CustomerService/icustomer-service-policy-search-req";
 import { CSPolicyData } from "../../app/models/CustomerService/icustomer-service-policy";
+import { EndorsTypeByPolicy } from "../../app/models/CustomerService/icustomer-service-utils";
 
 @Injectable({
 	providedIn: "root",
@@ -52,7 +53,7 @@ export class CustomerServiceService {
 		return this.http.post<IBaseResponse<CSPolicyData[]>>(this.env + ApiRoutes.CustomerService.searchPolicies, data, { observe: "response" });
 	}
 
-	getEndorsTypeByPolicy(endorsType: string, policyNo: string): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+	getEndorsTypeByPolicy(endorsType: string, policyNo: string): Observable<HttpResponse<IBaseResponse<EndorsTypeByPolicy[]>>> {
 		return this.http.post(
 			this.env + ApiRoutes.CustomerService.endorseTypeByPolicy,
 			{
@@ -68,7 +69,7 @@ export class CustomerServiceService {
 		insuranceCompName: string,
 		classofInsurance: string,
 		lineOfBusiness: string
-	): Observable<HttpResponse<IBaseResponse<ICustomerServicePolicySearch>>> {
+	): Observable<HttpResponse<IBaseResponse<string[]>>> {
 		return this.http.post(
 			this.env + ApiRoutes.CustomerService.csRequirments,
 			{
@@ -79,5 +80,9 @@ export class CustomerServiceService {
 			},
 			{ observe: "response" }
 		);
+	}
+
+	saveRequest(data: FormData): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.post(this.env + ApiRoutes.CustomerService.create, data, { observe: "response" });
 	}
 }
