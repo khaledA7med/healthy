@@ -42,6 +42,12 @@
         "MANAGEMENT": "Request Management"
       }
     },
+    "CLAIMS": {
+      "TEXT": "Claims",
+      "LIST": {
+        "MANAGEMENT": "Claims Management"
+      }
+    },
     "MENU": {
       "TEXT": "MENU"
     },

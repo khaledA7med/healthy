@@ -32,6 +32,11 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
+      import("./claims/claims.module").then((m) => m.ClaimsModule),
+  },
+  {
+    path: "",
+    loadChildren: () =>
       import("./extrapages/extraspages.module").then(
         (m) => m.ExtraspagesModule
       ),
