@@ -165,8 +165,8 @@
                                 <div class="accordion-info mb-2">
                                     <label for="netPremium">Net Premium</label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control input-text-right" placeholder="0.00"
-                                            id="netPremium" formControlName="netPremium"
+                                        <input type="text" class="form-control form-control-sm input-text-right"
+                                            placeholder="0.00" InputMask id="netPremium" formControlName="netPremium"
                                             [ngClass]="{'is-invalid': (f.netPremium?.touched || submitted) && f.netPremium?.invalid}"
                                             (input)="vatHandler()">
                                         <span class="input-group-text" id="SAR">SAR</span>
@@ -185,7 +185,7 @@
                                     <div class="input-group input-group-sm">
                                         <input type="text" id="policyFees" name="policyFees"
                                             class="form-control form-control-sm input-text-right" placeholder="0.00"
-                                            formControlName="policyFees"
+                                            InputMask formControlName="policyFees"
                                             [ngClass]="{'is-invalid': (f.policyFees?.touched || submitted) && f.policyFees?.invalid}"
                                             (input)="vatHandler()">
                                         <span class="input-group-text" id="">SAR</span>
@@ -210,7 +210,7 @@
                                         </div>
                                         <input type="text" id="vatPercValue" name="vatPercValue"
                                             class="form-control form-control-sm input-text-right"
-                                            formControlName="vatValue" placeholder="0.00" readonly>
+                                            formControlName="vatValue" placeholder="0.00" InputMask readonly>
                                         <span class="input-group-text" id="">SAR</span>
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control form-control-sm input-text-right"
                                             name="totalPremium" id="totalPremium" placeholder="0.00"
-                                            formControlName="totalPremium" readonly
+                                            formControlName="totalPremium" readonly InputMask
                                             [ngClass]="{'is-invalid': (f.totalPremium?.touched || submitted) && f.totalPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
                                     </div>
@@ -336,7 +336,7 @@
         <!-- start Documents -->
         <ngb-panel id="4" title="Documents" cardClass="open my-4">
             <ng-template ngbPanelContent="4">
-                <app-dropzone [UploadedFiles]="docs" #dropzone></app-dropzone>
+                <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs" #dropzone></app-dropzone>
             </ng-template>
         </ngb-panel>
         <!-- end Documents -->

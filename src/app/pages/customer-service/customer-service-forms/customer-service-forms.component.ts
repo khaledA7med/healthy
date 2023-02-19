@@ -244,8 +244,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 			return e.itemCheck === true;
 		});
 		if (!this.validationChecker()) return;
+		this.eventService.broadcast(reserved.isLoading, true);
 		const formData = new FormData();
-
 		formData.append("ClientID", form.value.clientID ? form.value.clientID.toString() : "");
 		formData.append("ClientName", form.value.clientName ? form.value.clientName : "");
 		formData.append("PolicyNo", form.value.policyNo ? form.value.policyNo : "");
@@ -268,12 +268,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("TotalPremium", form.value.totalPremium ? form.value.totalPremium?.toString()! : "");
 		formData.append("Branch", form.value.branch ? form.value.branch! : "");
 		form.value.requiermentsList!.forEach((e, i) => {
-			return e.itemCheck === true ? formData.append(`RequiermentsList[${i}]`, e.itemValue!) : "";
+			formData.append(`RequiermentsList[${i}].checked`, String(e.itemCheck!));
+			formData.append(`RequiermentsList[${i}].item`, e.itemValue!);
 		});
-		// form.value.requiermentsList!.forEach((e) => {
-		// 	return e.itemCheck === true ? formData.append(`RequiermentsList`, e.itemValue!) : "";
-		// });
+
 		this.documentsToUpload.forEach((el) => {
+			console.log("Documents", el);
 			formData.append("DocumentsModel", el);
 		});
 		formData.append("isRequierment", isRequierment ? "true" : "false");
@@ -288,7 +288,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 				if (res.body?.status) {
 					this.message.toast(res.body.message!, "success");
 					// if (this.uiState.editId) this.router.navigate([AppRoutes.Client.base]);
-					// this.resetForm();
+					this.resetForm();
 				} else this.message.popup("Sorry!", res.body?.message!, "warning");
 				// Hide Loader
 				this.eventService.broadcast(reserved.isLoading, false);

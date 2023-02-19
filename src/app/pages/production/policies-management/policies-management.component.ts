@@ -103,10 +103,12 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 					this.uiState.policies.list = res.body?.data!;
 					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
-					this.gridApi.hideOverlay();
 					this.uiState.gridReady = true;
+					this.gridApi.hideOverlay();
 				},
-				(err: HttpErrorResponse) => {}
+				(err: HttpErrorResponse) => {
+					this.message.popup("Oops!", err.message, "error");
+				}
 			);
 			this.subscribes.push(sub);
 		},
@@ -147,6 +149,8 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
+		// this.gridApi.sizeColumnsToFit();
+
 		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
 		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
 

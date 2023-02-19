@@ -70,7 +70,13 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 			next: (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
 				this.uiState.policyDetails = res.body?.data!;
 				AppUtils.nullValues(this.uiState.policyDetails);
-				// this.customizeClientDocuments();
+
+				this.uiState.policyDetails.issueDate = String(this.uiState.policyDetails.issueDate) == "-" ? undefined : this.uiState.policyDetails.issueDate;
+				this.uiState.policyDetails.periodFrom =
+					String(this.uiState.policyDetails.periodFrom) == "-" ? undefined : this.uiState.policyDetails.periodFrom;
+				this.uiState.policyDetails.periodTo = String(this.uiState.policyDetails.periodTo) == "-" ? undefined : this.uiState.policyDetails.periodTo;
+
+				this.customizeClientDocuments();
 			},
 			error: (error: HttpErrorResponse) => {
 				this.message.popup("Oops!", error.message, "error");
