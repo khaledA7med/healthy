@@ -71,6 +71,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
 		onSortChanged: (e) => this.onSort(e),
@@ -99,14 +100,20 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			this.gridApi.showLoadingOverlay();
 			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe(
 				(res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
-					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
-
-					this.uiState.policies.list = res.body?.data!;
-					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
-					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
+					if (res.status) {
+						this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+						this.uiState.policies.list = res.body?.data!;
+						params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
+						if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
+						this.uiState.gridReady = true;
+						this.gridApi.hideOverlay();
+					} else {
+						this.message.popup("Oops!", res.body?.message!, "warning");
+						this.gridApi.hideOverlay();
+					}
 				},
 				(err: HttpErrorResponse) => {
+					this.gridApi.hideOverlay();
 					this.message.popup("Oops!", err.message, "error");
 				}
 			);
@@ -215,7 +222,9 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				this.uiState.lineOfBusinessList = res.body?.data!.content;
 			},
-			(err: HttpErrorResponse) => {}
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
 		);
 		this.subscribes.push(sub);
 	}
@@ -231,23 +240,23 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	setIssueRangeFilter(e: any) {
-		this.f["issueFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["issueTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["issueFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["issueTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	setFinApprovedRangeFilter(e: any) {
-		this.f["financeApproveFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["financeApproveTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["financeApproveFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["financeApproveTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	setInceptionRangeFilter(e: any) {
-		this.f["inceptionFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["inceptionTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["inceptionFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["inceptionTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	setFinEntryRangeFilter(e: any) {
-		this.f["financeEntryFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["financeEntryTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["financeEntryFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["financeEntryTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	disableAmountFilter() {

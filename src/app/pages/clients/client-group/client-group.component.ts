@@ -88,6 +88,7 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 				},
 				(err: HttpErrorResponse) => {
 					this.message.popup("Oops!", err.message, "error");
+					this.gridApi.hideOverlay();
 				}
 			);
 			this.subscribes.push(sub);

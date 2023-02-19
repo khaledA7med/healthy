@@ -54,7 +54,8 @@
                     </label>
                     <ng-select id="client" class="is-invalid" placeholder="Select Client Name"
                         [items]="(lookupData | async)?.AllClients?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" formControlName="client" bindLabel="name" bindValue="id">
+                        [clearable]="true" [searchable]="true" formControlName="client" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
