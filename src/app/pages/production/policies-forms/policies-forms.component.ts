@@ -1001,7 +1001,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.uiState.submitted = true;
-    if (!this.validationChecker()) return;
+    // if (!this.validationChecker()) return;
     if (!this.financeChecker()) return;
     this.financeValueChecker();
   }
@@ -1033,24 +1033,25 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       };
 
     if (
-      (totals.fees !== values.fees ||
-        totals.netPremium !== values.net ||
-        totals.vat !== values.vat) &&
-      this.f.endorsType?.value !== "Refund" &&
-      this.f.endorsType?.value !== "Cancellation"
+      totals.fees !== values.fees ||
+      totals.netPremium !== values.net ||
+      totals.vat !== values.vat
     ) {
-      this.message.popup(
-        "Attention!",
-        "Payment Schedule Totals Not Correct!",
-        "warning"
-      );
-      return false;
+      if (
+        this.f.endorsType?.value !== "Refund" &&
+        this.f.endorsType?.value !== "Cancellation"
+      ) {
+        this.message.popup(
+          "Attention!",
+          "Payment Schedule Totals Not Correct!",
+          "warning"
+        );
+        return false;
+      }
     }
     if (
-      (coms.amount !== values.producerCom ||
-        coms.percentage !== values.producerComPerc) &&
-      this.f.endorsType?.value !== "Refund" &&
-      this.f.endorsType?.value !== "Cancellation"
+      coms.amount !== values.producerCom ||
+      coms.percentage !== values.producerComPerc
     ) {
       this.message.popup(
         "Attention!",
@@ -1214,8 +1215,12 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             this.router.navigate([AppRoutes.Production.base]);
           this.resetForm();
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
+        this.eventService.broadcast(reserved.isLoading, false);
       },
-      (err) => this.message.popup("Sorry!", err.message!, "error")
+      (err) => {
+        this.message.popup("Sorry!", err.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
     );
     this.subscribes.push(sub);
   }
