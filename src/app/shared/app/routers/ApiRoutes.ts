@@ -88,6 +88,7 @@ export const ApiRoutes = {
 		changeStatus: "/ClientRegistry/Clients/ChangeStatus",
 		deleteDocument: "/ClientRegistry/Clients/DeleteFile",
 		downloadDocument: "/ClientRegistry/Clients/DownloadFile",
+		report: "/ClientRegistry/Clients/Report"
 	},
 	ClientsGroups: {
 		list: "/ClientRegistry/Groups/Search",
