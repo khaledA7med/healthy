@@ -74,7 +74,6 @@ export interface IClientPreview extends IClient {
   secondryNo?: string;
   postalCode?: string;
   documentList?: IDocumentList[];
-  documentLists?: IDocumentList[];
   clientContacts?: IClientContact[];
   clientsBankAccounts?: IClientsBankAccount[];
 }

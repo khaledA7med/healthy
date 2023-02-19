@@ -34,4 +34,11 @@ export class MasterMethodsService {
       { observe: "response" }
     );
   }
+  downloadFile(data: string): Observable<HttpResponse<any>> {
+    return this.http.post(
+      this.env + ApiRoutes.MasterMethods.downloadDocument,
+      { path: data },
+      { observe: "response", responseType: "blob" }
+    );
+  }
 }

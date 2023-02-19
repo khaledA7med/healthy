@@ -1,22 +1,14 @@
+import { IBusinessDevelopment } from "./ibusiness-development";
 import { IDocumentList } from "./../App/IDocument";
 import { IRequirement } from "./irequirement";
 import { ICompetitors } from "./icompetitors";
 import { IActivityLog } from "./iactivity-log";
-export interface ISalesLeadDetails {
-  sNo: number;
+export interface ISalesLeadDetails extends IBusinessDevelopment {
   docSNo?: number;
-  leadNo?: string;
-  status?: string;
-  clientID?: number;
   prospectID?: number;
-  name?: string;
-  producer?: string;
   producerID?: number;
-  leadType?: string;
-  classOfBusiness?: string;
   branch?: string;
   type?: string;
-  lineOfBusiness?: string;
   policyDetails?: string;
   curr?: string;
   exRateAED?: number;
@@ -27,10 +19,7 @@ export interface ISalesLeadDetails {
   chListRequirements?: string;
   recentPolicyId?: string;
   currentPolicyNo?: string;
-  existingPolExpDate?: string;
   existingPolDetails?: string;
-  chCurrentInsurer?: boolean;
-  currentInsurer?: string;
   currentBroker?: string;
   clientDecision?: string;
   issuedBy?: string;
@@ -43,9 +32,7 @@ export interface ISalesLeadDetails {
   lossReason?: string;
   rejectionReason?: string;
   rejectionBy?: string;
-  savedBy?: string;
   sendToUW?: boolean;
-  savedDate?: Date;
   sendToUnderWritingdate?: Date;
   sendBackDate?: Date;
   qutationSentToSalesDate?: Date;
@@ -53,21 +40,11 @@ export interface ISalesLeadDetails {
   firmOrderSubmittedBy?: string;
   firmOrderSubmittedOn?: Date;
   statusUpdatedOn?: Date;
-  updatedBy?: string;
-  updatedOn?: Date;
-  quoatationDate?: Date;
-  quoatedPremium?: number;
-  revisedQuoatationDate?: Date;
-  revisedQuoatationPremium?: number;
   qutationSentToClientDate?: Date;
   deadLine?: Date;
   chDeadlinebool?: boolean;
   chDeadline?: number;
   chQuoatationSentToClient?: boolean;
-  clientResult?: string;
-  clientResultPremium?: number;
-  clientResultDate?: Date;
-  reason?: string;
   chQuoatation?: boolean;
   chRevisedQuoatation?: boolean;
   chClientResult?: boolean;

@@ -483,20 +483,26 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
         `ClientContacts[${i}].contactName`,
         contacts[i].contactName!
       );
-      formData.append(`ClientContacts[${i}].mobile`, contacts[i].mobile!);
+      formData.append(`ClientContacts[${i}].mobile`, contacts[i].mobile ?? "");
       formData.append(
         `ClientContacts[${i}].lineOfBusiness`,
-        contacts[i].lineOfBusiness!
+        contacts[i].lineOfBusiness ?? ""
       );
       formData.append(
         `ClientContacts[${i}].department`,
-        contacts[i].department!
+        contacts[i].department ?? ""
       );
-      formData.append(`ClientContacts[${i}].extension`, contacts[i].extension!);
-      formData.append(`ClientContacts[${i}].position`, contacts[i].position!);
-      formData.append(`ClientContacts[${i}].tele`, contacts[i].tele!);
+      formData.append(
+        `ClientContacts[${i}].extension`,
+        contacts[i].extension ?? ""
+      );
+      formData.append(
+        `ClientContacts[${i}].position`,
+        contacts[i].position ?? ""
+      );
+      formData.append(`ClientContacts[${i}].tele`, contacts[i].tele ?? "");
       formData.append(`ClientContacts[${i}].email`, contacts[i].email!);
-      formData.append(`ClientContacts[${i}].address`, contacts[i].address!);
+      formData.append(`ClientContacts[${i}].branch`, contacts[i].branch ?? "");
     }
 
     this.bankControlArray.controls.forEach((el) => el.enable());
@@ -507,14 +513,17 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       formData.append(`ClientsBankAccounts[${i}].bankName`, banks[i].bankName!);
       formData.append(
         `ClientsBankAccounts[${i}].arabicName`,
-        banks[i].arabicName!
+        banks[i].arabicName ?? ""
       );
-      formData.append(`ClientsBankAccounts[${i}].branch`, banks[i].branch!);
+      formData.append(
+        `ClientsBankAccounts[${i}].branch`,
+        banks[i].branch ?? ""
+      );
       formData.append(`ClientsBankAccounts[${i}].fullName`, banks[i].fullName!);
-      formData.append(`ClientsBankAccounts[${i}].iban`, banks[i].iban!);
+      formData.append(`ClientsBankAccounts[${i}].iban`, banks[i].iban ?? "");
       formData.append(
         `ClientsBankAccounts[${i}].swiftCode`,
-        banks[i].swiftCode!
+        banks[i].swiftCode ?? ""
       );
     }
 

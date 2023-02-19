@@ -33,6 +33,7 @@ import { IActivityLog } from "./../../../shared/app/models/BusinessDevelopment/i
 import { ICompetitors } from "./../../../shared/app/models/BusinessDevelopment/icompetitors";
 import { BusinessDevelopmentService } from "./../../../shared/services/business-development/business-development.service";
 import { ISalesLeadForm } from "./../../../shared/app/models/BusinessDevelopment/isalesLeadForm";
+import { SalesLeadType } from "src/app/shared/app/models/BusinessDevelopment/business-development-util";
 
 @Component({
   selector: "app-business-forms",
@@ -42,6 +43,7 @@ import { ISalesLeadForm } from "./../../../shared/app/models/BusinessDevelopment
 export class BusinessFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<ISalesLeadForm>;
   formData!: Observable<IBaseMasterTable>;
+  leadType: typeof SalesLeadType = SalesLeadType;
   submitted: boolean = false;
   subscribes: Subscription[] = [];
   lineOfBussArr: IGenericResponseType[] = [];
@@ -82,7 +84,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   initForm() {
     this.formGroup = new FormGroup<ISalesLeadForm>({
       //lead details
-      leadType: new FormControl("New"),
+      leadType: new FormControl(this.leadType.New),
       clientID: new FormControl(0, Validators.required),
       name: new FormControl(null, Validators.required),
       producer: new FormControl(null, Validators.required),
@@ -98,7 +100,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       preferedInsurComapnies: new FormControl([]),
       policyDetails: new FormControl(null, Validators.required),
       //currently insurance
-      isCurrentInsured: new FormControl(false), // use it when edit only to check
+      chCurrentInsurer: new FormControl(false),
       existingPolExpDate: new FormControl(
         { value: null, disabled: true },
         Validators.required
@@ -132,8 +134,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       sendToUW: new FormControl(false),
       // for edit
       leadNo: new FormControl(""),
-      selectedPolicyCompany: new FormControl(""),
-      selectedQuotingCompany: new FormControl(""),
     });
   }
   get f() {
@@ -192,7 +192,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     ];
   }
   toggleCurInsured() {
-    if (this.f.isCurrentInsured?.value) {
+    if (this.f.chCurrentInsurer?.value) {
       this.currentInsControls.forEach((c) => {
         c?.enable();
       });
@@ -431,7 +431,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
 
   patchValuesWhenEdit(salesLead: ISalesLeadDetails) {
-    this.uiState.editId = salesLead.sNo.toString();
+    this.uiState.editId = salesLead.sNo?.toString()!;
     this.formGroup.patchValue({
       // lead details
       leadType: salesLead.leadType,
@@ -449,6 +449,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       preferedInsurComapnies: salesLead?.preferedInsurComapnies,
       policyDetails: salesLead?.policyDetails,
       // currently insured
+      chCurrentInsurer: salesLead.chCurrentInsurer,
       existingPolExpDate: salesLead.existingPolExpDate
         ? (this.utils.dateStructFormat(salesLead.existingPolExpDate) as any)
         : "",
@@ -471,8 +472,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       this.f.deadLine?.enable();
     }
     // to enable currently insured inputs
-    if (salesLead.currentBroker) {
-      this.f.isCurrentInsured?.patchValue(true);
+    if (salesLead.chCurrentInsurer) {
       this.currentInsControls.forEach((c) => {
         c?.enable();
       });
@@ -643,7 +643,6 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
     });
 
     // activity log array
-    // this.activityLogArray.enable();
     salesLeadForm.salesActivityLogList?.forEach((el, i) => {
       formData.append(`SalesActivityLogList[${i}].logType`, el.logType!);
       formData.append(

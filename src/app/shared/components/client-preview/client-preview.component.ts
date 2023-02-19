@@ -26,20 +26,20 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
 import { IDocumentList } from "./../../app/models/App/IDocument";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
+import { MasterMethodsService } from "../../services/master-methods.service";
 
 @Component({
   selector: "app-modal-for-details",
   templateUrl: "./client-preview.component.html",
   styleUrls: ["./client-preview.component.scss"],
-  providers: [AppUtils],
 })
 export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
   uiState = {
-    sno: 0,
     id: "",
     clientDetails: {} as IClientPreview,
     updatedState: false,
-    documentList: [],
   };
 
   clientStatus: typeof ClientStatus = ClientStatus;
@@ -58,12 +58,14 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private message: MessagesService,
     private clientsGroupService: ClientsGroupsService,
     private table: MasterTableService,
+    private eventService: EventService,
+    private masterMethod: MasterMethodsService,
     public util: AppUtils
   ) {}
 
   ngAfterViewInit(): void {
     this.openPreviewModal();
-    this.getSNO();
+    this.getId();
     this.getClintDetails(this.uiState.id);
     this.initAddClientToGroupForm();
     this.getLookupData();
@@ -76,27 +78,38 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.backToMainRoute();
   }
 
-  getSNO(): void {
+  getId(): void {
     this.route.paramMap.subscribe((res) => {
       this.uiState.id = res.get("id")!;
     });
   }
 
   getClintDetails(id: string): void {
+    this.eventService.broadcast(reserved.isLoading, true);
+
     let sub = this.clientService.getClintDetails(id).subscribe({
       next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
         this.uiState.clientDetails = res.body?.data!;
         AppUtils.nullValues(this.uiState.clientDetails);
+        this.uiState.clientDetails.clientsBankAccounts?.map((b) =>
+          AppUtils.nullValues(b)
+        );
+        this.uiState.clientDetails.clientContacts?.map((c) =>
+          AppUtils.nullValues(c)
+        );
         this.customizeClientDocuments();
+        this.eventService.broadcast(reserved.isLoading, false);
       },
       error: (error: HttpErrorResponse) => {
+        this.eventService.broadcast(reserved.isLoading, false);
+
         this.message.popup("Oops!", error.message, "error");
       },
     });
     this.subscribes.push(sub);
   }
   customizeClientDocuments() {
-    this.uiState.clientDetails.documentLists?.forEach((el: IDocumentList) => {
+    this.uiState.clientDetails.documentList?.forEach((el: IDocumentList) => {
       switch (el.type) {
         case "zip":
           (el.className = "zip-fill"), (el.colorName = "text-success");
@@ -136,11 +149,11 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       .confirm(` Delete it !`, ` Delete it !`, "danger", "warning")
       .then((result: any) => {
         if (result.isConfirmed) {
-          let sub = this.clientService.deleteDocument(path).subscribe({
+          let sub = this.masterMethod.deleteFile(path).subscribe({
             next: (res) => {
               if (res.body?.status === true) {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.clientDetails.documentLists?.splice(index, 1);
+                this.uiState.clientDetails.documentList?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");
             },
             error: (error) => {
@@ -152,7 +165,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
       });
   }
   downloadFile(path: string) {
-    let sub = this.clientService.downloadDocument(path).subscribe({
+    let sub = this.masterMethod.downloadFile(path).subscribe({
       next: (res) => {
         const downloadedFile = new Blob([res.body as BlobPart], {
           type: res.body,
@@ -175,7 +188,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
 
   changeStatus(newStatus: string): void {
     let reqBody = {
-      clientId: this.uiState.sno,
+      clientId: this.uiState.clientDetails.sNo!,
       status: newStatus,
     };
 
@@ -260,7 +273,10 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
 
   initAddClientToGroupForm(): void {
     this.addClientToGroupForm = new FormGroup({
-      clientId: new FormControl(this.uiState.sno, Validators.required),
+      clientId: new FormControl(
+        this.uiState.clientDetails.sNo,
+        Validators.required
+      ),
       groupName: new FormControl(null, Validators.required),
     });
   }
