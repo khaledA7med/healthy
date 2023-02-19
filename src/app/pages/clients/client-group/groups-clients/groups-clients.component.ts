@@ -99,6 +99,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 					},
 					(err: HttpErrorResponse) => {
 						this.message.popup("Oops!", err.message, "error");
+						this.gridApi.hideOverlay();
 					}
 				);
 				this.subscribes.push(sub);

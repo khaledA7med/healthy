@@ -113,7 +113,8 @@
                                 <div class="accordion-info mb-2">
                                     <label for="expiryDate" class="asterisk-input">Expiry Date</label>
                                     <app-gregorian-picker [model]="f.existingPolExpDate?.value" [required]="true"
-                                        [disabled]="true" [submitted]="submitted"></app-gregorian-picker>
+                                        (dateChange)="expiryDate($event)" [disabled]="true"
+                                        [submitted]="submitted"></app-gregorian-picker>
                                 </div>
                             </div>
 

@@ -134,6 +134,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 				},
 				(err: HttpErrorResponse) => {
 					this.message.popup("Oops!", err.message, "error");
+					this.gridApi.hideOverlay();
 				}
 			);
 			this.subscribes.push(sub);
@@ -229,8 +230,8 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	}
 
 	setDeadLineFilter(e: any) {
-		this.f["deadlineFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["deadlineTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["deadlineFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["deadlineTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	getLookupData() {

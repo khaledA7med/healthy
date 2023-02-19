@@ -352,13 +352,13 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	setDeadLineFilter(e: any) {
-		this.f["deadlineFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["deadlineTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["deadlineFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["deadlineTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	setSavedOnFilter(e: any) {
-		this.f["savedOnFrom"].setValue(this.appUtils.dateFormater(e.from));
-		this.f["savedOnTo"].setValue(this.appUtils.dateFormater(e.to));
+		this.f["savedOnFrom"].patchValue(this.appUtils.dateFormater(e.from));
+		this.f["savedOnTo"].patchValue(this.appUtils.dateFormater(e.to));
 	}
 
 	onSalesLeadFilters(): void {

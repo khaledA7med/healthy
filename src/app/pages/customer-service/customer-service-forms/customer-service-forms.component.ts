@@ -37,6 +37,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 	uiState = {
 		editMode: false,
 		editId: "",
+		date: new Date(),
 		requestDetails: {} as CSPolicyData,
 		policyList: {
 			list: [] as CSPolicyData[],
@@ -106,6 +107,17 @@ export class CustomerServiceFormsComponent implements OnInit {
 			year: e.gon.year + 1,
 		};
 		this.f.dateOfDeadline?.patchValue(e.gon);
+	}
+
+	expiryDate(e: any) {
+		this.f.existingPolExpDate?.patchValue(e.gon);
+		this.f.existingPolExpDate?.patchValue(e.gon);
+		e.gon = {
+			day: e.gon.day - 1,
+			month: e.gon.month,
+			year: e.gon.year + 1,
+		};
+		this.f.existingPolExpDate?.patchValue(e.gon);
 	}
 
 	fillCSFormData(e: CSPolicyData) {
@@ -300,9 +312,17 @@ export class CustomerServiceFormsComponent implements OnInit {
 
 	resetForm(): void {
 		this.formGroup.reset();
-		this.submitted = false;
+		let date = {
+			gon: {
+				year: this.uiState.date.getFullYear(),
+				month: this.uiState.date.getMonth() + 1,
+				day: this.uiState.date.getDate(),
+			},
+		};
+		this.expiryDate(date);
 		this.uiState.requestDetails = {};
 		this.uiState.endorsTypes = [];
+		this.submitted = false;
 	}
 
 	documentsList(evt: File[]) {
