@@ -136,7 +136,7 @@ export const ApiRoutes = {
     delete: "",
   },
   Claims: {
-    search: "",
+    search: "/Claims/Search",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
