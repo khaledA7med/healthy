@@ -100,4 +100,17 @@ export const MENU: MenuItem[] = [
       },
     ],
   },
+  {
+    id: 6,
+    label: "MENUITEMS.CLAIMS.TEXT",
+    icon: "ri-file-copy-2-line",
+    subItems: [
+      {
+        id: 601,
+        label: "MENUITEMS.CLAIMS.LIST.MANAGEMENT",
+        link: AppRoutes.Claims.base,
+        parentId: 6,
+      },
+    ],
+  },
 ];
