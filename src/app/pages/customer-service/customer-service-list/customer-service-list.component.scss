@@ -23,8 +23,9 @@
 }
 
 .ng-select .ng-select-container {
-	min-height: 28px;
-	max-height: 28px;
+	min-height: 28px !important;
+	height: fit-content !important;
+	max-height: fit-content !important;
 }
 .offcanvas-body {
 	.form-control {

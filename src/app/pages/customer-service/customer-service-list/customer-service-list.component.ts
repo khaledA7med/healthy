@@ -104,8 +104,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
-		private appUtils: AppUtils,
-		private router: Router
+		private appUtils: AppUtils
 	) {}
 
 	ngAfterViewInit(): void {}
@@ -320,11 +319,12 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	}
 	//#endregion
 
-	changeStatus(CS: ICustomerService, status: string): void {
+	changeStatus(CS: ICustomerService, status: string, reason?: string): void {
 		let dataSubmit: IChangeCsStatusRequest = {
 			sno: CS.sno!,
 			reqNo: CS.requestNo!,
 			status,
+			reason,
 		};
 		switch (status) {
 			case CustomerServiceStatus.Pending:
@@ -332,6 +332,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 				break;
 			case CustomerServiceStatus.Close:
 				dataSubmit.status = CustomerServiceStatus.Close;
+				dataSubmit.reason = "";
 				break;
 			case CustomerServiceStatus.Cancel:
 				dataSubmit.status = CustomerServiceStatus.Cancel;
@@ -380,17 +381,17 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			parent.removeChild(statusCountChecker);
 		}
 		let childContent = `<div class=" col-12 d-flex align-items-center">
-					<div class="badge bg-secondary mx-1">
-					Pending <span>${this.uiState.statusCount?.pendingCount!}</span>
+					<div class="badge bg-info mx-1">
+					Pending <span>(${this.uiState.statusCount?.pendingCount!})</span>
 					</div>
-					<div class="badge bg-warning mx-1">
-					New Request <span>${this.uiState.statusCount?.newRequestCount!}</span>
+					<div class="badge  bg-secondary mx-1">
+					New Request <span>(${this.uiState.statusCount?.newRequestCount!})</span>
 					</div>
 					<div class="badge bg-success mx-1">
-					Close <span>${this.uiState.statusCount?.closeCount!}</span>
+					Close <span>(${this.uiState.statusCount?.closeCount!})</span>
 					</div>
 					<div class="badge bg-danger mx-1">
-					Canceled <span>${this.uiState.statusCount?.canceledCount!}</span>
+					Canceled <span>(${this.uiState.statusCount?.canceledCount!})</span>
 					</div>
 					</div>`;
 		child.classList.add("col", "my-2");

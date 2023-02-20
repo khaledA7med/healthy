@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import AppUtils from "src/app/shared/app/util";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -17,7 +17,8 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
 import { CSPolicyData } from "src/app/shared/app/models/CustomerService/icustomer-service-policy";
 import { CustomerServiceListComponent } from "../customer-service-list/customer-service-list.component";
-import { EndorsTypeByPolicy, RequiermentsList } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
+import { CustomerServiceStatus, EndorsTypeByPolicy, RequiermentsList } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
+import { ICustomerService } from "src/app/shared/app/models/CustomerService/icustomer-service";
 
 @Component({
 	selector: "app-customer-service-forms",
@@ -33,12 +34,14 @@ export class CustomerServiceFormsComponent implements OnInit {
 	@ViewChild(CustomerServiceListComponent)
 	dataSource!: CustomerServiceListComponent;
 	subscribes: Subscription[] = [];
+	requestStatus: any = CustomerServiceStatus;
 
 	uiState = {
 		editMode: false,
 		editId: "",
 		date: new Date(),
-		requestDetails: {} as CSPolicyData,
+		editRequestData: {} as ICustomerService,
+		requestDetailsFromClient: {} as CSPolicyData,
 		policyList: {
 			list: [] as CSPolicyData[],
 			totalPages: 0,
@@ -47,10 +50,10 @@ export class CustomerServiceFormsComponent implements OnInit {
 	};
 
 	@ViewChild("dropzone") dropzone!: any;
+	@ViewChild("checkAllRequierments") checkAllRequierments!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
-		private router: Router,
 		private message: MessagesService,
 		private tables: MasterTableService,
 		private customerService: CustomerServiceService,
@@ -63,6 +66,61 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.initForm();
 		this.initSearchClientForm();
 		this.formData = this.tables.getBaseData(MODULES.CustomerServiceForm);
+
+		let sub = this.route.paramMap.subscribe((res) => {
+			if (res.get("id")) {
+				this.uiState.editId = res.get("id")!;
+				this.eventService.broadcast(reserved.isLoading, true);
+				this.uiState.editMode = true;
+				this.getRequest(this.uiState.editId);
+			}
+		});
+		this.subscribes.push(sub);
+	}
+
+	getRequest(id: string): void {
+		this.customerService.getRequest(id).subscribe(
+			(res: HttpResponse<IBaseResponse<ICustomerService>>) => {
+				if (res.body?.status) this.setRequestDataToForm(res.body?.data!);
+				else this.message.popup("Oops!", res.body?.message!, "warning");
+			},
+			(err) => {
+				this.message.popup("Oops!", err?.message, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			}
+		);
+	}
+
+	setRequestDataToForm(data: ICustomerService) {
+		console.log(data);
+		this.f.clientName?.patchValue(data.clientName!);
+		this.f.clientID?.patchValue(data.clientId!);
+		this.f.requestNo?.patchValue(data.requestNo!);
+		this.f.branch?.patchValue(data.branch!);
+		this.f.endorsType?.patchValue(data.endorsType!);
+		this.f.policyNo?.patchValue(data.policyNo!);
+		this.f.classOfBusiness?.patchValue(data.classOfBusiness!);
+		this.f.lineOfBusiness?.patchValue(data.lineOfBusiness!);
+		this.f.insurComp?.patchValue(data.insurComp!);
+		this.f.existingPolExpDate?.patchValue(this.util.dateStructFormat(data.existingPolExpDate!) as any);
+		this.f.netPremium?.patchValue(data.netPremium!);
+		this.f.policyFees?.patchValue(data.policyFees!);
+		this.f.vatPerc?.patchValue(data.vatPerc!);
+		this.f.vatValue?.patchValue(data.vatValue!);
+		this.f.dateOfDeadline?.patchValue(this.util.dateStructFormat(data.dateOfDeadline!) as any);
+		this.f.requestDetails?.patchValue(data.requestDetails!);
+		this.docs = data.documentLists!;
+		data.requiermentsList!.forEach((req) => this.addReq(req));
+		this.eventService.broadcast(reserved.isLoading, false);
+	}
+
+	addReq(req: any) {
+		let request = new FormGroup<RequiermentsList>({
+			itemCheck: new FormControl(req.checked || null),
+			itemValue: new FormControl(req.item || null),
+		});
+		this.f.requiermentsList?.push(request);
+		this.requirmentsChecker();
 	}
 
 	//#region Search Client Modal
@@ -122,17 +180,16 @@ export class CustomerServiceFormsComponent implements OnInit {
 
 	fillCSFormData(e: CSPolicyData) {
 		this.modalService.dismissAll();
-		this.uiState.requestDetails = e;
+		this.uiState.requestDetailsFromClient = e;
 		this.formGroup.patchValue({
-			clientID: this.uiState.requestDetails.clientNo!,
-			clientName: this.uiState.requestDetails.clientName!,
-			producer: this.uiState.requestDetails.producer!,
-			classOfBusiness: this.uiState.requestDetails.className!,
-			policyNo: this.uiState.requestDetails.policyNo!,
-			lineOfBusiness: this.uiState.requestDetails.lineOfBusiness!,
-			insurComp: this.uiState.requestDetails.insurComp!,
+			clientID: this.uiState.requestDetailsFromClient.clientNo!,
+			clientName: this.uiState.requestDetailsFromClient.clientName!,
+			producer: this.uiState.requestDetailsFromClient.producer!,
+			classOfBusiness: this.uiState.requestDetailsFromClient.className!,
+			policyNo: this.uiState.requestDetailsFromClient.policyNo!,
+			lineOfBusiness: this.uiState.requestDetailsFromClient.insurComp!,
 			dateOfDeadline: this.util.dateStructFormat(new Date().toLocaleDateString()) as any,
-			existingPolExpDate: this.util.dateStructFormat(this.uiState.requestDetails.periodTo!) as any,
+			existingPolExpDate: this.util.dateStructFormat(this.uiState.requestDetailsFromClient.periodTo!) as any,
 		});
 	}
 
@@ -145,6 +202,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 			producer: new FormControl(null, Validators.required),
 			endorsType: new FormControl(null, Validators.required),
 			classOfBusiness: new FormControl(null, Validators.required),
+			requestNo: new FormControl(null, Validators.required),
 			netPremium: new FormControl(null),
 			policyNo: new FormControl(null, Validators.required),
 			lineOfBusiness: new FormControl(null, Validators.required),
@@ -167,12 +225,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 	}
 	// -------------------------------------------------------------------------------------------
 	getSimilarAndRequir(e: any) {
-		this.getEndorsTypeByPolicy(e.name, this.uiState.requestDetails.policyNo!);
+		this.getEndorsTypeByPolicy(e.name, this.uiState.requestDetailsFromClient.policyNo!);
 		this.getCSRequirments(
 			e.name,
-			this.uiState.requestDetails.insurComp!,
-			this.uiState.requestDetails.className!,
-			this.uiState.requestDetails.lineOfBusiness!
+			this.uiState.requestDetailsFromClient.insurComp!,
+			this.uiState.requestDetailsFromClient.className!,
+			this.uiState.requestDetailsFromClient.lineOfBusiness!
 		);
 	}
 
@@ -236,6 +294,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 			});
 		}
 	}
+
+	requirmentsChecker() {
+		let checkAll = this.requirmentsControlArray.controls.every((c) => c.get("itemCheck")?.value === true);
+		if (checkAll) this.checkAllRequierments.nativeElement.checked = true;
+		else this.checkAllRequierments.nativeElement.checked = false;
+	}
 	// --------------------------------------------------------------------------------------------------------------------
 
 	vatHandler(): void {
@@ -257,29 +321,34 @@ export class CustomerServiceFormsComponent implements OnInit {
 		});
 		if (!this.validationChecker()) return;
 		this.eventService.broadcast(reserved.isLoading, true);
+		const val = form.getRawValue();
 		const formData = new FormData();
-		formData.append("ClientID", form.value.clientID ? form.value.clientID.toString() : "");
-		formData.append("ClientName", form.value.clientName ? form.value.clientName : "");
-		formData.append("PolicyNo", form.value.policyNo ? form.value.policyNo : "");
+		if (this.uiState.editMode) formData.append("sNo", val.sNo!.toString());
+		formData.append("ClientID", val.clientID ? val.clientID.toString() : "");
+		formData.append("ClientName", val.clientName ? val.clientName : "");
+		formData.append("PolicyNo", val.policyNo ? val.policyNo : "");
 
-		formData.append("PolicySerial", this.uiState.requestDetails.policiesSNo ? this.uiState.requestDetails.policiesSNo.toString() : "");
-		formData.append("ClientPolicySNo", this.uiState.requestDetails.sNo ? this.uiState.requestDetails.sNo.toString() : "");
-		formData.append("EndorsType", form.value.endorsType ? form.value.endorsType : "");
+		formData.append(
+			"PolicySerial",
+			this.uiState.requestDetailsFromClient.policiesSNo ? this.uiState.requestDetailsFromClient.policiesSNo.toString() : ""
+		);
+		formData.append("ClientPolicySNo", this.uiState.requestDetailsFromClient.sNo ? this.uiState.requestDetailsFromClient.sNo.toString() : "");
+		formData.append("EndorsType", val.endorsType ? val.endorsType : "");
 
-		formData.append("InsurComp", form.value.insurComp ? form.value.insurComp : "");
-		formData.append("ClassOfBusiness", form.value.classOfBusiness ? form.value.classOfBusiness : "");
-		formData.append("LineOfBusiness", form.value.lineOfBusiness ? form.value.lineOfBusiness : "");
-		formData.append("ExistingPolExpDate", form.value.existingPolExpDate ? this.util.dateFormater(form.value.existingPolExpDate) : "");
-		formData.append("RequestDetails", form.value.requestDetails ? form.value.requestDetails : "");
-		formData.append("DateOfDeadline", form.value.dateOfDeadline ? this.util.dateFormater(form.value.dateOfDeadline!) : "");
+		formData.append("InsurComp", val.insurComp ? val.insurComp : "");
+		formData.append("ClassOfBusiness", val.classOfBusiness ? val.classOfBusiness : "");
+		formData.append("LineOfBusiness", val.lineOfBusiness ? val.lineOfBusiness : "");
+		formData.append("ExistingPolExpDate", val.existingPolExpDate ? this.util.dateFormater(val.existingPolExpDate) : "");
+		formData.append("RequestDetails", val.requestDetails ? val.requestDetails : "");
+		formData.append("DateOfDeadline", val.dateOfDeadline ? this.util.dateFormater(val.dateOfDeadline!) : "");
 
-		formData.append("NetPremium", form.value.netPremium ? form.value.netPremium?.toString()! : "");
-		formData.append("VatPerc", form.value.vatPerc ? form.value.vatPerc?.toString()! : "");
-		formData.append("VatValue", form.value.vatValue ? form.value.vatValue?.toString()! : "");
-		formData.append("PolicyFees", form.value.policyFees ? form.value.policyFees?.toString()! : "");
-		formData.append("TotalPremium", form.value.totalPremium ? form.value.totalPremium?.toString()! : "");
-		formData.append("Branch", form.value.branch ? form.value.branch! : "");
-		form.value.requiermentsList!.forEach((e, i) => {
+		formData.append("NetPremium", val.netPremium ? val.netPremium?.toString()! : "");
+		formData.append("VatPerc", val.vatPerc ? val.vatPerc?.toString()! : "");
+		formData.append("VatValue", val.vatValue ? val.vatValue?.toString()! : "");
+		formData.append("PolicyFees", val.policyFees ? val.policyFees?.toString()! : "");
+		formData.append("TotalPremium", val.totalPremium ? val.totalPremium?.toString()! : "");
+		formData.append("Branch", val.branch ? val.branch! : "");
+		val.requiermentsList!.forEach((e, i) => {
 			formData.append(`RequiermentsList[${i}].checked`, String(e.itemCheck!));
 			formData.append(`RequiermentsList[${i}].item`, e.itemValue!);
 		});
@@ -320,7 +389,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 			},
 		};
 		this.expiryDate(date);
-		this.uiState.requestDetails = {};
+		this.uiState.requestDetailsFromClient = {};
 		this.uiState.endorsTypes = [];
 		this.submitted = false;
 	}

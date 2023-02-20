@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { ICellRendererParams } from "ag-grid-community";
+
 import { CustomerServiceStatus } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -29,18 +30,24 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 						</ul>
 					</li>
 					<button ngbDropdownItem (click)="FollowUp()" class="btn btn-sm">Follow Up</button>
-					<button ngbDropdownItem class="btn btn-sm">Edit</button>
+					<button ngbDropdownItem class="btn btn-sm" (click)="Edit()">Edit</button>
 					<button ngbDropdownItem class="btn btn-sm">Make Invoice</button>
 					<li>
 						<a class="btn btn-sm dropdown-item">Change Status To &nbsp; &nbsp; &raquo;</a>
 						<ul class="dropdown-menu dropdown-submenu">
-							<li>
-								<button (click)="changeCsStatus(status.Pending)" class="btn btn-sm dropdown-item">{{ status.Pending }}</button>
+							<li *ngIf="params.data?.status !== status.Pending">
+								<a class="btn btn-sm dropdown-item">{{ status.Pending }} &nbsp; &nbsp; &raquo;</a>
+								<!-- <button (click)="changeCsStatus(status.Pending)" class="btn btn-sm dropdown-item"></button> -->
+								<ul class="dropdown-menu dropdown-submenu">
+									<li *ngFor="let el of (comp.lookupData | async)?.PendingReason?.content!">
+										<button (click)="changeCsStatus(status.Pending, el.name)" class="btn btn-sm dropdown-item">{{ el.name }}</button>
+									</li>
+								</ul>
 							</li>
-							<li>
+							<li *ngIf="params.data?.status !== status.Close">
 								<button (click)="changeCsStatus(status.Close)" class="btn btn-sm dropdown-item">{{ status.Close }}</button>
 							</li>
-							<li>
+							<li *ngIf="params.data?.status !== status.Cancel">
 								<button (click)="rejectRequets(status.Cancel)" class="btn btn-sm dropdown-item">{{ status.Cancel }}</button>
 							</li>
 						</ul>
@@ -74,8 +81,8 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 	],
 })
 export class CustomerServiceListControlsComponent {
-	private params!: ICellRendererParams;
-	private comp!: CustomerServiceListComponent;
+	public params!: ICellRendererParams;
+	public comp!: CustomerServiceListComponent;
 
 	status: any = CustomerServiceStatus;
 
@@ -86,14 +93,18 @@ export class CustomerServiceListControlsComponent {
 		this.comp = this.params.context.comp;
 	}
 
+	Edit() {
+		this._Router.navigate([AppRoutes.CustomerService.edit, this.params.data.identity]);
+	}
+
 	FollowUp() {
 		this.comp.openCustomerServiceFollowUp(this.params.data.requestNo);
 	}
 
-	changeCsStatus(chStatus: string) {
+	changeCsStatus(chStatus: string, reason?: string) {
 		this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
 			if (result.isConfirmed) {
-				this.comp.changeStatus(this.params.data, chStatus);
+				this.comp.changeStatus(this.params.data, chStatus, reason);
 			} else {
 				return;
 			}

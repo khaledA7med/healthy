@@ -28,9 +28,10 @@ export const customerServiceManageCols: ColDef[] = [
 	},
 	{
 		headerName: "Duration - W.Days(s)",
-		// field: "duration",
-		field: "savedDate",
-		valueFormatter: (params) => GlobalCellRender.getBusinessDateCount(new Date(params.value), new Date()),
+		field: "duration",
+		sortable: false,
+		// field: "savedDate",
+		// valueFormatter: (params) => GlobalCellRender.getBusinessDateCount(new Date(params.value), new Date()),
 		minWidth: 150,
 	},
 	{
