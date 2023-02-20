@@ -69,7 +69,7 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 		let sub = this.productinService.getPolicyById(id).subscribe({
 			next: (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
 				this.uiState.policyDetails = res.body?.data!;
-				AppUtils.nullValues(this.uiState.policyDetails);
+				// AppUtils.nullValues(this.uiState.policyDetails);
 
 				this.uiState.policyDetails.issueDate = String(this.uiState.policyDetails.issueDate) == "-" ? undefined : this.uiState.policyDetails.issueDate;
 				this.uiState.policyDetails.periodFrom =
@@ -174,14 +174,33 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 	}
 
 	changeStatus(newStatus: string): void {
-		let reqBody = {
-			sNo: this.uiState.sno,
+		let reqBody: IChangePolicyStatusRequest = {
 			status: newStatus,
+			sno: Number(this.uiState.policyDetails.sNo),
+			done: this.uiState.policyDetails.done,
+			reject: this.uiState.policyDetails.reject,
+			endorsType: this.uiState.policyDetails.endorsType,
+			sumInsur: this.uiState.policyDetails.sumInsur,
+			netPremium: this.uiState.policyDetails.netPremium,
+			vatValue: this.uiState.policyDetails.vatValue,
+			fees: this.uiState.policyDetails.fees,
+			totalPremium: this.uiState.policyDetails.totalPremium,
+			compComm: this.uiState.policyDetails.compComm,
+			compCommVat: this.uiState.policyDetails.compCommVat,
+			producerComm: this.uiState.policyDetails.producerComm,
+			mgrAprovedUser: this.uiState.policyDetails.mgrAprovedUser,
+			prodRejectInfo: this.uiState.policyDetails.prodRejectInfo,
+			prodRejecType: this.uiState.policyDetails.prodRejecType,
+			savedUser: this.uiState.policyDetails.savedUser,
+			policyNo: this.uiState.policyDetails.policyNo,
+			clientName: this.uiState.policyDetails.clientName,
+			className: this.uiState.policyDetails.className,
+			issueDate: this.uiState.policyDetails.issueDate,
+			periodTo: this.uiState.policyDetails.periodTo,
+			producersCommissionsList: this.uiState.policyDetails.producersCommissionsList,
 		};
 
-		if (newStatus === "Reject") {
-			this.changeStatusWithMsg(reqBody);
-		} else {
+		if (newStatus === "Approve") {
 			this.message.confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning").then((result: any) => {
 				if (result.isConfirmed) {
 					let sub = this.productinService.changeStatus(reqBody).subscribe({
@@ -198,6 +217,8 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 					this.subscribes.push(sub);
 				}
 			});
+		} else {
+			this.changeStatusWithMsg(reqBody);
 		}
 	}
 
@@ -225,7 +246,7 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 			preConfirm: (inputValue: string) => {
 				reqBody = {
 					...reqBody,
-					rejectionReason: inputValue,
+					prodRejectInfo: inputValue,
 				};
 			},
 		}).then((result) => {

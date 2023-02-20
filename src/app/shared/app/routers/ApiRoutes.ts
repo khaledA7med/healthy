@@ -59,6 +59,7 @@ export const ApiRoutes = {
       insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
       vatPercentage: LookUpTables + BaseData.VATPercentage,
       branch: LookUpTables + BaseData.Branch,
+      PendingReason: LookUpTables + BaseData.PendingReason,
     },
     Production: {
       policyStatus: LookUpTables + BaseData.PolicyStatus,
@@ -88,7 +89,7 @@ export const ApiRoutes = {
     changeStatus: "/ClientRegistry/Clients/ChangeStatus",
     deleteDocument: "/ClientRegistry/Clients/DeleteFile",
     downloadDocument: "/ClientRegistry/Clients/DownloadFile",
-    report: "/ClientRegistry/Clients/Report"
+    report: "/ClientRegistry/Clients/Report",
   },
   ClientsGroups: {
     list: "/ClientRegistry/Groups/Search",
@@ -121,7 +122,7 @@ export const ApiRoutes = {
     save: "/Production/Policy/Save",
     edit: "/Production/Policy/Edit",
     checkEndorsNo: "/Production/Policy/CheckPolicyEnrodsNo",
-    changeStatus: "",
+    changeStatus: "/Production/Policy/ChangeStatus",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -133,7 +134,7 @@ export const ApiRoutes = {
     endorseTypeByPolicy: "/CustomerService/Requests/GetEndorseTypeByPolicy",
     csRequirments: "/CustomerService/Requests/CSRequirements",
     create: "/CustomerService/Requests/Save",
-    edit: "",
+    edit: "/CustomerService/Requests/Edit",
     delete: "",
   },
   Claims: {
@@ -152,6 +153,6 @@ export const ApiRoutes = {
     editPrivileges: "/SystemAdmin/Users/EditPrivileges",
     changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
     save: "/SystemAdmin/Users/Save",
-    edit: "/SystemAdmin/Users/Edit"
-  }
+    edit: "/SystemAdmin/Users/Edit",
+  },
 };

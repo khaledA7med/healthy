@@ -85,4 +85,11 @@ export class CustomerServiceService {
 	saveRequest(data: FormData): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.post(this.env + ApiRoutes.CustomerService.create, data, { observe: "response" });
 	}
+
+	getRequest(id: string): Observable<HttpResponse<IBaseResponse<ICustomerService>>> {
+		return this.http.get<IBaseResponse<ICustomerService>>(this.env + ApiRoutes.CustomerService.edit, {
+			params: { id },
+			observe: "response",
+		});
+	}
 }

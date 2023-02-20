@@ -297,6 +297,10 @@ export class MasterTableService {
 					route: ApiRoutes.MasterTable.CustomerServiceForm.branch,
 					name: BaseData.Branch,
 				},
+				{
+					route: ApiRoutes.MasterTable.CustomerServiceForm.PendingReason,
+					name: BaseData.PendingReason,
+				},
 			],
 		};
 
