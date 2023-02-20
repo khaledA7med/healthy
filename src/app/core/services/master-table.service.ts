@@ -301,6 +301,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.CustomerServiceForm.PendingReason,
           name: BaseData.PendingReason,
         },
+        {
+          route: ApiRoutes.MasterTable.CustomerServiceForm.PendingReason,
+          name: BaseData.PendingReason,
+        },
       ],
       Claims: [
         {
