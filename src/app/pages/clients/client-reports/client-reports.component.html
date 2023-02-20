@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-md-12">
 
-        <form [formGroup]="filterForms" (ngSubmit)="onSubmit(filterForms)" name="ClntReportsForm" id="ClntReportForm">
+        <form [formGroup]="filterForms" (ngSubmit)="onSubmit(filterForms)" name="ClntReportsForm" id="ClntReportForm"
+            autocomplete="off">
             <div class="accordion-item pt-3 px-2 ">
                 <div class="row">
                     <div class="col-md-3">
@@ -14,9 +15,9 @@
                                         <label class="form-label" for="status">Status</label>
 
                                         <ng-select [items]="(lookupData | async)?.ClientStatus?.content!"
-                                            [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                                            [multiple]="true" bindLabel="name" bindValue="name"
-                                            formControlName="status">
+                                            placeholder="select status" [loading]="lookupData ? false : true"
+                                            [clearable]="true" [searchable]="true" [multiple]="true" bindLabel="name"
+                                            bindValue="name" formControlName="status">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -59,7 +60,8 @@
                                             </div>
                                             <ng-select [items]="(lookupData | async)?.CommericalNo?.content!"
                                                 [loading]="lookupData ? false : true" [clearable]="true"
-                                                [searchable]="true" bindLabel="name" bindValue="name" id="commercialNo"
+                                                placeholder="select commerical number" [searchable]="true"
+                                                bindLabel="name" bindValue="name" id="commercialNo"
                                                 formControlName="crNO">
                                             </ng-select>
                                         </div>
@@ -68,11 +70,12 @@
                                     <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
                                         <div class="accordion-info">
                                             <div class="d-flex justify-content-between">
-                                                <label for="producer" class="col-form-label">Producer</label>
+                                                <label for="producer"
+                                                    class="col-form-label asterisk-input">Producer</label>
                                             </div>
                                             <ng-select [items]="(lookupData | async)?.Producers?.content!"
                                                 [loading]="lookupData ? false : true" [clearable]="true"
-                                                class="is-invalid"
+                                                class="is-invalid" placeholder="select producer"
                                                 [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
                                                 [searchable]="true" bindLabel="name" bindValue="name" id="producer"
                                                 formControlName="producer">
@@ -86,11 +89,11 @@
                                     <!-- Type -->
                                     <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
                                         <div class="accordion-info">
-                                            <label for="TypeChoiced" class="col-form-label">Type</label>
+                                            <label for="type" class="col-form-label">Type</label>
                                             <ng-select [items]="(lookupData | async)?.ClientTypes?.content!"
                                                 [loading]="lookupData ? false : true" [clearable]="true"
-                                                [searchable]="true" bindLabel="name" bindValue="name" id="type"
-                                                formControlName="type">
+                                                [searchable]="true" placeholder="select type" bindLabel="name"
+                                                bindValue="name" id="type" formControlName="type">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -102,35 +105,46 @@
                                             </div>
                                             <ng-select [items]="(lookupData | async)?.Branch?.content!"
                                                 [loading]="lookupData ? false : true" [clearable]="true"
-                                                [multiple]="true" [searchable]="true" bindLabel="name" bindValue="name"
-                                                id="branch" formControlName="branchs">
+                                                placeholder="select branch" [multiple]="true" [searchable]="true"
+                                                bindLabel="name" bindValue="name" id="branch" formControlName="branchs">
                                             </ng-select>
                                         </div>
                                     </div>
                                     <!-- minDate -->
                                     <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
                                         <div class="accordion-info">
-                                            <label for="minDate" class="col-form-label">Min Date</label>
+                                            <label for="minDate" class="col-form-label asterisk-input">Min Date</label>
                                             <div class="input-group">
                                                 <input type="text" ngbDatepicker #d1="ngbDatepicker"
+                                                    [ngClass]="{'is-submitted': (f.minDate?.touched || submitted) && f.minDate?.invalid}"
                                                     placeholder="yyyy-mm-dd" class="form-control form-control-sm"
-                                                    (click)="d1.toggle()" formControlName="minDate" readonly />
+                                                    [required]="true" (click)="d1.toggle()" formControlName="minDate"
+                                                    readonly />
 
                                                 <button class="btn btn-outline-secondary ri-calendar-2-line"
                                                     type="button" (click)="d1.toggle()"></button>
+                                            </div>
+                                            <div class="invalid-feedback fw-bold"
+                                                *ngIf="(f.minDate?.touched || submitted) && f.minDate?.invalid">
+                                                Required
                                             </div>
                                         </div>
                                     </div>
                                     <!-- Max Date-->
                                     <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
                                         <div class="accordion-info">
-                                            <label for="maxDate" class="col-form-label">Max Date</label>
+                                            <label for="maxDate" class="col-form-label asterisk-input">Max Date</label>
                                             <div class="input-group">
                                                 <input type="text" ngbDatepicker #d2="ngbDatepicker"
+                                                    [ngClass]="{'is-submitted': (f.maxDate?.touched || submitted) && f.maxDate?.invalid}"
                                                     placeholder="yyyy-mm-dd" class="form-control form-control-sm"
                                                     (click)="d2.toggle()" formControlName="maxDate" readonly />
                                                 <button class="btn btn-outline-secondary ri-calendar-2-line"
                                                     type="button" (click)="d2.toggle()"></button>
+                                            </div>
+                                            <div class="invalid-feedback fw-bold"
+                                                *ngIf="(f.maxDate?.touched || submitted) && f.maxDate?.invalid">
+                                                Required
                                             </div>
                                         </div>
                                     </div>
@@ -139,12 +153,22 @@
 
                             </div>
                         </div>
-                        <div class="row d-flex">
-                            <div class="col-md-4 mb-2 justify-content-center">
-                                <button type="submit" id="GenerateClntRegistryReport"
-                                    class="btn btn-success btn-sm w-50 bg-gradient waves-effect waves-light mx-auto">
-                                    Print List
-                                </button>
+                        <div class="card">
+                            <div class="container-fluid">
+                                <div class="card-body px-1 py-3">
+                                    <div class="d-flex justify-content-end">
+                                        <button [disabled]="filterForms.invalid" (click)="openFullscreen(content)"
+                                            type="submit" id="GenerateClntRegistryReport"
+                                            class="btn btn-soft-success btn-md bg-gradient mx-2">
+                                            Print List
+                                        </button>
+                                        <button type="button" id="sa-warning" (click)="resetForm();"
+                                            class="btn btn-md btn-soft-danger">
+                                            <i class="ri-delete-bin-2-line"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,3 +177,16 @@
         </form>
     </div>
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Client Report</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <iframe [src]="url" frameborder="5"></iframe>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-lg btn-outline-danger" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
