@@ -142,4 +142,8 @@ export class ClientReportsComponent implements OnInit {
     );
     this.subscribes.push(sub);
   }
+
+  openFullscreen(content: any) {
+    this.modalService.open(content, { fullscreen: true });
+  }
 }
