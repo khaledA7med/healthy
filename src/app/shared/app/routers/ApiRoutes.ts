@@ -163,6 +163,6 @@ export const ApiRoutes = {
     editPrivileges: "/SystemAdmin/Users/EditPrivileges",
     changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
     save: "/SystemAdmin/Users/Save",
-    edit: "/SystemAdmin/Users/Edit"
-  }
+    edit: "/SystemAdmin/Users/Edit",
+  },
 };
