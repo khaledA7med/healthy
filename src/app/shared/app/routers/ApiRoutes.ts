@@ -144,6 +144,7 @@ export const ApiRoutes = {
   },
   Claims: {
     search: "/Claims/Search",
+    subStatus: "/Claims/GetSubStatusByStatus",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",

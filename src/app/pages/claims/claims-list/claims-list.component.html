@@ -50,6 +50,7 @@
   <ng-template #filter let-offcanvas>
     <div class="offcanvas-header">
       <h4 class="offcanvas-title fs-4">Filters</h4>
+
       <button
         type="button"
         class="btn-close"
@@ -57,8 +58,8 @@
         (click)="offcanvas.dismiss('Cross click')"
       ></button>
     </div>
-    <form [formGroup]="filterForm">
-      <div class="offcanvas-body row">
+    <div class="offcanvas-body row">
+      <form [formGroup]="filterForm">
         <div class="col-12 mb-2">
           <label for="form-label">Client ID:</label>
           <input
@@ -94,6 +95,7 @@
           <label for="form-label">Status</label>
           <ng-select
             [multiple]="true"
+            [clearable]="true"
             [loading]="formData ? false : true"
             [items]="(formData | async)?.ClaimStatus?.content!"
             bindLabel="name"
@@ -101,17 +103,35 @@
             class="form-control-sm px-0"
             placeholder="Select Status"
             formControlName="status"
+            (change)="getSubStatus()"
           ></ng-select>
         </div>
-      </div>
-      <div class="offcanvas-footer border-top row mb-3 mx-1">
-        <div class="col-6 mt-2">
-          <button class="btn btn-light btn-sm w-100">Clear Filter</button>
+        <div class="col-12 mb-2">
+          <label for="form-label">Sub Status</label>
+          <ng-select
+            [multiple]="true"
+            [clearable]="true"
+            [items]="uiState.claims.subStatus!"
+            bindValue="name"
+            class="form-control-sm px-0"
+            placeholder="Select Sub Status"
+            formControlName="subStatus"
+          ></ng-select>
         </div>
-        <div class="col-6 mt-2">
-          <button class="btn btn-success btn-sm w-100">Apply</button>
-        </div>
+      </form>
+    </div>
+    <div class="offcanvas-footer border-top row mb-3 mx-1">
+      <div class="col-6 mt-2">
+        <button class="btn btn-light btn-sm w-100">Clear Filter</button>
       </div>
-    </form>
+      <div class="col-6 mt-2">
+        <button
+          class="btn btn-success btn-sm w-100"
+          (click)="submitFilterForm()"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
   </ng-template>
 </div>
