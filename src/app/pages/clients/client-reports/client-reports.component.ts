@@ -1,8 +1,9 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { reserved } from 'src/app/core/models/reservedWord';
@@ -14,28 +15,34 @@ import { AppRoutes } from 'src/app/shared/app/routers/appRouters';
 import AppUtils from 'src/app/shared/app/util';
 import { ClientsService } from 'src/app/shared/services/clients/clients.service';
 import { MessagesService } from 'src/app/shared/services/messages.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-client-reports',
   templateUrl: './client-reports.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: [ './client-reports.component.scss' ]
 })
 export class ClientReportsComponent implements OnInit
 {
+
+
+  closeResult!: string;
+  url!: string;
 
   filterForms!: FormGroup<IClientReportFilters>;
   submitted: boolean = false;
   lookupData!: Observable<IBaseMasterTable>;
 
   subscribes: Subscription[] = [];
-  util: any;
   uiState: any;
 
   constructor (
+    private modalService: NgbModal,
     private ClientsService: ClientsService,
     private message: MessagesService,
     private table: MasterTableService,
-    private appUtils: AppUtils,
+    private util: AppUtils,
     private router: Router,
     private eventService: EventService
 
@@ -47,19 +54,26 @@ export class ClientReportsComponent implements OnInit
     this.lookupData = this.table.getBaseData(MODULES.Client);
   }
 
+
   initFilterForm (): void
   {
     this.filterForms = new FormGroup<IClientReportFilters>({
-      status: new FormControl([]),
-      name: new FormControl(null),
-      accountNumber: new FormControl(null),
-      crNO: new FormControl(null),
-      producer: new FormControl(null, Validators.required),
-      type: new FormControl(null),
+      status: new FormControl([ "Active" ]),
+      name: new FormControl(""),
+      accountNumber: new FormControl(""),
+      crNO: new FormControl(""),
+      producer: new FormControl("", Validators.required),
+      type: new FormControl(""),
       branchs: new FormControl([]),
-      minDate: new FormControl(null),
-      maxDate: new FormControl(null),
+      minDate: new FormControl(null, Validators.required),
+      maxDate: new FormControl(null, Validators.required),
     });
+  }
+
+  resetForm (): void
+  {
+    this.filterForms.reset();
+    this.submitted = false;
   }
 
 
@@ -75,37 +89,20 @@ export class ClientReportsComponent implements OnInit
     // Display Submitting Loader
     this.eventService.broadcast(reserved.isLoading, true);
 
-    const formData = new FormData();
-
-    formData.append("accountNumber", filterForm.value.accountNumber!);
-    formData.append("crNO", filterForm.value.crNO!);
-    formData.append("name", filterForm.value.name!);
-    formData.append("producer", filterForm.value.producer!);
-    formData.append("type", filterForm.value.type!);
-    for (let status of filterForm.value.status!)
-    {
-      formData.append('status', status);
-    }
-    for (let branchs of filterForm.value.branchs!)
-    {
-      formData.append('status', branchs);
-    }
-    formData.append(
-      "minDate",
-      this.util.dateFormater(filterForm.value.minDate!)
-    );
-    formData.append(
-      "maxDate",
-      this.util.dateFormater(filterForm.value.maxDate!)
-    );
-    let sub = this.ClientsService.viewReport(formData).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
+    let sub = this.ClientsService.viewReport(filterForm.value).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
       {
         if (res.body?.status)
         {
-          this.message.toast(res.body.message!, "success");
-          if (this.uiState.editId)
-            this.router.navigate([ AppRoutes.Client.base ]);
+          if (this.filterForms?.invalid)
+          {
+            this.message.toast("Enter required data");
+          } else
+          {
+            this.message.toast(res.body.message!, "success");
+            this.url = res.body.data
+            this.resetForm();
+          }
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
         // Hide Loader
         this.eventService.broadcast(reserved.isLoading, false);
@@ -114,4 +111,10 @@ export class ClientReportsComponent implements OnInit
     );
     this.subscribes.push(sub);
   }
+
+  openFullscreen (content: any)
+  {
+    this.modalService.open(content, { fullscreen: true });
+  }
+
 }
