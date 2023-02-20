@@ -75,6 +75,13 @@ export const ApiRoutes = {
       productionFieldList: LookUpTables + BaseData.ProductionFieldList,
       productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
     },
+    Claims: {
+      claimStatus: LookUpTables + BaseData.ClaimStatus,
+      allUsers: LookUpTables + BaseData.AllUsers,
+      typeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
+      insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
+    },
   },
   MasterMethods: {
     downloadDocument: "/Documents/Download",
