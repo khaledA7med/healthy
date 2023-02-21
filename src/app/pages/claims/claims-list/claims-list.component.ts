@@ -1,3 +1,4 @@
+import AppUtils from "src/app/shared/app/util";
 import { IClaimsFilter } from "./../../../shared/app/models/Claims/iclaims-filter";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MessagesService } from "./../../../shared/services/messages.service";
@@ -25,7 +26,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDate, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -85,20 +86,15 @@ export class ClaimsListComponent implements OnInit {
     private claimService: ClaimsService,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
-    private table: MasterTableService
+    private table: MasterTableService,
+    private util: AppUtils
   ) {}
 
   ngOnInit(): void {
     this.formData = this.table.getBaseData(MODULES.Claims);
-    this.initFilterForm();
-
-    this.uiState.filters = {
-      ...this.uiState.filters,
-      ...this.filterForm.value,
-    };
   }
 
-  //#region
+  //#region Table
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
@@ -187,6 +183,7 @@ export class ClaimsListComponent implements OnInit {
   //#region filter
   openFilterCanvas(name: TemplateRef<any>) {
     this.offcanvasService.open(name, { position: "end" });
+    this.initFilterForm();
   }
 
   private initFilterForm() {
@@ -196,6 +193,23 @@ export class ClaimsListComponent implements OnInit {
       claimType: new FormControl([]),
       status: new FormControl([]),
       subStatus: new FormControl([]),
+      dtpLossFrom: new FormControl(null),
+      dtpLossTo: new FormControl(null),
+      dtpCreatedOnFrom: new FormControl(null),
+      dtpCreatedOnTo: new FormControl(null),
+      combOperatorAmount: new FormControl(null),
+      paidAmount1: new FormControl(null),
+      paidAmount2: new FormControl(null),
+      combOperatorUnderProcessingAmount: new FormControl(null),
+      underProcesingAmount1: new FormControl(null),
+      underProcesingAmount2: new FormControl(null),
+      claimNo: new FormControl(null),
+      insurCompClaimNo: new FormControl(null),
+      blawbNo: new FormControl(null),
+      policyNo: new FormControl(null),
+      chassisNumber: new FormControl(null),
+      policyCertificateNo: new FormControl(null),
+      declarationNo: new FormControl(null),
     });
   }
   get filterF() {
@@ -218,6 +232,31 @@ export class ClaimsListComponent implements OnInit {
         }
       );
     this.subscribes.push(sub);
+  }
+  // get accident / bill date range
+  accidentDateRange(e: { from: NgbDate; to: NgbDate }) {
+    this.filterF.dtpLossFrom?.patchValue(this.util.dateFormater(e.from));
+    this.filterF.dtpLossTo?.patchValue(this.util.dateFormater(e.to));
+  }
+  //get Create on date range
+  createOnDateRange(e: { from: NgbDate; to: NgbDate }) {
+    this.filterF.dtpCreatedOnFrom?.patchValue(this.util.dateFormater(e.from));
+    this.filterF.dtpCreatedOnTo?.patchValue(this.util.dateFormater(e.to));
+  }
+  // paid amount
+  paidAmount1(e: any) {
+    this.filterF.paidAmount1?.patchValue(e.target.value);
+  }
+  paidAmount2(e: any) {
+    this.filterF.paidAmount2?.patchValue(e.target.value);
+  }
+
+  // under processing amount
+  processingAmount1(e: any) {
+    this.filterF.underProcesingAmount1?.patchValue(e.target.value);
+  }
+  processingAmount2(e: any) {
+    this.filterF.underProcesingAmount2?.patchValue(e.target.value);
   }
 
   submitFilterForm() {

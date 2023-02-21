@@ -21,11 +21,6 @@
 .ps__rail-y {
   opacity: 0.6;
 }
-
-.ng-select .ng-select-container {
-  min-height: 28px;
-  max-height: 28px;
-}
 .offcanvas-body {
   .form-control {
     max-height: 30px;
@@ -38,4 +33,7 @@
   min-height: 28px !important;
   height: fit-content !important;
   max-height: fit-content !important;
+}
+.amount-op {
+  width: 100px !important;
 }

@@ -58,9 +58,10 @@
         (click)="offcanvas.dismiss('Cross click')"
       ></button>
     </div>
-    <div class="offcanvas-body row">
-      <form [formGroup]="filterForm">
-        <div class="col-12 mb-2">
+    <div class="offcanvas-body">
+      <form [formGroup]="filterForm" class="row justify-content-center">
+        <!-- col client Id -->
+        <div class="col mb-2">
           <label for="form-label">Client ID:</label>
           <input
             type="text"
@@ -69,7 +70,9 @@
             formControlName="clientId"
           />
         </div>
-        <div class="col-12 mb-2">
+        <!-- /col -->
+        <!-- col client name -->
+        <div class="col mb-2">
           <label for="form-label">Client Name:</label>
           <input
             type="text"
@@ -78,7 +81,9 @@
             formControlName="clientName"
           />
         </div>
-        <div class="col-12 mb-2">
+        <!-- /col -->
+        <!-- col claim typ -->
+        <div class="col mb-2">
           <label for="form-label">Claim Type:</label>
           <ng-select
             [multiple]="true"
@@ -91,7 +96,9 @@
             formControlName="claimType"
           ></ng-select>
         </div>
-        <div class="col-12 mb-2">
+        <!-- /col -->
+        <!-- col status -->
+        <div class="col mb-2">
           <label for="form-label">Status</label>
           <ng-select
             [multiple]="true"
@@ -106,7 +113,9 @@
             (change)="getSubStatus()"
           ></ng-select>
         </div>
-        <div class="col-12 mb-2">
+        <!-- /col -->
+        <!-- col sub status -->
+        <div class="col mb-2">
           <label for="form-label">Sub Status</label>
           <ng-select
             [multiple]="true"
@@ -114,10 +123,174 @@
             [items]="uiState.claims.subStatus!"
             bindValue="name"
             class="form-control-sm px-0"
-            placeholder="Select Sub Status"
+            placeholder="Select Status For Load Sub Status "
             formControlName="subStatus"
           ></ng-select>
         </div>
+        <!-- /col -->
+        <!-- col accident date -->
+        <div class="col mb-2">
+          <label for="form-label ">Accident / Bill Date Range:</label>
+          <app-range-picker
+            (dateChange)="accidentDateRange($event)"
+          ></app-range-picker>
+        </div>
+        <!-- /col -->
+        <!-- col create on date -->
+        <div class="col mb-2">
+          <label for="form-label">Create On Date Range:</label>
+          <app-range-picker
+            (dateChange)="createOnDateRange($event)"
+          ></app-range-picker>
+        </div>
+        <!-- /col -->
+        <!-- col paid amount  -->
+        <div class="col mb-2">
+          <label for="form-label">Paid Amount</label>
+          <div class="input-group input-group-sm">
+            <ng-select
+              [clearable]="true"
+              [clearOnBackspace]="false"
+              [items]="(formData | async)?.ProductionOperatordList?.content!"
+              bindValue="name"
+              bindLabel="name"
+              class="form-control-sm input-group-text p-0 border-0 amount-op"
+              placeholder="Select operator"
+              formControlName="combOperatorAmount"
+            ></ng-select>
+            <input
+              type="number"
+              class="form-control form-control-sm"
+              [placeholder]="
+                filterF.combOperatorAmount?.value != 'Between'
+                  ? 'Paid Amount'
+                  : 'Amount From'
+              "
+              (blur)="paidAmount1($event)"
+            />
+            <input
+              *ngIf="filterF.combOperatorAmount?.value == 'Between'"
+              type="number"
+              class="form-control form-control-sm"
+              placeholder="Amount To"
+              (blur)="paidAmount2($event)"
+            />
+          </div>
+        </div>
+        <!-- /col -->
+        <!-- col paid under processing amount -->
+        <div class="col mb-2">
+          <label for="form-label">Under Processing Amount</label>
+          <div class="input-group input-group-sm">
+            <ng-select
+              [clearable]="true"
+              [clearOnBackspace]="false"
+              [items]="(formData | async)?.ProductionOperatordList?.content!"
+              bindValue="name"
+              bindLabel="name"
+              class="form-control-sm input-group-text p-0 border-0 amount-op"
+              placeholder="Select operator"
+              formControlName="combOperatorUnderProcessingAmount"
+            ></ng-select>
+            <input
+              type="number"
+              class="form-control form-control-sm"
+              [placeholder]="
+                filterF.combOperatorUnderProcessingAmount?.value != 'Between'
+                  ? 'Under Processing Amount'
+                  : 'Amount From'
+              "
+              (blur)="processingAmount1($event)"
+            />
+            <input
+              *ngIf="
+                filterF.combOperatorUnderProcessingAmount?.value == 'Between'
+              "
+              type="number"
+              class="form-control form-control-sm"
+              placeholder="Amount To"
+              (blur)="processingAmount2($event)"
+            />
+          </div>
+        </div>
+        <!-- /col -->
+        <!-- col claim no  -->
+        <div class="col mb-2">
+          <label for="form-label">Claim No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Claim Number"
+            formControlName="claimNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col insured claim no  -->
+        <div class="col mb-2">
+          <label for="form-label">Insured Claim No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Insured Claim Number"
+            formControlName="insurCompClaimNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col bl / awb no  -->
+        <div class="col mb-2">
+          <label for="form-label">Bl / Awb No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Bl / Awb Number"
+            formControlName="blawbNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col policy no  -->
+        <div class="col mb-2">
+          <label for="form-label">Policy No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Policy Number"
+            formControlName="policyNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- chassis / item no  -->
+        <div class="col mb-2">
+          <label for="form-label">Chassis / Item No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Chassis / Item Number"
+            formControlName="chassisNumber"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col policy / certificate no  -->
+        <div class="col mb-2">
+          <label for="form-label">Policy / Certificate No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Policy / Certificate Number"
+            formControlName="policyCertificateNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col declaration no  -->
+        <div class="col mb-2">
+          <label for="form-label">Declaration No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Declaration Number"
+            formControlName="declarationNo"
+          />
+        </div>
+        <!-- /col -->
       </form>
     </div>
     <div class="offcanvas-footer border-top row mb-3 mx-1">
