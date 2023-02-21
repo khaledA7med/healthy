@@ -1,5 +1,4 @@
-export enum BaseData
-{
+export enum BaseData {
   ClientType = "ClientTypes",
   Producers = "Producers",
   RelationshipStatus = "RelationshipStatus",
@@ -41,11 +40,10 @@ export enum BaseData
   VATPercentage = "VATPercentage",
   ClaimStatus = "ClaimStatus",
   JobTitleOfUsers = "JobTitleOfUsers",
-  StatusOfUsers = "StatusOfUsers"
+  StatusOfUsers = "StatusOfUsers",
 }
 
-export interface IBaseMasterTable
-{
+export interface IBaseMasterTable {
   ClientTypes?: Caching<IGenericResponseType[]>;
   Producers?: Caching<IGenericResponseType[]>;
   RelationshipStatus?: Caching<IGenericResponseType[]>;
@@ -90,52 +88,44 @@ export interface IBaseMasterTable
   StatusOfUsers?: Caching<IGenericResponseType[]>;
 }
 
-export interface Caching<T>
-{
+export interface Caching<T> {
   cacheable: boolean;
   content: T;
 }
 
-export interface IAllClients
-{
+export interface IAllClients {
   sNo: number;
   fullName: string;
   producer: string;
   status: string;
 }
 
-export interface IGenericResponseType
-{
+export interface IGenericResponseType {
   id: number;
   name: string;
 }
 
-export interface INationality
-{
+export interface INationality {
   nationalityEn?: string;
   nationalityAr?: string;
 }
 
-export interface IBusinessActivity
-{
+export interface IBusinessActivity {
   sNo: number;
   businessActivity: string;
 }
 
-export interface IPositions
-{
+export interface IPositions {
   sNo: number;
   position: string;
 }
-export interface IBanks
-{
+export interface IBanks {
   sNo?: number;
   bankName?: string;
   swift?: string;
 }
 
-export interface IClientTypes
-{
+export interface IClientTypes {
   id: number;
   name: string;
 }

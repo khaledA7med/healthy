@@ -86,7 +86,7 @@ export const ApiRoutes = {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
       jobTitleOfUsers: LookUpTables + BaseData.JobTitleOfUsers,
       branch: LookUpTables + BaseData.Branch,
-    }
+    },
   },
   MasterMethods: {
     downloadDocument: "/Documents/Download",
