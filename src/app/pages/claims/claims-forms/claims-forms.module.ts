@@ -8,14 +8,17 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import {
   NgbAccordionModule,
   NgbCollapseModule,
+  NgbTooltipModule,
 } from "@ng-bootstrap/ng-bootstrap";
 import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.module";
 import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
+import { ClaimsRequestListComponent } from "./claims-request-list.component";
+import { AgGridModule } from "ag-grid-angular";
 
 export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
 
 @NgModule({
-  declarations: [ClaimsFormsComponent],
+  declarations: [ClaimsFormsComponent, ClaimsRequestListComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -25,6 +28,8 @@ export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
     NgbCollapseModule,
     DropzoneModule,
     GregorianPickerModule,
+    AgGridModule,
+    NgbTooltipModule,
   ],
 })
 export class ClaimsFormsModule {}
