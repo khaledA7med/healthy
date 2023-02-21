@@ -1,6 +1,8 @@
 import { FormControl } from "@angular/forms";
 
 export interface IClaimsForms {
+  clientInfo?: FormControl<string | null>;
+
   SNo?: FormControl<number | null>;
   Branch?: FormControl<string | null>;
   CNo?: FormControl<string | null>;
@@ -10,24 +12,24 @@ export interface IClaimsForms {
   /* Policy Details Tap */
   ClientID?: FormControl<string | null>;
   ClientName?: FormControl<string | null>;
-  InsuranceCompany?: FormControl<string | null>;
-  PolicyNo?: FormControl<string | null>;
-  ClassName?: FormControl<string | null>;
-  LineOfBusiness?: FormControl<string | null>;
-  DateOfLossFrom?: FormControl<Date | null>; //Inception Date
-  DateOfLossTo?: FormControl<Date | null>; //Expiry Date
-  ProjectTitle?: FormControl<string | null>;
+  insuranceCompany?: FormControl<string | null>;
+  policyNo?: FormControl<string | null>;
+  className?: FormControl<string | null>;
+  lineOfBusiness?: FormControl<string | null>;
+  dateOfLossFrom?: FormControl<Date | null>; //Inception Date
+  dateOfLossTo?: FormControl<Date | null>; //Expiry Date
+  projectTitle?: FormControl<string | null>;
   MaintenancePeriodFrom?: FormControl<Date | null>;
   MaintenancePeriodTo?: FormControl<Date | null>;
-  PreviousClaimsNo?: FormControl<number | null>;
+  previousClaimsNo?: FormControl<number | null>;
   //  IEnumerable<ClaimTransactionDto> ClaimTransactions  = new List<ClaimTransactionDto>(); // Just For Presentation
   /****************** End ************************/
 
   /* Payment Tap 1- Claim Details */
-  InsurCompClaimNo?: FormControl<string | null>;
-  InsuredClaimNo?: FormControl<string | null>;
-  MembName?: FormControl<string | null>;
-  BLAWBNo?: FormControl<string | null>;
+  insurCompClaimNo?: FormControl<string | null>;
+  insuredClaimNo?: FormControl<string | null>;
+  membName?: FormControl<string | null>;
+  bLAWBNo?: FormControl<string | null>;
 
   //Claimant Details
   ClaimantMobile?: FormControl<string | null>;
@@ -75,9 +77,9 @@ export interface IClaimsForms {
   //  IEnumerable<BaseLookUpDto> ClaimStatusNotesList  = new List<BaseLookUpDto>();
 
   //Loss Adjuster
-  Lostadjuster?: FormControl<string | null>;
-  LostadjusterEmail?: FormControl<string | null>; //Reference
-  LostadjusterTele?: FormControl<string | null>;
+  lostadjuster?: FormControl<string | null>;
+  lostadjusterEmail?: FormControl<string | null>; //Reference
+  lostadjusterTele?: FormControl<string | null>;
   /* End Tap 1 */
 
   // /* Payment Tap 2- Rejections / Deductions */
@@ -101,7 +103,7 @@ export interface IClaimsForms {
   /* Motor  */
   CarPaletNo?: FormControl<string | null>;
   MistakePercentage?: FormControl<number | null>;
-  ClaimType?: FormControl<string | null>; //MOT GEN
+  claimType?: FormControl<string | null>; //MOT GEN
   Type?: FormControl<string | null>; // Own Damage , Total Loss
   CarsMake?: FormControl<string | null>;
   Model?: FormControl<string | null>;
