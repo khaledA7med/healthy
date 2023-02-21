@@ -74,6 +74,17 @@ export default class StatusCellRender {
         return `<span class='badge badge-soft-info'>${e.value}</span>`;
     }
   }
+
+  public static systemAdminStatus(e: CellEvent): string {
+    switch (e.value) {
+      case "Active":
+        return `<span class='badge bg-success'>${e.value}</span>`;
+      case "Disable":
+        return `<span class='badge bg-dark'>${e.value}</span>`;
+      default:
+        return `<span class='badge bg-danger'>${e.value}</span>`;
+    }
+  }
   public static claimStatus(e: CellEvent): string {
     switch (e.value) {
       case claimsStatus.active:

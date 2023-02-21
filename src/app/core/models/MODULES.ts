@@ -14,4 +14,5 @@ export enum MODULES {
   CustomerService = "CustomerService",
   CustomerServiceForm = "CustomerServiceForm",
   Claims = "Claims",
+  SystemAdmin = "SystemAdmin",
 }

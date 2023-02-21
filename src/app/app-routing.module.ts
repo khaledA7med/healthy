@@ -13,7 +13,7 @@ const routes: Routes = [
     component: LayoutComponent,
     loadChildren: () =>
       import("./pages/pages.module").then((m) => m.PagesModule),
-    canActivate: [AuthGuard],
+    canActivate: [ AuthGuard ],
   },
   {
     path: "auth",
@@ -26,7 +26,7 @@ const routes: Routes = [
       import("./extraspages/extraspages.module").then(
         (m) => m.ExtraspagesModule
       ),
-    canActivate: [AuthGuard],
+    canActivate: [ AuthGuard ],
   },
   {
     path: "**",
@@ -40,7 +40,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
