@@ -21,12 +21,11 @@
             <i class="ri-filter-3-line align-bottom me-1"></i>
             Filters
         </a>
-        <a type="button" class="btn btn-sm btn-success mx-2  d-flex align-items-center" id="create-btn"
-            asp-action="CSRegistry" asp-controller="CustomerService">
+        <a type="button" class="btn btn-sm btn-success mx-2  d-flex align-items-center"
+            (click)="openUsersDialoge(usersContent)">
             <i class="ri-add-line align-bottom me-1"></i> Add User
         </a>
-        <a type="button" class="btn btn-sm btn-info  d-flex align-items-center" id="create-btn" asp-action="CSRegistry"
-            asp-controller="CustomerService">
+        <a type="button" class="btn btn-sm btn-info  d-flex align-items-center" id="create-btn">
             <i class="ri-add-line align-bottom me-1"></i> Privileges
         </a>
     </div>
@@ -37,7 +36,7 @@
     </ag-grid-angular>
 </div>
 
-<!----------------------------------  --------------------
+<!--------------------------------------------------------
                         Client Filter
   -------------------------------------------------------->
 <div>
@@ -103,3 +102,84 @@
         </div>
     </ng-template>
 </div>
+
+<!--------------------------------------------------------
+                        Add/Edit Users Modal
+  -------------------------------------------------------->
+
+<ng-template #usersContent let-modal>
+    <div class="modal-header mb-0">
+        <h4 class="modal-title" id="modal-basic-title">Policy Search</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <form [formGroup]="userForm" (ngSubmit)="submitUserData(userForm)">
+        <div class="modal-body p-1" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="col-12 row">
+
+                    <!-- Staff Name -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="staffName">Staff Name</label>
+                        <ng-select id="staffName" placeholder="Select Staff Name" formControlName="fullName"
+                            [items]="(lookupData | async)?.AllClients?.content!" bindLabel="name" bindValue="name"
+                            [loading]="lookupData ? false : true">
+                        </ng-select>
+                    </div>
+
+                    <!-- User Name -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="userName">User Name</label>
+                        <input id="userName" class="form-control form-control-sm" formControlName="userName" />
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="branch">branch</label>
+                        <ng-select id="branch" placeholder="Select branch" formControlName="branch"
+                            [items]="(lookupData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                            [loading]="lookupData ? false : true">
+                        </ng-select>
+                    </div>
+
+                    <!-- Phone No -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="phoneNo">Phone No</label>
+                        <input id="phoneNo" class="form-control form-control-sm" formControlName="phoneNo" />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="email">Email</label>
+                        <input id="email" class="form-control form-control-sm" formControlName="email" />
+                    </div>
+
+                    <!-- Security Role -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                        <label for="securityRole" class="asterisk-input">Security Role</label>
+                        <div class="input-group input-group-sm">
+                            <div class="w-100 d-flex">
+                                <ng-select id="securityRole" placeholder="Select Security Role"
+                                    [items]="(lookupData | async)?.AllClients?.content!" bindLabel="name"
+                                    bindValue="name" [loading]="lookupData ? false : true" style="width: 92%;">
+                                </ng-select>
+                                <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                    style="width: 12%;">
+                                    <i class="ri-add-fill mx-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <span class="invalid-feedback fw-bold">
+                            Required
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"><i
+                    class="ri-add-line mx-1"></i>Add</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>
