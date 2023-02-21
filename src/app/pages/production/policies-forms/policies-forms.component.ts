@@ -75,6 +75,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       searching: searchBy,
       issueType: issueType,
       lineOfBusiness: [] as IGenericResponseType[],
+      isRequest: false as boolean,
     },
     requestSearch: {
       clientName: "",
@@ -244,6 +245,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.searchType?.patchValue("Client");
       this.f.issueType?.patchValue("new");
       this.f.requestNo?.clearValidators();
+      this.uiState.policy.isRequest = false;
       this.newIssue();
     }
     this.f.requestNo?.updateValueAndValidity();
@@ -303,6 +305,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
               compCommPerc: +policy?.compCommPerc!,
               insurComp: policy?.insurComp,
               lineOfBusiness: policy?.lineOfBusiness,
+              issueDate: client?.issueDate,
+              periodFrom: client?.periodFrom,
               periodTo: new Date(policy?.periodTo!),
               policyNo: policy?.policyNo,
               producerCommPerc: +policy?.producerCommPerc!,
@@ -321,9 +325,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             this.setPolicyDataToForm(data);
             this.f.issueType?.patchValue("endorsement");
             this.f.requestNo?.patchValue(e.requestNo!);
-
+            this.uiState.policy.isRequest = true;
             this.uiState.policySearch.clientName = e.clientName!;
-            this.uiState.policySearch.clientID = e.clientName!;
+            this.uiState.policySearch.clientID = e.clientID!;
 
             this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "error");
@@ -346,6 +350,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     });
     this.uiState.policySearch.clientName = e.fullName!;
     this.uiState.policySearch.clientID = e.sNo!;
+    this.uiState.policy.isRequest = false;
     this.modalRef.close();
   }
 
@@ -358,6 +363,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
           if (res.status) {
             let data = res.data;
             this.setPolicyDataToForm(data!);
+            this.uiState.policy.isRequest = false;
             this.modalRef.close();
           } else this.message.popup("Oops!", res.message!, "warning");
           this.eventService.broadcast(reserved.isLoading, false);
@@ -1002,8 +1008,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.uiState.submitted = true;
-    // if (!this.validationChecker()) return;
-    // if (!this.financeChecker()) return;
+    if (!this.validationChecker()) return;
+    if (!this.financeChecker()) return;
     this.financeValueChecker();
   }
 
@@ -1025,12 +1031,12 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     let totals = this.uiState.paymentTermsTotals,
       coms = this.uiState.producerCommission.commissionTotals,
       values = {
-        net: this.f.netPremium?.value,
-        fees: this.f.fees?.value,
-        vat: this.f.vatValue?.value,
-        total: this.f.totalPremium?.value,
-        producerCom: this.f.producerComm?.value,
-        producerComPerc: this.f.producerCommPerc?.value,
+        net: +this.f.netPremium?.value!,
+        fees: +this.f.fees?.value!,
+        vat: +this.f.vatValue?.value!,
+        total: +this.f.totalPremium?.value!,
+        producerCom: +this.f.producerComm?.value!,
+        producerComPerc: +this.f.producerCommPerc?.value!,
       };
 
     if (
@@ -1065,30 +1071,29 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   financeValueChecker(): void {
-    // let arr = [];
-    // let msg = "";
+    let arr = [];
+    let msg = "";
 
-    // if (this.f.netPremium?.value === 0) arr.push("Net Premium Value = 0");
-    // if (this.f.compCommAmount?.value === 0)
-    //   arr.push("Company Commission Value = 0");
+    if (this.f.netPremium?.value === 0) arr.push("Net Premium Value = 0");
+    if (this.f.compCommAmount?.value === 0)
+      arr.push("Company Commission Value = 0");
 
-    // if (arr) {
-    //   for (let i = 0; i < arr.length; i++)
-    //     msg += `<li class='text-start'>${arr[i]}</li>`;
+    if (arr) {
+      for (let i = 0; i < arr.length; i++)
+        msg += `<li class='text-start'>${arr[i]}</li>`;
 
-    //   this.message
-    //     .templateComfirmation(
-    //       "Are You Sure Want Countinue ?!",
-    //       `<ul>${msg}</ul>`,
-    //       "Yes, Sure !",
-    //       undefined,
-    //       "question"
-    //     )
-    //     .then((res: SweetAlertResult) => {
-    //       if (res.isConfirmed) this.checkPolicyEndorsNo();
-    //     });
-    // } else this.checkPolicyEndorsNo();
-    this.checkPolicyEndorsNo();
+      this.message
+        .templateComfirmation(
+          "Are You Sure Want Countinue ?!",
+          `<ul>${msg}</ul>`,
+          "Yes, Sure !",
+          undefined,
+          "question"
+        )
+        .then((res: SweetAlertResult) => {
+          if (res.isConfirmed) this.checkPolicyEndorsNo();
+        });
+    } else this.checkPolicyEndorsNo();
   }
 
   checkPolicyEndorsNo(): void {
@@ -1232,6 +1237,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.paymentTermsList?.clear();
     this.f.producersCommissionsList?.clear();
     this.f.periodTo?.enable();
+    this.f.searchType?.patchValue("Client");
+    this.f.issueType?.patchValue("new");
+    this.f.requestNo?.clearValidators();
     this.documentsToUpload = [];
     this.dropzone.clearImages();
     this.uiState.submitted = false;
