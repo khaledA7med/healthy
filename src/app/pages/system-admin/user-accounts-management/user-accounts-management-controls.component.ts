@@ -16,8 +16,8 @@ import { UserAccountsManagementComponent } from './user-accounts-management.comp
       <i class="ri-more-2-fill"></i>
     </button>
     <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-      <button ngbDropdownItem (click)="Enable()" class="btn btn-sm">Enable</button>
-      <button ngbDropdownItem (click)="Disable()" class="btn btn-sm">Disable</button>
+      <button ngbDropdownItem (click)="Enable(adminStatus.Active)" class="btn btn-sm">{{adminStatus.Active}}</button>
+      <button ngbDropdownItem (click)="Disable(adminStatus.Disable)" class="btn btn-sm">{{adminStatus.Disable}}</button>
       <button ngbDropdownItem (click)="ResetPassword()" class="btn btn-sm">Reset Password</button>
       <button ngbDropdownItem (click)="Edit()" class="btn btn-sm">Edit</button>
     </div>
@@ -69,12 +69,12 @@ export class UserAccountsManagementControlsComponent
   ResetPassword ()
   {
     this.message
-      .confirm("Sure!", "Change Status?!", "primary", "question")
+      .confirm("Sure!", "Reset Password?!", "primary", "question")
       .then((result: SweetAlertResult) =>
       {
         if (result.isConfirmed)
         {
-          // this.comp.ResetPassword(this.params.data, userId);
+          this.comp.ResetPassword(this.params.data.identity);
         } else
         {
           return;
@@ -87,13 +87,35 @@ export class UserAccountsManagementControlsComponent
     console.log("Enable work")
   }
 
-  Enable ()
+  Enable (status: string)
   {
-    console.log("Enable work")
+    this.message
+      .confirm("Sure!", "Change Status?!", "primary", "question")
+      .then((result: SweetAlertResult) =>
+      {
+        if (result.isConfirmed)
+        {
+          this.comp.changeStatus(this.params.data, status);
+        } else
+        {
+          return;
+        }
+      });
   }
 
-  Disable ()
+  Disable (status: string)
   {
-    console.log("Disable work")
+    this.message
+      .confirm("Sure!", "Change Status?!", "primary", "question")
+      .then((result: SweetAlertResult) =>
+      {
+        if (result.isConfirmed)
+        {
+          this.comp.changeStatus(this.params.data, status);
+        } else
+        {
+          return;
+        }
+      });
   }
 }

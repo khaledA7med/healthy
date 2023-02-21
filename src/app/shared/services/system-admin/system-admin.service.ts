@@ -6,6 +6,7 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { ISystemAdminFilters } from '../../app/models/SystemAdmin/isystem-admin-filters';
 import { ISystemAdmin } from '../../app/models/SystemAdmin/isystem-admin';
+import { IChangeUserStatus } from '../../app/models/SystemAdmin/isystem-admin-req';
 
 @Injectable({
   providedIn: 'root'
@@ -29,15 +30,26 @@ export class SystemAdminService
   }
 
   getResetPassword (
-    userId: string
+    id: string
   ): Observable<HttpResponse<IBaseResponse<any>>>
   {
     return this.http.get<IBaseResponse<any>>(
       this.env + ApiRoutes.SystemAdmin.changePasswordAsync,
       {
         observe: "response",
-        params: { userId },
+        params: { id },
       }
+    );
+  }
+
+  changeStatus (
+    data: IChangeUserStatus
+  ): Observable<HttpResponse<IBaseResponse<any>>>
+  {
+    return this.http.post(
+      this.env + ApiRoutes.SystemAdmin.changeStatus,
+      data,
+      { observe: "response" }
     );
   }
 

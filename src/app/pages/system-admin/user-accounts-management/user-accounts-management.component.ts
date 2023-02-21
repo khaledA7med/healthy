@@ -18,7 +18,7 @@ import { ISystemAdminFilters } from "src/app/shared/app/models/SystemAdmin/isyst
 import { ISystemAdmin } from "src/app/shared/app/models/SystemAdmin/isystem-admin";
 import { systemAdminCols } from "src/app/shared/app/grid/systemAdminCols";
 import { SystemAdminService } from "src/app/shared/services/system-admin/system-admin.service";
-import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
+import { SystemAdminStatus } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
 
 
 @Component({
@@ -30,7 +30,6 @@ import { MasterMethodsService } from "src/app/shared/services/master-methods.ser
 })
 export class UserAccountsManagementComponent implements OnInit, OnDestroy
 {
-  userId!: string;
 
   uiState = {
     routerLink: {
@@ -82,7 +81,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy
 
   constructor (
     private systemAdminService: SystemAdminService,
-    private masterService: MasterMethodsService,
     private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
@@ -227,9 +225,42 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy
   }
   //#endregion
 
-  ResetPassword ()
+  ResetPassword (id: any)
   {
-    let sub = this.systemAdminService.getResetPassword(this.userId).subscribe(
+    let sub = this.systemAdminService.getResetPassword(id).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        this.gridApi.setDatasource(this.dataSource);
+        if (res.body?.status) this.message.toast(res.body!.message!, "success");
+        else this.message.toast(res.body!.message!, "error");
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  changeStatus (user: ISystemAdmin, status: string): void
+  {
+    let dataSubmit = {
+      updateUser: user.updateUser!,
+      status: "",
+    };
+    switch (status)
+    {
+      case "active":
+        dataSubmit.status = SystemAdminStatus.Active;
+        break;
+      case "disable":
+        dataSubmit.status = SystemAdminStatus.Disable;
+        break;
+      default:
+        dataSubmit.status = status;
+        break;
+    }
+    let sub = this.systemAdminService.changeStatus(dataSubmit).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
