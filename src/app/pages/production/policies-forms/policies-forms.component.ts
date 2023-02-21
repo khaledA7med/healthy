@@ -150,7 +150,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         (el) => !el.name.startsWith("Direct Business")
       );
     });
-    this.subscribes.push(sub);
+
+    let sub2 = this.f.chPolicyHolder?.valueChanges.subscribe((el) => {
+      if (el) this.f.policyHolder?.enable();
+      else this.f.policyHolder?.disable();
+    });
+
+    this.subscribes.push(sub, sub2!);
 
     let date = {
       gon: {
@@ -230,12 +236,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     return this.formGroup.controls;
   }
 
-  chPolicyHolderEvt(e: Event) {
-    let elem = e.target as HTMLInputElement;
-    if (elem.checked) this.f.policyHolder?.enable();
-    else this.f.policyHolder?.disable();
-  }
-
   searchByEvt(): void {
     if (this.f.searchType?.value === this.uiState.policy.searching.request)
       this.f.requestNo?.setValidators(Validators.required);
@@ -244,6 +244,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.searchType?.patchValue("Client");
       this.f.issueType?.patchValue("new");
       this.f.requestNo?.clearValidators();
+      this.newIssue();
     }
     this.f.requestNo?.updateValueAndValidity();
   }
@@ -296,37 +297,30 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             this.endorsementIssue();
             let client = res.data?.clientData,
               policy = res.data?.clientPolicy;
-
-            this.formGroup.patchValue({
-              requestNo: e.requestNo,
-              clientInfo: `${e?.clientID} | ${e?.clientName}`,
-              clientName: e.clientName!,
-              clientNo: client?.clientNo,
+            let data: IPolicyPreview = {
+              accNo: policy?.accNo,
+              className: policy?.className,
+              compCommPerc: +policy?.compCommPerc!,
+              insurComp: policy?.insurComp,
+              lineOfBusiness: policy?.lineOfBusiness,
+              periodTo: new Date(policy?.periodTo!),
+              policyNo: policy?.policyNo,
+              producerCommPerc: +policy?.producerCommPerc!,
+              clientNo: +e?.clientID!,
+              clientName: e?.clientName,
               producer: e?.producer,
               oasisPolRef: client?.oasisPolRef,
-              accNo: policy?.accNo,
-              policyNo: policy?.policyNo,
               endorsType: e?.endorsType,
               endorsNo: client?.endorsNo,
-              insurComp: policy?.insurComp,
-              className: policy?.className,
-              lineOfBusiness: policy?.lineOfBusiness,
               minDriverAge: +client?.minDriverAge!,
               claimNoOfDays: +client?.claimNoOfDays!,
-              csNoOfDays: +client?.csNoOfDays!,
+              csnoOfDays: +client?.csNoOfDays!,
               remarks: client?.remarks,
-              issueType: "endorsement",
-            });
+            };
 
-            this.f.issueDate?.patchValue(
-              this.appUtils.dateStructFormat(client?.issueDate!) as any
-            );
-            this.f.periodFrom?.patchValue(
-              this.appUtils.dateStructFormat(client?.periodFrom!) as any
-            );
-            this.f.periodTo?.patchValue(
-              this.appUtils.dateStructFormat(policy?.periodTo!) as any
-            );
+            this.setPolicyDataToForm(data);
+            this.f.issueType?.patchValue("endorsement");
+            this.f.requestNo?.patchValue(e.requestNo!);
 
             this.uiState.policySearch.clientName = e.clientName!;
             this.uiState.policySearch.clientID = e.clientName!;
@@ -379,8 +373,23 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   getPolicy(id: string): void {
     this.productionService.getPolicy(id).subscribe(
       (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
-        if (res.body?.status) this.setPolicyDataToForm(res.body?.data!);
-        else this.message.popup("Oops!", res.body?.message!, "warning");
+        if (res.body?.status) {
+          let data = res.body?.data!;
+          this.setPolicyDataToForm(data);
+          this.formGroup.patchValue({
+            sNo: data.sNo,
+            sumInsur: data.sumInsur,
+            netPremium: data.netPremium,
+            fees: data.fees,
+            deductFees: data.deductFees,
+            vatPerc: data.vatPerc,
+            vatValue: data.vatValue,
+            totalPremium: data.totalPremium,
+            compCommAmount: data.compComm,
+            compCommVAT: data.compCommVAT,
+            producerComm: data.producerComm,
+          });
+        } else this.message.popup("Oops!", res.body?.message!, "warning");
         this.eventService.broadcast(reserved.isLoading, false);
       },
       (err) => {
@@ -392,10 +401,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   setPolicyDataToForm(data: IPolicyPreview): void {
     this.formGroup.patchValue({
-      sNo: this.uiState.editMode ? data.sNo : "0",
       clientInfo: `${data.clientNo} | ${data.clientName}`,
       producer: data.producer,
-      chPolicyHolder: data.chPolicyHolder,
+      chPolicyHolder: data.policyHolder ? true : false,
       policyHolder: data.policyHolder,
       oasisPolRef: data.oasisPolRef,
       accNo: data.accNo,
@@ -411,18 +419,8 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       remarks: data.remarks,
       clientDNCNNo: data.clientDNCNNo,
       compCommDNCNNo: data.compCommDNCNNo,
-      sumInsur: data.sumInsur,
-      netPremium: data.netPremium,
-      fees: data.fees,
-      deductFees: data.deductFees,
-      vatPerc: data.vatPerc,
-      vatValue: data.vatValue,
-      totalPremium: data.totalPremium,
       compCommPerc: data.compCommPerc,
-      compCommAmount: data.compComm,
-      compCommVAT: data.compCommVAT,
       producerCommPerc: data.producerCommPerc,
-      producerComm: data.producerComm,
     });
     this.f.issueDate?.patchValue(
       this.appUtils.dateStructFormat(data?.issueDate!) as any
@@ -436,10 +434,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.getLineOfBusiness(data.className!, true);
     this.totalPaymentRow();
     this.totalCommissionRow();
-    data?.producersCommissionsList.forEach((com) =>
-      this.addProducerCommission(com)
-    );
-    data?.paymentTermsList.forEach((pay) => this.addPaymentTerm(pay));
+
+    if (data?.producersCommissionsList!)
+      data?.producersCommissionsList!.forEach((com) =>
+        this.addProducerCommission(com)
+      );
+    if (data?.paymentTermsList!)
+      data?.paymentTermsList!.forEach((pay) => this.addPaymentTerm(pay));
     this.docs = data.documentList!;
 
     this.eventService.broadcast(reserved.isLoading, false);

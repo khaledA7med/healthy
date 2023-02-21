@@ -5,8 +5,8 @@ import { IProducersCommissionsList } from "./iproducers-commissions-list";
 
 export interface IPolicyPreview extends IPolicy {
   documents?: IDocumentList[];
-  paymentTermsList: IPaymentTermsList[];
-  producersCommissionsList: IProducersCommissionsList[];
+  paymentTermsList?: IPaymentTermsList[];
+  producersCommissionsList?: IProducersCommissionsList[];
   documentList?: IDocumentList[];
   documentLists?: IDocumentList[];
 }
