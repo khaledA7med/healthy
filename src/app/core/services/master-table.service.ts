@@ -9,14 +9,17 @@ import { CachingService } from "./caching.service";
 @Injectable({
   providedIn: "root",
 })
-export class MasterTableService {
+export class MasterTableService
+{
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor(private http: HttpClient, private caching: CachingService) {
+  constructor (private http: HttpClient, private caching: CachingService)
+  {
     this.dataSrc = [];
   }
 
-  getBaseData(module: string) {
+  getBaseData (module: string)
+  {
     let data = {
       Client: [
         {
@@ -328,9 +331,25 @@ export class MasterTableService {
           name: BaseData.PendingReason,
         },
       ],
+      SystemAdmin: [
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.statusOfUsers,
+          name: BaseData.StatusOfUsers
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.jobTitleOfUsers,
+          name: BaseData.JobTitleOfUsers
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.branch,
+          name: BaseData.Branch
+        },
+
+      ]
     };
 
-    switch (module) {
+    switch (module)
+    {
       case MODULES.Client:
         this.dataSrc = data.Client;
         break;
@@ -358,14 +377,18 @@ export class MasterTableService {
       case MODULES.Claims:
         this.dataSrc = data.Claims;
         break;
+      case MODULES.SystemAdmin:
+        this.dataSrc = data.SystemAdmin;
+        break;
       default:
         break;
     }
 
-    for (let i = 0; i < this.dataSrc.length; i++) {
+    for (let i = 0; i < this.dataSrc.length; i++)
+    {
       this.http
-        .get<any>(this.env + this.dataSrc[i].route, {
-          context: new HttpContext().set(MODULE_NAME, this.dataSrc[i].name),
+        .get<any>(this.env + this.dataSrc[ i ].route, {
+          context: new HttpContext().set(MODULE_NAME, this.dataSrc[ i ].name),
         })
         .subscribe();
     }

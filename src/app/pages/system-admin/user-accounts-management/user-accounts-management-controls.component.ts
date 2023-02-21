@@ -4,6 +4,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { SystemAdminStatus } from 'src/app/shared/app/models/SystemAdmin/system-admin-utils';
 import { AppRoutes } from 'src/app/shared/app/routers/appRouters';
 import { MessagesService } from 'src/app/shared/services/messages.service';
+import { SweetAlertResult } from 'sweetalert2';
 import { UserAccountsManagementComponent } from './user-accounts-management.component';
 
 @Component({
@@ -17,7 +18,7 @@ import { UserAccountsManagementComponent } from './user-accounts-management.comp
     <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
       <button ngbDropdownItem (click)="Enable()" class="btn btn-sm">Enable</button>
       <button ngbDropdownItem (click)="Disable()" class="btn btn-sm">Disable</button>
-      <button ngbDropdownItem (click)="View()" class="btn btn-sm">View</button>
+      <button ngbDropdownItem (click)="ResetPassword()" class="btn btn-sm">Reset Password</button>
       <button ngbDropdownItem (click)="Edit()" class="btn btn-sm">Edit</button>
     </div>
   </div>
@@ -65,9 +66,20 @@ export class UserAccountsManagementControlsComponent
     this.comp = this.params.context.comp;
   }
 
-  View ()
+  ResetPassword ()
   {
-    console.log("Enable work")
+    this.message
+      .confirm("Sure!", "Change Status?!", "primary", "question")
+      .then((result: SweetAlertResult) =>
+      {
+        if (result.isConfirmed)
+        {
+          // this.comp.ResetPassword(this.params.data, userId);
+        } else
+        {
+          return;
+        }
+      });
   }
 
   Edit ()

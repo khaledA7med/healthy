@@ -30,6 +30,7 @@ import { MasterMethodsService } from "src/app/shared/services/master-methods.ser
 })
 export class UserAccountsManagementComponent implements OnInit, OnDestroy
 {
+  userId!: string;
 
   uiState = {
     routerLink: {
@@ -225,6 +226,23 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy
     this.filterForm.reset();
   }
   //#endregion
+
+  ResetPassword ()
+  {
+    let sub = this.systemAdminService.getResetPassword(this.userId).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        this.gridApi.setDatasource(this.dataSource);
+        if (res.body?.status) this.message.toast(res.body!.message!, "success");
+        else this.message.toast(res.body!.message!, "error");
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
   ngOnDestroy (): void
   {

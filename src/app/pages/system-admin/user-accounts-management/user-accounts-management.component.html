@@ -33,7 +33,7 @@
 </div>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 
@@ -50,12 +50,12 @@
         <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForm">
 
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
                     <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                        [items]="(lookupData | async)?.StatusOfUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="status" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
@@ -63,26 +63,27 @@
                     <label for="fullName" class="form-label text-muted fw-bold fs-13">
                         Full Name
                     </label>
-                    <input name="fullName" type="text" class="form-control" formControlName="fullName" id="fullName" placeholder="Full Name">
+                    <input name="fullName" type="text" class="form-control" formControlName="fullName" id="fullName"
+                        placeholder="Full Name">
                 </div>
 
                 <div class="mb-3">
-                    <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
-                    <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                    <label for="branch" class="form-label text-muted fw-bold fs-13">Branch</label>
+                    <ng-select id="branch" class="is-invalid" placeholder="Select branch"
+                        [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="branch" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
-                    <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                    <label for="jobTitle" class="form-label text-muted fw-bold fs-13">Job Title</label>
+                    <ng-select id="jobTitle" class="is-invalid" placeholder="Select Job Title"
+                        [items]="(lookupData | async)?.JobTitleOfUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="jobTitle" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
-                </div> -->
+                </div>
 
 
                 <div class="col-12 mh-100"></div>

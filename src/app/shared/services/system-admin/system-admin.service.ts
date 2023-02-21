@@ -28,4 +28,17 @@ export class SystemAdminService
     );
   }
 
+  getResetPassword (
+    userId: string
+  ): Observable<HttpResponse<IBaseResponse<any>>>
+  {
+    return this.http.get<IBaseResponse<any>>(
+      this.env + ApiRoutes.SystemAdmin.changePasswordAsync,
+      {
+        observe: "response",
+        params: { userId },
+      }
+    );
+  }
+
 }
