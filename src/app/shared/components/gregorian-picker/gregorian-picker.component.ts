@@ -21,7 +21,7 @@ import {
 export class GregorianPickerComponent implements OnChanges {
   date!: NgbDateStruct;
   @Input() model!: any;
-
+  @Input() readonly: boolean = false;
   @Input() submitted: boolean = false;
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;

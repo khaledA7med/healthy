@@ -3,8 +3,8 @@
         [disabled]="disabled" [required]="required" placeholder="yyyy-mm-dd" class="form-control"
         [footerTemplate]="footerTemplate"
         [ngClass]="{'is-invalid': required && ((dates.touched && dates.invalid) || (submitted && dates.invalid))}"
-        (dateSelect)="onDateSelect($event)" readonly (click)="d.toggle()" />
-    <button class="btn btn-outline-secondary ri-calendar-2-line" type="button" (click)="d.toggle()"
+        (dateSelect)="onDateSelect($event)" readonly (click)="!readonly && d.toggle()" />
+    <button class="btn btn-outline-secondary ri-calendar-2-line" type="button" (click)="!readonly && d.toggle()"
         [disabled]="disabled"></button>
     <div class="invalid-feedback fw-bold"
         *ngIf="required && ((dates.touched && dates.invalid) || (submitted && dates.invalid))">
