@@ -419,7 +419,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       vatValue: data.vatValue,
       totalPremium: data.totalPremium,
       compCommPerc: data.compCommPerc,
-      compCommAmount: data.compCommAmount,
+      compCommAmount: data.compComm,
       compCommVAT: data.compCommVAT,
       producerCommPerc: data.producerCommPerc,
       producerComm: data.producerComm,
@@ -1002,7 +1002,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.uiState.submitted = true;
     // if (!this.validationChecker()) return;
-    if (!this.financeChecker()) return;
+    // if (!this.financeChecker()) return;
     this.financeValueChecker();
   }
 
@@ -1064,29 +1064,30 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   financeValueChecker(): void {
-    let arr = [];
-    let msg = "";
+    // let arr = [];
+    // let msg = "";
 
-    if (this.f.netPremium?.value === 0) arr.push("Net Premium Value = 0");
-    if (this.f.compCommAmount?.value === 0)
-      arr.push("Company Commission Value = 0");
+    // if (this.f.netPremium?.value === 0) arr.push("Net Premium Value = 0");
+    // if (this.f.compCommAmount?.value === 0)
+    //   arr.push("Company Commission Value = 0");
 
-    if (arr) {
-      for (let i = 0; i < arr.length; i++)
-        msg += `<li class='text-start'>${arr[i]}</li>`;
+    // if (arr) {
+    //   for (let i = 0; i < arr.length; i++)
+    //     msg += `<li class='text-start'>${arr[i]}</li>`;
 
-      this.message
-        .templateComfirmation(
-          "Are You Sure Want Countinue ?!",
-          `<ul>${msg}</ul>`,
-          "Yes, Sure !",
-          undefined,
-          "question"
-        )
-        .then((res: SweetAlertResult) => {
-          if (res.isConfirmed) this.checkPolicyEndorsNo();
-        });
-    } else this.checkPolicyEndorsNo();
+    //   this.message
+    //     .templateComfirmation(
+    //       "Are You Sure Want Countinue ?!",
+    //       `<ul>${msg}</ul>`,
+    //       "Yes, Sure !",
+    //       undefined,
+    //       "question"
+    //     )
+    //     .then((res: SweetAlertResult) => {
+    //       if (res.isConfirmed) this.checkPolicyEndorsNo();
+    //     });
+    // } else this.checkPolicyEndorsNo();
+    this.checkPolicyEndorsNo();
   }
 
   checkPolicyEndorsNo(): void {
@@ -1119,7 +1120,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     const formData = new FormData();
 
     let val = this.formGroup.getRawValue();
-
+    console.log(val.deductFees);
     if (this.uiState.editMode) formData.append("sNo", val.sNo!);
 
     formData.append("RequestNo", val.requestNo! ?? "");
@@ -1150,14 +1151,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     formData.append("ClientDNCNNo", val.clientDNCNNo! ?? "");
     formData.append("NetPremium", val.netPremium?.toString()! ?? "0");
     formData.append("Fees", val.fees?.toString()! ?? "0");
-    formData.append("DeductFees", val.deductFees?.toString()! ?? "0");
+    formData.append("DeductFees", /*val.deductFees?.toString()!*/ "false");
     formData.append("VatPerc", val.vatPerc?.toString()! ?? "0");
     formData.append("VatValue", val.vatValue?.toString()! ?? "0");
     formData.append("TotalPremium", val.totalPremium?.toString()! ?? "0");
     formData.append("CompCommDNCNNo", val.compCommDNCNNo! ?? "");
     formData.append("CompCommPerc", val.compCommPerc?.toString()! ?? "0");
     formData.append("CompCommVAT", val.compCommVAT?.toString()! ?? "0");
-    formData.append("CompCommAmount", val.compCommAmount?.toString()! ?? "0");
+    formData.append("CompComm", val.compCommAmount?.toString()! ?? "0");
     formData.append(
       "ProducerCommPerc",
       val.producerCommPerc?.toString()! ?? ""

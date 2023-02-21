@@ -13,4 +13,5 @@ export enum MODULES {
   ProductionForm = "ProductionForm",
   CustomerService = "CustomerService",
   CustomerServiceForm = "CustomerServiceForm",
+  Claims = "Claims",
 }

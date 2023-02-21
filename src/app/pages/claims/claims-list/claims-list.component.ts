@@ -1,3 +1,5 @@
+import { IClaimsFilter } from "./../../../shared/app/models/Claims/iclaims-filter";
+import { FormControl, FormGroup } from "@angular/forms";
 import { MessagesService } from "./../../../shared/services/messages.service";
 import { ClaimsService } from "./../../../shared/services/claims/claims.service";
 import { claimsManageCols } from "./../../../shared/app/grid/claimsCols";
@@ -6,6 +8,7 @@ import {
   Component,
   ElementRef,
   OnInit,
+  TemplateRef,
   ViewEncapsulation,
 } from "@angular/core";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -19,9 +22,13 @@ import {
   IGetRowsParams,
 } from "ag-grid-community";
 import PerfectScrollbar from "perfect-scrollbar";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import { MODULES } from "src/app/core/models/MODULES";
 
 @Component({
   selector: "app-claims-list",
@@ -44,6 +51,7 @@ export class ClaimsListComponent implements OnInit {
     } as IBaseFilters,
     claims: {
       list: [] as IClaims[],
+      subStatus: [] as string[],
       totalPages: 0,
     },
   };
@@ -70,14 +78,27 @@ export class ClaimsListComponent implements OnInit {
     onPaginationChanged: (e) => this.onPageChange(e),
   };
   subscribes: Subscription[] = [];
+  filterForm!: FormGroup<IClaimsFilter>;
+  formData!: Observable<IBaseMasterTable>;
   constructor(
     private tableRef: ElementRef,
     private claimService: ClaimsService,
-    private message: MessagesService
+    private message: MessagesService,
+    private offcanvasService: NgbOffcanvas,
+    private table: MasterTableService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.formData = this.table.getBaseData(MODULES.Claims);
+    this.initFilterForm();
 
+    this.uiState.filters = {
+      ...this.uiState.filters,
+      ...this.filterForm.value,
+    };
+  }
+
+  //#region
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
@@ -161,4 +182,50 @@ export class ClaimsListComponent implements OnInit {
       horizontal.update();
     }
   }
+  //#endregion
+
+  //#region filter
+  openFilterCanvas(name: TemplateRef<any>) {
+    this.offcanvasService.open(name, { position: "end" });
+  }
+
+  private initFilterForm() {
+    this.filterForm = new FormGroup<IClaimsFilter>({
+      clientId: new FormControl(null),
+      clientName: new FormControl(null),
+      claimType: new FormControl([]),
+      status: new FormControl([]),
+      subStatus: new FormControl([]),
+    });
+  }
+  get filterF() {
+    return this.filterForm.controls;
+  }
+  getSubStatus() {
+    if (this.filterF.status?.value!.length == 0) {
+      this.uiState.claims.subStatus = [];
+      this.filterF.subStatus?.reset();
+      return;
+    }
+    let sub = this.claimService
+      .getSubStatus(this.filterF.status?.value!)
+      .subscribe(
+        (res: HttpResponse<IBaseResponse<string[]>>) => {
+          this.uiState.claims.subStatus = res.body?.data!;
+        },
+        (err: HttpErrorResponse) => {
+          this.message.popup("Oops!", err.message, "error");
+        }
+      );
+    this.subscribes.push(sub);
+  }
+
+  submitFilterForm() {
+    this.uiState.filters = {
+      ...this.uiState.filters,
+      ...this.filterForm.value,
+    };
+    this.gridApi.setDatasource(this.dataSource);
+  }
+  //#endregion
 }
