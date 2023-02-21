@@ -97,51 +97,7 @@ export class ClientReportsComponent implements OnInit {
     this.subscribes.push(sub);
   }
 
-  openFullscreen(content: any) {
-    this.modalService.open(content, { fullscreen: true });
-  }
-
-  onSubmit(filterForm: FormGroup<IClientReportFilters>) {
-    this.submitted = true;
-
-    // Display Submitting Loader
-    this.eventService.broadcast(reserved.isLoading, true);
-
-    const formData = new FormData();
-
-    formData.append("accountNumber", filterForm.value.accountNumber!);
-    formData.append("crNO", filterForm.value.crNO!);
-    formData.append("name", filterForm.value.name!);
-    formData.append("producer", filterForm.value.producer!);
-    formData.append("type", filterForm.value.type!);
-    for (let status of filterForm.value.status!) {
-      formData.append("status", status);
-    }
-    for (let branchs of filterForm.value.branchs!) {
-      formData.append("status", branchs);
-    }
-    formData.append(
-      "minDate",
-      this.util.dateFormater(filterForm.value.minDate!)
-    );
-    formData.append(
-      "maxDate",
-      this.util.dateFormater(filterForm.value.maxDate!)
-    );
-    let sub = this.ClientsService.viewReport(formData).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
-          this.message.toast(res.body.message!, "success");
-          if (this.uiState.editId)
-            this.router.navigate([AppRoutes.Client.base]);
-        } else this.message.popup("Sorry!", res.body?.message!, "warning");
-        // Hide Loader
-        this.eventService.broadcast(reserved.isLoading, false);
-      },
-      (err) => this.message.popup("Sorry!", err.message!, "error")
-    );
-    this.subscribes.push(sub);
-  }
+  ngOnInit(): void {}
 
   openFullscreen(content: any) {
     this.modalService.open(content, { fullscreen: true });
