@@ -48,6 +48,12 @@
         "MANAGEMENT": "Claims Management"
       }
     },
+    "SYSTEMADMIN": {
+      "TEXT": "System Admin",
+      "LIST": {
+        "MANAGEMENT": "System Management"
+      }
+    },
     "MENU": {
       "TEXT": "MENU"
     },

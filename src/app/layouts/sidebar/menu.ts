@@ -113,4 +113,17 @@ export const MENU: MenuItem[] = [
       },
     ],
   },
+  {
+    id: 7,
+    label: "MENUITEMS.SYSTEMADMIN.TEXT",
+    icon: "ri-user-settings-line",
+    subItems: [
+      {
+        id: 701,
+        label: "MENUITEMS.SYSTEMADMIN.LIST.MANAGEMENT",
+        link: AppRoutes.SystemAdmin.base,
+        parentId: 7
+      }
+    ]
+  },
 ];
