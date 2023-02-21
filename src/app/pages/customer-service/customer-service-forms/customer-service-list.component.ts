@@ -75,13 +75,11 @@ export class CustomerServiceListComponent implements OnDestroy, OnInit {
 	policyDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			console.log(this.filter);
 			let dataTOSubmit: CSPolicySearchRequest = {
 				clientNo: this.filter.clientNo !== null ? this.filter.clientNo : 0,
 				policyNo: this.filter.policyNo !== null ? this.filter.policyNo : "",
 				insuranceCompName: this.filter.insuranceCompName !== null ? this.filter.insuranceCompName : "",
 			};
-			console.log(dataTOSubmit);
 			let sub = this.customerService.searchPolicy(dataTOSubmit).subscribe(
 				(res: HttpResponse<IBaseResponse<CSPolicyData[]>>) => {
 					if (res.status) {

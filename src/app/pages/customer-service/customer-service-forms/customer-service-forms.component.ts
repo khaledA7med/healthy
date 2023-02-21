@@ -19,6 +19,8 @@ import { CSPolicyData } from "src/app/shared/app/models/CustomerService/icustome
 import { CustomerServiceListComponent } from "../customer-service-list/customer-service-list.component";
 import { CustomerServiceStatus, EndorsTypeByPolicy, RequiermentsList } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 import { ICustomerService } from "src/app/shared/app/models/CustomerService/icustomer-service";
+import { IChangeCsStatusRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-req";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 @Component({
 	selector: "app-customer-service-forms",
@@ -54,6 +56,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 
 	constructor(
 		private route: ActivatedRoute,
+		private router: Router,
 		private message: MessagesService,
 		private tables: MasterTableService,
 		private customerService: CustomerServiceService,
@@ -81,8 +84,10 @@ export class CustomerServiceFormsComponent implements OnInit {
 	getRequest(id: string): void {
 		this.customerService.getRequest(id).subscribe(
 			(res: HttpResponse<IBaseResponse<ICustomerService>>) => {
-				if (res.body?.status) this.setRequestDataToForm(res.body?.data!);
-				else this.message.popup("Oops!", res.body?.message!, "warning");
+				if (res.body?.status) {
+					this.uiState.editRequestData = res.body.data!;
+					this.setRequestDataToForm(res.body?.data!);
+				} else this.message.popup("Oops!", res.body?.message!, "warning");
 			},
 			(err) => {
 				this.message.popup("Oops!", err?.message, "error");
@@ -92,7 +97,6 @@ export class CustomerServiceFormsComponent implements OnInit {
 	}
 
 	setRequestDataToForm(data: ICustomerService) {
-		console.log(data);
 		this.f.clientName?.patchValue(data.clientName!);
 		this.f.clientID?.patchValue(data.clientId!);
 		this.f.requestNo?.patchValue(data.requestNo!);
@@ -111,6 +115,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.f.requestDetails?.patchValue(data.requestDetails!);
 		this.docs = data.documentLists!;
 		data.requiermentsList!.forEach((req) => this.addReq(req));
+		this.vatHandler();
+		this.requirmentsChecker();
 		this.eventService.broadcast(reserved.isLoading, false);
 	}
 
@@ -187,9 +193,10 @@ export class CustomerServiceFormsComponent implements OnInit {
 			producer: this.uiState.requestDetailsFromClient.producer!,
 			classOfBusiness: this.uiState.requestDetailsFromClient.className!,
 			policyNo: this.uiState.requestDetailsFromClient.policyNo!,
-			lineOfBusiness: this.uiState.requestDetailsFromClient.insurComp!,
+			lineOfBusiness: this.uiState.requestDetailsFromClient.lineOfBusiness!,
 			dateOfDeadline: this.util.dateStructFormat(new Date().toLocaleDateString()) as any,
 			existingPolExpDate: this.util.dateStructFormat(this.uiState.requestDetailsFromClient.periodTo!) as any,
+			insurComp: this.uiState.requestDetailsFromClient.insurComp!,
 		});
 	}
 
@@ -199,10 +206,10 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.formGroup = new FormGroup<ICSForm>({
 			clientID: new FormControl(null, Validators.required),
 			clientName: new FormControl(null, Validators.required),
-			producer: new FormControl(null, Validators.required),
+			producer: new FormControl(null),
 			endorsType: new FormControl(null, Validators.required),
 			classOfBusiness: new FormControl(null, Validators.required),
-			requestNo: new FormControl(null, Validators.required),
+			requestNo: new FormControl(null),
 			netPremium: new FormControl(null),
 			policyNo: new FormControl(null, Validators.required),
 			lineOfBusiness: new FormControl(null, Validators.required),
@@ -223,7 +230,7 @@ export class CustomerServiceFormsComponent implements OnInit {
 	get f() {
 		return this.formGroup.controls;
 	}
-	// -------------------------------------------------------------------------------------------
+
 	getSimilarAndRequir(e: any) {
 		this.getEndorsTypeByPolicy(e.name, this.uiState.requestDetailsFromClient.policyNo!);
 		this.getCSRequirments(
@@ -266,6 +273,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.subscribes.push(sub);
 	}
 
+	//#region Requirments Checkers & It's Form Array
+
 	get requirmentsControlArray() {
 		return this.formGroup.get("requiermentsList") as FormArray;
 	}
@@ -300,7 +309,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 		if (checkAll) this.checkAllRequierments.nativeElement.checked = true;
 		else this.checkAllRequierments.nativeElement.checked = false;
 	}
-	// --------------------------------------------------------------------------------------------------------------------
+
+	//#endregion
 
 	vatHandler(): void {
 		this.f.vatValue?.patchValue((+this.f.netPremium?.value! + +this.f.policyFees?.value!) * (this.f.vatPerc?.value! / 100));
@@ -314,25 +324,128 @@ export class CustomerServiceFormsComponent implements OnInit {
 		return true;
 	}
 
+	//#region Change Request Status Functions
+
+	changeRequestAlert(chStatus: string, reason?: string) {
+		this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
+			if (result.isConfirmed) {
+				this.changeStatusReq(chStatus, reason);
+			} else {
+				return;
+			}
+		});
+	}
+
+	rejectRequets(status: string): any {
+		let rejectionReason: any;
+		return Swal.fire({
+			title: "Type Rejection Reason",
+			input: "text",
+			inputAttributes: {
+				required: "true",
+			},
+			validationMessage: "Required",
+			showCancelButton: true,
+			background: "var(--vz-modal-bg)",
+			customClass: {
+				confirmButton: "btn btn-success btn-sm w-xs me-2 mt-2",
+				cancelButton: "btn btn-ghost-danger btn-sm w-xs mt-2",
+				input: "customize-swlInput",
+				validationMessage: "fs-6 bg-transparent  m-1 p-1",
+			},
+			confirmButtonText: `Reject`,
+			buttonsStyling: false,
+			showCloseButton: true,
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+			preConfirm: (inputValue: string) => {
+				rejectionReason = inputValue;
+			},
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.changeStatusReq(status, rejectionReason);
+			}
+		});
+	}
+
+	changeStatusReq(status: string, reason?: string): void {
+		this.eventService.broadcast(reserved.isLoading, true);
+		let dataSubmit: IChangeCsStatusRequest = {
+			sno: this.uiState.editRequestData.sno!,
+			reqNo: this.uiState.editRequestData.requestNo!,
+			status,
+			reason,
+		};
+		switch (status) {
+			case this.requestStatus.Pending:
+				dataSubmit.status = this.requestStatus.Pending;
+				break;
+			case this.requestStatus.Close:
+				dataSubmit.status = this.requestStatus.Close;
+				dataSubmit.reason = "";
+				break;
+			case this.requestStatus.Cancel:
+				dataSubmit.status = this.requestStatus.Cancel;
+				break;
+			default:
+				dataSubmit.status = status;
+				break;
+		}
+
+		let sub = this.customerService.changeStatus(dataSubmit).subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				if (res.body?.status) {
+					this.message.toast(res.body!.message!, "success");
+					this.router.navigate([AppRoutes.CustomerService.base]);
+				} else this.message.toast(res.body!.message!, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			}
+		);
+
+		this.subscribes.push(sub);
+	}
+
+	//#endregion
+
+	//#region Form Submittion and Reset
+
 	submitForm(form: FormGroup<ICSForm>) {
 		this.submitted = true;
+		if (!this.validationChecker()) return;
+
+		this.eventService.broadcast(reserved.isLoading, true);
+
+		const val = form.getRawValue();
+		const formData = new FormData();
+
 		let isRequierment = form.value.requiermentsList!.some((e) => {
 			return e.itemCheck === true;
 		});
-		if (!this.validationChecker()) return;
-		this.eventService.broadcast(reserved.isLoading, true);
-		const val = form.getRawValue();
-		const formData = new FormData();
-		if (this.uiState.editMode) formData.append("sNo", val.sNo!.toString());
+
+		if (this.uiState.editMode) formData.append("RequestNo", this.uiState.editRequestData.requestNo!);
 		formData.append("ClientID", val.clientID ? val.clientID.toString() : "");
 		formData.append("ClientName", val.clientName ? val.clientName : "");
 		formData.append("PolicyNo", val.policyNo ? val.policyNo : "");
-
 		formData.append(
 			"PolicySerial",
-			this.uiState.requestDetailsFromClient.policiesSNo ? this.uiState.requestDetailsFromClient.policiesSNo.toString() : ""
+			this.uiState.requestDetailsFromClient.policiesSNo
+				? this.uiState.requestDetailsFromClient.policiesSNo.toString()
+				: this.uiState.editMode
+				? this.uiState.editRequestData.policySerial!.toString()
+				: ""
 		);
-		formData.append("ClientPolicySNo", this.uiState.requestDetailsFromClient.sNo ? this.uiState.requestDetailsFromClient.sNo.toString() : "");
+		formData.append(
+			"ClientPolicySNo",
+			this.uiState.requestDetailsFromClient.sNo
+				? this.uiState.requestDetailsFromClient.sNo.toString()
+				: this.uiState.editMode
+				? this.uiState.editRequestData.clientPolicySno!.toString()
+				: ""
+		);
 		formData.append("EndorsType", val.endorsType ? val.endorsType : "");
 
 		formData.append("InsurComp", val.insurComp ? val.insurComp : "");
@@ -341,7 +454,6 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("ExistingPolExpDate", val.existingPolExpDate ? this.util.dateFormater(val.existingPolExpDate) : "");
 		formData.append("RequestDetails", val.requestDetails ? val.requestDetails : "");
 		formData.append("DateOfDeadline", val.dateOfDeadline ? this.util.dateFormater(val.dateOfDeadline!) : "");
-
 		formData.append("NetPremium", val.netPremium ? val.netPremium?.toString()! : "");
 		formData.append("VatPerc", val.vatPerc ? val.vatPerc?.toString()! : "");
 		formData.append("VatValue", val.vatValue ? val.vatValue?.toString()! : "");
@@ -349,18 +461,18 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("TotalPremium", val.totalPremium ? val.totalPremium?.toString()! : "");
 		formData.append("Branch", val.branch ? val.branch! : "");
 		val.requiermentsList!.forEach((e, i) => {
-			formData.append(`RequiermentsList[${i}].checked`, String(e.itemCheck!));
+			formData.append(`RequiermentsList[${i}].checked`, e.itemCheck === true ? String(e.itemCheck!) : "false");
 			formData.append(`RequiermentsList[${i}].item`, e.itemValue!);
 		});
 
 		this.documentsToUpload.forEach((el) => {
-			console.log("Documents", el);
 			formData.append("DocumentsModel", el);
 		});
+
 		formData.append("isRequierment", isRequierment ? "true" : "false");
 		formData.append("notifyClient", "0");
 		formData.append("notifyInsurer", "0");
-		formData.append("sNo", "0");
+		formData.append("sNo", this.uiState.editMode ? this.uiState.editRequestData.sno!.toString() : "0");
 		formData.append("pending", "false");
 		formData.append("docSNo", "0");
 
@@ -368,13 +480,16 @@ export class CustomerServiceFormsComponent implements OnInit {
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {
 					this.message.toast(res.body.message!, "success");
-					// if (this.uiState.editId) this.router.navigate([AppRoutes.Client.base]);
+					if (this.uiState.editId) this.router.navigate([AppRoutes.CustomerService.base]);
 					this.resetForm();
 				} else this.message.popup("Sorry!", res.body?.message!, "warning");
 				// Hide Loader
 				this.eventService.broadcast(reserved.isLoading, false);
 			},
-			(err) => this.message.popup("Sorry!", err.message!, "warning")
+			(err) => {
+				this.message.popup("Sorry!", err.message!, "warning");
+				this.eventService.broadcast(reserved.isLoading, false);
+			}
 		);
 		this.subscribes.push(sub);
 	}
@@ -393,6 +508,8 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.uiState.endorsTypes = [];
 		this.submitted = false;
 	}
+
+	//#endregion
 
 	documentsList(evt: File[]) {
 		this.documentsToUpload = evt;

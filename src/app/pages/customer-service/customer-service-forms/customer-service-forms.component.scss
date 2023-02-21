@@ -39,11 +39,11 @@ table.table tr td:not(:last-child) {
 .dropdown-menu .dropdown-submenu {
 	display: none;
 	position: absolute;
-	left: auto;
+	right: 100%;
 	top: -7px;
 }
-.dropdown-menu .dropdown-submenu-left {
-	right: 100%;
+.dropdown-menu .dropdown-submenu-right {
+	left: 100%;
 	left: auto;
 }
 .dropdown-menu > li:hover > .dropdown-submenu {
