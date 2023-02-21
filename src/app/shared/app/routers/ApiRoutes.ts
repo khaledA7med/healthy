@@ -142,4 +142,16 @@ export const ApiRoutes = {
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
   },
+  SystemAdmin: {
+    search: "/SystemAdmin/Users/Search",
+    details: "/SystemAdmin/Users/Details",
+    changeStatus: "/SystemAdmin/Users/ChangeStatus",
+    addRole: "/SystemAdmin/Users/AddRole",
+    deleteRole: "/SystemAdmin/Users/DeleteRole",
+    getPrivileges: "/SystemAdmin/Users/GetPrivileges",
+    editPrivileges: "/SystemAdmin/Users/EditPrivileges",
+    changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
+    save: "/SystemAdmin/Users/Save",
+    edit: "/SystemAdmin/Users/Edit"
+  }
 };

@@ -36,6 +36,10 @@ const routes: Routes = [
   },
   {
     path: "",
+    loadChildren: () => import("./system-admin/system-admin.module").then((m) => m.SystemAdminModule)
+  },
+  {
+    path: "",
     loadChildren: () =>
       import("./extrapages/extraspages.module").then(
         (m) => m.ExtraspagesModule
@@ -44,7 +48,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  imports: [ RouterModule.forChild(routes) ],
+  exports: [ RouterModule ],
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }

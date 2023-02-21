@@ -62,22 +62,37 @@ export default class StatusCellRender
 		}
 	}
 
-	public static policyStatus(e: CellEvent): string {
-		switch (e.value) {
+	public static policyStatus (e: CellEvent): string
+	{
+		switch (e.value)
+		{
 			case IPolicyStatus.active:
-				return `<span class='badge badge-soft-success'>${e.value}</span>`;
+				return `<span class='badge badge-soft-success'>${ e.value }</span>`;
 			case IPolicyStatus.pending:
-				return `<span class='badge badge-soft-warning'>${e.value}</span>`;
+				return `<span class='badge badge-soft-warning'>${ e.value }</span>`;
 			case IPolicyStatus.expired:
-				return `<span class='badge badge-soft-danger'>${e.value}</span>`;
+				return `<span class='badge badge-soft-danger'>${ e.value }</span>`;
 			case IPolicyStatus.approvedByProduction:
-				return `<span class='badge badge-soft-info'>${e.value}</span>`;
+				return `<span class='badge badge-soft-info'>${ e.value }</span>`;
 			case IPolicyStatus.rejectedByProduction:
-				return `<span class='badge badge-soft-danger'>${e.value}</span>`;
+				return `<span class='badge badge-soft-danger'>${ e.value }</span>`;
 			case IPolicyStatus.rejectedByFinance:
-				return `<span class='badge badge-soft-primary'>${e.value}</span>`;
+				return `<span class='badge badge-soft-primary'>${ e.value }</span>`;
 			default:
-				return `<span class='badge badge-soft-info'>${e.value}</span>`;
+				return `<span class='badge badge-soft-info'>${ e.value }</span>`;
+		}
+	}
+
+	public static systemAdminStatus (e: CellEvent): string
+	{
+		switch (e.value)
+		{
+			case "Active":
+				return `<span class='badge bg-success'>${ e.value }</span>`;
+			case "Disable":
+				return `<span class='badge bg-dark'>${ e.value }</span>`;
+			default:
+				return `<span class='badge bg-danger'>${ e.value }</span>`;
 		}
 	}
 }
