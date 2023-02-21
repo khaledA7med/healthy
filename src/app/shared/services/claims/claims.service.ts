@@ -1,3 +1,4 @@
+import { IBaseFilters } from "./../../app/models/App/IBaseFilters";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -15,7 +16,7 @@ export class ClaimsService {
   private readonly env = environment.baseURL;
   constructor(private http: HttpClient) {}
   getAllClaims(
-    claimsFilters: IClaimsFilter
+    claimsFilters: IClaimsFilter | IBaseFilters
   ): Observable<HttpResponse<IBaseResponse<IClaims[]>>> {
     return this.http.post<IBaseResponse<IClaims[]>>(
       this.env + ApiRoutes.Claims.search,
@@ -23,6 +24,16 @@ export class ClaimsService {
       {
         observe: "response",
       }
+    );
+  }
+
+  getSubStatus(
+    status: string[]
+  ): Observable<HttpResponse<IBaseResponse<string[]>>> {
+    return this.http.post<IBaseResponse<string[]>>(
+      this.env + ApiRoutes.Claims.subStatus,
+      { status: status },
+      { observe: "response" }
     );
   }
 }

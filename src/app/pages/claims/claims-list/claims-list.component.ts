@@ -51,6 +51,7 @@ export class ClaimsListComponent implements OnInit {
     } as IBaseFilters,
     claims: {
       list: [] as IClaims[],
+      subStatus: [] as string[],
       totalPages: 0,
     },
   };
@@ -77,7 +78,7 @@ export class ClaimsListComponent implements OnInit {
     onPaginationChanged: (e) => this.onPageChange(e),
   };
   subscribes: Subscription[] = [];
-  filterForm!: FormGroup;
+  filterForm!: FormGroup<IClaimsFilter>;
   formData!: Observable<IBaseMasterTable>;
   constructor(
     private tableRef: ElementRef,
@@ -89,6 +90,12 @@ export class ClaimsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.table.getBaseData(MODULES.Claims);
+    this.initFilterForm();
+
+    this.uiState.filters = {
+      ...this.uiState.filters,
+      ...this.filterForm.value,
+    };
   }
 
   //#region
@@ -176,20 +183,49 @@ export class ClaimsListComponent implements OnInit {
     }
   }
   //#endregion
-  //#region
+
+  //#region filter
   openFilterCanvas(name: TemplateRef<any>) {
     this.offcanvasService.open(name, { position: "end" });
-    this.initFilterForm();
   }
 
   private initFilterForm() {
-    this.filterForm = new FormGroup({
+    this.filterForm = new FormGroup<IClaimsFilter>({
       clientId: new FormControl(null),
       clientName: new FormControl(null),
       claimType: new FormControl([]),
       status: new FormControl([]),
+      subStatus: new FormControl([]),
     });
   }
+  get filterF() {
+    return this.filterForm.controls;
+  }
+  getSubStatus() {
+    if (this.filterF.status?.value!.length == 0) {
+      this.uiState.claims.subStatus = [];
+      this.filterF.subStatus?.reset();
+      return;
+    }
+    let sub = this.claimService
+      .getSubStatus(this.filterF.status?.value!)
+      .subscribe(
+        (res: HttpResponse<IBaseResponse<string[]>>) => {
+          this.uiState.claims.subStatus = res.body?.data!;
+        },
+        (err: HttpErrorResponse) => {
+          this.message.popup("Oops!", err.message, "error");
+        }
+      );
+    this.subscribes.push(sub);
+  }
 
+  submitFilterForm() {
+    this.uiState.filters = {
+      ...this.uiState.filters,
+      ...this.filterForm.value,
+    };
+    this.gridApi.setDatasource(this.dataSource);
+  }
   //#endregion
 }
