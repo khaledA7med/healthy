@@ -59,9 +59,9 @@
       ></button>
     </div>
     <div class="offcanvas-body">
-      <form [formGroup]="filterForm" class="row justify-content-center">
+      <form [formGroup]="filterForm" class="row">
         <!-- col client Id -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Client ID:</label>
           <input
             type="text"
@@ -72,7 +72,7 @@
         </div>
         <!-- /col -->
         <!-- col client name -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Client Name:</label>
           <input
             type="text"
@@ -83,7 +83,7 @@
         </div>
         <!-- /col -->
         <!-- col claim typ -->
-        <div class="col mb-2">
+        <div class="co-12 mb-3">
           <label for="form-label">Claim Type:</label>
           <ng-select
             [multiple]="true"
@@ -91,14 +91,14 @@
             [items]="(formData | async)?.TypeOfCustomerServices?.content!"
             bindLabel="name"
             bindValue="name"
-            class="form-control-sm px-0"
+            class="form-control-sm p-0"
             placeholder="Select Claim Type"
             formControlName="claimType"
           ></ng-select>
         </div>
         <!-- /col -->
         <!-- col status -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Status</label>
           <ng-select
             [multiple]="true"
@@ -107,7 +107,7 @@
             [items]="(formData | async)?.ClaimStatus?.content!"
             bindLabel="name"
             bindValue="name"
-            class="form-control-sm px-0"
+            class="form-control-sm p-0"
             placeholder="Select Status"
             formControlName="status"
             (change)="getSubStatus()"
@@ -115,21 +115,21 @@
         </div>
         <!-- /col -->
         <!-- col sub status -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Sub Status</label>
           <ng-select
             [multiple]="true"
             [clearable]="true"
             [items]="uiState.claims.subStatus!"
             bindValue="name"
-            class="form-control-sm px-0"
+            class="form-control-sm p-0"
             placeholder="Select Status For Load Sub Status "
             formControlName="subStatus"
           ></ng-select>
         </div>
         <!-- /col -->
         <!-- col accident date -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label ">Accident / Bill Date Range:</label>
           <app-range-picker
             (dateChange)="accidentDateRange($event)"
@@ -137,7 +137,7 @@
         </div>
         <!-- /col -->
         <!-- col create on date -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Create On Date Range:</label>
           <app-range-picker
             (dateChange)="createOnDateRange($event)"
@@ -145,7 +145,7 @@
         </div>
         <!-- /col -->
         <!-- col paid amount  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Paid Amount</label>
           <div class="input-group input-group-sm">
             <ng-select
@@ -157,6 +157,7 @@
               class="form-control-sm input-group-text p-0 border-0 amount-op"
               placeholder="Select operator"
               formControlName="combOperatorAmount"
+              (change)="resetPaidAmount2()"
             ></ng-select>
             <input
               type="number"
@@ -179,7 +180,7 @@
         </div>
         <!-- /col -->
         <!-- col paid under processing amount -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Under Processing Amount</label>
           <div class="input-group input-group-sm">
             <ng-select
@@ -191,6 +192,7 @@
               class="form-control-sm input-group-text p-0 border-0 amount-op"
               placeholder="Select operator"
               formControlName="combOperatorUnderProcessingAmount"
+              (change)="resetProcAmount2()"
             ></ng-select>
             <input
               type="number"
@@ -215,7 +217,7 @@
         </div>
         <!-- /col -->
         <!-- col claim no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Claim No:</label>
           <input
             type="text"
@@ -226,7 +228,7 @@
         </div>
         <!-- /col -->
         <!-- col insured claim no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Insured Claim No:</label>
           <input
             type="text"
@@ -237,7 +239,7 @@
         </div>
         <!-- /col -->
         <!-- col bl / awb no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Bl / Awb No:</label>
           <input
             type="text"
@@ -248,7 +250,7 @@
         </div>
         <!-- /col -->
         <!-- col policy no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Policy No:</label>
           <input
             type="text"
@@ -259,7 +261,7 @@
         </div>
         <!-- /col -->
         <!-- chassis / item no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Chassis / Item No:</label>
           <input
             type="text"
@@ -270,7 +272,7 @@
         </div>
         <!-- /col -->
         <!-- col policy / certificate no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Policy / Certificate No:</label>
           <input
             type="text"
@@ -281,13 +283,137 @@
         </div>
         <!-- /col -->
         <!-- col declaration no  -->
-        <div class="col mb-2">
+        <div class="col-12 mb-3">
           <label for="form-label">Declaration No:</label>
           <input
             type="text"
             class="form-control form-control-sm"
             placeholder="Declaration Number"
             formControlName="declarationNo"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col branch  -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Branch:</label>
+          <input type="text" class="form-control form-control-sm" disabled />
+        </div>
+        <!-- /col -->
+        <!-- col insurance company -->
+        <div class="co-12 mb-3">
+          <label for="form-label">Insurance Company:</label>
+          <ng-select
+            [loading]="formData ? false : true"
+            [items]="(formData | async)?.InsuranceCompanies?.content!"
+            bindLabel="name"
+            bindValue="name"
+            class="form-control-sm p-0"
+            placeholder="Select Insurance Company"
+            formControlName="insurCompany"
+          ></ng-select>
+        </div>
+        <!-- /col -->
+        <!-- insurance company -->
+        <div class="co-12 mb-3">
+          <label for="form-label">Created By:</label>
+          <ng-select
+            [loading]="formData ? false : true"
+            [items]="(formData | async)?.AllUsers?.content!"
+            bindLabel="name"
+            bindValue="name"
+            class="form-control-sm p-0"
+            placeholder=""
+            formControlName="savedUser"
+          ></ng-select>
+        </div>
+        <!-- /col -->
+        <!-- col  invoice no  -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Invoice No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="invoiceNo"
+            placeholder="Invoice Number"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col  wip no -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Wip No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="wipNo"
+            placeholder="Wip Number"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col  car plat no -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Car Plat No:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="carNo"
+            placeholder="Car Plat Number"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col payment reference   -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Payment Reference:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="paymentDetails"
+            placeholder="Payment Reference"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col name of injured  -->
+        <div class="col-12 mb-3">
+          <label for="form-label">
+            Name Of The Injured / Deceased / Fiddler:</label
+          >
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="nameofInjured"
+            placeholder="Name Of The Injured / Deceased / Fiddler"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col loss location   -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Loss Location:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="lossLocation"
+            placeholder="Loss Location"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col  shipment name   -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Shipment Name:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="shipmentName"
+            placeholder="Shipment Name"
+          />
+        </div>
+        <!-- /col -->
+        <!-- col  member / driver name -->
+        <div class="col-12 mb-3">
+          <label for="form-label">Member / Driver Name:</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="memberDriverName"
+            placeholder=" Member / Driver Name"
           />
         </div>
         <!-- /col -->
@@ -308,3 +434,7 @@
     </div>
   </ng-template>
 </div>
+
+<!-----------------------------------------------
+                Claims follow up
+------------------------------------------------->

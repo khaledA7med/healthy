@@ -67,6 +67,7 @@ export class ClaimsListComponent implements OnInit {
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
+    context: { com: this },
     defaultColDef: {
       flex: 1,
       minWidth: 100,
@@ -210,6 +211,16 @@ export class ClaimsListComponent implements OnInit {
       chassisNumber: new FormControl(null),
       policyCertificateNo: new FormControl(null),
       declarationNo: new FormControl(null),
+      insurCompany: new FormControl(null),
+      savedUser: new FormControl(null),
+      invoiceNo: new FormControl(null),
+      wipNo: new FormControl(null),
+      carNo: new FormControl(null),
+      paymentDetails: new FormControl(null),
+      nameofInjured: new FormControl(null),
+      lossLocation: new FormControl(null),
+      shipmentName: new FormControl(null),
+      memberDriverName: new FormControl(null),
     });
   }
   get filterF() {
@@ -250,6 +261,9 @@ export class ClaimsListComponent implements OnInit {
   paidAmount2(e: any) {
     this.filterF.paidAmount2?.patchValue(e.target.value);
   }
+  resetPaidAmount2() {
+    this.filterF.paidAmount2?.reset();
+  }
 
   // under processing amount
   processingAmount1(e: any) {
@@ -257,6 +271,9 @@ export class ClaimsListComponent implements OnInit {
   }
   processingAmount2(e: any) {
     this.filterF.underProcesingAmount2?.patchValue(e.target.value);
+  }
+  resetProcAmount2() {
+    this.filterF.underProcesingAmount2?.reset();
   }
 
   submitFilterForm() {
@@ -266,5 +283,13 @@ export class ClaimsListComponent implements OnInit {
     };
     this.gridApi.setDatasource(this.dataSource);
   }
+  //#endregion
+
+  //#region follow up
+
+  getFollowUps() {
+    // let sub = this.claimService.getClaimsFollowUp()
+  }
+
   //#endregion
 }
