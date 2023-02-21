@@ -47,4 +47,8 @@ export const AppRoutes = {
     create: "claims/create",
     edit: "claims/update/",
   },
+  SystemAdmin: {
+    base: "system-admin",
+    create: "system-admin/create"
+  }
 };

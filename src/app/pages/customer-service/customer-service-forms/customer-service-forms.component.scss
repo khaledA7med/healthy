@@ -1,51 +1,75 @@
 [col-id="action"] {
-	overflow: visible !important;
+  overflow: visible !important;
 }
 
 .ag-row.ag-row-focus {
-	z-index: 1 !important;
+  z-index: 1 !important;
 }
 
 .ag-cell:focus {
-	border: none !important;
-	outline: none;
+  border: none !important;
+  outline: none;
 }
 
 #gridScrollbar .ag-body-viewport,
 #gridScrollbar .ag-body-horizontal-scroll-viewport {
-	position: relative;
-	overflow: hidden !important;
+  position: relative;
+  overflow: hidden !important;
 }
 
 .ps__rail-x,
 .ps__rail-y {
-	opacity: 0.6;
+  opacity: 0.6;
 }
 
 table.table tr td:not(:last-child) {
-	min-width: 180px;
+  min-width: 180px;
 }
 
 .custom-checkbox {
-	height: 18px !important;
+  height: 18px !important;
 }
 
 #changeStatusDropdown::after {
-	display: none;
+  display: none;
 }
 .dropdown-menu li {
-	position: relative;
+  position: relative;
 }
 .dropdown-menu .dropdown-submenu {
-	display: none;
-	position: absolute;
-	left: auto;
-	top: -7px;
+  display: none;
+  position: absolute;
+  left: auto;
+  top: -7px;
 }
 .dropdown-menu .dropdown-submenu-left {
-	right: 100%;
-	left: auto;
+  right: 100%;
+  left: auto;
 }
 .dropdown-menu > li:hover > .dropdown-submenu {
-	display: block;
+  display: block;
+}
+
+.custom-checkbox {
+  height: 18px !important;
+}
+
+#changeStatusDropdown::after {
+  display: none;
+}
+.dropdown-menu li {
+  position: relative;
+}
+.dropdown-menu .dropdown-submenu {
+  display: none;
+  position: absolute;
+  left: auto;
+  top: -7px;
+}
+.dropdown-menu .dropdown-submenu-left {
+  right: 100%;
+  left: auto;
+}
+.dropdown-menu > li:hover > .dropdown-submenu {
+  display: block;
 }

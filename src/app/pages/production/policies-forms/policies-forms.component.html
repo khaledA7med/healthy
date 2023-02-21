@@ -79,12 +79,12 @@
 
                             <!-- Other Policy Holder -->
                             <div class="col-lg-4 col-md-12 my-1">
-                                <label for="otherPolicy" [ngClass]="{'asterisk-input' : f.chPolicyHolder?.value}">
+                                <label for="otherPolicy" [ngClass]="{'asterisk-input' : f.policyHolder?.enabled}">
                                     Other Policy Holder</label>
                                 <div class="input-group input-group-sm">
                                     <div class="input-group-text">
                                         <input class="form-check-input mt-0" id='otherPolicyChecker' type="checkbox"
-                                            formControlName="chPolicyHolder" (change)="chPolicyHolderEvt($event)">
+                                            formControlName="chPolicyHolder">
                                     </div>
                                     <input type="text"
                                         [ngClass]="{'is-invalid' : (f.policyHolder?.touched || uiState.submitted) && f.policyHolder?.invalid}"

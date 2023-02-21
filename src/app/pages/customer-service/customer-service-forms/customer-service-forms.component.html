@@ -719,16 +719,21 @@
                             &raquo;</a>
                         <ul class="dropdown-menu dropdown-submenu">
                             <li *ngFor="let el of (formData | async)?.PendingReason?.content!">
-                                <button class="btn btn-sm dropdown-item">{{
+                                <button class="btn btn-sm dropdown-item" type="button"
+                                    (click)="changeRequestAlert(requestStatus.Pending, el.name)">{{
                                     el.name }}</button>
                             </li>
                         </ul>
                     </li>
                     <li *ngIf="uiState.editRequestData?.status !== requestStatus.Close">
-                        <button class="btn btn-sm dropdown-item">{{ requestStatus.Close }}</button>
+                        <button class="btn btn-sm dropdown-item" type="button"
+                            (click)="changeRequestAlert(requestStatus.Close)">{{
+                            requestStatus.Close }}</button>
                     </li>
                     <li *ngIf="uiState.editRequestData?.status !== requestStatus.Cancel">
-                        <button class="btn btn-sm dropdown-item">{{ requestStatus.Cancel }}</button>
+                        <button class="btn btn-sm dropdown-item" type="button"
+                            (click)="rejectRequets(requestStatus.Cancel)">{{
+                            requestStatus.Cancel }}</button>
                     </li>
                 </div>
             </div>

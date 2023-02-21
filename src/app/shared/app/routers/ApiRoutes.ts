@@ -96,6 +96,7 @@ export const ApiRoutes = {
     changeStatus: "/ClientRegistry/Clients/ChangeStatus",
     deleteDocument: "/ClientRegistry/Clients/DeleteFile",
     downloadDocument: "/ClientRegistry/Clients/DownloadFile",
+    report: "/ClientRegistry/Clients/Report",
   },
   ClientsGroups: {
     list: "/ClientRegistry/Groups/Search",
@@ -147,9 +148,21 @@ export const ApiRoutes = {
     search: "/Claims/Search",
     searchPolicy: "/Claims/SearchPolicy",
     SearchClientClaimData: "/Claims/SearchClientClaimData",
-    subStatus: "/Claims/GetSubStatusByStatus",
+    subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
+  },
+  SystemAdmin: {
+    search: "/SystemAdmin/Users/Search",
+    details: "/SystemAdmin/Users/Details",
+    changeStatus: "/SystemAdmin/Users/ChangeStatus",
+    addRole: "/SystemAdmin/Users/AddRole",
+    deleteRole: "/SystemAdmin/Users/DeleteRole",
+    getPrivileges: "/SystemAdmin/Users/GetPrivileges",
+    editPrivileges: "/SystemAdmin/Users/EditPrivileges",
+    changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
+    save: "/SystemAdmin/Users/Save",
+    edit: "/SystemAdmin/Users/Edit",
   },
 };

@@ -9,13 +9,15 @@ import { IClient } from "../../app/models/Clients/iclient";
 import { IClientFilters } from "../../app/models/Clients/iclientFilters";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
+import { IClientReportFilters } from "../../app/models/Clients/iclient-reoprt-filters";
+import AppUtils from "../../app/util";
 
 @Injectable({
   providedIn: "root",
 })
 export class ClientsService {
   private readonly env = environment.baseURL;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private utils: AppUtils) {}
 
   getAllClients(
     clientFilters: IClientFilters
@@ -83,6 +85,24 @@ export class ClientsService {
       this.env + ApiRoutes.Clients.downloadDocument,
       { path: data },
       { observe: "response", responseType: "blob" }
+    );
+  }
+
+  viewReport(body: any): Observable<HttpResponse<IBaseResponse<any>>> {
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.Clients.report,
+      {
+        name: body.name,
+        accountNumber: body.accountNumber,
+        crNO: body.crNO,
+        producer: body.producer,
+        type: body.type,
+        branchs: body.branchs,
+        status: body.status,
+        minDate: this.utils.dateFormater(body.minDate),
+        maxDate: this.utils.dateFormater(body.maxDate),
+      },
+      { observe: "response" }
     );
   }
 }

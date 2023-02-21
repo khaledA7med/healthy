@@ -23,25 +23,15 @@
 }
 
 .ng-select .ng-select-container {
-  min-height: 28px;
-  max-height: 28px;
+  min-height: 28px !important;
+  height: fit-content !important;
+  max-height: fit-content !important;
 }
 .offcanvas-body {
   .form-control {
     max-height: 30px;
   }
-}
-
-.dark-modal .modal-content {
-  background-color: #292b2c;
-  color: white;
-}
-.modal-body {
-  overflow-y: auto;
-}
-.dark-modal .close {
-  color: white;
-}
-.light-blue-backdrop {
-  background-color: #5cb3fd;
+  .form-control.text-area {
+    max-height: unset;
+  }
 }
