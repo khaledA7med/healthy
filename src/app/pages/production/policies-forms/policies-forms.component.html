@@ -146,7 +146,7 @@
                                         class="form-control" placeholder="Policy Ref">
                                     <button class="btn btn-info btn-sm d-flex align-items-center" id="ourPolicyRefBtn"
                                         type="button" (click)="openModal(policy)"
-                                        [disabled]="f.issueType?.value === uiState.policy.issueType.new">
+                                        [disabled]="f.issueType?.value === uiState.policy.issueType.new || uiState.policy.isRequest">
                                         <i class="ri-file-search-line mx-1"></i>
                                         Search
                                     </button>
