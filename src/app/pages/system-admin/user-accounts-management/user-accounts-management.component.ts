@@ -245,7 +245,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy
   changeStatus (user: ISystemAdmin, status: string): void
   {
     let dataSubmit = {
-      updateUser: user.updateUser!,
+      sno: user.sno!,
       status: "",
     };
     switch (status)

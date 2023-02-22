@@ -33,12 +33,9 @@ export class SystemAdminService
     id: string
   ): Observable<HttpResponse<IBaseResponse<any>>>
   {
-    return this.http.get<IBaseResponse<any>>(
-      this.env + ApiRoutes.SystemAdmin.changePasswordAsync,
-      {
-        observe: "response",
-        params: { id },
-      }
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.SystemAdmin.changePasswordAsync, {},
+      { params: { id: id }, observe: "response" }
     );
   }
 
