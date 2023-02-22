@@ -14,5 +14,24 @@ export interface UserModel {
 	savedDate?: FormControl<Date | null>;
 	updateUser?: FormControl<string | null>;
 	updateDate?: FormControl<Date | null>;
-	securityRoles?: FormArray<FormControl<string>>;
+	DDSecurityRole?: FormControl<string | null>;
+	securityRoles?: FormArray<FormControl<string | null>> | FormArray<never>;
+}
+
+export interface UserModelData {
+	sno?: number;
+	staffId?: number;
+	fullName?: string;
+	userName?: string;
+	jobTitle?: string;
+	phoneNo?: string;
+	email?: string;
+	branch?: string;
+	pass?: string;
+	savedUser?: string;
+	savedDate?: Date;
+	updateUser?: string;
+	updateDate?: Date;
+	DDSecurityRole?: string;
+	securityRoles?: string[];
 }

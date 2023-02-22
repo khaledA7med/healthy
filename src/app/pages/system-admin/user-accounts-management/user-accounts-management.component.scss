@@ -35,3 +35,11 @@
 		max-height: unset;
 	}
 }
+
+.SCSelect.ng-select .ng-select-container {
+	border-radius: 4px 0px 0px 4px !important;
+	-webkit-border-radius: 4px 0px 0px 4px !important;
+	-moz-border-radius: 4px 0px 0px 4px !important;
+	-ms-border-radius: 4px 0px 0px 4px !important;
+	-o-border-radius: 4px 0px 0px 4px !important;
+}
