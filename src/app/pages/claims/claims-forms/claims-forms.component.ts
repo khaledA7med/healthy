@@ -5,7 +5,7 @@ import {
   NgbModalOptions,
   NgbModalRef,
 } from "@ng-bootstrap/ng-bootstrap";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import {
   ClaimsType,
@@ -13,7 +13,8 @@ import {
 } from "src/app/shared/app/models/Claims/claims-util";
 import { IClaimsForms } from "src/app/shared/app/models/Claims/iclaims-forms";
 import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/dropzone.component";
-import { ClaimsRequestListComponent } from "./claims-request-list.component";
+import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form.component";
+import { ClaimPaymentsFormComponent } from "./form-helpers/claim-payments-form.component";
 
 @Component({
   selector: "app-claims-forms",
@@ -24,7 +25,6 @@ export class ClaimsFormsComponent implements OnInit {
   formGroup!: FormGroup<IClaimsForms>;
   formData!: Observable<IBaseMasterTable>;
   modalRef!: NgbModalRef;
-
   uiState = {
     claimTypes: ClaimsType,
     submitted: false as boolean,
@@ -39,11 +39,17 @@ export class ClaimsFormsComponent implements OnInit {
       lineOfBusiness: null,
       policyNo: null,
     } as IClaimPoliciesSearch,
+    modalConfig: {
+      centered: true,
+      size: "xl",
+      backdrop: "static",
+    } as NgbModalOptions,
   };
   documentsToUpload: File[] = [];
   docs: any[] = [];
   @ViewChild(DropzoneComponent) dropzone!: DropzoneComponent;
 
+  subscribes: Subscription[] = [];
   constructor(private modalService: NgbModal) {}
 
   ngOnInit(): void {
@@ -69,6 +75,37 @@ export class ClaimsFormsComponent implements OnInit {
       lostadjuster: new FormControl(null),
       lostadjusterEmail: new FormControl(null),
       lostadjusterTele: new FormControl(null),
+      ckClaimAmount: new FormControl(true),
+      claimAmount: new FormControl(null),
+      otherCurrAmount: new FormControl({ value: null, disabled: true }),
+      otherCurr: new FormControl({ value: "SAR", disabled: true }),
+      exchangeRate: new FormControl(1),
+      estimatedValue: new FormControl(null),
+      salvage: new FormControl(null),
+      contactName: new FormControl(null),
+      contactEmail: new FormControl(null),
+      contactTele: new FormControl(null),
+      notes: new FormControl(null),
+
+      chIntimationDate: new FormControl(true),
+      intimationDate: new FormControl(null),
+      chDateOfLoss: new FormControl(true),
+      dateOfLoss: new FormControl(null),
+      chDateOfReceive: new FormControl(true),
+      dateOfReceive: new FormControl(null),
+      chDateofSubmission: new FormControl(true),
+      dateOfSubmission: new FormControl(null),
+      chDateOfDeadline: new FormControl(true),
+      dateOfDeadline: new FormControl(null),
+      status: new FormControl(null, Validators.required),
+      claimStatusNotes: new FormControl(null, Validators.required),
+
+      claimantMobile: new FormControl(null),
+      claimantEmail: new FormControl(null),
+      claimantIBAN: new FormControl(null),
+      bankName: new FormControl(null, Validators.required),
+      bankBranch: new FormControl(null),
+      bankCity: new FormControl(null),
     });
   }
 
@@ -78,11 +115,7 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Policy Details Section
   openModal(modal: TemplateRef<NgbModalOptions>) {
-    this.modalRef = this.modalService.open(modal, {
-      centered: true,
-      size: "xl",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(modal, this.uiState.modalConfig);
   }
 
   claimTypeTogglerEvt(): void {
@@ -101,6 +134,35 @@ export class ClaimsFormsComponent implements OnInit {
 
   fillRequestDataToForm(e: any): void {
     console.log(e);
+  }
+  //#endregion
+
+  //#region Payments Section
+  addPayment(): void {
+    this.modalRef = this.modalService.open(ClaimPaymentsFormComponent, {
+      centered: true,
+      size: "lg",
+      backdrop: "static",
+    });
+    this.modalRef.componentInstance.data = {
+      // sNo: 50,
+      clientName: "hahah",
+    };
+
+    let sub = this.modalRef.closed.subscribe((res) => {
+      console.log(res);
+    });
+    this.subscribes.push(sub);
+  }
+  //#endregion
+
+  //#region Approvals Section
+  addApproval(): void {
+    this.modalRef = this.modalService.open(ClaimApprovalsFormComponent, {
+      centered: true,
+      size: "lg",
+      backdrop: "static",
+    });
   }
   //#endregion
 
