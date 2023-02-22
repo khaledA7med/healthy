@@ -86,6 +86,8 @@ export const ApiRoutes = {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
       jobTitleOfUsers: LookUpTables + BaseData.JobTitleOfUsers,
       branch: LookUpTables + BaseData.Branch,
+      staffProfilesNames: LookUpTables + BaseData.ProducersList,
+      userSecurityRoles: LookUpTables + BaseData.UserSecurityRoles,
     },
   },
   MasterMethods: {
@@ -160,8 +162,8 @@ export const ApiRoutes = {
   },
   SystemAdmin: {
     search: "/SystemAdmin/Users/Search",
-    details: "/SystemAdmin/Users/Details",
     changeStatus: "/SystemAdmin/Users/ChangeStatus",
+    userDetails: "/SystemAdmin/Users/ProducerBySno",
     addRole: "/SystemAdmin/Users/AddRole",
     deleteRole: "/SystemAdmin/Users/DeleteRole",
     getPrivileges: "/SystemAdmin/Users/GetPrivileges",
