@@ -77,10 +77,9 @@
                             <!-- Inception Date -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="dateOfLossFrom" class="asterisk-input">Inception Date</label>
-                                <input type="text" formControlName="dateOfLossFrom" class="form-control form-control-sm"
-                                    [ngClass]="{'is-invalid' : (f.dateOfLossFrom?.touched || uiState.submitted) && f.dateOfLossFrom?.invalid}"
-                                    placeholder="Inception Date" id="dateOfLossFrom" readonly>
-                                <span class="invalid-feedback mt-0">Required</span>
+                                <app-gregorian-picker [model]="f.dateOfLossFrom?.value" [required]="true"
+                                    [submitted]="uiState.submitted" [disabled]="false"
+                                    [readonly]="true"></app-gregorian-picker>
                             </div>
 
                             <!-- Project Title -->
@@ -112,10 +111,9 @@
                             <!-- Expiry Date -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="dateOfLossTo" class="asterisk-input">Expiry Date</label>
-                                <input type="text" formControlName="dateOfLossTo" class="form-control form-control-sm"
-                                    [ngClass]="{'is-invalid' : (f.dateOfLossTo?.touched || uiState.submitted) && f.dateOfLossTo?.invalid}"
-                                    placeholder="Expiry Date" id="dateOfLossTo" readonly>
-                                <span class="invalid-feedback mt-0">Required</span>
+                                <app-gregorian-picker [model]="f.dateOfLossTo?.value" [required]="true"
+                                    [submitted]="uiState.submitted" [disabled]="false"
+                                    [readonly]="true"></app-gregorian-picker>
                             </div>
 
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
