@@ -1,15 +1,22 @@
 import AppUtils from "src/app/shared/app/util";
 import { IClaimsFilter } from "./../../../shared/app/models/Claims/iclaims-filter";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessagesService } from "./../../../shared/services/messages.service";
 import { ClaimsService } from "./../../../shared/services/claims/claims.service";
 import { claimsManageCols } from "./../../../shared/app/grid/claimsCols";
 import { IBaseFilters } from "./../../../shared/app/models/App/IBaseFilters";
 import {
+  AfterViewChecked,
+  AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
+  QueryList,
+  Renderer2,
   TemplateRef,
+  ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from "@angular/core";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -30,6 +37,8 @@ import { NgbDate, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
+import { IClaimsFollowUp } from "src/app/shared/app/models/Claims/iclaims-followUp";
+import { SimplebarAngularComponent } from "simplebar-angular";
 
 @Component({
   selector: "app-claims-list",
@@ -37,13 +46,12 @@ import { MODULES } from "src/app/core/models/MODULES";
   styleUrls: ["./claims-list.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClaimsListComponent implements OnInit {
+export class ClaimsListComponent implements OnInit, OnDestroy {
   uiState = {
     routerLink: {
       forms: AppRoutes.Claims.create,
     },
     gridReady: false,
-    submitted: false,
     filters: {
       pageNumber: 1,
       pageSize: 50,
@@ -53,9 +61,16 @@ export class ClaimsListComponent implements OnInit {
     claims: {
       list: [] as IClaims[],
       subStatus: [] as string[],
+      followUpData: [] as IClaimsFollowUp[],
       totalPages: 0,
     },
   };
+  subscribes: Subscription[] = [];
+  filterForm!: FormGroup<IClaimsFilter>;
+  followUpForm!: FormGroup;
+  formData!: Observable<IBaseMasterTable>;
+  @ViewChild("followUp") followUpCanvas!: ElementRef;
+
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
@@ -67,7 +82,7 @@ export class ClaimsListComponent implements OnInit {
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
-    context: { com: this },
+    context: { comp: this },
     defaultColDef: {
       flex: 1,
       minWidth: 100,
@@ -79,9 +94,6 @@ export class ClaimsListComponent implements OnInit {
     onSortChanged: (e) => this.onSort(e),
     onPaginationChanged: (e) => this.onPageChange(e),
   };
-  subscribes: Subscription[] = [];
-  filterForm!: FormGroup<IClaimsFilter>;
-  formData!: Observable<IBaseMasterTable>;
   constructor(
     private tableRef: ElementRef,
     private claimService: ClaimsService,
@@ -287,9 +299,56 @@ export class ClaimsListComponent implements OnInit {
 
   //#region follow up
 
-  getFollowUps() {
-    // let sub = this.claimService.getClaimsFollowUp()
+  openFollowUpCanvas(sNo: number) {
+    this.offcanvasService.open(this.followUpCanvas, { position: "end" });
+    this.getFollowUp(sNo);
+    this.initFollowUpForm(sNo.toString());
+  }
+
+  initFollowUpForm(sNo: string) {
+    this.followUpForm = new FormGroup({
+      no: new FormControl(sNo),
+      names: new FormControl([], Validators.required),
+      msg: new FormControl(null, Validators.required),
+    });
+  }
+  get followUpF() {
+    return this.followUpForm.controls;
+  }
+
+  getFollowUp(sNo: number) {
+    let sub = this.claimService.getFollowUp(sNo).subscribe(
+      (res: HttpResponse<IBaseResponse<IClaimsFollowUp[]>>) => {
+        this.uiState.claims.followUpData = res.body?.data!;
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  sendFollowUp(form: any) {
+    if (!this.followUpForm.valid) {
+      this.followUpForm.markAllAsTouched();
+      return;
+    }
+    let sub = this.claimService.saveFollowUp(form).subscribe(
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.data) {
+          this.getFollowUp(form.no);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.popup("Sorry!", res.body?.message!, "error");
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
   }
 
   //#endregion
+  ngOnDestroy(): void {
+    this.subscribes.forEach((sub) => sub.unsubscribe);
+  }
 }

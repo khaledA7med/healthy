@@ -71,12 +71,24 @@ export class ClaimsService {
     );
   }
 
-  getClaimsFollowUp(
-    id: number
+  getFollowUp(
+    sNo: number
   ): Observable<HttpResponse<IBaseResponse<IClaimsFollowUp[]>>> {
-    return this.http.post<HttpResponse<IBaseResponse<IClaimsFollowUp[]>>>(
+    return this.http.post<IBaseResponse<IClaimsFollowUp[]>>(
       this.env + ApiRoutes.Claims.followUps,
-      { observe: "response", params: { id } }
+      {},
+      { observe: "response", params: { ClaimSno: sNo } }
+    );
+  }
+  saveFollowUp(email: {
+    no: string;
+    msg: string;
+    names: string[];
+  }): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Claims.saveFollowUps,
+      email,
+      { observe: "response" }
     );
   }
 }

@@ -150,6 +150,7 @@ export const ApiRoutes = {
     SearchClientClaimData: "/Claims/SearchClientClaimData",
     subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",
     followUps: "/Claims/GetClaimFollowUps",
+    saveFollowUps: "/Claims/SaveClaimFollowUp",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
