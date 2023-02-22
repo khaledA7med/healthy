@@ -38,12 +38,15 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutes.Client.reports,
+		data: {
+			title: "Client Reports",
+		},
 		loadChildren: () => import("./client-reports/client-reports.module").then((m) => m.ClientReportsModule),
 	},
 ];
 
 @NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule],
+	imports: [ RouterModule.forChild(routes) ],
+	exports: [ RouterModule ],
 })
-export class ClientsRoutingModule {}
+export class ClientsRoutingModule { }

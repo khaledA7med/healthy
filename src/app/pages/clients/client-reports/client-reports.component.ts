@@ -16,16 +16,20 @@ import AppUtils from "src/app/shared/app/util";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 @Component({
   selector: "app-client-reports",
   templateUrl: "./client-reports.component.html",
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ["./client-reports.component.scss"],
+  styleUrls: [ "./client-reports.component.scss" ],
 })
-export class ClientReportsComponent implements OnInit {
+
+export class ClientReportsComponent implements OnInit 
+{
   closeResult!: string;
-  url!: string;
+  url!: any;
 
   filterForms!: FormGroup<IClientReportFilters>;
   submitted: boolean = false;
@@ -34,24 +38,27 @@ export class ClientReportsComponent implements OnInit {
   subscribes: Subscription[] = [];
   uiState: any;
 
-  constructor(
+  constructor (
     private modalService: NgbModal,
     private ClientsService: ClientsService,
     private message: MessagesService,
     private table: MasterTableService,
     private util: AppUtils,
     private router: Router,
-    private eventService: EventService
-  ) {}
+    private eventService: EventService,
+    private sanitizer: DomSanitizer
+  ) { }
 
-  ngOnInit(): void {
+  ngOnInit (): void
+  {
     this.initFilterForm();
     this.lookupData = this.table.getBaseData(MODULES.Client);
   }
 
-  initFilterForm(): void {
+  initFilterForm (): void
+  {
     this.filterForms = new FormGroup<IClientReportFilters>({
-      status: new FormControl(["Active"]),
+      status: new FormControl([ "Active" ]),
       name: new FormControl(""),
       accountNumber: new FormControl(""),
       crNO: new FormControl(""),
@@ -63,29 +70,48 @@ export class ClientReportsComponent implements OnInit {
     });
   }
 
-  resetForm(): void {
+  resetForm (): void
+  {
     this.filterForms.reset();
     this.submitted = false;
   }
 
-  get f() {
+  get f ()
+  {
     return this.filterForms.controls;
   }
 
-  onSubmit(filterForm: FormGroup<IClientReportFilters>) {
+  minDate (e: any)
+  {
+    this.f.minDate?.patchValue(e.gon);
+  }
+  maxDate (e: any)
+  {
+    this.f.maxDate?.patchValue(e.gon);
+  }
+
+  onSubmit (filterForm: FormGroup<IClientReportFilters>)
+  {
     this.submitted = true;
 
     // Display Submitting Loader
     this.eventService.broadcast(reserved.isLoading, true);
 
     let sub = this.ClientsService.viewReport(filterForm.value).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
-        if (res.body?.status) {
-          if (this.filterForms?.invalid) {
-            this.message.toast("Enter required data");
-          } else {
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        if (res.body?.status)
+        {
+          this.eventService.broadcast(reserved.isLoading, false);
+          if (this.filterForms?.invalid)
+          {
+            this.message.popup("error!..", "Enter required data");
+          } else
+          {
+            this.eventService.broadcast(reserved.isLoading, false);
             this.message.toast(res.body.message!, "success");
-            this.url = res.body.data;
+
+            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(res.body.data);
             this.resetForm();
           }
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
@@ -97,7 +123,8 @@ export class ClientReportsComponent implements OnInit {
     this.subscribes.push(sub);
   }
 
-  openFullscreen(content: any) {
+  openFullscreen (content: any)
+  {
     this.modalService.open(content, { fullscreen: true });
   }
 }

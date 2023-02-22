@@ -5,7 +5,8 @@ import { ClientReportsComponent } from "./client-reports.component";
 import { RouterModule, Routes } from "@angular/router";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { NgbDatepickerModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 export const routes: Routes = [ { path: "", component: ClientReportsComponent } ];
 
@@ -17,8 +18,8 @@ export const routes: Routes = [ { path: "", component: ClientReportsComponent } 
     NgSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbDatepickerModule,
-    NgbModule
+    NgbModule,
+    GregorianPickerModule
   ],
 })
 export class ClientReportsModule { }

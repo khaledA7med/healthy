@@ -15,13 +15,15 @@ import AppUtils from "../../app/util";
 @Injectable({
   providedIn: "root",
 })
-export class ClientsService {
+export class ClientsService
+{
   private readonly env = environment.baseURL;
-  constructor(private http: HttpClient, private utils: AppUtils) {}
+  constructor (private http: HttpClient, private utils: AppUtils) { }
 
-  getAllClients(
+  getAllClients (
     clientFilters: IClientFilters
-  ): Observable<HttpResponse<IBaseResponse<IClient[]>>> {
+  ): Observable<HttpResponse<IBaseResponse<IClient[]>>>
+  {
     return this.http.post<IBaseResponse<IClient[]>>(
       this.env + ApiRoutes.Clients.search,
       clientFilters,
@@ -30,9 +32,10 @@ export class ClientsService {
       }
     );
   }
-  getClintDetails(
+  getClintDetails (
     id: string
-  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>>
+  {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.details,
       {
@@ -42,16 +45,18 @@ export class ClientsService {
     );
   }
 
-  getClientById(
+  getClientById (
     id: string
-  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>> {
+  ): Observable<HttpResponse<IBaseResponse<IClientPreview>>>
+  {
     return this.http.get<IBaseResponse<IClientPreview>>(
       this.env + ApiRoutes.Clients.edit,
       { params: { id }, observe: "response" }
     );
   }
 
-  saveClient(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
+  saveClient (body: FormData): Observable<HttpResponse<IBaseResponse<number>>>
+  {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Clients.save,
       body,
@@ -61,9 +66,10 @@ export class ClientsService {
     );
   }
 
-  changeStatus(
+  changeStatus (
     data: IChangeStatusRequest
-  ): Observable<HttpResponse<IBaseResponse<null>>> {
+  ): Observable<HttpResponse<IBaseResponse<null>>>
+  {
     return this.http.post<IBaseResponse<null>>(
       this.env + ApiRoutes.Clients.changeStatus,
       data,
@@ -73,14 +79,16 @@ export class ClientsService {
     );
   }
 
-  deleteDocument(data: string): Observable<HttpResponse<IBaseResponse<null>>> {
+  deleteDocument (data: string): Observable<HttpResponse<IBaseResponse<null>>>
+  {
     return this.http.post<IBaseResponse<null>>(
       this.env + ApiRoutes.Clients.deleteDocument,
       { path: data },
       { observe: "response" }
     );
   }
-  downloadDocument(data: string): Observable<HttpResponse<any>> {
+  downloadDocument (data: string): Observable<HttpResponse<any>>
+  {
     return this.http.post(
       this.env + ApiRoutes.Clients.downloadDocument,
       { path: data },
@@ -88,7 +96,8 @@ export class ClientsService {
     );
   }
 
-  viewReport(body: any): Observable<HttpResponse<IBaseResponse<any>>> {
+  viewReport (body: any): Observable<HttpResponse<IBaseResponse<any>>>
+  {
     return this.http.post<IBaseResponse<any>>(
       this.env + ApiRoutes.Clients.report,
       {
