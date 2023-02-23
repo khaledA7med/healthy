@@ -1,3 +1,4 @@
+import { IClaimsFollowUp } from "./../../app/models/Claims/iclaims-followUp";
 import { IBaseFilters } from "./../../app/models/App/IBaseFilters";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -66,6 +67,27 @@ export class ClaimsService {
     return this.http.post<IBaseResponse<string[]>>(
       this.env + ApiRoutes.Claims.subStatus,
       { status: status },
+      { observe: "response" }
+    );
+  }
+
+  getFollowUp(
+    sNo: number
+  ): Observable<HttpResponse<IBaseResponse<IClaimsFollowUp[]>>> {
+    return this.http.post<IBaseResponse<IClaimsFollowUp[]>>(
+      this.env + ApiRoutes.Claims.followUps,
+      {},
+      { observe: "response", params: { ClaimSno: sNo } }
+    );
+  }
+  saveFollowUp(email: {
+    no: string;
+    msg: string;
+    names: string[];
+  }): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Claims.saveFollowUps,
+      email,
       { observe: "response" }
     );
   }

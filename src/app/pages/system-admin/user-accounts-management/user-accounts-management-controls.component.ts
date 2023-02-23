@@ -4,6 +4,7 @@ import { ICellRendererParams } from "ag-grid-community";
 import { SystemAdminStatus } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { SweetAlertResult } from "sweetalert2";
 import { UserAccountsManagementComponent } from "./user-accounts-management.component";
 
 @Component({
@@ -15,9 +16,13 @@ import { UserAccountsManagementComponent } from "./user-accounts-management.comp
 					<i class="ri-more-2-fill"></i>
 				</button>
 				<div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-					<button ngbDropdownItem (click)="Enable()" class="btn btn-sm">Enable</button>
-					<button ngbDropdownItem (click)="Disable()" class="btn btn-sm">Disable</button>
-					<button ngbDropdownItem (click)="View()" class="btn btn-sm">View</button>
+					<button ngbDropdownItem (click)="Enable(adminStatus.Active)" class="btn btn-sm">
+						{{ adminStatus.Active }}
+					</button>
+					<button ngbDropdownItem (click)="Disable(adminStatus.Disable)" class="btn btn-sm">
+						{{ adminStatus.Disable }}
+					</button>
+					<button ngbDropdownItem (click)="ResetPassword()" class="btn btn-sm">Reset Password</button>
 					<button ngbDropdownItem (click)="Edit()" class="btn btn-sm">Edit</button>
 				</div>
 			</div>
@@ -61,8 +66,14 @@ export class UserAccountsManagementControlsComponent {
 		this.comp = this.params.context.comp;
 	}
 
-	View() {
-		console.log("Enable work");
+	ResetPassword() {
+		this.message.confirm("Sure!", "Reset Password?!", "primary", "question").then((result: SweetAlertResult) => {
+			if (result.isConfirmed) {
+				this.comp.ResetPassword(this.params.data.identity);
+			} else {
+				return;
+			}
+		});
 	}
 
 	Edit() {
@@ -70,11 +81,23 @@ export class UserAccountsManagementControlsComponent {
 		this.comp.openUsersDialoge(this.params.data.identity);
 	}
 
-	Enable() {
-		console.log("Enable work");
+	Enable(status: string) {
+		this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
+			if (result.isConfirmed) {
+				this.comp.changeStatus(this.params.data, status);
+			} else {
+				return;
+			}
+		});
 	}
 
-	Disable() {
-		console.log("Disable work");
+	Disable(status: string) {
+		this.message.confirm("Sure!", "Change Status?!", "primary", "question").then((result: SweetAlertResult) => {
+			if (result.isConfirmed) {
+				this.comp.changeStatus(this.params.data, status);
+			} else {
+				return;
+			}
+		});
 	}
 }

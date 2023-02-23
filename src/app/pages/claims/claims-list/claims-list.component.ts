@@ -1,14 +1,22 @@
+import AppUtils from "src/app/shared/app/util";
 import { IClaimsFilter } from "./../../../shared/app/models/Claims/iclaims-filter";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MessagesService } from "./../../../shared/services/messages.service";
 import { ClaimsService } from "./../../../shared/services/claims/claims.service";
 import { claimsManageCols } from "./../../../shared/app/grid/claimsCols";
 import { IBaseFilters } from "./../../../shared/app/models/App/IBaseFilters";
 import {
+  AfterViewChecked,
+  AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
+  QueryList,
+  Renderer2,
   TemplateRef,
+  ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from "@angular/core";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -25,10 +33,12 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDate, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
+import { IClaimsFollowUp } from "src/app/shared/app/models/Claims/iclaims-followUp";
+import { SimplebarAngularComponent } from "simplebar-angular";
 
 @Component({
   selector: "app-claims-list",
@@ -36,13 +46,12 @@ import { MODULES } from "src/app/core/models/MODULES";
   styleUrls: ["./claims-list.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClaimsListComponent implements OnInit {
+export class ClaimsListComponent implements OnInit, OnDestroy {
   uiState = {
     routerLink: {
       forms: AppRoutes.Claims.create,
     },
     gridReady: false,
-    submitted: false,
     filters: {
       pageNumber: 1,
       pageSize: 50,
@@ -52,9 +61,16 @@ export class ClaimsListComponent implements OnInit {
     claims: {
       list: [] as IClaims[],
       subStatus: [] as string[],
+      followUpData: [] as IClaimsFollowUp[],
       totalPages: 0,
     },
   };
+  subscribes: Subscription[] = [];
+  filterForm!: FormGroup<IClaimsFilter>;
+  followUpForm!: FormGroup;
+  formData!: Observable<IBaseMasterTable>;
+  @ViewChild("followUp") followUpCanvas!: ElementRef;
+
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
@@ -66,6 +82,7 @@ export class ClaimsListComponent implements OnInit {
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
+    context: { comp: this },
     defaultColDef: {
       flex: 1,
       minWidth: 100,
@@ -77,28 +94,20 @@ export class ClaimsListComponent implements OnInit {
     onSortChanged: (e) => this.onSort(e),
     onPaginationChanged: (e) => this.onPageChange(e),
   };
-  subscribes: Subscription[] = [];
-  filterForm!: FormGroup<IClaimsFilter>;
-  formData!: Observable<IBaseMasterTable>;
   constructor(
     private tableRef: ElementRef,
     private claimService: ClaimsService,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
-    private table: MasterTableService
+    private table: MasterTableService,
+    private util: AppUtils
   ) {}
 
   ngOnInit(): void {
     this.formData = this.table.getBaseData(MODULES.Claims);
-    this.initFilterForm();
-
-    this.uiState.filters = {
-      ...this.uiState.filters,
-      ...this.filterForm.value,
-    };
   }
 
-  //#region
+  //#region Table
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
@@ -187,6 +196,7 @@ export class ClaimsListComponent implements OnInit {
   //#region filter
   openFilterCanvas(name: TemplateRef<any>) {
     this.offcanvasService.open(name, { position: "end" });
+    this.initFilterForm();
   }
 
   private initFilterForm() {
@@ -196,6 +206,33 @@ export class ClaimsListComponent implements OnInit {
       claimType: new FormControl([]),
       status: new FormControl([]),
       subStatus: new FormControl([]),
+      dtpLossFrom: new FormControl(null),
+      dtpLossTo: new FormControl(null),
+      dtpCreatedOnFrom: new FormControl(null),
+      dtpCreatedOnTo: new FormControl(null),
+      combOperatorAmount: new FormControl(null),
+      paidAmount1: new FormControl(null),
+      paidAmount2: new FormControl(null),
+      combOperatorUnderProcessingAmount: new FormControl(null),
+      underProcesingAmount1: new FormControl(null),
+      underProcesingAmount2: new FormControl(null),
+      claimNo: new FormControl(null),
+      insurCompClaimNo: new FormControl(null),
+      blawbNo: new FormControl(null),
+      policyNo: new FormControl(null),
+      chassisNumber: new FormControl(null),
+      policyCertificateNo: new FormControl(null),
+      declarationNo: new FormControl(null),
+      insurCompany: new FormControl(null),
+      savedUser: new FormControl(null),
+      invoiceNo: new FormControl(null),
+      wipNo: new FormControl(null),
+      carNo: new FormControl(null),
+      paymentDetails: new FormControl(null),
+      nameofInjured: new FormControl(null),
+      lossLocation: new FormControl(null),
+      shipmentName: new FormControl(null),
+      memberDriverName: new FormControl(null),
     });
   }
   get filterF() {
@@ -219,6 +256,37 @@ export class ClaimsListComponent implements OnInit {
       );
     this.subscribes.push(sub);
   }
+  // get accident / bill date range
+  accidentDateRange(e: { from: NgbDate; to: NgbDate }) {
+    this.filterF.dtpLossFrom?.patchValue(this.util.dateFormater(e.from));
+    this.filterF.dtpLossTo?.patchValue(this.util.dateFormater(e.to));
+  }
+  //get Create on date range
+  createOnDateRange(e: { from: NgbDate; to: NgbDate }) {
+    this.filterF.dtpCreatedOnFrom?.patchValue(this.util.dateFormater(e.from));
+    this.filterF.dtpCreatedOnTo?.patchValue(this.util.dateFormater(e.to));
+  }
+  // paid amount
+  paidAmount1(e: any) {
+    this.filterF.paidAmount1?.patchValue(e.target.value);
+  }
+  paidAmount2(e: any) {
+    this.filterF.paidAmount2?.patchValue(e.target.value);
+  }
+  resetPaidAmount2() {
+    this.filterF.paidAmount2?.reset();
+  }
+
+  // under processing amount
+  processingAmount1(e: any) {
+    this.filterF.underProcesingAmount1?.patchValue(e.target.value);
+  }
+  processingAmount2(e: any) {
+    this.filterF.underProcesingAmount2?.patchValue(e.target.value);
+  }
+  resetProcAmount2() {
+    this.filterF.underProcesingAmount2?.reset();
+  }
 
   submitFilterForm() {
     this.uiState.filters = {
@@ -228,4 +296,59 @@ export class ClaimsListComponent implements OnInit {
     this.gridApi.setDatasource(this.dataSource);
   }
   //#endregion
+
+  //#region follow up
+
+  openFollowUpCanvas(sNo: number) {
+    this.offcanvasService.open(this.followUpCanvas, { position: "end" });
+    this.getFollowUp(sNo);
+    this.initFollowUpForm(sNo.toString());
+  }
+
+  initFollowUpForm(sNo: string) {
+    this.followUpForm = new FormGroup({
+      no: new FormControl(sNo),
+      names: new FormControl([], Validators.required),
+      msg: new FormControl(null, Validators.required),
+    });
+  }
+  get followUpF() {
+    return this.followUpForm.controls;
+  }
+
+  getFollowUp(sNo: number) {
+    let sub = this.claimService.getFollowUp(sNo).subscribe(
+      (res: HttpResponse<IBaseResponse<IClaimsFollowUp[]>>) => {
+        this.uiState.claims.followUpData = res.body?.data!;
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  sendFollowUp(form: any) {
+    if (!this.followUpForm.valid) {
+      this.followUpForm.markAllAsTouched();
+      return;
+    }
+    let sub = this.claimService.saveFollowUp(form).subscribe(
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.data) {
+          this.getFollowUp(form.no);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.popup("Sorry!", res.body?.message!, "error");
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  //#endregion
+  ngOnDestroy(): void {
+    this.subscribes.forEach((sub) => sub.unsubscribe);
+  }
 }

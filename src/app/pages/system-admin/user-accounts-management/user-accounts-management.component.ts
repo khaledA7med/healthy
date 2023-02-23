@@ -18,7 +18,7 @@ import { ISystemAdminFilters } from "src/app/shared/app/models/SystemAdmin/isyst
 import { ISystemAdmin } from "src/app/shared/app/models/SystemAdmin/isystem-admin";
 import { systemAdminCols } from "src/app/shared/app/grid/systemAdminCols";
 import { SystemAdminService } from "src/app/shared/services/system-admin/system-admin.service";
-import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
+import { SystemAdminStatus } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
 import { EventService } from "src/app/core/services/event.service";
 import { UserModel, UserModelData } from "src/app/shared/app/models/SystemAdmin/isystem-admin-user-form";
 import { UserDetails } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
@@ -86,7 +86,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private systemAdminService: SystemAdminService,
-		private masterService: MasterMethodsService,
 		private tableRef: ElementRef,
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
@@ -212,7 +211,51 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 	//#endregion
 
+	ResetPassword(id: any) {
+		let sub = this.systemAdminService.getResetPassword(id).subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				this.gridApi.setDatasource(this.dataSource);
+				if (res.body?.status) this.message.toast(res.body!.message!, "success");
+				else this.message.toast(res.body!.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
+		);
+		this.subscribes.push(sub);
+	}
+
+	changeStatus(user: ISystemAdmin, status: string): void {
+		let dataSubmit = {
+			sno: user.sno!,
+			status: "",
+		};
+		switch (status) {
+			case "active":
+				dataSubmit.status = SystemAdminStatus.Active;
+				break;
+			case "disable":
+				dataSubmit.status = SystemAdminStatus.Disable;
+				break;
+			default:
+				dataSubmit.status = status;
+				break;
+		}
+		let sub = this.systemAdminService.changeStatus(dataSubmit).subscribe(
+			(res: HttpResponse<IBaseResponse<any>>) => {
+				this.gridApi.setDatasource(this.dataSource);
+				if (res.body?.status) this.message.toast(res.body!.message!, "success");
+				else this.message.toast(res.body!.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
+		);
+		this.subscribes.push(sub);
+	}
+
 	//#region Add/Edit User Modal
+
 	userModal!: NgbModalRef;
 	userForm!: FormGroup;
 	userFormSubmitted = false as boolean;
@@ -241,21 +284,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		return this.userForm.controls;
 	}
 
-	editUser(id: string) {
-		let sub = this.systemAdminService.getEditUserData(id).subscribe(
-			(res: HttpResponse<IBaseResponse<UserModelData>>) => {
-				this.uiState.editUserMode = true;
-				this.uiState.editUserData = res.body?.data!;
-				this.openUsersDialoge();
-				this.fillEditUserForm(res.body?.data!);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
-		this.subscribes.push(sub);
-	}
-
 	openUsersDialoge(id?: string) {
 		this.resetUserForm();
 		this.userModal = this.modalService.open(this.usersContent, {
@@ -266,12 +294,10 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		});
 		if (id) {
 			this.eventService.broadcast(reserved.isLoading, true);
-
 			let sub = this.systemAdminService.getEditUserData(id).subscribe(
 				(res: HttpResponse<IBaseResponse<UserModelData>>) => {
 					this.uiState.editUserMode = true;
 					this.uiState.editUserData = res.body?.data!;
-					this.openUsersDialoge();
 					this.fillEditUserForm(res.body?.data!);
 					this.eventService.broadcast(reserved.isLoading, false);
 				},

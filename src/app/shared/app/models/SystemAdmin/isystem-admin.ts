@@ -22,4 +22,5 @@ export interface ISystemAdmin
     costCentersDivision?: string,
     lastLogin?: string,
     userRole?: string,
+    identity?: string;
 }

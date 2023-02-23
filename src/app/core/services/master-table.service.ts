@@ -333,11 +333,26 @@ export class MasterTableService {
 				},
 			],
 			SystemAdmin: [
-				{ route: ApiRoutes.MasterTable.SystemAdmin.statusOfUsers, name: BaseData.StatusOfUsers },
-				{ route: ApiRoutes.MasterTable.SystemAdmin.jobTitleOfUsers, name: BaseData.JobTitleOfUsers },
-				{ route: ApiRoutes.MasterTable.SystemAdmin.branch, name: BaseData.Branch },
-				{ route: ApiRoutes.MasterTable.SystemAdmin.staffProfilesNames, name: BaseData.ProducersList },
-				{ route: ApiRoutes.MasterTable.SystemAdmin.userSecurityRoles, name: BaseData.UserSecurityRoles },
+				{
+					route: ApiRoutes.MasterTable.SystemAdmin.statusOfUsers,
+					name: BaseData.StatusOfUsers,
+				},
+				{
+					route: ApiRoutes.MasterTable.SystemAdmin.jobTitleOfUsers,
+					name: BaseData.JobTitleOfUsers,
+				},
+				{
+					route: ApiRoutes.MasterTable.SystemAdmin.branch,
+					name: BaseData.Branch,
+				},
+				{
+					route: ApiRoutes.MasterTable.SystemAdmin.staffProfilesNames,
+					name: BaseData.ProducersList,
+				},
+				{
+					route: ApiRoutes.MasterTable.SystemAdmin.userSecurityRoles,
+					name: BaseData.UserSecurityRoles,
+				},
 			],
 		};
 

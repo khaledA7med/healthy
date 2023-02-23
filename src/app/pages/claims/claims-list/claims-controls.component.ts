@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { ICellRendererParams } from "ag-grid-community";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { ClaimsListComponent } from "./claims-list.component";
 @Component({
   selector: "app-claims-controls",
   template: `
@@ -21,7 +22,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
           aria-labelledby="actionDropdown"
           class="dropdown-menu"
         >
-          <button ngbDropdownItem class="btn btn-sm">
+          <button ngbDropdownItem class="btn btn-sm" (click)="followUp()">
             <i class="ri-chat-follow-up-fill align-bottom me-2 text-muted"></i>
             Follow Up
           </button>
@@ -73,11 +74,16 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 })
 export class ClaimsControlsComponent {
   private params!: ICellRendererParams;
+  private comp!: ClaimsListComponent;
 
   constructor(private _Router: Router, private message: MessagesService) {}
 
   agInit(params: ICellRendererParams) {
     this.params = params;
+    this.comp = this.params.context.comp;
+  }
+  followUp() {
+    this.comp.openFollowUpCanvas(this.params.data.sNo);
   }
 
   Edit() {

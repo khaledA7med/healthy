@@ -6,6 +6,7 @@ import { ClaimsListComponent } from "./claims-list.component";
 
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
+import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 
 export const routes: Routes = [{ path: "", component: ClaimsListComponent }];
 
@@ -14,6 +15,7 @@ export const routes: Routes = [{ path: "", component: ClaimsListComponent }];
   imports: [
     CommonModule,
     SharedModule,
+    RangePickerModule,
     RouterModule.forChild(routes),
     AgGridModule.withComponents(ClaimsControlsComponent),
   ],
