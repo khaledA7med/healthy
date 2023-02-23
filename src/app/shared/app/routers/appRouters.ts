@@ -36,6 +36,7 @@ export const AppRoutes = {
 		details: "policy",
 		create: "production/create",
 		edit: "production/update/",
+		editCommissions: "production/edit-commissions"
 	},
 	CustomerService: {
 		base: "customer-service",
