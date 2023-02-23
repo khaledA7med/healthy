@@ -41,10 +41,20 @@ const routes: Routes = [
         (m) => m.PoliciesFormsModule
       ),
   },
+  {
+    path: AppRoutes.Production.editCommissions,
+    data: {
+      title: "Edit Commissions",
+    },
+    loadChildren: () =>
+      import("./policies-edit-commissions/policies-edit-commissions.module").then(
+        (m) => m.PoliciesEditCommissionsModule
+      ),
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  imports: [ RouterModule.forChild(routes) ],
+  exports: [ RouterModule ],
 })
-export class ProductionRoutingModule {}
+export class ProductionRoutingModule { }

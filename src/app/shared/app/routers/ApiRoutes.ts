@@ -137,6 +137,7 @@ export const ApiRoutes = {
     edit: "/Production/Policy/Edit",
     checkEndorsNo: "/Production/Policy/CheckPolicyEnrodsNo",
     changeStatus: "/Production/Policy/ChangeStatus",
+    editCommissions: "",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -164,6 +165,7 @@ export const ApiRoutes = {
   },
   SystemAdmin: {
     search: "/SystemAdmin/Users/Search",
+    allRoles: "/SystemAdmin/Users/GetRoles",
     changeStatus: "/SystemAdmin/Users/ChangeStatus",
     userDetails: "/SystemAdmin/Users/ProducerBySno",
     addRole: "/SystemAdmin/Users/AddRole",

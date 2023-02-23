@@ -1,0 +1,94 @@
+<div class="row justify-content-between align-items-center mb-3">
+    <div class="col-2 form-group row align-items-center">
+        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
+
+        <div class="col-sm-4">
+            <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
+                [(ngModel)]="uiState.filters.pageSize">
+                <ng-option [value]="25">25</ng-option>
+                <ng-option [value]="50">50</ng-option>
+                <ng-option [value]="100">100</ng-option>
+                <ng-option [value]="150">150</ng-option>
+                <ng-option [value]="200">200</ng-option>
+            </ng-select>
+
+        </div>
+    </div>
+
+    <div class="col-3 d-flex justify-content-end">
+
+        <button type="button" class="btn btn-sm btn-info mx-2 d-flex align-items-center"
+            (click)="openFilterOffcanvas()">
+            <i class="ri-filter-3-line align-bottom me-1"></i>
+            Filters
+        </button>
+    </div>
+</div>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>
+
+
+<!----------------------------------  --------------------
+                         Filter
+  -------------------------------------------------------->
+<div>
+    <ng-template #filter let-offcanvas>
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title fs-4">Filters</h4>
+            <button type="button" class="btn-close" aria-label="Close"
+                (click)="offcanvas.dismiss('Cross click')"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form class="row justify-content-center" [formGroup]="filterForms">
+                <!-- Producer -->
+                <div class="mb-3">
+                    <label for="CliProducerent" class="form-label text-muted fw-bold fs-13">
+                        Producer:
+                    </label>
+                    <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
+                        [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="producer" bindLabel="name"
+                        bindValue="name">
+                    </ng-select>
+                </div>
+                <!-- Client Name -->
+                <div class="mb-3">
+                    <label for="Client" class="form-label text-muted fw-bold fs-13">
+                        Client Name:
+                    </label>
+                    <ng-select id="clientName" class="is-invalid" placeholder="Select Producer"
+                        [items]="(lookupData | async)?.ClientsList?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="clientName" bindLabel="name"
+                        bindValue="name">
+                    </ng-select>
+                </div>
+                <!-- Client ID -->
+                <div class="mb-3">
+                    <label for="policyNumber" class="form-label text-muted fw-bold fs-13">
+                        Policy Number:
+                    </label>
+                    <input id="policyNumber" type="text" class="form-control" placeholder="Policy Number"
+                        formControlName="policyNumber">
+                </div>
+
+
+            </form>
+        </div>
+        <!-- submit and clear btn -->
+        <div class="offcanvas-footer border-top row mb-3 mx-1">
+            <div class="col-6 mt-2">
+                <button class="btn btn-light btn-sm w-100" (click)="clearFilter();">
+                    Clear Filter
+                </button>
+            </div>
+            <div class="col-6 mt-2">
+                <button class="btn btn-success btn-sm w-100" (click)="onEditCommissionsFilter()">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</div>

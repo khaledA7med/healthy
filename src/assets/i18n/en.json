@@ -33,7 +33,8 @@
     "PRODUCTION": {
       "TEXT": "Production",
       "LIST": {
-        "MANAGEMENT": "Policies/Endorsements Management"
+        "MANAGEMENT": "Policies/Endorsements Management",
+        "EDITCOMMISSIONS": "Policies/Edit Commissions"
       }
     },
     "CUSTOMERSERVICE": {
