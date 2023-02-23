@@ -9,7 +9,13 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import {
   CellEvent,
   GridApi,
@@ -108,7 +114,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private systemAdminService: SystemAdminService,
-    private masterService: MasterMethodsService,
     private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
