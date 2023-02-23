@@ -164,6 +164,7 @@ export const ApiRoutes = {
 	},
 	SystemAdmin: {
 		search: "/SystemAdmin/Users/Search",
+		allRoles: "/SystemAdmin/Users/GetRoles",
 		changeStatus: "/SystemAdmin/Users/ChangeStatus",
 		userDetails: "/SystemAdmin/Users/ProducerBySno",
 		addRole: "/SystemAdmin/Users/AddRole",
