@@ -96,53 +96,48 @@ export interface IClaimsForms {
   /***************        End Payment Tap     *****************/
 
   /* Medical */
-  MedID?: FormControl<string | null>;
-  Hospital?: FormControl<string | null>;
-  MedClass?: FormControl<string | null>; //Added M
-  MedCaseType?: FormControl<string | null>; //Added M
+  medID?: FormControl<string | null>;
+  hospital?: FormControl<string | null>;
+  medClass?: FormControl<string | null>; //Added M
+  medCaseType?: FormControl<string | null>; //Added M
   /***************        End Medical       *****************/
 
   /* Motor  */
-  CarPaletNo?: FormControl<string | null>;
-  MistakePercentage?: FormControl<number | null>;
+  carPaletNo?: FormControl<string | null>;
+  mistakePercentage?: FormControl<number | null>;
   claimType?: FormControl<string | null>; //MOT GEN
-  Type?: FormControl<string | null>; // Own Damage , Total Loss
-  CarsMake?: FormControl<string | null>;
-  Model?: FormControl<string | null>;
-  TypeOfrepair?: FormControl<string | null>;
-  City?: FormControl<string | null>;
-  WorkshopAgency?: FormControl<string | null>;
+  motorChassisNo?: FormControl<string | null>;
+  type?: FormControl<string | null>; // Own Damage , Total Loss
+  carsMake?: FormControl<string | null>;
+  model?: FormControl<string | null>;
+  typeOfrepair?: FormControl<string | null>;
+  city?: FormControl<string | null>;
+  workshopAgency?: FormControl<string | null>;
   //  IEnumerable<BaseLookUpDto> WorkshopAgencyList  = new List<BaseLookUpDto>();
-  AccidentNumber?: FormControl<string | null>;
+  accidentNumber?: FormControl<string | null>;
   TPL?: FormControl<number | null>;
-  Excess?: FormControl<number | null>;
-  PolicyExcess?: FormControl<string | null>;
-  PolicyCertificateNo?: FormControl<string | null>;
+  excess?: FormControl<number | null>;
+  policyExcess?: FormControl<string | null>;
+  policyCertificateNo?: FormControl<string | null>;
 
   /***************        End Motor       *****************/
 
   /* General  */
-  NameofInjured?: FormControl<string | null>;
-  NatureofLoss?: FormControl<string | null>;
-  LossLocation?: FormControl<string | null>;
-  ClaimExcess?: FormControl<number | null>;
-  InterimPayment?: FormControl<number | null>;
-  Recovery?: FormControl<string | null>;
-  Liability?: FormControl<string | null>;
-  ClaimCertificateNo?: FormControl<string | null>;
-  DeclarationNo?: FormControl<string | null>;
-  ShipmentName?: FormControl<string | null>;
+  nameofInjured?: FormControl<string | null>;
+  natureofLoss?: FormControl<string | null>;
+  lossLocation?: FormControl<string | null>;
+  claimExcess?: FormControl<number | null>;
+  interimPayment?: FormControl<number | null>;
+  recovery?: FormControl<string | null>;
+  liability?: FormControl<string | null>;
+  claimCertificateNo?: FormControl<string | null>;
+  declarationNo?: FormControl<string | null>;
+  shipmentName?: FormControl<string | null>;
+  generalChassisNo?: FormControl<string | null>;
   //  IEnumerable<ClaimGeneralDto> ClaimsGeneral  = new List<ClaimGeneralDto>();
   //   ClaimsGeneral
 
   /***************        End General       *****************/
-
-  /********* Matual ************/
-  GeneralChassisNo?: FormControl<string | null>;
-  MotorChassisNo?: FormControl<string | null>;
-  ChassisNumber?: FormControl<string | null>;
-
-  /*********************/
 
   InsuranceCompanyDNCNNo?: FormControl<string | null>;
   DriverAge?: FormControl<string | null>;

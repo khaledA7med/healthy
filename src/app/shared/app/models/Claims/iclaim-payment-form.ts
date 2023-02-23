@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms";
 
 export interface IClaimPayment {
   sNo: number;
-  claimsNo: number;
+  claimSNo: number;
   clientName: string;
   clientNo: number;
   branch: string;
@@ -17,7 +17,7 @@ export interface IClaimPayment {
 
 export interface IClaimPaymentForm {
   sNo: FormControl<number | null>;
-  claimNo: FormControl<number | null>;
+  claimSNo: FormControl<number | null>;
   paymentType: FormControl<string | null>;
   clientName: FormControl<string | null>;
   clientNo: FormControl<number | null>;
