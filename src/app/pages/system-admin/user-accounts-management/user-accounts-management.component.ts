@@ -256,7 +256,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	openUsersDialoge() {
+	openUsersDialoge(id?: string) {
 		this.resetUserForm();
 		this.userModal = this.modalService.open(this.usersContent, {
 			ariaLabelledBy: "modal-basic-title",
@@ -264,6 +264,24 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 			backdrop: "static",
 			size: "xl",
 		});
+		if (id) {
+			this.eventService.broadcast(reserved.isLoading, true);
+
+			let sub = this.systemAdminService.getEditUserData(id).subscribe(
+				(res: HttpResponse<IBaseResponse<UserModelData>>) => {
+					this.uiState.editUserMode = true;
+					this.uiState.editUserData = res.body?.data!;
+					this.openUsersDialoge();
+					this.fillEditUserForm(res.body?.data!);
+					this.eventService.broadcast(reserved.isLoading, false);
+				},
+				(err: HttpErrorResponse) => {
+					this.message.popup("Oops!", err.message, "error");
+					this.eventService.broadcast(reserved.isLoading, false);
+				}
+			);
+			this.subscribes.push(sub);
+		}
 
 		this.userModal.hidden.subscribe(() => {
 			this.resetUserForm();

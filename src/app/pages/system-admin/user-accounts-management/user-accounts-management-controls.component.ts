@@ -66,7 +66,8 @@ export class UserAccountsManagementControlsComponent {
 	}
 
 	Edit() {
-		this.comp.editUser(this.params.data.identity);
+		// this.comp.editUser(this.params.data.identity);
+		this.comp.openUsersDialoge(this.params.data.identity);
 	}
 
 	Enable() {
