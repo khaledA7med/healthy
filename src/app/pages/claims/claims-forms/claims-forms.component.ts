@@ -43,7 +43,7 @@ export class ClaimsFormsComponent implements OnInit {
     } as IClaimPoliciesSearch,
     modalConfig: {
       centered: true,
-      size: "xl",
+      size: "lg",
       backdrop: "static",
     } as NgbModalOptions,
   };
@@ -140,9 +140,9 @@ export class ClaimsFormsComponent implements OnInit {
       recovery: new FormControl(null),
       liability: new FormControl(null),
       claimCertificateNo: new FormControl(null),
+      generalChassisNo: new FormControl(null),
       declarationNo: new FormControl(null),
       shipmentName: new FormControl(null),
-      generalChassisNo: new FormControl(null),
     });
   }
 
@@ -152,11 +152,14 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Policy Details Section
   openModal(modal: TemplateRef<NgbModalOptions>) {
-    this.modalRef = this.modalService.open(modal, this.uiState.modalConfig);
+    this.modalRef = this.modalService.open(modal, {
+      centered: true,
+      size: "xl",
+      backdrop: "static",
+    });
   }
 
   claimTypeTogglerEvt(): void {
-    console.log();
     switch (this.f.claimType?.value) {
       case this.uiState.claimTypes.Medical:
         break;
@@ -176,11 +179,10 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Payments Section
   addPayment(): void {
-    this.modalRef = this.modalService.open(ClaimPaymentsFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimPaymentsFormComponent,
+      this.uiState.modalConfig
+    );
     this.modalRef.componentInstance.data = {
       // sNo: 50,
       clientName: "hahah",
@@ -195,31 +197,28 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Approvals Section
   addApproval(): void {
-    this.modalRef = this.modalService.open(ClaimApprovalsFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimApprovalsFormComponent,
+      this.uiState.modalConfig
+    );
   }
   //#endregion
 
   //#region Invoices Section
   addInvoice(): void {
-    this.modalRef = this.modalService.open(ClaimInvoicesFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimInvoicesFormComponent,
+      this.uiState.modalConfig
+    );
   }
   //#endregion
 
   //#region Rejection/Deduction Section
   addRejectDeduction(): void {
-    this.modalRef = this.modalService.open(ClaimRejectDeductFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimRejectDeductFormComponent,
+      this.uiState.modalConfig
+    );
   }
   //#endregion
 

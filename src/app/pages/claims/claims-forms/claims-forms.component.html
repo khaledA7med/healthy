@@ -176,7 +176,7 @@
                                                     placeholder="Insurance Claim No." id="insurCompClaimNo">
                                             </div>
                                             <div class="mb-2">
-                                                <label for="membName">Member/Driver Name</label>
+                                                <label for="membName" class="asterisk-input">Member/Driver Name</label>
                                                 <input type="text" formControlName="membName"
                                                     [ngClass]="{'is-invalid' : (f.membName?.touched || uiState.submitted) && f.membName?.invalid}"
                                                     class="form-control form-control-sm"
@@ -838,7 +838,8 @@
         </ngb-panel>
 
         <!-- Medical Claims -->
-        <ngb-panel id="7" title="Medical Claims" cardClass="open my-4">
+        <ngb-panel id="7" title="Medical Claims" *ngIf="f.claimType?.value === this.uiState.claimTypes.Medical"
+            cardClass="open my-4">
             <ng-template ngbPanelContent="3">
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
@@ -913,7 +914,8 @@
         </ngb-panel>
 
         <!-- Motor Claims -->
-        <ngb-panel id="8" title="Motor Claims" cardClass="open my-4">
+        <ngb-panel id="8" title="Motor Claims" *ngIf="f.claimType?.value === this.uiState.claimTypes.Motor"
+            cardClass="open my-4">
             <ng-template ngbPanelContent="3">
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
@@ -1077,7 +1079,8 @@
         </ngb-panel>
 
         <!-- General Claims -->
-        <ngb-panel id="9" title="General Claims" cardClass="open my-4">
+        <ngb-panel id="9" title="General Claims" *ngIf="f.claimType?.value === this.uiState.claimTypes.General"
+            cardClass="open my-4">
             <ng-template ngbPanelContent="3">
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
@@ -1090,119 +1093,98 @@
                                         </div>
                                         <div class="ribbon-content mt-4 text-muted">
                                             <div class="row">
-                                                <!-- Name of the Injured / deceased -->
-                                                <div class="col-lg-6 col-md-12 my-1">
-                                                    <label for="nameofInjured">Name of the
-                                                        Injured / Deceased</label>
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        formControlName="nameofInjured" id="nameofInjured"
-                                                        placeholder="Name of the Injured / Deceased">
-                                                </div>
-
-                                                <!-- Recovery -->
-                                                <div class="col-lg-6 col-md-12 my-1">
-                                                    <label for="recovery">Recovery</label>
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        formControlName="recovery" id="recovery" placeholder="Recovery">
-                                                </div>
-
                                                 <div class="col-lg-6 col-md-12">
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="nameOfTheInjuredDece">
-                                                                Name of the
-                                                                Injured / deceased
-                                                            </label>
-                                                        </div>
+                                                    <!-- Name of the Injured / deceased -->
+                                                    <div class="my-1">
+                                                        <label for="nameofInjured">Name of the
+                                                            Injured / Deceased</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="nameOfTheInjuredDece" id="nameOfTheInjuredDece"
-                                                            placeholder="Name of the Injured/deceased">
+                                                            formControlName="nameofInjured" id="nameofInjured"
+                                                            placeholder="Name of the Injured / Deceased">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="natureOfLoss">Nature Of Loss</label>
-                                                        </div>
+
+                                                    <!-- Nature Of Loss -->
+                                                    <div class="my-1">
+                                                        <label for="natureofLoss">Nature Of Loss</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="natureOfLoss" id="natureOfLoss"
+                                                            formControlName="natureofLoss" id="natureofLoss"
                                                             placeholder="Nature Of Loss">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="lossLocation">Loss Location</label>
-                                                        </div>
+
+                                                    <!-- Loss Location -->
+                                                    <div class="my-1">
+                                                        <label for="lossLocation">Loss Location</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="lossLocation" id="lossLocation"
+                                                            formControlName="lossLocation" id="lossLocation"
                                                             placeholder="Loss Location">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="policyExcess">Policy Excess</label>
-                                                        </div>
+
+                                                    <!-- Policy Excess -->
+                                                    <div class="my-1">
+                                                        <label for="claimExcess">Policy Excess</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="policyExcess" id="policyExcess"
+                                                            formControlName="claimExcess" id="claimExcess"
                                                             placeholder="Policy Excess">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="interimPayment">Interim Payment</label>
+
+                                                    <!-- Interim Payment -->
+                                                    <div class="my-1">
+                                                        <label for="interimPayment">Interim Payment</label>
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="text" class="form-control input-text-right"
+                                                                id="interimPayment" formControlName="interimPayment"
+                                                                InputMask placeholder="0.00" aria-describedby="SAR">
+                                                            <span class="input-group-text" id="SAR">SAR</span>
                                                         </div>
-                                                        <input type="text"
-                                                            class="form-control form-control-sm input-text-right"
-                                                            name="interimPayment" id="interimPayment"
-                                                            placeholder="0.00">
                                                     </div>
                                                 </div>
+
                                                 <div class="col-lg-6 col-md-12">
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="recovery">Recovery</label>
-                                                        </div>
+                                                    <!-- Recovery -->
+                                                    <div class="my-1">
+                                                        <label for="recovery">Recovery</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="recovery" id="recovery" placeholder="Recovery">
+                                                            formControlName="recovery" id="recovery"
+                                                            placeholder="Recovery">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="liability">Liability</label>
-                                                        </div>
+
+                                                    <!-- Liability -->
+                                                    <div class="my-1">
+                                                        <label for="liability">Liability</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="liability" id="liability" placeholder="Liability">
+                                                            formControlName="liability" id="liability"
+                                                            placeholder="Liability">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="policyCertificateNo">
-                                                                Policy/Certificate
-                                                                No.
-                                                            </label>
-                                                        </div>
+
+                                                    <!-- Policy/Certificate No. -->
+                                                    <div class="my-1">
+                                                        <label for="claimCertificateNo">Policy/Certificate No.</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="policyCertificateNo" id="policyCertificateNo"
+                                                            formControlName="claimCertificateNo" id="claimCertificateNo"
                                                             placeholder="Policy/Certificate No.">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="generalChassisItemNo">
-                                                                Chassis/Item
-                                                                No.
-                                                            </label>
-                                                        </div>
+
+                                                    <!-- Chassis/Item No. -->
+                                                    <div class="my-1">
+                                                        <label for="generalChassisNo">Chassis/Item No.</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="generalChassisItemNo" id="generalChassisItemNo"
+                                                            formControlName="generalChassisNo" id="generalChassisNo"
                                                             placeholder="Chassis/Item No.">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="declarationNo">Declaration No.</label>
-                                                        </div>
+
+                                                    <!-- Declaration No. -->
+                                                    <div class="my-1">
+                                                        <label for="declarationNo">Declaration No.</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="declarationNo" id="declarationNo"
+                                                            formControlName="declarationNo" id="declarationNo"
                                                             placeholder="Declaration No.">
                                                     </div>
-                                                    <div class="accordion-info mb-2">
-                                                        <div class="lables">
-                                                            <label for="shipmentName">Shipment Name</label>
-                                                        </div>
+
+                                                    <!-- Shipment Name -->
+                                                    <div class="my-1">
+                                                        <label for="shipmentName">Shipment Name</label>
                                                         <input type="text" class="form-control form-control-sm"
-                                                            name="shipmentName" id="shipmentName"
+                                                            formControlName="shipmentName" id="shipmentName"
                                                             placeholder="Shipment Name">
                                                     </div>
                                                 </div>
@@ -1217,7 +1199,7 @@
                                         <div class="ribbon ribbon-info round-shape">
                                             Items Details
                                         </div>
-                                        <div class="ribbon-content mt-5 C-P-Card text-muted">
+                                        <div class="ribbon-content mt-4 pt-1 text-muted">
                                             <table id="generalClaimsItemsTable"
                                                 class="table align-middle table-nowrap mb-0">
                                                 <thead class="table-light">
