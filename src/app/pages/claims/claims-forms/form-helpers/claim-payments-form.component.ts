@@ -134,7 +134,7 @@ import {
 export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
   @Input() data: IClaimPayment = {
     sNo: 0,
-    claimsNo: 0,
+    claimSNo: 0,
     clientName: "",
     clientNo: 0,
     branch: "",
@@ -173,7 +173,7 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
       amount: new FormControl(null, Validators.required),
       bankName: new FormControl(null),
       branch: new FormControl(null),
-      claimNo: new FormControl(null),
+      claimSNo: new FormControl(null),
       clientName: new FormControl(null),
       clientNo: new FormControl(null),
       IBAN: new FormControl(null),
@@ -198,7 +198,7 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     console.log(this.data);
     this.initForm();
     this.formGroup.patchValue({
-      claimNo: this.data.claimsNo,
+      claimSNo: this.data.claimSNo,
       clientName: this.data.clientName,
       clientNo: this.data.clientNo,
     });

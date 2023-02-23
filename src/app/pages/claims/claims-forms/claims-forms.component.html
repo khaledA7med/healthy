@@ -729,7 +729,7 @@
                                         List Of Invoices</div>
                                     <div class="ribbon-content mt-3 C-P-Card text-muted">
                                         <div class="d-flex justify-content-end">
-                                            <button type="button"
+                                            <button type="button" (click)="addInvoice()"
                                                 class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
                                                 <i class="ri-menu-add-line"></i> Add Invoice
                                             </button>
@@ -806,9 +806,9 @@
                                         List Of Rejected Payments</div>
                                     <div class="ribbon-content mt-3 text-muted">
                                         <div class="d-flex justify-content-end">
-                                            <button type="button"
+                                            <button type="button" (click)="addRejectDeduction()"
                                                 class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
-                                                <i class="ri-menu-add-line"></i> Add Invoice
+                                                <i class="ri-menu-add-line"></i> Add Reject/Deduct
                                             </button>
                                         </div>
                                         <table id="rejectedPaymentListTable"
@@ -843,15 +843,62 @@
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row">
-                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
-                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-                                    <div class="card-body">
-                                        <div class="ribbon ribbon-info round-shape">
-                                            Client's Premium & Company Commissions
-                                        </div>
-                                        <div class="ribbon-content mt-4 pt-2 text-muted">
-                                            <div class="row">
+                            <div class="card ribbon-box border shadow-none mb-0">
+                                <div class="card-body">
+                                    <div class="ribbon ribbon-info round-shape">
+                                        Medical Claim Details
+                                    </div>
+                                    <div class="ribbon-content mt-4 C-P-Card text-muted">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                                                <label for="medID" class="asterisk-input">Member Card No.</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid' : (f.medID?.touched || uiState.submitted) && f.medID?.invalid}"
+                                                    formControlName="medID" id="medID" placeholder="Member Card No.">
+                                                <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                                                <label for="medClass" class="asterisk-input">Class</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid' : (f.medClass?.touched || uiState.submitted) && f.medClass?.invalid}"
+                                                    formControlName="medClass" id="medClass" placeholder="Class">
+                                                <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                                                <label for="hospital" class="asterisk-input">Hospital</label>
+                                                <div class="input-group input-group-sm">
+                                                    <!-- [items]="(formData | async)?.hospitals?.content!"  -->
+                                                    <ng-select formControlName="hospital"
+                                                        class="form-control p-0 border-0 is-invalid"
+                                                        [ngClass]="{'is-submitted': (f.hospital?.touched || uiState.submitted) && f.hospital?.invalid}"
+                                                        bindLabel="name" bindValue="name"
+                                                        [loading]="formData ? false : true">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div>{{ item.name }}</div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <button class="btn btn-info btn-sm d-flex align-items-center"
+                                                        type="button">
+                                                        <i class="ri-add-fill mx-1"></i>
+                                                    </button>
+                                                    <span class="invalid-feedback fw-bold mt-0"
+                                                        *ngIf="(f.hospital?.touched || uiState.submitted) && f.hospital?.invalid">Required</span>
+                                                </div>
+                                            </div>
 
+                                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                                                <label for="medCaseType" class="asterisk-input">Case Type</label>
+                                                <!-- [items]="(formData | async)?.medCaseTypes?.content!" -->
+                                                <ng-select formControlName="medCaseType" class="is-invalid"
+                                                    [ngClass]="{'is-submitted': (f.medCaseType?.touched || uiState.submitted) && f.medCaseType?.invalid}"
+                                                    bindLabel="name" bindValue="name"
+                                                    [loading]="formData ? false : true">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div>{{ item.name }}</div>
+                                                    </ng-template>
+                                                </ng-select>
+                                                <span class="invalid-feedback fw-bold mt-0"
+                                                    *ngIf="(f.medCaseType?.touched || uiState.submitted) && f.medCaseType?.invalid">Required</span>
                                             </div>
                                         </div>
                                     </div>
@@ -871,15 +918,151 @@
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row">
-                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
-                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-                                    <div class="card-body">
-                                        <div class="ribbon ribbon-info round-shape">
-                                            Client's Premium & Company Commissions
-                                        </div>
-                                        <div class="ribbon-content mt-4 pt-2 text-muted">
-                                            <div class="row">
+                            <div class="card ribbon-box border shadow-none mb-0">
+                                <div class="card-body">
+                                    <div class="ribbon ribbon-info round-shape">
+                                        Motor Claim Details
+                                    </div>
+                                    <div class="ribbon-content mt-4 text-muted">
+                                        <div class="row">
+                                            <!-- Car Plat No. -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="carPaletNo">Car Plat No.</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid' : (f.carPaletNo?.touched || uiState.submitted) && f.carPaletNo?.invalid}"
+                                                    formControlName="carPaletNo" id="carPaletNo"
+                                                    placeholder="Car Plat No.">
+                                                <span class="invalid-feedback fw-bold mt-0">Required</span>
+                                            </div>
 
+                                            <!-- Car Make -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="carsMake">Car Make</label>
+                                                <!-- [items]="(formData | async)?.carsMakes?.content!" -->
+                                                <ng-select formControlName="carsMake" class="is-invalid"
+                                                    [ngClass]="{'is-submitted': (f.carsMake?.touched || uiState.submitted) && f.carsMake?.invalid}"
+                                                    bindLabel="name" bindValue="name"
+                                                    [loading]="formData ? false : true">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div>{{ item.name }}</div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+
+                                            <!-- Accident Number -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="accidentNumber">Accident Number </label>
+                                                <input type="text" formControlName="accidentNumber"
+                                                    class="form-control form-control-sm" placeholder="Accident Number"
+                                                    id="accidentNumber">
+                                            </div>
+
+                                            <!-- Claim Type -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="type">Claim Type</label>
+                                                <!-- [items]="(formData | async)?.types?.content!" -->
+                                                <ng-select formControlName="type" class="is-invalid"
+                                                    [ngClass]="{'is-submitted': (f.type?.touched || uiState.submitted) && f.type?.invalid}"
+                                                    bindLabel="name" bindValue="name"
+                                                    [loading]="formData ? false : true">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div>{{ item.name }}</div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+
+                                            <!-- Chassis/Item No. -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="motorChassisNo">Chassis/Item No.</label>
+                                                <textarea rows="1" type="text" class="form-control form-control-sm"
+                                                    formControlName="motorChassisNo" id="motorChassisNo"
+                                                    placeholder="Chassis/Item No."></textarea>
+                                            </div>
+
+                                            <!-- Car Model -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="model">Car Model</label>
+                                                <input type="number" class="form-control form-control-sm"
+                                                    formControlName="model" id="model" placeholder="Car Model">
+                                            </div>
+
+                                            <!-- TPL -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="model">TPL</label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control input-text-right" id="TPL"
+                                                        formControlName="TPL" InputMask placeholder="0.00"
+                                                        aria-describedby="SAR">
+                                                    <span class="input-group-text" id="SAR">SAR</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- City -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="type">City</label>
+                                                <!-- [items]="(formData | async)?.city?.content!" -->
+                                                <ng-select formControlName="city" class="is-invalid" bindLabel="name"
+                                                    bindValue="name" [loading]="formData ? false : true">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div>{{ item.name }}</div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+
+                                            <!-- Responsibility -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="mistakePercentage">Responsibility</label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        formControlName="mistakePercentage" id="mistakePercentage"
+                                                        placeholder="Responsibility">
+                                                    <span class="input-group-text" style="padding: .25rem .5rem;">
+                                                        <i class="ri-percent-line"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Type Of Repair -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="type">Type Of Repair</label>
+                                                <!-- [items]="(formData | async)?.typeOfrepair?.content!" -->
+                                                <ng-select formControlName="typeOfrepair" class="is-invalid"
+                                                    bindLabel="name" bindValue="name"
+                                                    [loading]="formData ? false : true">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div>{{ item.name }}</div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+
+                                            <!-- Excess -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="excess">Excess</label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control input-text-right" id="excess"
+                                                        formControlName="excess" InputMask placeholder="0.00"
+                                                        aria-describedby="SAR">
+                                                    <span class="input-group-text" id="SAR">SAR</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Workshop/Agency -->
+                                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                                                <label for="workshopAgency">Workshop/Agency</label>
+                                                <div class="input-group input-group-sm">
+                                                    <!-- [items]="(formData | async)?.workshopAgencys?.content!"  -->
+                                                    <ng-select formControlName="workshopAgency"
+                                                        class="form-control p-0 border-0 is-invalid" bindLabel="name"
+                                                        bindValue="name" [loading]="formData ? false : true">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div>{{ item.name }}</div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <button class="btn btn-info btn-sm d-flex align-items-center"
+                                                        routerLink="./work">
+                                                        <i class="ri-add-fill mx-1"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -899,16 +1082,155 @@
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
                         <div class="row">
-                            <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
-                                <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card ribbon-box border shadow-none mb-0">
                                     <div class="card-body">
                                         <div class="ribbon ribbon-info round-shape">
-                                            Client's Premium & Company Commissions
+                                            General Claim Details
                                         </div>
-                                        <div class="ribbon-content mt-4 pt-2 text-muted">
+                                        <div class="ribbon-content mt-4 text-muted">
                                             <div class="row">
+                                                <!-- Name of the Injured / deceased -->
+                                                <div class="col-lg-6 col-md-12 my-1">
+                                                    <label for="nameofInjured">Name of the
+                                                        Injured / Deceased</label>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="nameofInjured" id="nameofInjured"
+                                                        placeholder="Name of the Injured / Deceased">
+                                                </div>
 
+                                                <!-- Recovery -->
+                                                <div class="col-lg-6 col-md-12 my-1">
+                                                    <label for="recovery">Recovery</label>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="recovery" id="recovery" placeholder="Recovery">
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="nameOfTheInjuredDece">
+                                                                Name of the
+                                                                Injured / deceased
+                                                            </label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="nameOfTheInjuredDece" id="nameOfTheInjuredDece"
+                                                            placeholder="Name of the Injured/deceased">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="natureOfLoss">Nature Of Loss</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="natureOfLoss" id="natureOfLoss"
+                                                            placeholder="Nature Of Loss">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="lossLocation">Loss Location</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="lossLocation" id="lossLocation"
+                                                            placeholder="Loss Location">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="policyExcess">Policy Excess</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="policyExcess" id="policyExcess"
+                                                            placeholder="Policy Excess">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="interimPayment">Interim Payment</label>
+                                                        </div>
+                                                        <input type="text"
+                                                            class="form-control form-control-sm input-text-right"
+                                                            name="interimPayment" id="interimPayment"
+                                                            placeholder="0.00">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="recovery">Recovery</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="recovery" id="recovery" placeholder="Recovery">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="liability">Liability</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="liability" id="liability" placeholder="Liability">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="policyCertificateNo">
+                                                                Policy/Certificate
+                                                                No.
+                                                            </label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="policyCertificateNo" id="policyCertificateNo"
+                                                            placeholder="Policy/Certificate No.">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="generalChassisItemNo">
+                                                                Chassis/Item
+                                                                No.
+                                                            </label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="generalChassisItemNo" id="generalChassisItemNo"
+                                                            placeholder="Chassis/Item No.">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="declarationNo">Declaration No.</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="declarationNo" id="declarationNo"
+                                                            placeholder="Declaration No.">
+                                                    </div>
+                                                    <div class="accordion-info mb-2">
+                                                        <div class="lables">
+                                                            <label for="shipmentName">Shipment Name</label>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="shipmentName" id="shipmentName"
+                                                            placeholder="Shipment Name">
+                                                    </div>
+                                                </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card ribbon-box border shadow-none h-100">
+                                    <div class="card-body">
+                                        <div class="ribbon ribbon-info round-shape">
+                                            Items Details
+                                        </div>
+                                        <div class="ribbon-content mt-5 C-P-Card text-muted">
+                                            <table id="generalClaimsItemsTable"
+                                                class="table align-middle table-nowrap mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Item</th>
+                                                        <th scope="col" class="text-center">Mandatory</th>
+                                                        <th scope="col">Value</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
