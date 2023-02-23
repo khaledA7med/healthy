@@ -14,11 +14,22 @@ import { DropzoneModule } from "src/app/shared/components/dropzone/dropzone.modu
 import { GregorianPickerModule } from "src/app/shared/components/gregorian-picker/gregorian-picker.module";
 import { ClaimsRequestListComponent } from "./claims-request-list.component";
 import { AgGridModule } from "ag-grid-angular";
+import { ClaimPaymentsFormComponent } from "./form-helpers/claim-payments-form.component";
+import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form.component";
+import { ClaimInvoicesFormComponent } from "./form-helpers/claim-invoices-form.component";
+import { ClaimRejectDeductFormComponent } from "./form-helpers/claim-reject-deduct-form.component";
 
 export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
 
 @NgModule({
-  declarations: [ClaimsFormsComponent, ClaimsRequestListComponent],
+  declarations: [
+    ClaimsFormsComponent,
+    ClaimsRequestListComponent,
+    ClaimPaymentsFormComponent,
+    ClaimApprovalsFormComponent,
+    ClaimInvoicesFormComponent,
+    ClaimRejectDeductFormComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,

@@ -32,48 +32,50 @@ export interface IClaimsForms {
   bLAWBNo?: FormControl<string | null>;
 
   //Claimant Details
-  ClaimantMobile?: FormControl<string | null>;
-  ClaimantEmail?: FormControl<string | null>;
-  ClaimantIBAN?: FormControl<string | null>;
-  BankName?: FormControl<string | null>;
-  BankBranch?: FormControl<string | null>;
-  BankCity?: FormControl<string | null>;
+  claimantMobile?: FormControl<string | null>;
+  claimantEmail?: FormControl<string | null>;
+  claimantIBAN?: FormControl<string | null>;
+  bankName?: FormControl<string | null>;
+  bankBranch?: FormControl<string | null>;
+  bankCity?: FormControl<string | null>;
 
   //Claim Amount
-  ClaimAmount?: FormControl<number | null>;
-  OtherCurrAmount?: FormControl<number | null>;
-  OtherCurr?: FormControl<string | null>;
-  EstimatedValue?: FormControl<number | null>;
-  Salvage?: FormControl<number | null>;
+  ckClaimAmount?: FormControl<boolean | null>;
+  claimAmount?: FormControl<number | null>;
+  otherCurrAmount?: FormControl<number | null>;
+  otherCurr?: FormControl<string | null>;
+  exchangeRate?: FormControl<number | null>;
+  estimatedValue?: FormControl<number | null>;
+  salvage?: FormControl<number | null>;
 
   //Contact Details
-  ContactName?: FormControl<string | null>;
-  ContactEmail?: FormControl<string | null>;
-  ContactTele?: FormControl<string | null>;
-  Notes?: FormControl<string | null>;
+  contactName?: FormControl<string | null>;
+  contactEmail?: FormControl<string | null>;
+  contactTele?: FormControl<string | null>;
+  notes?: FormControl<string | null>;
 
   //Required Document
   //  IEnumerable<BaseLookUpDto> requiredDocumentList  = new List<BaseLookUpDto>();
   //   RequiredDocuments
 
   //claim Details Dates
-  ChIntimationDate?: FormControl<boolean | null>;
-  IntimationDate?: FormControl<Date | null>;
+  chIntimationDate?: FormControl<boolean | null>;
+  intimationDate?: FormControl<Date | null>;
 
-  ChDateOfLoss?: FormControl<boolean | null>;
-  DateOfLoss?: FormControl<Date | null>; //Accident / Bill Date
+  chDateOfLoss?: FormControl<boolean | null>;
+  dateOfLoss?: FormControl<Date | null>; //Accident / Bill Date
 
-  ChDateOfReceive?: FormControl<boolean | null>;
-  DateOfReceive?: FormControl<Date | null>; //Receive Date
+  chDateOfReceive?: FormControl<boolean | null>;
+  dateOfReceive?: FormControl<Date | null>; //Receive Date
 
-  ChDateofSubmission?: FormControl<boolean | null>;
-  DateOfSubmission?: FormControl<Date | null>;
+  chDateofSubmission?: FormControl<boolean | null>;
+  dateOfSubmission?: FormControl<Date | null>;
 
-  ChDateOfDeadline?: FormControl<boolean | null>;
-  DateOfDeadline?: FormControl<Date | null>;
+  chDateOfDeadline?: FormControl<boolean | null>;
+  dateOfDeadline?: FormControl<Date | null>;
 
-  Status?: FormControl<string | null>;
-  ClaimStatusNotes?: FormControl<string | null>;
+  status?: FormControl<string | null>;
+  claimStatusNotes?: FormControl<string | null>;
   //  IEnumerable<BaseLookUpDto> ClaimStatusNotesList  = new List<BaseLookUpDto>();
 
   //Loss Adjuster
