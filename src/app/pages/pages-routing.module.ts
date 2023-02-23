@@ -36,7 +36,15 @@ const routes: Routes = [
   },
   {
     path: "",
-    loadChildren: () => import("./system-admin/system-admin.module").then((m) => m.SystemAdminModule)
+    loadChildren: () =>
+      import("./system-admin/system-admin.module").then(
+        (m) => m.SystemAdminModule
+      ),
+  },
+  {
+    path: "",
+    loadChildren: () =>
+      import("./email/email.module").then((m) => m.EmailModule),
   },
   {
     path: "",
@@ -48,7 +56,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {}

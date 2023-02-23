@@ -1,3 +1,4 @@
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { Component, OnInit, EventEmitter, Output, Inject } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { EventService } from "../../core/services/event.service";
@@ -37,6 +38,7 @@ export class TopbarComponent implements OnInit {
   countryName: any;
   cookieValue: any;
   userData: any;
+  emailRoute: string = AppRoutes.Email.base;
 
   constructor(
     @Inject(DOCUMENT) private document: any,

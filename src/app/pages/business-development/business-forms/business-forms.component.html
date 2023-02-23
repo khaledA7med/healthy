@@ -152,8 +152,8 @@
                           "
                           [routerLink]="
                             uiState.isClient
-                              ? '/clients/create'
-                              : '/clients/groups'
+                              ? '/' + uiState.routes.addClient
+                              : '/' + uiState.routes.addGroup
                           "
                         >
                           <i class="ri-user-add-line align-middle"></i>

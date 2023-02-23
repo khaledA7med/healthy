@@ -51,6 +51,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   docs: any[] = [];
 
   uiState = {
+    routes: {
+      addClient: AppRoutes.Client.clientForms,
+      addGroup: AppRoutes.Client.groups,
+    },
     isClient: true, // Choose client Or Group
     editId: "",
     editMode: false,
