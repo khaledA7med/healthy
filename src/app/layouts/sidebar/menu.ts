@@ -85,6 +85,12 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.Production.base,
         parentId: 4,
       },
+      {
+        id: 402,
+        label: "MENUITEMS.PRODUCTION.LIST.EDITCOMMISSIONS",
+        link: AppRoutes.Production.editCommissions,
+        parentId: 4,
+      },
     ],
   },
   {
