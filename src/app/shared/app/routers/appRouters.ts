@@ -53,4 +53,7 @@ export const AppRoutes = {
     create: "system-admin/create",
     privileges: "system-admin/privileges",
   },
+  Email: {
+    base: "",
+  },
 };
