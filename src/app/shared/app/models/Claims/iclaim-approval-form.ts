@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms";
 
 export interface IClaimApproval {
   sNo: number;
-  claimNo: number;
+  claimSNo: number;
   clientNo: number;
   clientName: string;
   chassisNo: string;
@@ -23,7 +23,7 @@ export interface IClaimApproval {
 
 export interface IClaimApprovalForm {
   sNo: FormControl<number | null>;
-  claimNo: FormControl<number | null>;
+  claimSNo: FormControl<number | null>;
   clientNo: FormControl<number | null>;
   clientName: FormControl<string | null>;
   chassisNo: FormControl<string | null>;

@@ -14,7 +14,9 @@ import {
 import { IClaimsForms } from "src/app/shared/app/models/Claims/iclaims-forms";
 import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/dropzone.component";
 import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form.component";
+import { ClaimInvoicesFormComponent } from "./form-helpers/claim-invoices-form.component";
 import { ClaimPaymentsFormComponent } from "./form-helpers/claim-payments-form.component";
+import { ClaimRejectDeductFormComponent } from "./form-helpers/claim-reject-deduct-form.component";
 
 @Component({
   selector: "app-claims-forms",
@@ -41,7 +43,7 @@ export class ClaimsFormsComponent implements OnInit {
     } as IClaimPoliciesSearch,
     modalConfig: {
       centered: true,
-      size: "xl",
+      size: "lg",
       backdrop: "static",
     } as NgbModalOptions,
   };
@@ -106,6 +108,41 @@ export class ClaimsFormsComponent implements OnInit {
       bankName: new FormControl(null, Validators.required),
       bankBranch: new FormControl(null),
       bankCity: new FormControl(null),
+
+      // Medical
+      medID: new FormControl(null, Validators.required),
+      hospital: new FormControl(null, Validators.required),
+      medClass: new FormControl(null, Validators.required),
+      medCaseType: new FormControl(null, Validators.required),
+
+      /* Motor  */
+      carPaletNo: new FormControl(null, Validators.required),
+      motorChassisNo: new FormControl(null),
+      mistakePercentage: new FormControl(null),
+      type: new FormControl(null),
+      carsMake: new FormControl(null),
+      model: new FormControl(null),
+      typeOfrepair: new FormControl(null),
+      city: new FormControl(null),
+      workshopAgency: new FormControl(null),
+      accidentNumber: new FormControl(null),
+      TPL: new FormControl(null),
+      excess: new FormControl(null),
+      policyExcess: new FormControl(null),
+      policyCertificateNo: new FormControl(null),
+
+      // General
+      nameofInjured: new FormControl(null),
+      natureofLoss: new FormControl(null),
+      lossLocation: new FormControl(null),
+      claimExcess: new FormControl(null),
+      interimPayment: new FormControl(null),
+      recovery: new FormControl(null),
+      liability: new FormControl(null),
+      claimCertificateNo: new FormControl(null),
+      generalChassisNo: new FormControl(null),
+      declarationNo: new FormControl(null),
+      shipmentName: new FormControl(null),
     });
   }
 
@@ -115,11 +152,14 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Policy Details Section
   openModal(modal: TemplateRef<NgbModalOptions>) {
-    this.modalRef = this.modalService.open(modal, this.uiState.modalConfig);
+    this.modalRef = this.modalService.open(modal, {
+      centered: true,
+      size: "xl",
+      backdrop: "static",
+    });
   }
 
   claimTypeTogglerEvt(): void {
-    console.log();
     switch (this.f.claimType?.value) {
       case this.uiState.claimTypes.Medical:
         break;
@@ -139,11 +179,10 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Payments Section
   addPayment(): void {
-    this.modalRef = this.modalService.open(ClaimPaymentsFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimPaymentsFormComponent,
+      this.uiState.modalConfig
+    );
     this.modalRef.componentInstance.data = {
       // sNo: 50,
       clientName: "hahah",
@@ -158,11 +197,28 @@ export class ClaimsFormsComponent implements OnInit {
 
   //#region Approvals Section
   addApproval(): void {
-    this.modalRef = this.modalService.open(ClaimApprovalsFormComponent, {
-      centered: true,
-      size: "lg",
-      backdrop: "static",
-    });
+    this.modalRef = this.modalService.open(
+      ClaimApprovalsFormComponent,
+      this.uiState.modalConfig
+    );
+  }
+  //#endregion
+
+  //#region Invoices Section
+  addInvoice(): void {
+    this.modalRef = this.modalService.open(
+      ClaimInvoicesFormComponent,
+      this.uiState.modalConfig
+    );
+  }
+  //#endregion
+
+  //#region Rejection/Deduction Section
+  addRejectDeduction(): void {
+    this.modalRef = this.modalService.open(
+      ClaimRejectDeductFormComponent,
+      this.uiState.modalConfig
+    );
   }
   //#endregion
 
