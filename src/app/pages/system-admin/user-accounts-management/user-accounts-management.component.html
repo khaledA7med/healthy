@@ -21,23 +21,22 @@
             <i class="ri-filter-3-line align-bottom me-1"></i>
             Filters
         </a>
-        <a type="button" class="btn btn-sm btn-success mx-2  d-flex align-items-center" id="create-btn"
-            asp-action="CSRegistry" asp-controller="CustomerService">
+        <a type="button" class="btn btn-sm btn-success mx-2  d-flex align-items-center" (click)="openUsersDialoge()">
             <i class="ri-add-line align-bottom me-1"></i> Add User
         </a>
-        <a type="button" class="btn btn-sm btn-info  d-flex align-items-center" id="create-btn" asp-action="CSRegistry"
-            asp-controller="CustomerService">
+        <a type="button" [routerLink]="'/' + uiState.routerLink.privileges"
+            class="btn btn-sm btn-info  d-flex align-items-center" id="create-btn">
             <i class="ri-add-line align-bottom me-1"></i> Privileges
         </a>
     </div>
 </div>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 
-<!----------------------------------  --------------------
+<!--------------------------------------------------------
                         Client Filter
   -------------------------------------------------------->
 <div>
@@ -50,12 +49,12 @@
         <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForm">
 
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
                     <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                        [items]="(lookupData | async)?.StatusOfUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="status" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
@@ -63,26 +62,27 @@
                     <label for="fullName" class="form-label text-muted fw-bold fs-13">
                         Full Name
                     </label>
-                    <input name="fullName" type="text" class="form-control" formControlName="fullName" id="fullName" placeholder="Full Name">
+                    <input name="fullName" type="text" class="form-control" formControlName="fullName" id="fullName"
+                        placeholder="Full Name">
                 </div>
 
                 <div class="mb-3">
-                    <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
-                    <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                    <label for="branch" class="form-label text-muted fw-bold fs-13">Branch</label>
+                    <ng-select id="branch" class="is-invalid" placeholder="Select branch"
+                        [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="branch" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
-                    <ng-select id="Status" class="is-invalid" placeholder="Select Status"
-                        [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [searchable]="true" formControlName="status"
-                        bindLabel="name" bindValue="name">
+                    <label for="jobTitle" class="form-label text-muted fw-bold fs-13">Job Title</label>
+                    <ng-select id="jobTitle" class="is-invalid" placeholder="Select Job Title"
+                        [items]="(lookupData | async)?.JobTitleOfUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="jobTitle" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
-                </div> -->
+                </div>
 
 
                 <div class="col-12 mh-100"></div>
@@ -103,3 +103,151 @@
         </div>
     </ng-template>
 </div>
+
+<!--------------------------------------------------------
+                        Add/Edit Users Modal
+  -------------------------------------------------------->
+
+<ng-template #usersContent let-modal>
+    <div class="modal-header mb-0">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editUserMode">Add User Account</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editUserMode">Edit User Account</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <form [formGroup]="userForm" (ngSubmit)="submitUserData(userForm)">
+        <div class="modal-body p-1" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="col-12 row">
+
+                    <!-- Staff ID -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2" *ngIf="uiState.editUserMode">
+                        <label for="staffId">Staff ID</label>
+                        <input id="staffId" class="form-control form-control-sm" formControlName="staffId"
+                            [ngClass]="{'is-submitted': (ff['staffId'].touched || uiState.submitted) && ff['staffId'].invalid}" />
+                        <span *ngIf="(ff['staffId'].touched || uiState.submitted) && ff['staffId'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Staff Name -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="fullName">Full Name</label>
+                        <ng-select id="fullName" placeholder="Select Staff Name" (change)="getUserDetails($event.id)"
+                            [ngClass]="{'is-submitted': (ff['fullName'].touched || uiState.submitted) && ff['fullName'].invalid}"
+                            formControlName="fullName" [items]="(lookupData | async)?.ProducersList?.content!"
+                            bindLabel="name" bindValue="name" [loading]="lookupData ? false : true">
+                        </ng-select>
+                        <span *ngIf="(ff['fullName'].touched || uiState.submitted) && ff['fullName'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Job Title -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2" *ngIf="uiState.editUserMode">
+                        <label for="jobTitle">Job Title</label>
+                        <input id="jobTitle" class="form-control form-control-sm" formControlName="jobTitle"
+                            [ngClass]="{'is-submitted': (ff['jobTitle'].touched || uiState.submitted) && ff['jobTitle'].invalid}" />
+                        <span *ngIf="(ff['jobTitle'].touched || uiState.submitted) && ff['staffId'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- User Name -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="userName">User Name</label>
+                        <input id="userName" class="form-control form-control-sm" formControlName="userName"
+                            [ngClass]="{'is-submitted': (ff['userName'].touched || uiState.submitted) && ff['userName'].invalid}" />
+                        <span *ngIf="(ff['userName'].touched || uiState.submitted) && ff['userName'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="branch">branch</label>
+                        <ng-select id="branch" placeholder="Select branch" formControlName="branch"
+                            [ngClass]="{'is-submitted': (ff['branch'].touched || uiState.submitted) && ff['branch'].invalid}"
+                            [items]="(lookupData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                            [loading]="lookupData ? false : true">
+                        </ng-select>
+                        <span *ngIf="(ff['branch'].touched || uiState.submitted) && ff['branch'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Phone No -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="phoneNo">Phone No</label>
+                        <input id="phoneNo" class="form-control form-control-sm" formControlName="phoneNo"
+                            [ngClass]="{'is-submitted': (ff['phoneNo'].touched || uiState.submitted) && ff['phoneNo'].invalid}" />
+                        <span *ngIf="(ff['phoneNo'].touched || uiState.submitted) && ff['phoneNo'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="email">Email</label>
+                        <input id="email" class="form-control form-control-sm" formControlName="email"
+                            [ngClass]="{'is-submitted': (ff['email'].touched || uiState.submitted) && ff['email'].invalid}" />
+                        <span *ngIf="(ff['email'].touched || uiState.submitted) && ff['email'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <!-- Security Role -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                        <label for="securityRole" class="asterisk-input">Security Role</label>
+                        <div class="input-group input-group-sm">
+                            <ng-select id="securityRole" placeholder="Select Security Role"
+                                class="form-control SCSelect p-0 border-0"
+                                [ngClass]="{'is-submitted': (ff['DDSecurityRole'].touched || uiState.submitted) && ff['DDSecurityRole'].invalid}"
+                                [items]="(lookupData | async)?.UserSecurityRoles?.content!" bindLabel="name"
+                                formControlName="DDSecurityRole" bindValue="name" [loading]="lookupData ? false : true">
+                            </ng-select>
+                            <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
+                                (click)="addSecurityRole(ff['DDSecurityRole'].value)">
+                                <i class="ri-add-fill mx-1"></i>
+                            </button>
+                        </div>
+                        <span
+                            *ngIf="(ff['DDSecurityRole'].touched || uiState.submitted) && ff['DDSecurityRole'].invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+                    <!-- Security Roles Table -->
+                    <div class="row col-12 justify-content-center">
+                        <div class="col-lg-6 col-md-8 col-sm-12 my-3 table-responsive">
+                            <table class="table align-middle table-nowrap mb-0" id="requiermentsTbl">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center" scope="col">Security Roles</th>
+                                        <th class="text-center" scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="securityRoles">
+                                    <tr *ngFor="let c of securityRolesArray.controls; index as i">
+                                        <ng-container>
+                                            <td class="text-center">{{ securityRolesControls(i).value }}
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-danger" type="button"
+                                                    (click)="deleteSecurityRole(i)">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                    </tr>
+                                    <tr *ngIf=" securityRolesArray.controls.length === 0 "
+                                        class="my-1 text-center text-dark fw-bold no-item-contact">
+                                        <td colspan="100">No Security Roles To Show</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="!uiState.editUserMode"><i class="ri-add-line mx-1"></i>Add</button>
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="uiState.editUserMode"><i class="ri-edit-line mx-1"></i>Edit</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>

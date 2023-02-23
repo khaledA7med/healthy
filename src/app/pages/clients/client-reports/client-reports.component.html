@@ -3,173 +3,188 @@
 
         <form [formGroup]="filterForms" (ngSubmit)="onSubmit(filterForms)" name="ClntReportsForm" id="ClntReportForm"
             autocomplete="off">
-            <div class="accordion-item pt-3 px-2 ">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card ribbon-box border  shadow-none mb-lg-0 mt-2 ">
-                            <div class="card-body ">
-                                <span class="ribbon ribbon-info round-shape"><span>1) Status</span></span>
+            <ngb-accordion #acc="ngbAccordion" activeIds="1">
+                <!-- Client Details -->
+                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                    <ng-template ngbPanelContent="1">
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                            <div class="accordion-item pt-3 px-2 ">
                                 <div class="row">
-                                    <!-- Status -->
-                                    <div class="col-12 mb-2 mt-4">
-                                        <label class="form-label" for="status">Status</label>
+                                    <div class="col-md-3">
+                                        <div class="card ribbon-box border  shadow-none mt-2 ">
+                                            <div class="card-body ">
+                                                <span class="ribbon ribbon-info round-shape"><span>1)
+                                                        Status</span></span>
+                                                <div class="row">
+                                                    <!-- Status -->
+                                                    <div class="col-12 mb-3 mt-4">
+                                                        <label for="status">Status</label>
 
-                                        <ng-select [items]="(lookupData | async)?.ClientStatus?.content!"
-                                            placeholder="select status" [loading]="lookupData ? false : true"
-                                            [clearable]="true" [searchable]="true" [multiple]="true" bindLabel="name"
-                                            bindValue="name" formControlName="status">
-                                        </ng-select>
+                                                        <ng-select
+                                                            [items]="(lookupData | async)?.ClientStatus?.content!"
+                                                            placeholder="select status"
+                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                            [clearable]="true" [searchable]="true" [multiple]="true"
+                                                            bindLabel="name" bindValue="name" formControlName="status">
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 mb-2">
+                                        <div class="card ribbon-box border  shadow-none mt-2 ">
+                                            <div class="card-body ">
+                                                <span class="ribbon ribbon-info round-shape"><span>2) Filter
+                                                        By</span></span>
+                                                <div class="row">
+                                                    <!-- Name -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+
+                                                        <div class="accordion-info form-check "
+                                                            style="padding-left:0!important">
+                                                            <div class="lables mt-4 ">
+                                                                <label for="Name">Name</label>
+                                                            </div>
+                                                            <input for="Name" type="text" id="ClntName"
+                                                                formControlName="name"
+                                                                class="form-control form-control-sm ">
+                                                        </div>
+                                                    </div>
+                                                    <!-- AccountNumber -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 mt-4">
+                                                        <div class="accordion-info form-check"
+                                                            style="padding-left:0!important">
+                                                            <div class="lables">
+                                                                <label for="AccountNumber">Account NO.</label>
+                                                            </div>
+                                                            <input for="AccountNumber" type="text"
+                                                                id="ClntAccountNumber" formControlName="accountNumber"
+                                                                class="form-control form-control-sm ">
+                                                        </div>
+                                                    </div>
+                                                    <!-- CrNO -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 mt-4">
+                                                        <div class="accordion-info">
+                                                            <div class="lables">
+                                                                <label for="CrNOChoiced">CR
+                                                                    No.</label>
+                                                            </div>
+                                                            <ng-select
+                                                                [items]="(lookupData | async)?.CommericalNo?.content!"
+                                                                [loading]="lookupData ? false : true" [clearable]="true"
+                                                                placeholder="select commerical number"
+                                                                [searchable]="true" bindLabel="name" bindValue="name"
+                                                                id="commercialNo" formControlName="crNO">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Producer -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 mt-4">
+                                                        <div class="accordion-info">
+                                                            <div class="d-flex justify-content-between">
+                                                                <label for="producer"
+                                                                    class="asterisk-input">Producer</label>
+                                                            </div>
+                                                            <ng-select
+                                                                [items]="(lookupData | async)?.Producers?.content!"
+                                                                [loading]="lookupData ? false : true" [clearable]="true"
+                                                                [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
+                                                                class="is-invalid" placeholder="select producer"
+                                                                [searchable]="true" bindLabel="name" bindValue="name"
+                                                                id="producer" formControlName="producer">
+                                                            </ng-select>
+                                                            <div class="invalid-feedback fw-bold"
+                                                                *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">
+                                                                Required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Type -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 mt-2">
+                                                        <div class="accordion-info">
+                                                            <label for="type">Type</label>
+                                                            <ng-select
+                                                                [items]="(lookupData | async)?.ClientTypes?.content!"
+                                                                [loading]="lookupData ? false : true" [clearable]="true"
+                                                                [searchable]="true" placeholder="select type"
+                                                                bindLabel="name" bindValue="name" id="type"
+                                                                formControlName="type">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Branchs -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3 mt-2">
+                                                        <div class="accordion-info">
+                                                            <div class="d-flex justify-content-between">
+                                                                <label for="Branch">Branch</label>
+                                                            </div>
+                                                            <ng-select [items]="(lookupData | async)?.Branch?.content!"
+                                                                [loading]="lookupData ? false : true" [clearable]="true"
+                                                                [hideSelected]="true" placeholder="select branch"
+                                                                [multiple]="true" [searchable]="true" bindLabel="name"
+                                                                bindValue="name" id="branch" formControlName="branchs">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- minDate -->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                        <div class="accordion-info">
+                                                            <label for="minDate"
+                                                                class="col-form-label asterisk-input">Min Date</label>
+
+                                                            <app-gregorian-picker [model]="f.minDate?.value"
+                                                                [required]="true" [submitted]="submitted"
+                                                                (dateChange)="minDate($event)"></app-gregorian-picker>
+
+                                                            <div class="invalid-feedback fw-bold"
+                                                                *ngIf="(f.minDate?.touched || submitted) && f.minDate?.invalid">
+                                                                Required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Max Date-->
+                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                        <div class="accordion-info">
+                                                            <label for="maxDate"
+                                                                class="col-form-label asterisk-input">Max Date</label>
+                                                            <app-gregorian-picker [model]="f.maxDate?.value"
+                                                                [required]="true" [submitted]="submitted"
+                                                                (dateChange)="maxDate($event)"></app-gregorian-picker>
+
+                                                            <div class="invalid-feedback fw-bold"
+                                                                *ngIf="(f.maxDate?.touched || submitted) && f.maxDate?.invalid">
+                                                                Required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="card ribbon-box border  shadow-none mt-2 ">
-                            <div class="card-body ">
-                                <span class="ribbon ribbon-info round-shape"><span>2) Filter By</span></span>
-                                <div class="row">
-                                    <!-- Name -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 ">
-
-                                        <div class="accordion-info form-check " style="padding-left:0!important">
-                                            <div class="lables mt-4 ">
-                                                <label for="Name" class="col-form-label">Name</label>
-                                            </div>
-                                            <input for="Name" type="text" id="ClntName" formControlName="name"
-                                                class="form-control form-control-sm ">
-                                        </div>
-                                    </div>
-                                    <!-- AccountNumber -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info form-check" style="padding-left:0!important">
-                                            <div class="lables">
-                                                <label for="AccountNumber" class="col-form-label">Account NO.</label>
-                                            </div>
-                                            <input for="AccountNumber" type="text" id="ClntAccountNumber"
-                                                formControlName="accountNumber" class="form-control form-control-sm ">
-                                        </div>
-                                    </div>
-                                    <!-- CrNO -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <div class="lables">
-                                                <label for="CrNOChoiced" class="col-form-label">CR No.</label>
-                                            </div>
-                                            <ng-select [items]="(lookupData | async)?.CommericalNo?.content!"
-                                                [loading]="lookupData ? false : true" [clearable]="true"
-                                                placeholder="select commerical number" [searchable]="true"
-                                                bindLabel="name" bindValue="name" id="commercialNo"
-                                                formControlName="crNO">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                    <!-- Producer -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <div class="d-flex justify-content-between">
-                                                <label for="producer"
-                                                    class="col-form-label asterisk-input">Producer</label>
-                                            </div>
-                                            <ng-select [items]="(lookupData | async)?.Producers?.content!"
-                                                [loading]="lookupData ? false : true" [clearable]="true"
-                                                class="is-invalid" placeholder="select producer"
-                                                [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
-                                                [searchable]="true" bindLabel="name" bindValue="name" id="producer"
-                                                formControlName="producer">
-                                            </ng-select>
-                                            <div class="invalid-feedback fw-bold"
-                                                *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">
-                                                Required
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Type -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <label for="type" class="col-form-label">Type</label>
-                                            <ng-select [items]="(lookupData | async)?.ClientTypes?.content!"
-                                                [loading]="lookupData ? false : true" [clearable]="true"
-                                                [searchable]="true" placeholder="select type" bindLabel="name"
-                                                bindValue="name" id="type" formControlName="type">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                    <!-- Branchs -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <div class="d-flex justify-content-between">
-                                                <label for="Branch" class="col-form-label">Branch</label>
-                                            </div>
-                                            <ng-select [items]="(lookupData | async)?.Branch?.content!"
-                                                [loading]="lookupData ? false : true" [clearable]="true"
-                                                placeholder="select branch" [multiple]="true" [searchable]="true"
-                                                bindLabel="name" bindValue="name" id="branch" formControlName="branchs">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                    <!-- minDate -->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <label for="minDate" class="col-form-label asterisk-input">Min Date</label>
-                                            <div class="input-group">
-                                                <input type="text" ngbDatepicker #d1="ngbDatepicker"
-                                                    [ngClass]="{'is-submitted': (f.minDate?.touched || submitted) && f.minDate?.invalid}"
-                                                    placeholder="yyyy-mm-dd" class="form-control form-control-sm"
-                                                    [required]="true" (click)="d1.toggle()" formControlName="minDate"
-                                                    readonly />
-
-                                                <button class="btn btn-outline-secondary ri-calendar-2-line"
-                                                    type="button" (click)="d1.toggle()"></button>
-                                            </div>
-                                            <div class="invalid-feedback fw-bold"
-                                                *ngIf="(f.minDate?.touched || submitted) && f.minDate?.invalid">
-                                                Required
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Max Date-->
-                                    <div class="col-lg-4 col-md-4 col-sm-4 mb-2 mt-4">
-                                        <div class="accordion-info">
-                                            <label for="maxDate" class="col-form-label asterisk-input">Max Date</label>
-                                            <div class="input-group">
-                                                <input type="text" ngbDatepicker #d2="ngbDatepicker"
-                                                    [ngClass]="{'is-submitted': (f.maxDate?.touched || submitted) && f.maxDate?.invalid}"
-                                                    placeholder="yyyy-mm-dd" class="form-control form-control-sm"
-                                                    (click)="d2.toggle()" formControlName="maxDate" readonly />
-                                                <button class="btn btn-outline-secondary ri-calendar-2-line"
-                                                    type="button" (click)="d2.toggle()"></button>
-                                            </div>
-                                            <div class="invalid-feedback fw-bold"
-                                                *ngIf="(f.maxDate?.touched || submitted) && f.maxDate?.invalid">
-                                                Required
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="container-fluid">
-                                <div class="card-body px-1 py-3">
-                                    <div class="d-flex justify-content-end">
-                                        <button [disabled]="filterForms.invalid" (click)="openFullscreen(content)"
-                                            type="submit" id="GenerateClntRegistryReport"
-                                            class="btn btn-soft-success btn-md bg-gradient mx-2">
-                                            Print List
-                                        </button>
-                                        <button type="button" id="sa-warning" (click)="resetForm();"
-                                            class="btn btn-md btn-soft-danger">
-                                            <i class="ri-delete-bin-2-line"></i>
-                                            Clear
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+            <div class="card mt-2">
+                <div class="container-fluid">
+                    <div class="card-body px-1 py-3">
+                        <div class="d-flex justify-content-end">
+                            <button [disabled]="filterForms.invalid" (click)="openFullscreen(content)" type="submit"
+                                id="GenerateClntRegistryReport" class="btn btn-soft-success btn-sm bg-gradient mx-2">
+                                Generate
+                            </button>
+                            <button type="button" id="sa-warning" (click)="resetForm();"
+                                class="btn btn-sm btn-soft-danger">
+                                <i class="ri-delete-bin-2-line"></i>
+                                Clear
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -183,10 +198,10 @@
         <h4 class="modal-title">Client Report</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        <iframe [src]="url" frameborder="5"></iframe>
+    <div class="modal-body mx-auto">
+        <iframe [src]="url" class="justify-content-center" frameborder="5" width="100%" height="90%"></iframe>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-lg btn-outline-danger" (click)="modal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>

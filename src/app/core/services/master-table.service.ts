@@ -332,6 +332,28 @@ export class MasterTableService {
           name: BaseData.PendingReason,
         },
       ],
+      SystemAdmin: [
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.statusOfUsers,
+          name: BaseData.StatusOfUsers,
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.jobTitleOfUsers,
+          name: BaseData.JobTitleOfUsers,
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.staffProfilesNames,
+          name: BaseData.ProducersList,
+        },
+        {
+          route: ApiRoutes.MasterTable.SystemAdmin.userSecurityRoles,
+          name: BaseData.UserSecurityRoles,
+        },
+      ],
     };
 
     switch (module) {
@@ -361,6 +383,9 @@ export class MasterTableService {
         break;
       case MODULES.Claims:
         this.dataSrc = data.Claims;
+        break;
+      case MODULES.SystemAdmin:
+        this.dataSrc = data.SystemAdmin;
         break;
       default:
         break;

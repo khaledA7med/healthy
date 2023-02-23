@@ -15,18 +15,18 @@ export const systemAdminCols: ColDef[] = [
         headerName: "Status",
         cellRenderer: StatusCellRender.systemAdminStatus,
         field: "status",
-        minWidth: 200,
+        minWidth: 100,
     },
     {
         headerName: "User ID",
         field: "sno",
         sort: "asc",
-        minWidth: 130,
+        minWidth: 110,
     },
     {
         headerName: "User Name",
         field: "userName",
-        minWidth: 200,
+        minWidth: 130,
     },
     {
         headerName: "Staff ID",
@@ -35,61 +35,64 @@ export const systemAdminCols: ColDef[] = [
     {
         headerName: "Full Name",
         field: "fullName",
-        minWidth: 250,
+        minWidth: 200,
     },
     {
         headerName: "Job Title",
         field: "jobTitle",
-        minWidth: 250,
+        minWidth: 200,
     },
     {
         headerName: "phone No.",
         field: "phoneNo",
-        minWidth: 250,
+        minWidth: 150,
     },
     {
         headerName: "Email",
         field: "email",
-        minWidth: 250,
+        minWidth: 200,
     },
     {
         headerName: "Branch",
         field: "branch",
-        valueFormatter: GlobalCellRender.dateFormater,
-        minWidth: 150,
+        minWidth: 110,
     },
     {
         headerName: "Division",
         field: "costCentersDivision",
-        minWidth: 250,
+        minWidth: 140,
     },
     {
         headerName: "Department",
         field: "costCentersDepartment",
-        minWidth: 150,
+        minWidth: 130,
     },
     {
         headerName: "Created By",
         field: "savedUser",
-        minWidth: 150,
+        minWidth: 180,
     },
     {
         headerName: "Created On",
         valueFormatter: GlobalCellRender.dateFormater,
         field: "savedDate",
+        minWidth: 150
     },
     {
         headerName: "Last Updated By",
         field: "updateUser",
+        minWidth: 150
     },
     {
         headerName: "Last Updated On",
         valueFormatter: GlobalCellRender.dateFormater,
         field: "updateDate",
+        minWidth: 150
     },
     {
         headerName: "Last Login On",
         field: "lastLogin",
         valueFormatter: GlobalCellRender.dateFormater,
+        minWidth: 150
     },
 ];

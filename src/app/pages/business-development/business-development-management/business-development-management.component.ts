@@ -84,7 +84,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	];
 	@ViewChild("filter") salesLeadFilter!: ElementRef;
 	@ViewChild("followUp") FollowUpCanvas!: ElementRef;
-	context: any = { comp: this };
 
 	// To Unsubscription
 	subscribes: Subscription[] = [];

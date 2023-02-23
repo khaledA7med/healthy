@@ -39,6 +39,10 @@ export enum BaseData {
   ProductionOperatordList = "ProductionOperatordList",
   VATPercentage = "VATPercentage",
   ClaimStatus = "ClaimStatus",
+  JobTitleOfUsers = "JobTitleOfUsers",
+  StatusOfUsers = "StatusOfUsers",
+  ProducersList = "ProducersList",
+  UserSecurityRoles = "UserSecurityRoles",
 }
 
 export interface IBaseMasterTable {
@@ -82,6 +86,10 @@ export interface IBaseMasterTable {
   ProductionOperatordList?: Caching<IGenericResponseType[]>;
   VATPercentage?: Caching<IGenericResponseType[]>;
   ClaimStatus?: Caching<IGenericResponseType[]>;
+  JobTitleOfUsers?: Caching<IGenericResponseType[]>;
+  StatusOfUsers?: Caching<IGenericResponseType[]>;
+  ProducersList?: Caching<IGenericResponseType[]>;
+  UserSecurityRoles?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {
