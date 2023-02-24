@@ -4,36 +4,35 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+  - master
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '14.x'
-  displayName: 'Init Modules'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "14.x"
+    displayName: "Init Modules"
 
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --configuration production --output-hashing=all
-  displayName: 'Build'
-  
-- task: FtpUpload@2
-  inputs:
-    credentialsOption: 'inputs'
-    serverUrl: 'ftp://67.225.146.5'
-    username: 'ftp_ibs_ng'
-    password: 'e%71mM28i'
-    rootDirectory: 'dist/oasis/'
-    filePatterns: '**'
-    remoteDirectory: '/ibs-ng.oasisoft.net'
-    enableUtf8: true
-    clean: false
-    cleanContents: true
-    preservePaths: true
-    trustSSL: true
-  displayName: 'Upload [IBS]'
+  - script: |
+      npm install -g @angular/cli
+      npm install
+      ng build --configuration production --output-hashing=all
+    displayName: "Build"
 
+  - task: FtpUpload@2
+    inputs:
+      credentialsOption: "inputs"
+      serverUrl: "ftp://67.225.146.5"
+      username: "ftp_ibs_ng"
+      password: "e%71mM28i"
+      rootDirectory: "dist/oasis/"
+      filePatterns: "**"
+      remoteDirectory: "/httpdocs"
+      enableUtf8: true
+      clean: false
+      cleanContents: true
+      preservePaths: true
+      trustSSL: true
+    displayName: "Upload [IBS]"
