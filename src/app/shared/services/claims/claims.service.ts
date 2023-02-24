@@ -13,6 +13,7 @@ import {
   IClaimPolicies,
   IClaimPoliciesSearch,
 } from "../../app/models/Claims/claims-util";
+import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 
 @Injectable({
   providedIn: "root",
@@ -53,12 +54,31 @@ export class ClaimsService {
     );
   }
 
-  searchClientClaimData() {
-    return this.http.post(
+  searchClientClaimData(
+    data: IClaimPolicies
+  ): Observable<IBaseResponse<IClaimPolicies>> {
+    return this.http.post<IBaseResponse<IClaimPolicies>>(
       this.env + ApiRoutes.Claims.SearchClientClaimData,
-      {}
+      {
+        ClassOfBusiness: data.className,
+        LineOfBusiness: data.lineOfBusiness,
+        PolicyNo: data.policyNo,
+        ClientId: data.clientNo?.toString(),
+      }
     );
   }
+
+  getClaimStatusNotes(
+    state: string[]
+  ): Observable<IBaseResponse<IGenericResponseType[]>> {
+    return this.http.post<IBaseResponse<IGenericResponseType[]>>(
+      this.env + ApiRoutes.Claims.getClaimStatusNotes,
+      {
+        status: state,
+      }
+    );
+  }
+
   //#endregion
 
   getSubStatus(

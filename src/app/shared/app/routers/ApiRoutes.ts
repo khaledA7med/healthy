@@ -81,6 +81,10 @@ export const ApiRoutes = {
       typeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
       insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
       productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
+      insurClasses: LookUpTables + BaseData.InsurClasses,
+      currencies: LookUpTables + BaseData.Currencies,
+      banks: LookUpTables + BaseData.Banks,
+      rejectionReason: LookUpTables + BaseData.RejectionReason,
     },
     SystemAdmin: {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
@@ -159,6 +163,7 @@ export const ApiRoutes = {
     subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
+    getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",

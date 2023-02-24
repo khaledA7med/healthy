@@ -39,6 +39,7 @@ export class GregorianPickerComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.model) this.date = this.model;
+    else this.date = { day: 0, year: 0, month: 0 };
   }
 
   get today() {

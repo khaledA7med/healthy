@@ -1,17 +1,19 @@
-import { FormControl } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { IClaimRejectDeductForm } from "./iclaim-reject-deduct-form";
 
 export interface IClaimsForms {
   clientInfo?: FormControl<string | null>;
 
-  SNo?: FormControl<number | null>;
-  Branch?: FormControl<string | null>;
-  CNo?: FormControl<string | null>;
-  ClaimNo?: FormControl<string | null>;
-  PoliciesSNo?: FormControl<string | null>;
+  sNo?: FormControl<number | null>;
+  branch?: FormControl<string | null>;
+  cNo?: FormControl<string | null>;
+  claimNo?: FormControl<string | null>;
+  policiesSNo?: FormControl<string | null>;
+  claimType?: FormControl<string | null>; //MOT GEN
 
   /* Policy Details Tap */
-  ClientID?: FormControl<string | null>;
-  ClientName?: FormControl<string | null>;
+  clientID?: FormControl<string | null>;
+  clientName?: FormControl<string | null>;
   insuranceCompany?: FormControl<string | null>;
   policyNo?: FormControl<string | null>;
   className?: FormControl<string | null>;
@@ -19,10 +21,9 @@ export interface IClaimsForms {
   dateOfLossFrom?: FormControl<Date | null>; //Inception Date
   dateOfLossTo?: FormControl<Date | null>; //Expiry Date
   projectTitle?: FormControl<string | null>;
-  MaintenancePeriodFrom?: FormControl<Date | null>;
-  MaintenancePeriodTo?: FormControl<Date | null>;
+  maintenancePeriodFrom?: FormControl<Date | null>;
+  maintenancePeriodTo?: FormControl<Date | null>;
   previousClaimsNo?: FormControl<number | null>;
-  //  IEnumerable<ClaimTransactionDto> ClaimTransactions  = new List<ClaimTransactionDto>(); // Just For Presentation
   /****************** End ************************/
 
   /* Payment Tap 1- Claim Details */
@@ -40,13 +41,7 @@ export interface IClaimsForms {
   bankCity?: FormControl<string | null>;
 
   //Claim Amount
-  ckClaimAmount?: FormControl<boolean | null>;
-  claimAmount?: FormControl<number | null>;
-  otherCurrAmount?: FormControl<number | null>;
-  otherCurr?: FormControl<string | null>;
-  exchangeRate?: FormControl<number | null>;
-  estimatedValue?: FormControl<number | null>;
-  salvage?: FormControl<number | null>;
+  claimAmounts?: FormGroup<IClaimAmountForm>;
 
   //Contact Details
   contactName?: FormControl<string | null>;
@@ -55,8 +50,13 @@ export interface IClaimsForms {
   notes?: FormControl<string | null>;
 
   //Required Document
-  //  IEnumerable<BaseLookUpDto> requiredDocumentList  = new List<BaseLookUpDto>();
-  //   RequiredDocuments
+  requiredDocumentList: FormArray<
+    FormGroup<{
+      item?: FormControl<string | null>;
+      checked?: FormControl<boolean | null>;
+    }>
+  >;
+  chAllDocuments: FormControl<boolean | null>;
 
   //claim Details Dates
   chIntimationDate?: FormControl<boolean | null>;
@@ -96,47 +96,17 @@ export interface IClaimsForms {
   /***************        End Payment Tap     *****************/
 
   /* Medical */
-  medID?: FormControl<string | null>;
-  hospital?: FormControl<string | null>;
-  medClass?: FormControl<string | null>; //Added M
-  medCaseType?: FormControl<string | null>; //Added M
+  medical?: FormGroup<IClaimMedicalForm>;
   /***************        End Medical       *****************/
 
   /* Motor  */
-  carPaletNo?: FormControl<string | null>;
-  mistakePercentage?: FormControl<number | null>;
-  claimType?: FormControl<string | null>; //MOT GEN
-  motorChassisNo?: FormControl<string | null>;
-  type?: FormControl<string | null>; // Own Damage , Total Loss
-  carsMake?: FormControl<string | null>;
-  model?: FormControl<string | null>;
-  typeOfrepair?: FormControl<string | null>;
-  city?: FormControl<string | null>;
-  workshopAgency?: FormControl<string | null>;
-  //  IEnumerable<BaseLookUpDto> WorkshopAgencyList  = new List<BaseLookUpDto>();
-  accidentNumber?: FormControl<string | null>;
-  TPL?: FormControl<number | null>;
-  excess?: FormControl<number | null>;
-  policyExcess?: FormControl<string | null>;
-  policyCertificateNo?: FormControl<string | null>;
-
+  motor?: FormGroup<IClaimMotorForm>;
   /***************        End Motor       *****************/
 
   /* General  */
-  nameofInjured?: FormControl<string | null>;
-  natureofLoss?: FormControl<string | null>;
-  lossLocation?: FormControl<string | null>;
-  claimExcess?: FormControl<number | null>;
-  interimPayment?: FormControl<number | null>;
-  recovery?: FormControl<string | null>;
-  liability?: FormControl<string | null>;
-  claimCertificateNo?: FormControl<string | null>;
-  declarationNo?: FormControl<string | null>;
-  shipmentName?: FormControl<string | null>;
-  generalChassisNo?: FormControl<string | null>;
   //  IEnumerable<ClaimGeneralDto> ClaimsGeneral  = new List<ClaimGeneralDto>();
   //   ClaimsGeneral
-
+  general?: FormGroup<IClaimGeneralForm>;
   /***************        End General       *****************/
 
   InsuranceCompanyDNCNNo?: FormControl<string | null>;
@@ -158,4 +128,62 @@ export interface IClaimsForms {
   MngRejectInfo?: FormControl<string | null>;
   PaymentType?: FormControl<string | null>;
   PaymentDetails?: FormControl<string | null>;
+}
+
+export interface IClaimAmountForm {
+  ckClaimAmount?: FormControl<boolean | null>;
+  claimAmount?: FormControl<number | null>;
+  otherCurrAmount?: FormControl<number | null>;
+  otherCurr?: FormControl<string | null>;
+  exchangeRate?: FormControl<number | null>;
+  estimatedValue?: FormControl<number | null>;
+  salvage?: FormControl<number | null>;
+}
+
+export interface IClaimMedicalForm {
+  medID?: FormControl<string | null>;
+  hospital?: FormControl<string | null>;
+  medClass?: FormControl<string | null>; //Added M
+  medCaseType?: FormControl<string | null>; //Added M
+}
+
+export interface IClaimMotorForm {
+  carPaletNo?: FormControl<string | null>;
+  mistakePercentage?: FormControl<number | null>;
+  motorChassisNo?: FormControl<string | null>;
+  type?: FormControl<string | null>; // Own Damage , Total Loss
+  carsMake?: FormControl<string | null>;
+  model?: FormControl<string | null>;
+  typeOfrepair?: FormControl<string | null>;
+  city?: FormControl<string | null>;
+  workshopAgency?: FormControl<string | null>;
+  accidentNumber?: FormControl<string | null>;
+  TPL?: FormControl<number | null>;
+  excess?: FormControl<number | null>;
+  policyExcess?: FormControl<string | null>;
+  policyCertificateNo?: FormControl<string | null>;
+}
+
+export interface IClaimGeneralForm {
+  nameofInjured?: FormControl<string | null>;
+  natureofLoss?: FormControl<string | null>;
+  lossLocation?: FormControl<string | null>;
+  claimExcess?: FormControl<number | null>;
+  interimPayment?: FormControl<number | null>;
+  recovery?: FormControl<string | null>;
+  liability?: FormControl<string | null>;
+  claimCertificateNo?: FormControl<string | null>;
+  declarationNo?: FormControl<string | null>;
+  shipmentName?: FormControl<string | null>;
+  generalChassisNo?: FormControl<string | null>;
+  claimsGeneral?: FormArray<FormGroup<IClaimsGeneralListForm>>;
+}
+
+export interface IClaimsGeneralListForm {
+  claimNo?: FormControl<number | null>;
+  clientName?: FormControl<string | null>;
+  clientNo?: FormControl<number | null>;
+  item?: FormControl<string | null>;
+  mandatory?: FormControl<boolean | null>;
+  value?: FormControl<number | null>;
 }

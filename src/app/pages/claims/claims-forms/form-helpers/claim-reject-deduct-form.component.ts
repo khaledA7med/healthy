@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
@@ -7,11 +14,12 @@ import {
   IClaimRejectDeduct,
   IClaimRejectDeductForm,
 } from "src/app/shared/app/models/Claims/iclaim-reject-deduct-form";
+import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
   selector: "app-claim-reject-deduct-form",
   template: `
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">
           Rejection/Deduction Details
@@ -80,6 +88,7 @@ import {
         </div>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"
@@ -87,7 +96,6 @@ import {
         >
           Cancel
         </button>
-        <button type="submit" class="btn btn-primary btn-sm">Save</button>
       </div>
     </form>
   `,
@@ -107,6 +115,11 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
     type: "",
   };
 
+  @Input() formEditMode: boolean = false;
+
+  @Output() rejectDeductItem: EventEmitter<IClaimRejectDeduct> =
+    new EventEmitter<IClaimRejectDeduct>();
+
   types: string[] = ["Rejected", "Deducted"];
 
   submitted: boolean = false;
@@ -114,7 +127,7 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
 
-  constructor(public modal: NgbActiveModal) {}
+  constructor(public modal: NgbActiveModal, private message: MessagesService) {}
 
   initForm(): void {
     this.formGroup = new FormGroup<IClaimRejectDeductForm>({
@@ -137,7 +150,34 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
     this.initForm();
   }
 
-  onSubmit(value: any): void {}
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+    if (!this.validationChecker()) return;
+    if (this.formEditMode) {
+    } else {
+      this.rejectDeductItem.emit({
+        type: this.f.type?.value!,
+        amount: this.f.amount?.value!,
+        rejectionNote: this.f.rejectionNote?.value!,
+        rejectionReason: this.f.rejectionReason?.value!,
+        clientName: this.f.clientName?.value!,
+        clientNo: this.f.clientNo?.value!,
+      });
+      this.modal.close();
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

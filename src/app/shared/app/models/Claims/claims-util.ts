@@ -1,3 +1,4 @@
+import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { IBaseFilters } from "../App/IBaseFilters";
 
 export enum ClaimsType {
@@ -29,7 +30,28 @@ export interface IClaimPolicies {
   oasisPolRef?: string;
   maintenancePeriodMonths?: string;
   identity?: string;
+  claimTransactionList?: IClaimTransactionList[];
+  requiredDocumentList?: IGenericResponseType[];
+  claimGeneralList?: IClaimGeneralList[];
+  previousClaimsCount?: number;
 }
+
+export interface IClaimTransactionList {
+  accNo?: string;
+  subAccName?: string;
+  policyNo?: string;
+  outstandingBalance?: string;
+  overDueBalance?: string;
+}
+export interface IClaimGeneralList {
+  claimNo?: string;
+  clientName?: string;
+  clientNo?: string;
+  item?: string;
+  mandatory?: boolean;
+  value?: number;
+}
+
 export enum claimsStatus {
   active = "Active",
   closed = "Closed",
