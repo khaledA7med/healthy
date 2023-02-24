@@ -29,7 +29,7 @@ steps:
       password: "e%71mM28i"
       rootDirectory: "dist/oasis/"
       filePatterns: "**"
-      remoteDirectory: "/httpdocs"
+      remoteDirectory: "/"
       enableUtf8: true
       clean: false
       cleanContents: true
