@@ -1,5 +1,11 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
 import {
   AbstractControl,
   FormArray,
@@ -7,6 +13,7 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   NgbModal,
   NgbModalOptions,
@@ -29,6 +36,7 @@ import {
   IClaimPoliciesSearch,
   IClaimTransactionList,
 } from "src/app/shared/app/models/Claims/claims-util";
+import { IClaimDataForm } from "src/app/shared/app/models/Claims/iclaim-data-form";
 import {
   IClaimRejectDeduct,
   IClaimRejectDeductForm,
@@ -41,6 +49,7 @@ import {
   IClaimsForms,
   IClaimsGeneralListForm,
 } from "src/app/shared/app/models/Claims/iclaims-forms";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
 import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/dropzone.component";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
@@ -56,7 +65,7 @@ import { ClaimRejectDeductFormComponent } from "./form-helpers/claim-reject-dedu
   templateUrl: "./claims-forms.component.html",
   styleUrls: ["./claims-forms.component.scss"],
 })
-export class ClaimsFormsComponent implements OnInit {
+export class ClaimsFormsComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClaimsForms>;
   formData!: Observable<IBaseMasterTable>;
   modalRef!: NgbModalRef;
@@ -64,6 +73,7 @@ export class ClaimsFormsComponent implements OnInit {
     claimTypes: ClaimsType,
     submitted: false as boolean,
     editMode: false as boolean,
+    editId: "" as string,
     searchRequest: {
       pageNumber: 1,
       pageSize: 50,
@@ -103,12 +113,22 @@ export class ClaimsFormsComponent implements OnInit {
     private claimService: ClaimsService,
     private eventService: EventService,
     private util: AppUtils,
-    private message: MessagesService
+    private message: MessagesService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.formDataHandler();
+    let sub = this.route.paramMap.subscribe((res) => {
+      if (res.get("id")) {
+        this.eventService.broadcast(reserved.isLoading, true);
+        this.uiState.editId = res.get("id")!;
+        this.getClaim(this.uiState.editId);
+      }
+    });
+    this.subscribes.push(sub);
   }
 
   //#region Global Handlers
@@ -127,7 +147,7 @@ export class ClaimsFormsComponent implements OnInit {
     this.medicalClaimType();
 
     // Claimant Amounts Calc
-    this.claimAmountHandler();
+    if (!this.uiState.editMode) this.claimAmountHandler();
 
     // Set Default Dates
     let date = new Date();
@@ -149,6 +169,8 @@ export class ClaimsFormsComponent implements OnInit {
     this.formGroup = new FormGroup<IClaimsForms>({
       claimType: new FormControl(this.uiState.claimTypes.Medical),
       clientInfo: new FormControl(null, Validators.required),
+      clientName: new FormControl(null, Validators.required),
+      clientID: new FormControl(null, Validators.required),
       policyNo: new FormControl(null, Validators.required),
       className: new FormControl(null, Validators.required),
       dateOfLossFrom: new FormControl(null, Validators.required),
@@ -156,6 +178,7 @@ export class ClaimsFormsComponent implements OnInit {
       projectTitle: new FormControl(null),
       insuranceCompany: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
+      claimNo: new FormControl(null),
       previousClaimsNo: new FormControl(null),
       insurCompClaimNo: new FormControl(null),
       insuredClaimNo: new FormControl(null),
@@ -174,6 +197,10 @@ export class ClaimsFormsComponent implements OnInit {
         exchangeRate: new FormControl(1),
         estimatedValue: new FormControl(null),
         salvage: new FormControl(null),
+        paid: new FormControl(null),
+        deducted: new FormControl(null),
+        rejected: new FormControl(null),
+        underProcessing: new FormControl(null),
       }),
 
       contactName: new FormControl(null),
@@ -279,6 +306,77 @@ export class ClaimsFormsComponent implements OnInit {
   get general(): IClaimGeneralForm {
     return this.f.general?.controls!;
   }
+
+  getClaim(id: string): void {
+    console.log(id);
+    this.uiState.editMode = true;
+    this.claimService
+      .getClaimById("3871")
+      .subscribe((res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
+        console.log(res);
+        if (res.body?.status) {
+          let data = res.body?.data;
+          this.formGroup.patchValue({
+            claimType: data?.claimType,
+            clientID: data?.clientID?.toString()!,
+            clientName: data?.clientName,
+            clientInfo: `${data?.clientID} | ${data?.clientName}`,
+            policyNo: data?.policyNo,
+            className: data?.className,
+            insuranceCompany: data?.insuranceCompany,
+            claimNo: data?.claimNo,
+            insurCompClaimNo: data?.insurCompClaimNo,
+            insuredClaimNo: data?.insuredClaimNo,
+            membName: data?.membName,
+            bLAWBNo: data?.blawbNo,
+            lostadjuster: data?.lostadjuster,
+            lostadjusterEmail: data?.lostadjusterEmail,
+            lostadjusterTele: data?.lostadjusterTele,
+            claimAmounts: {
+              claimAmount: data?.claimAmount,
+              estimatedValue: data?.estimatedValue,
+              salvage: data?.salvage,
+            },
+            contactName: data?.contactName,
+            contactEmail: data?.contactEmail,
+            contactTele: data?.contactTele,
+            notes: data?.notes,
+
+            chIntimationDate: data?.chIntimationDate,
+            intimationDate: this.util.dateStructFormat(
+              data?.intimationDate!
+            ) as any,
+            chDateOfLoss: data?.chDateOfLoss,
+            dateOfLoss: this.util.dateStructFormat(data?.dateOfLoss!) as any,
+            chDateOfReceive: data?.chDateOfDeadline,
+            dateOfReceive: this.util.dateStructFormat(
+              data?.dateOfReceive!
+            ) as any,
+            chDateOfDeadline: data?.chDateOfDeadline,
+            dateOfDeadline: this.util.dateStructFormat(
+              data?.dateOfDeadline!
+            ) as any,
+
+            status: data?.status,
+            claimStatusNotes: data?.claimStatusNotes,
+
+            claimantMobile: data?.claimantMobile,
+            claimantEmail: data?.claimantEmail,
+            claimantIBAN: data?.claimantIBAN,
+            bankName: data?.bankName,
+            bankBranch: data?.bankBranch,
+            bankCity: data?.bankCity,
+          });
+
+          this.setRequiredDocuments(
+            data?.requiredDocumentList!,
+            data?.requiredDocuments!
+          );
+        }
+        this.eventService.broadcast(reserved.isLoading, false);
+      });
+  }
+
   //#endregion
 
   //#region Policy Details Section
@@ -388,7 +486,6 @@ export class ClaimsFormsComponent implements OnInit {
   // Claim Amount Handler
   claimAmountHandler(): void {
     let sub = this.amounts.ckClaimAmount?.valueChanges.subscribe((el) => {
-      console.log(el);
       if (el) {
         this.amounts.otherCurr?.disable();
         this.amounts.otherCurr?.patchValue("SAR");
@@ -513,6 +610,15 @@ export class ClaimsFormsComponent implements OnInit {
     else this.f.chAllDocuments.patchValue(true);
   }
 
+  setRequiredDocuments(list: IGenericResponseType[], selected: string) {
+    this.uiState.claimLists.requiredDocs = selected.split(";")!;
+    list.forEach((el, i) => {
+      this.addRequiredDocs(el);
+      if (this.uiState.claimLists.requiredDocs.includes(el.name))
+        this.documentListControl(i, "checked").patchValue(true);
+    });
+  }
+
   //#endregion
 
   //#region Payments Section
@@ -561,8 +667,8 @@ export class ClaimsFormsComponent implements OnInit {
     this.modalRef.componentInstance.formEditMode = this.uiState.editMode;
     this.modalRef.componentInstance.data = {
       sNo: 0,
-      clientName: this.f.clientName,
-      clientNo: this.f.clientID,
+      clientName: this.f.clientName?.value,
+      clientNo: this.f.clientID?.value,
     };
 
     let sub = this.modalRef.closed.subscribe((res) => {});
@@ -627,6 +733,7 @@ export class ClaimsFormsComponent implements OnInit {
   onSubmit(): void {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let val = this.formGroup.getRawValue();
     const formData = new FormData();
 
@@ -678,34 +785,26 @@ export class ClaimsFormsComponent implements OnInit {
     for (let i = 0; i < itemDetail.length; i++) {
       formData.append(
         `ClaimsGeneral[${i}].clientNo`,
-        itemDetail[i].clientNo!.toString()
+        this.f.clientID?.value! ?? "0"
       );
       formData.append(
         `ClaimsGeneral[${i}].clientName`,
-        itemDetail[i].clientName!
+        this.f.clientName?.value! ?? ""
       );
       formData.append(`ClaimsGeneral[${i}].item`, itemDetail[i].item!);
       formData.append(
         `ClaimsGeneral[${i}].value`,
-        itemDetail[i].value!.toString()
+        itemDetail[i].value ? itemDetail[i].value!.toString()! : "0"
       );
       formData.append(
         `ClaimsGeneral[${i}].mandatory`,
         itemDetail[i].mandatory!.toString()
       );
-      formData.append(
-        `ClaimsGeneral[${i}].clientNo`,
-        itemDetail[i].clientNo!.toString()
-      );
-      formData.append(
-        `ClaimsGeneral[${i}].clientNo`,
-        itemDetail[i].clientNo!.toString()
-      );
     }
 
     formData.append("branch", val.branch ?? "");
     formData.append("PolicyNo", val.policyNo ?? "");
-    formData.append("cNo", val.sNo?.toString()! ?? "");
+    formData.append("cNo", val.sNo?.toString()! ?? "0");
     formData.append("ClientName", val.clientName ?? "");
     formData.append("clientID", val.clientID ?? "");
     formData.append("claimType", val.claimType ?? "");
@@ -738,19 +837,19 @@ export class ClaimsFormsComponent implements OnInit {
     formData.append("MotorChassisNo", val.motor?.motorChassisNo ?? "");
     formData.append(
       "mistakePercentage",
-      val.motor?.mistakePercentage?.toString() ?? ""
+      val.motor?.mistakePercentage?.toString() ?? "0"
     );
-    formData.append("tpl", val.motor?.TPL?.toString() ?? "");
-    formData.append("excess", val.motor?.excess?.toString() ?? "");
+    formData.append("tpl", val.motor?.TPL?.toString() ?? "0");
+    formData.append("excess", val.motor?.excess?.toString() ?? "0");
 
     formData.append("generalChassisNo", val.general?.generalChassisNo ?? "");
     formData.append("nameofInjured", val.general?.nameofInjured ?? "");
     formData.append("natureofLoss", val.general?.natureofLoss ?? "");
     formData.append("lossLocation", val.general?.lossLocation ?? "");
-    formData.append("PolicyExcess", val.general?.claimExcess!.toString() ?? "");
+    formData.append("PolicyExcess", val.general?.claimExcess! ?? "");
     formData.append(
       "interimPayment",
-      val.general?.interimPayment?.toString() ?? ""
+      val.general?.interimPayment?.toString() ?? "0"
     );
     formData.append("recovery", val.general?.recovery ?? "");
     formData.append("liability", val.general?.liability ?? "");
@@ -769,11 +868,11 @@ export class ClaimsFormsComponent implements OnInit {
     formData.append("salvage", val.claimAmounts?.salvage?.toString() ?? "0");
     formData.append(
       "claimAmount",
-      val.claimAmounts?.claimAmount?.toString() ?? ""
+      val.claimAmounts?.claimAmount?.toString() ?? "0"
     );
     formData.append(
       "otherCurrAmount",
-      val.claimAmounts?.otherCurrAmount?.toString() ?? ""
+      val.claimAmounts?.otherCurrAmount?.toString() ?? "0"
     );
     formData.append("otherCurr", val.claimAmounts?.otherCurr!);
 
@@ -818,7 +917,30 @@ export class ClaimsFormsComponent implements OnInit {
     formData.append("contactTele", val.contactTele ?? "");
 
     formData.append("projectTitle", val.projectTitle ?? "");
+
+    let sub = this.claimService.saveClaim(formData).subscribe(
+      (res: IBaseResponse<number>) => {
+        console.log(res);
+        if (res.status) {
+          this.message.toast(res.message!, "success");
+          if (this.uiState.editMode)
+            this.router.navigate([AppRoutes.Claims.base]);
+          this.resetForm();
+        } else this.message.popup("Sorry!", res?.message!, "warning");
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Sorry!", err?.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+
+    this.subscribes.push(sub);
   }
 
   resetForm() {}
+
+  ngOnDestroy(): void {
+    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+  }
 }

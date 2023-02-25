@@ -138,6 +138,11 @@ export interface IClaimAmountForm {
   exchangeRate?: FormControl<number | null>;
   estimatedValue?: FormControl<number | null>;
   salvage?: FormControl<number | null>;
+
+  paid?: FormControl<number | null>;
+  deducted?: FormControl<number | null>;
+  rejected?: FormControl<number | null>;
+  underProcessing?: FormControl<number | null>;
 }
 
 export interface IClaimMedicalForm {
@@ -168,7 +173,7 @@ export interface IClaimGeneralForm {
   nameofInjured?: FormControl<string | null>;
   natureofLoss?: FormControl<string | null>;
   lossLocation?: FormControl<string | null>;
-  claimExcess?: FormControl<number | null>;
+  claimExcess?: FormControl<string | null>;
   interimPayment?: FormControl<number | null>;
   recovery?: FormControl<string | null>;
   liability?: FormControl<string | null>;

@@ -14,6 +14,7 @@ import {
   IClaimPoliciesSearch,
 } from "../../app/models/Claims/claims-util";
 import { IGenericResponseType } from "src/app/core/models/masterTableModels";
+import { IClaimDataForm } from "../../app/models/Claims/iclaim-data-form";
 
 @Injectable({
   providedIn: "root",
@@ -76,6 +77,22 @@ export class ClaimsService {
       {
         status: state,
       }
+    );
+  }
+
+  saveClaim(data: FormData): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.Claims.saveClaim,
+      data
+    );
+  }
+
+  getClaimById(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IClaimDataForm>>> {
+    return this.http.get<IBaseResponse<IClaimDataForm>>(
+      this.env + ApiRoutes.Claims.editClaim,
+      { params: { sno: id }, observe: "response" }
     );
   }
 

@@ -158,6 +158,8 @@ export const ApiRoutes = {
   },
   Claims: {
     search: "/Claims/Search",
+    saveClaim: "/Claims/SaveClaim",
+    editClaim: "/Claims/EditClaim",
     searchPolicy: "/Claims/SearchPolicy",
     SearchClientClaimData: "/Claims/SearchClientClaimData",
     subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",

@@ -16,7 +16,6 @@ export class PermissionsInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    console.log("first");
     return next.handle(request);
   }
 }

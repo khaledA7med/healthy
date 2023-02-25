@@ -148,6 +148,13 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
+    console.log(this.data);
+    this.formGroup.patchValue({
+      sNo: this.data.sNo,
+      claimSNo: this.data.claimSNo,
+      clientName: this.data.clientName,
+      clientNo: this.data.clientNo,
+    });
   }
 
   validationChecker(): boolean {
@@ -167,6 +174,14 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     if (this.formEditMode) {
     } else {
+      console.log({
+        type: this.f.type?.value!,
+        amount: this.f.amount?.value!,
+        rejectionNote: this.f.rejectionNote?.value!,
+        rejectionReason: this.f.rejectionReason?.value!,
+        clientName: this.f.clientName?.value!,
+        clientNo: this.f.clientNo?.value!,
+      });
       this.rejectDeductItem.emit({
         type: this.f.type?.value!,
         amount: this.f.amount?.value!,
