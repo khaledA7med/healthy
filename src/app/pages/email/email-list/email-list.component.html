@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="email-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
     <!-- Side Bar -->
-    <div class="email-menu-sidebar">
+    <div class="email-menu-sidebar" #sideBar>
       <div class="p-4 d-flex flex-column h-100">
         <div class="pb-4 border-bottom border-bottom-dashed">
           <button
@@ -12,9 +12,9 @@
             New
           </button>
         </div>
-        <ngx-simplebar class="email-menu-sidebar-scroll pe-3">
+        <ngx-simplebar class="email-menu-sidebar-scroll">
           <!-- mail list -->
-          <div class="mail-list mt-3">
+          <div class="mail-list mt-3 me-3">
             <a href="javascript: void(0)" class="active"
               ><i class="ri-mail-fill me-3 align-middle fw-medium"></i>
               <span class="mail-list-link">All</span>
@@ -52,7 +52,7 @@
           </div>
           <!-- / mail list -->
           <!-- labels -->
-          <div>
+          <div class="me-3">
             <h5 class="fs-12 text-uppercase text-muted mt-4">Labels</h5>
 
             <div class="mail-list mt-1">
@@ -94,7 +94,7 @@
           </div>
           <!-- /labels -->
           <!-- chat -->
-          <div class="border-top border-top-dashed pt-3 mt-3">
+          <div class="border-top border-top-dashed pt-3 mt-3 me-3">
             <a
               href="javascript: void(0)"
               class="btn btn-icon btn-sm btn-soft-info btn-rounded float-end"
@@ -182,6 +182,241 @@
         </div>
       </div>
     </div>
+    <!-- / Side Bar -->
+    <!-- email content -->
+    <div class="email-content">
+      <div class="p-4 pb-0">
+        <div class="border-bottom border-bottom-dashed">
+          <div class="row mt-n2 mb-3 mb-sm-0">
+            <!-- col email menu -->
+            <div class="col col-sm-auto order-1 d-block d-lg-none">
+              <button
+                type="button"
+                class="btn btn-soft-success btn-icon btn-sm fs-16 email-menu-btn"
+                (click)="showSideBar()"
+              >
+                <i class="ri-menu-2-fill align-bottom"></i>
+              </button>
+            </div>
+            <!-- /col -->
+            <!-- col email actions -->
+            <div class="col-sm order-3 order-sm-2">
+              <div
+                class="hstack gap-sm-1 align-items-center flex-wrap email-topbar-link"
+              >
+                <div class="form-check fs-14 m-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="checkall"
+                  />
+                  <label class="form-check-label" for="checkall"></label>
+                </div>
+                <div id="email-topbar-actions">
+                  <div class="hstack gap-sm-1 align-items-center flex-wrap">
+                    <button
+                      type="button"
+                      class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                      title="Archive"
+                    >
+                      <i class="ri-inbox-archive-fill align-bottom"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                      title="Report Spam"
+                    >
+                      <i class="ri-error-warning-fill align-bottom"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                      title="Trash"
+                    >
+                      <i class="ri-delete-bin-5-fill align-bottom"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="vr align-self-center mx-2"></div>
+                <div ngbDropdown>
+                  <button
+                    class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                    type="button"
+                    id="dropdown1"
+                    ngbDropdownToggle
+                  >
+                    <i class="ri-price-tag-3-fill align-bottom"></i>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdown1">
+                    <button ngbDropdownItem>Support</button>
+                    <button ngbDropdownItem>Freelance</button>
+                    <button ngbDropdownItem>Social</button>
+                    <button ngbDropdownItem>Friends</button>
+                    <button ngbDropdownItem>Family</button>
+                  </div>
+                </div>
+                <div ngbDropdown>
+                  <button
+                    class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                    type="button"
+                    id="dropdown2"
+                    ngbDropdownToggle
+                  >
+                    <i class="ri-more-2-fill align-bottom"></i>
+                  </button>
+                  <div
+                    ngbDropdownMenu
+                    aria-labelledby="dropdown2"
+                    class="dropdown-menu-end"
+                  >
+                    <button ngbDropdownItem>Mark all as Read</button>
+                  </div>
+                </div>
+                <!-- <div
+                  class="alert alert-warning alert-dismissible unreadConversations-alert px-4 fade show"
+                  id="unreadConversations"
+                  role="alert"
+                >
+                  No Unread Conversations
+                </div> -->
+              </div>
+            </div>
+            <!-- /col -->
+            <!-- col refresh  -->
+            <div class="col-auto order-2 order-sm-3">
+              <div class="d-flex gap-sm-1 email-topbar-link">
+                <button
+                  type="button"
+                  class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                >
+                  <i class="ri-refresh-line align-bottom"></i>
+                </button>
+                <div ngbDropdown>
+                  <button
+                    class="btn btn-ghost-secondary btn-icon btn-sm fs-16"
+                    type="button"
+                    ngbDropdownToggle
+                  >
+                    <i class="ri-more-2-fill align-bottom"></i>
+                  </button>
+                  <div ngbDropdownMenu class="dropdown-menu-end">
+                    <button ngbDropdownItem>Mark as Unread</button>
+                    <button ngbDropdownItem>Mark as Important</button>
+                    <button ngbDropdownItem>Add to Tasks</button>
+                    <button ngbDropdownItem>Add Star</button>
+                    <button ngbDropdownItem>Mute</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="row align-items-end mt-3">
+            <div class="col">
+              <div id="mail-filter-navlist">
+                <ul
+                  class="nav nav-tabs nav-tabs-custom nav-primary gap-1 text-center border-bottom-0"
+                  role="tablist"
+                >
+                  <li class="nav-item">
+                    <button
+                      class="nav-link fw-semibold"
+                      [ngClass]="{ active: uiState.isPrimary }"
+                      type="button"
+                      role="tab"
+                      aria-controls="pills-primary"
+                      (click)="toggleNavItem('primary')"
+                    >
+                      <i class="ri-inbox-fill align-bottom d-inline-block"></i>
+                      <span class="ms-1 d-none d-sm-inline-block">Primary</span>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button
+                      class="nav-link fw-semibold"
+                      [ngClass]="{ active: uiState.isSocial }"
+                      type="button"
+                      role="tab"
+                      aria-controls="pills-social"
+                      (click)="toggleNavItem('social')"
+                    >
+                      <i class="ri-group-fill align-bottom d-inline-block"></i>
+                      <span class="ms-1 d-none d-sm-inline-block">Social</span>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button
+                      class="nav-link fw-semibold"
+                      [ngClass]="{ active: uiState.isPromotions }"
+                      type="button"
+                      role="tab"
+                      aria-controls="pills-promotions"
+                      (click)="toggleNavItem('promotions')"
+                    >
+                      <i
+                        class="ri-price-tag-3-fill align-bottom d-inline-block"
+                      ></i>
+                      <span class="ms-1 d-none d-sm-inline-block"
+                        >Promotions</span
+                      >
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="text-muted mb-2">1-50 of 154</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content">
+          <div
+            class="tab-pane fade show active"
+            id="pills-primary"
+            role="tabpanel"
+            aria-labelledby="pills-primary-tab"
+          >
+            <ngx-simplebar
+              class="message-list-content mx-n4 px-4 message-list-scroll"
+            >
+              <ul class="message-list">
+                <li *ngFor="let item of uiState.allMailList">
+                  <div class="col-mail col-mail-1">
+                    <div class="form-check checkbox-wrapper-mail fs-14">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [value]="item.id"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      class="btn avatar-xs p-0 favourite-btn fs-15"
+                      [ngClass]="{ active: item.starred }"
+                    >
+                      <i class="ri-star-fill"></i>
+                    </button>
+                    <a href="javascript: void(0);" class="title">
+                      <span class="title-name"> {{ item.name }} </span>
+                    </a>
+                  </div>
+                  <div class="col-mail col-mail-2">
+                    <a href="javascript: void(0);" class="subject">
+                      {{ item.title }}-<span class="subject-title">
+                        {{ item.description }}
+                      </span>
+                    </a>
+                    <div class="date">{{ item.date }}</div>
+                  </div>
+                </li>
+              </ul>
+            </ngx-simplebar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / email content -->
   </div>
-  <!-- / Side Bar -->
 </div>
