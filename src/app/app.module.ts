@@ -17,7 +17,6 @@ import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { interceptorProviders } from "./core/helpers";
 import { UrlSerializer } from "@angular/router";
 import { LowerCaseUrlSerializer } from "./core/helpers/LowerCaseUrlSerializer";
-// import { FullCalendarModule } from "@fullcalendar/angular";
 
 export function createTranslateLoader(http: HttpClient): any {
 	return new TranslateHttpLoader(http, "assets/i18n/", ".json");
@@ -40,7 +39,6 @@ export function createTranslateLoader(http: HttpClient): any {
 		AppRoutingModule,
 		LayoutsModule,
 		PagesModule,
-		// FullCalendarModule,
 	],
 	providers: [interceptorProviders, { provide: UrlSerializer, useClass: LowerCaseUrlSerializer }],
 	bootstrap: [AppComponent],

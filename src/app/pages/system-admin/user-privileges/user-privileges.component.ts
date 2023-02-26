@@ -237,6 +237,12 @@ export class UserPrivilegesComponent implements OnInit {
 			approvalsRoles: privilegeRole[];
 			reportsRoles: privilegeRole[];
 		};
+		HumanResources: {
+			generalRoles: privilegeRole[];
+			payrollRoles: privilegeRole[];
+		};
+		FixedAssets: privilegeRole[];
+		SysAdmin: privilegeRole[];
 	};
 
 	privilegesForm!: FormGroup<IUserRolesPrivilegesForm>;
@@ -1020,6 +1026,311 @@ export class UserPrivilegesComponent implements OnInit {
 					},
 				],
 			},
+			HumanResources: {
+				generalRoles: [
+					{
+						control: this.ff.chStaffProfiles!,
+						name: "chStaffProfiles",
+						label: "Staff Profiles",
+					},
+					{
+						control: this.ff.chJobsOffersManagement!,
+						name: "chJobsOffersManagement",
+						label: "Job Offers Management",
+					},
+					{
+						control: this.ff.chStaffContracts!,
+						name: "chStaffContracts",
+						label: "Staff Contracts",
+					},
+					{
+						control: this.ff.chLegalLicenseAndOfficialServices!,
+						name: "chLegalLicenseAndOfficialServices",
+						label: "Legal License & Offical Services",
+					},
+					{
+						control: this.ff.chVacationsManagement!,
+						name: "chVacationsManagement",
+						label: "Vacations Management",
+					},
+					{
+						control: this.ff.chVacationsRequest!,
+						name: "chVacationsRequest",
+						label: "Vacations Requests",
+					},
+					{
+						control: this.ff.chHRDeleteApprovedEntries!,
+						name: "chHRDeleteApprovedEntries",
+						label: "Delete Approved Entries",
+					},
+					{
+						control: this.ff.chReports!,
+						name: "chReports",
+						label: "Reports",
+					},
+					{
+						control: this.ff.chApproval!,
+						name: "chApproval",
+						label: "Approval",
+					},
+					{
+						control: this.ff.chAppraisalForm!,
+						name: "chAppraisalForm",
+						label: "Appraisal Form",
+					},
+					{
+						control: this.ff.chSettings!,
+						name: "chSettings",
+						label: "Settings",
+					},
+					{
+						control: this.ff.chRenameStaffName!,
+						name: "chRenameStaffName",
+						label: "Rename Staff Names",
+					},
+					{
+						control: this.ff.chIncidents!,
+						name: "chIncidents",
+						label: "Incidents",
+					},
+					{
+						control: this.ff.chSalaryandBenefits!,
+						name: "chSalaryandBenefits",
+						label: "Salary and Benefits",
+					},
+					{
+						control: this.ff.chEndofService!,
+						name: "chEndofService",
+						label: "End Of Service",
+					},
+					{
+						control: this.ff.chLetterWarning!,
+						name: "chLetterWarning",
+						label: "Warning",
+					},
+					{
+						control: this.ff.chLetterEmbassy!,
+						name: "chLetterEmbassy",
+						label: "Embassy",
+					},
+					{
+						control: this.ff.chLetterEndofService!,
+						name: "chLetterEndofService",
+						label: "End of Service Letter",
+					},
+					{
+						control: this.ff.chLetterEffectiveDateNotice!,
+						name: "chLetterEffectiveDateNotice",
+						label: "Effective Date Notice",
+					},
+					{
+						control: this.ff.chLetterEmployment!,
+						name: "chLetterEmployment",
+						label: "Employment",
+					},
+					{
+						control: this.ff.chLetterSalaryTransfer!,
+						name: "chLetterSalaryTransfer",
+						label: "Salary Transfer",
+					},
+					{
+						control: this.ff.chLetterSalaryDefinition!,
+						name: "chLetterSalaryDefinition",
+						label: "Salary Definition",
+					},
+					{
+						control: this.ff.chLetterReleaseandDischargeForm!,
+						name: "chLetterReleaseandDischargeForm",
+						label: "Release and Discharge Form",
+					},
+					{
+						control: this.ff.chLetterJoiningLetters!,
+						name: "chLetterJoiningLetters",
+						label: "Joining Letters",
+					},
+					{
+						control: this.ff.chLetterSponsorshipTransfer!,
+						name: "chLetterSponsorshipTransfer",
+						label: "Sponsorship Transfer Letters",
+					},
+					{
+						control: this.ff.chLetterTemporaryProfile!,
+						name: "chLetterTemporaryProfile",
+						label: "Temporary Profile Letters",
+					},
+					{
+						control: this.ff.chLetterTemporaryProfile!,
+						name: "chLetterTemporaryProfile",
+						label: "Field Application Letters",
+					},
+					{
+						control: this.ff.chLetterAuthorization!,
+						name: "chLetterAuthorization",
+						label: "Authorization Letters",
+					},
+					{
+						control: this.ff.chAlertExpiringID!,
+						name: "chAlertExpiringID",
+						label: "IDs Expiry",
+					},
+					{
+						control: this.ff.chAlertExpiringPassport!,
+						name: "chAlertExpiringPassport",
+						label: "Passports Expiry",
+					},
+					{
+						control: this.ff.chAlertExpiringLabours!,
+						name: "chAlertExpiringLabours",
+						label: "Labours Expiry",
+					},
+					{
+						control: this.ff.chAlertExpiringContracts!,
+						name: "chAlertExpiringContracts",
+						label: "Contracts Expiry",
+					},
+					{
+						control: this.ff.chAlertExpiringLegal!,
+						name: "chAlertExpiringLegal",
+						label: "Legal License Expiry",
+					},
+					{
+						control: this.ff.chAlertVacationRequest!,
+						name: "chAlertVacationRequest",
+						label: "Alert Vacation Request",
+					},
+					{
+						control: this.ff.chAlertLeaveRequest!,
+						name: "chAlertLeaveRequest",
+						label: "Alert Leave Request",
+					},
+					{
+						control: this.ff.chAlertRemindinglegal!,
+						name: "chAlertRemindinglegal",
+						label: "Alert Reminding legal",
+					},
+					{
+						control: this.ff.chAlertExpiringProbation!,
+						name: "chAlertExpiringProbation",
+						label: "Alert Expiring Probation",
+					},
+					{
+						control: this.ff.chAlertDueContracts!,
+						name: "chAlertDueContracts",
+						label: "Alert Due Contracts",
+					},
+				],
+				payrollRoles: [
+					{
+						control: this.ff.chPayroll!,
+						name: "chPayroll",
+						label: "Payroll",
+					},
+					{
+						control: this.ff.chLoansManagement!,
+						name: "chLoansManagement",
+						label: "Loans Management",
+					},
+					{
+						control: this.ff.chGovernmentExpenses!,
+						name: "chGovernmentExpenses",
+						label: "Government Expenses",
+					},
+					{
+						control: this.ff.chHealthInsurance!,
+						name: "chHealthInsurance",
+						label: "Health Insurance",
+					},
+					{
+						control: this.ff.chAirTickets!,
+						name: "chAirTickets",
+						label: "Air Tickets",
+					},
+					{
+						control: this.ff.chRetroactiveManagement!,
+						name: "chRetroactiveManagement",
+						label: "Retroactive Management",
+					},
+					{
+						control: this.ff.chMobileAllowances!,
+						name: "chMobileAllowances",
+						label: "Mobile Allowances",
+					},
+					{
+						control: this.ff.chSchoolAllowanceManagement!,
+						name: "chSchoolAllowanceManagement",
+						label: "School Allowances Management",
+					},
+					{
+						control: this.ff.chOvertime!,
+						name: "chOvertime",
+						label: "Overtime",
+					},
+					{
+						control: this.ff.chBonusManagement!,
+						name: "chBonusManagement",
+						label: "Bonus Management",
+					},
+					{
+						control: this.ff.chDeductibles!,
+						name: "chDeductibles",
+						label: "Deductibles",
+					},
+					{
+						control: this.ff.chGeneratePayroll!,
+						name: "chGeneratePayroll",
+						label: "Generate Payroll",
+					},
+					{
+						control: this.ff.chActivatePayroll!,
+						name: "chActivatePayroll",
+						label: "Activate Payroll",
+					},
+					{
+						control: this.ff.chPayrollArchive!,
+						name: "chPayrollArchive",
+						label: "Payroll Archive",
+					},
+					{
+						control: this.ff.chHoldSalary!,
+						name: "chHoldSalary",
+						label: "Hold Salary",
+					},
+				],
+			},
+			FixedAssets: [
+				{
+					control: this.ff.chFixedAssets!,
+					name: "chFixedAssets",
+					label: "Fixed Assets",
+				},
+				{
+					control: this.ff.chFixedAssetsReadOnly!,
+					name: "chFixedAssetsReadOnly",
+					label: "Read-Only",
+				},
+			],
+			SysAdmin: [
+				{
+					control: this.ff.chSystemAdmin!,
+					name: "chSystemAdmin",
+					label: "System Admin",
+				},
+				{
+					control: this.ff.chUsersMang!,
+					name: "chUsersMang",
+					label: "User Accounts Management",
+				},
+				{
+					control: this.ff.chSMSControlPanel!,
+					name: "chSMSControlPanel",
+					label: "SMS Control Panal",
+				},
+				{
+					control: this.ff.chEmailsLog!,
+					name: "chEmailsLog",
+					label: "Emails Log",
+				},
+			],
 		};
 	}
 
@@ -1074,31 +1385,71 @@ export class UserPrivilegesComponent implements OnInit {
 					} else this.globalArrs.FinancialManagement[key].forEach((e) => e.control.patchValue(false));
 				}
 				break;
+			case "HumanResources":
+				let hrKey: keyof typeof this.globalArrs.HumanResources;
+				for (hrKey in this.globalArrs.HumanResources) {
+					if (val === true) {
+						this.globalArrs.HumanResources[hrKey].forEach((e) => e.control.patchValue(true));
+						this.ff.chHR?.patchValue(true);
+					} else this.globalArrs.HumanResources[hrKey].forEach((e) => e.control.patchValue(false));
+				}
+				break;
+			case "FixedAssets":
+				this.globalArrs.FixedAssets.forEach((item: privilegeRole) => {
+					if (item.name != "chFixedAssetsReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "SysAdmin":
+				this.globalArrs.SysAdmin.forEach((item: privilegeRole) => {
+					if (val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
 			default:
 				console.log("err");
 		}
 	}
 
-	subItemsChecker(subMenu: string, val: boolean) {
+	subItemsChecker(moduleName: string, subMenu: string, val: boolean) {
 		let mainChecker: privilegeRole[] = [];
-
-		this.globalArrs.FinancialManagement[subMenu as keyof typeof this.globalArrs.FinancialManagement].forEach((item, i) => {
-			if (val) item.control.patchValue(true);
-			else item.control.patchValue(false);
-		});
-		let key: keyof typeof this.globalArrs.FinancialManagement;
-		for (key in this.globalArrs.FinancialManagement) {
-			if (subMenu != "generalRoles")
-				this.globalArrs.FinancialManagement[key].forEach((e, i) => {
-					if (e.control.value === true && i > 0) mainChecker.push(e);
-				});
-			else
-				this.globalArrs.FinancialManagement[key].forEach((e, i) => {
-					if (e.control.value === true) mainChecker.push(e);
-				});
+		if (moduleName === "FinancialManagement") {
+			this.globalArrs.FinancialManagement[subMenu as keyof typeof this.globalArrs.FinancialManagement].forEach((item, i) => {
+				if (val) item.control.patchValue(true);
+				else item.control.patchValue(false);
+			});
+			let key: keyof typeof this.globalArrs.FinancialManagement;
+			for (key in this.globalArrs.FinancialManagement) {
+				if (subMenu != "generalRoles")
+					this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+						if (e.control.value === true && i > 0) mainChecker.push(e);
+					});
+				else
+					this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+						if (e.control.value === true) mainChecker.push(e);
+					});
+			}
+			if (mainChecker.length > 0) this.ff.chFinance?.patchValue(true);
+			else this.ff.chFinance?.patchValue(false);
+		} else {
+			this.globalArrs.HumanResources[subMenu as keyof typeof this.globalArrs.HumanResources].forEach((item, i) => {
+				if (val) item.control.patchValue(true);
+				else item.control.patchValue(false);
+			});
+			let key: keyof typeof this.globalArrs.HumanResources;
+			for (key in this.globalArrs.HumanResources) {
+				if (subMenu != "generalRoles")
+					this.globalArrs.HumanResources[key].forEach((e, i) => {
+						if (e.control.value === true && i > 0) mainChecker.push(e);
+					});
+				else
+					this.globalArrs.HumanResources[key].forEach((e, i) => {
+						if (e.control.value === true) mainChecker.push(e);
+					});
+			}
+			if (mainChecker.length > 0) this.ff.chHR?.patchValue(true);
+			else this.ff.chHR?.patchValue(false);
 		}
-		if (mainChecker.length > 0) this.ff.chFinance?.patchValue(true);
-		else this.ff.chFinance?.patchValue(false);
 	}
 
 	checkMasterItem(modulName: string, subMenu?: string, val?: boolean) {
@@ -1173,6 +1524,49 @@ export class UserPrivilegesComponent implements OnInit {
 				}
 				if (mainChecker.length > 0) this.ff.chFinance?.patchValue(true);
 				else this.ff.chFinance?.patchValue(false);
+				break;
+			case "HumanResources":
+				let cchosenSubMenu = this.globalArrs.HumanResources[subMenu as keyof typeof this.globalArrs.HumanResources];
+				let mmainChecker: privilegeRole[] = [];
+				if (subMenu != "generalRoles") checkarr = cchosenSubMenu.filter((e) => e.name !== cchosenSubMenu[0].name);
+				else checkarr = cchosenSubMenu.filter((e) => e.control.value === true);
+				let keyy: keyof typeof this.globalArrs.HumanResources;
+				for (keyy in this.globalArrs.HumanResources) {
+					if (subMenu != "generalRoles")
+						this.globalArrs.HumanResources[keyy].forEach((e, i) => {
+							if (e.control.value === true && i > 0) mmainChecker.push(e);
+						});
+					else
+						this.globalArrs.HumanResources[keyy].forEach((e, i) => {
+							if (e.control.value === true) mmainChecker.push(e);
+						});
+				}
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (subMenu != "generalRoles") {
+					if (checker) {
+						cchosenSubMenu[0].control.patchValue(true);
+						this.ff.chHR?.patchValue(true);
+					} else {
+						cchosenSubMenu[0].control.patchValue(false);
+					}
+				} else {
+					if (checker) this.ff.chHR?.patchValue(true);
+					else this.ff.chHR?.patchValue(false);
+				}
+				if (mmainChecker.length > 0) this.ff.chHR?.patchValue(true);
+				else this.ff.chHR?.patchValue(false);
+				break;
+			case "FixedAssets":
+				checkarr = this.globalArrs.FixedAssets.filter((e) => !(e.name == "chFixedAssets" || e.name == "chFixedAssetsReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.FixedAssets.find((e) => e.name === "chFixedAssets")?.control.patchValue(true);
+				else this.globalArrs.FixedAssets.find((e) => e.name === "chFixedAssets")?.control.patchValue(false);
+				break;
+			case "SysAdmin":
+				checkarr = this.globalArrs.SysAdmin.filter((e) => !(e.name == "chSystemAdmin"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.SysAdmin.find((e) => e.name === "chSystemAdmin")?.control.patchValue(true);
+				else this.globalArrs.SysAdmin.find((e) => e.name === "chSystemAdmin")?.control.patchValue(false);
 				break;
 			default:
 				console.log("err");
