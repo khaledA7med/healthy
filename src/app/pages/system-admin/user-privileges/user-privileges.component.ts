@@ -9,7 +9,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { SystemAdminService } from "src/app/shared/services/system-admin/system-admin.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import AppUtils from "src/app/shared/app/util";
-import { IUserRoles, IUserRolesForm } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
+import { IUserRoles, IUserRolesForm, privilegeRole } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
 import { EventService } from "src/app/core/services/event.service";
 import { userRolesCols } from "src/app/shared/app/grid/userRolesCols";
 import { reserved } from "src/app/core/models/reservedWord";
@@ -223,11 +223,28 @@ export class UserPrivilegesComponent implements OnInit {
 
 	//#region Privilages Management
 
+	globalArrs!: {
+		MasterTable: privilegeRole[];
+		BussinessDevelopment: privilegeRole[];
+		ClientRegistry: privilegeRole[];
+		Production: privilegeRole[];
+		CustomerService: privilegeRole[];
+		ClaimsManagement: privilegeRole[];
+		FinancialManagement: {
+			generalRoles: privilegeRole[];
+			makeNewRoles: privilegeRole[];
+			archivesRoles: privilegeRole[];
+			approvalsRoles: privilegeRole[];
+			reportsRoles: privilegeRole[];
+		};
+	};
+
 	privilegesForm!: FormGroup<IUserRolesPrivilegesForm>;
 
 	initPrivilegesForm() {
 		this.privilegesForm = new FormGroup<IUserRolesPrivilegesForm>({
 			sNo: new FormControl(0),
+
 			// Master Table Controllers
 			chMasterTabels: new FormControl(false),
 			chIncuranceClasses: new FormControl(false),
@@ -380,13 +397,47 @@ export class UserPrivilegesComponent implements OnInit {
 			chStaffContracts: new FormControl(false),
 			chLegalLicenseAndOfficialServices: new FormControl(false),
 			chVacationsManagement: new FormControl(false),
+			chVacationsRequest: new FormControl(false),
+			chHRDeleteApprovedEntries: new FormControl(false),
+			chReports: new FormControl(false),
+			chApproval: new FormControl(false),
+			chAppraisalForm: new FormControl(false),
+			chSettings: new FormControl(false),
+			chRenameStaffName: new FormControl(false),
+			chIncidents: new FormControl(false),
+			chEndofService: new FormControl(false),
+			chLetterWarning: new FormControl(false),
+			chLetterEmbassy: new FormControl(false),
+			chLetterEndofService: new FormControl(false),
+			chLetterEffectiveDateNotice: new FormControl(false),
+			chLetterEmployment: new FormControl(false),
+			chLetterSalaryTransfer: new FormControl(false),
+			chLetterSalaryDefinition: new FormControl(false),
+			chLetterReleaseandDischargeForm: new FormControl(false),
+			chLetterJoiningLetters: new FormControl(false),
+			chLetterSponsorshipTransfer: new FormControl(false),
+			chLetterTemporaryProfile: new FormControl(false),
+			chLetterFieldApplication: new FormControl(false),
+			chLetterAuthorization: new FormControl(false),
+			chAlertExpiringID: new FormControl(false),
+			chAlertExpiringPassport: new FormControl(false),
+			chAlertExpiringLabours: new FormControl(false),
+			chAlertExpiringContracts: new FormControl(false),
+			chAlertExpiringLegal: new FormControl(false),
+			chAlertVacationRequest: new FormControl(false),
+			chAlertLeaveRequest: new FormControl(false),
+			chAlertRemindinglegal: new FormControl(false),
+			chAlertExpiringProbation: new FormControl(false),
+			chAlertDueContracts: new FormControl(false),
+			chHRReadOnly: new FormControl(false),
 
-			// chAccessAllProducers: new FormControl(false),
-			// chInsurClass: new FormControl(false),
-			// chProdRetail: new FormControl(false),
-			// chMasterInsClassesLines: new FormControl(false),
-			// chMasterInsCompanies: new FormControl(false),
-			// chBussDevProspects: new FormControl(false),
+			// Unused Privileges
+			chAccessAllProducers: new FormControl(false),
+			chInsurClass: new FormControl(false),
+			chProdRetail: new FormControl(false),
+			chMasterInsClassesLines: new FormControl(false),
+			chMasterInsCompanies: new FormControl(false),
+			chBussDevProspects: new FormControl(false),
 			chAccessAllUsersCSRequests: new FormControl(false),
 			chCustSerRequests: new FormControl(false),
 			chBussDevUnderwritingMedical: new FormControl(false),
@@ -428,11 +479,10 @@ export class UserPrivilegesComponent implements OnInit {
 			chFinancialManager: new FormControl(false),
 			chFinReviewPay: new FormControl(false),
 			chFinanceRenameAccounts: new FormControl(false),
-
+			chSalaryandBenefits: new FormControl(false),
 			chVacApprovalDeptManager: new FormControl(false),
 			chApprovalDeptManager: new FormControl(false),
 			chCLaimManagerAppr: new FormControl(false),
-			chApproval: new FormControl(false),
 			chCloseFinancialYear: new FormControl(false),
 			alert: new FormControl(false),
 			productionCombExpApprove: new FormControl(false),
@@ -458,56 +508,676 @@ export class UserPrivilegesComponent implements OnInit {
 			chApprovingFinVouchersRV: new FormControl(false),
 			chApprovingFinVouchersPV: new FormControl(false),
 			chApprovingFinVouchersReverse: new FormControl(false),
-			chIncidents: new FormControl(false),
-			chAppraisalForm: new FormControl(false),
-			chReports: new FormControl(false),
-			chSettings: new FormControl(false),
-			chHRDeleteApprovedEntries: new FormControl(false),
 			chDepartmentVacations: new FormControl(false),
-			chVacationsRequest: new FormControl(false),
 			chhrAlarms: new FormControl(false),
-			chAlertExpiringLegal: new FormControl(false),
 			chAlertExpiringVisa: new FormControl(false),
-			chAlertExpiringPassport: new FormControl(false),
-			chAlertExpiringID: new FormControl(false),
-			chAlertExpiringLabours: new FormControl(false),
-			chAlertExpiringContracts: new FormControl(false),
 			chProductionEntryApproval: new FormControl(false),
 			chDeleteFollowUp: new FormControl(false),
 			chPReactivated: new FormControl(false),
-			chHRReadOnly: new FormControl(false),
 			chSystemAdminReadOnly: new FormControl(false),
-			chRenameStaffName: new FormControl(false),
-			chSalaryandBenefits: new FormControl(false),
-			chLetterWarning: new FormControl(false),
-			chLetterEmbassy: new FormControl(false),
-			chLetterEndofService: new FormControl(false),
-			chLetterEffectiveDateNotice: new FormControl(false),
-			chLetterEmployment: new FormControl(false),
-			chLetterSalaryTransfer: new FormControl(false),
-			chLetterSalaryDefinition: new FormControl(false),
-			chLetterReleaseandDischargeForm: new FormControl(false),
-			chLetterJoiningLetters: new FormControl(false),
-			chLetterSponsorshipTransfer: new FormControl(false),
-			chLetterTemporaryProfile: new FormControl(false),
-			chLetterFieldApplication: new FormControl(false),
-			chLetterAuthorization: new FormControl(false),
-			chEndofService: new FormControl(false),
 			chLetters: new FormControl(false),
-			chAlertVacationRequest: new FormControl(false),
-			chAlertLeaveRequest: new FormControl(false),
-			chAlertRemindinglegal: new FormControl(false),
-			chAlertExpiringProbation: new FormControl(false),
-			chAlertDueContracts: new FormControl(false),
 			chEnabledStatusRequst: new FormControl(false),
 			chAccessAllUsers: new FormControl(false),
 		});
+
+		this.globalArrs = {
+			MasterTable: [
+				{
+					control: this.ff.chMasterTabels!,
+					name: "chMasterTabels",
+					label: "Master Tables",
+				},
+				{
+					control: this.ff.chMasterTablesReadOnly!,
+					name: "chMasterTablesReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chIncuranceClasses!,
+					name: "chIncuranceClasses",
+					label: "Insurance Classes/Lines of Bussiness",
+				},
+				{
+					control: this.ff.chInsuranceCompanies!,
+					name: "chInsuranceCompanies",
+					label: "Insurance Companies",
+				},
+				{
+					control: this.ff.chProductionBusinessModules!,
+					name: "chProductionBusinessModules",
+					label: "Production/Business Modules",
+				},
+				{
+					control: this.ff.chInsuranceBrokers!,
+					name: "chInsuranceBrokers",
+					label: "Insurance Brokers",
+				},
+				{
+					control: this.ff.chClaimsModule!,
+					name: "chClaimsModule",
+					label: "Claims Modules",
+				},
+				{
+					control: this.ff.chTypeProspects!,
+					name: "chTypeProspects",
+					label: "Type Prospects",
+				},
+				{
+					control: this.ff.chListOfRequiredDocuments!,
+					name: "chListOfRequiredDocuments",
+					label: "List of Required Documents",
+				},
+				{
+					control: this.ff.chBusinessActivity!,
+					name: "chBusinessActivity",
+					label: "Business Activity",
+				},
+				{
+					control: this.ff.chContactsListPosition!,
+					name: "chContactsListPosition",
+					label: "Contacts List Position",
+				},
+				{
+					control: this.ff.chClientsCategories!,
+					name: "chClientsCategories",
+					label: "Clients Categories",
+				},
+				{
+					control: this.ff.chCountries!,
+					name: "chCountries",
+					label: "Countries",
+				},
+				{
+					control: this.ff.chDefaultEmails!,
+					name: "chDefaultEmails",
+					label: "Default Emails",
+				},
+			],
+			BussinessDevelopment: [
+				{
+					control: this.ff.chBussDevelopment!,
+					name: "chBussDevelopment",
+					label: "Bussiness Development",
+				},
+				{
+					control: this.ff.chBusinessDevelopmentReadOnly!,
+					name: "chBusinessDevelopmentReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chSalesforceSupport!,
+					name: "chSalesforceSupport",
+					label: "Salesforce Support",
+				},
+				{
+					control: this.ff.chProspectRegistry!,
+					name: "chProspectRegistry",
+					label: "Prospects Registery",
+				},
+				{
+					control: this.ff.chSalesManagement!,
+					name: "chSalesManagement",
+					label: "Sales Management",
+				},
+				{
+					control: this.ff.chUnderwritingDepartment!,
+					name: "chUnderwritingDepartment",
+					label: " Underwriting Department",
+				},
+				{
+					control: this.ff.chBussUnderwritingGeneral!,
+					name: "chBussUnderwritingGeneral",
+					label: "Underwriting Department General",
+				},
+				{
+					control: this.ff.chBussUnderwritingMedical!,
+					name: "chBussUnderwritingMedical",
+					label: "Underwriting Department Medical",
+				},
+				{
+					control: this.ff.chBusinessReports!,
+					name: "chBusinessReports",
+					label: "Business Reports",
+				},
+				{
+					control: this.ff.chAccessAllUsersSales!,
+					name: "chAccessAllUsersSales",
+					label: "Access All Users Sales",
+				},
+				{
+					control: this.ff.chAccessAllProducersSales!,
+					name: "chAccessAllProducersSales",
+					label: "Access All Producers",
+				},
+				{
+					control: this.ff.chAccessAllBranchBussiness!,
+					name: "chAccessAllBranchBussiness",
+					label: "Access All Branch",
+				},
+				{
+					control: this.ff.chPandingSalesLead!,
+					name: "chPandingSalesLead",
+					label: "Show Underwriters Alert",
+				},
+				{
+					control: this.ff.chExpiredLeadsPolices!,
+					name: "chExpiredLeadsPolices",
+					label: "Show Expired Leads Policies Alert",
+				},
+			],
+			ClientRegistry: [
+				{
+					control: this.ff.chClientsRegistryAdmin!,
+					name: "chClientsRegistryAdmin",
+					label: "Clients Registery",
+				},
+				{
+					control: this.ff.chClientsRegistryAdministratorReadOnly!,
+					name: "chClientsRegistryAdministratorReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chClientsRegistry!,
+					name: "chClientsRegistry",
+					label: "Clients Registery",
+				},
+				{
+					control: this.ff.chClientsGrouping!,
+					name: "chClientsGrouping",
+					label: "Clients Grouping",
+				},
+				{
+					control: this.ff.chAccessAllClients!,
+					name: "chAccessAllClients",
+					label: "Access All Clients",
+				},
+				{
+					control: this.ff.chAccessAllProducersClients!,
+					name: "chAccessAllProducersClients",
+					label: " Access All Producers",
+				},
+			],
+			Production: [
+				{
+					control: this.ff.chProduction!,
+					name: "chProduction",
+					label: "Production",
+				},
+				{
+					control: this.ff.chProductionReadOnly!,
+					name: "chProductionReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chProdPolicies!,
+					name: "chProdPolicies",
+					label: "Polices/Endorsments Management",
+				},
+				{
+					control: this.ff.chEntryCorrection!,
+					name: "chEntryCorrection",
+					label: "Entry correction",
+				},
+				{
+					control: this.ff.chProdEntryApproval!,
+					name: "chProdEntryApproval",
+					label: "Production Entry correction",
+				},
+				{
+					control: this.ff.chProdReports!,
+					name: "chProdReports",
+					label: "Production Reports",
+				},
+				{
+					control: this.ff.viewAllBranchs!,
+					name: "viewAllBranchs",
+					label: "Access all Branches",
+				},
+				{
+					control: this.ff.chAccessAllProducersProduction!,
+					name: "chAccessAllProducersProduction",
+					label: "Access all Producers",
+				},
+				{
+					control: this.ff.chProductionAccessAllUsers!,
+					name: "chProductionAccessAllUsers",
+					label: "Access All User",
+				},
+				{
+					control: this.ff.chUpdateClientDNCNCompCNDN!,
+					name: "chUpdateClientDNCNCompCNDN",
+					label: "Update Client DN/CN and Comp CN/DN",
+				},
+				{
+					control: this.ff.chUpdateDeliveryStatus!,
+					name: "chUpdateDeliveryStatus",
+					label: "Update Delivery Status",
+				},
+				{
+					control: this.ff.chChangeProducerComm!,
+					name: "chChangeProducerComm",
+					label: "Change Producers Commission",
+				},
+				{
+					control: this.ff.chModifyCommOut!,
+					name: "chModifyCommOut",
+					label: "Update Commission Out",
+				},
+				{
+					control: this.ff.chHideCompanyCommission!,
+					name: "chHideCompanyCommission",
+					label: "Hide Company Commission",
+				},
+				{
+					control: this.ff.chHideProducerCommission!,
+					name: "chHideProducerCommission",
+					label: "Hide Producers Commission",
+				},
+				{
+					control: this.ff.chExpiredPolices!,
+					name: "chExpiredPolices",
+					label: "Alert Show Expired Polices",
+				},
+				{
+					control: this.ff.cHduePayments!,
+					name: "cHduePayments",
+					label: "Alert Show Due Payments",
+				},
+			],
+			CustomerService: [
+				{
+					control: this.ff.chCustomerService!,
+					name: "chCustomerService",
+					label: "Customer Service",
+				},
+				{
+					control: this.ff.chCustomerServiceReadOnly!,
+					name: "chCustomerServiceReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chRequestsManagements!,
+					name: "chRequestsManagements",
+					label: "Requests Mangement",
+				},
+				{
+					control: this.ff.chCustSerReports!,
+					name: "chCustSerReports",
+					label: "Reports",
+				},
+				{
+					control: this.ff.chAccessAllUsersCustomer!,
+					name: "chAccessAllUsersCustomer",
+					label: "Access All User",
+				},
+				{
+					control: this.ff.chAccessAllBrancheCustomer!,
+					name: "chAccessAllBrancheCustomer",
+					label: "Access All Branches",
+				},
+				{
+					control: this.ff.chCSEntryCorrection!,
+					name: "chCSEntryCorrection",
+					label: "Entery Correction",
+				},
+				{
+					control: this.ff.chComplaintsRegistry!,
+					name: "chComplaintsRegistry",
+					label: "Complaints Regisery",
+				},
+				{
+					control: this.ff.chOnlineRequests!,
+					name: "chOnlineRequests",
+					label: "Online Requests",
+				},
+				{
+					control: this.ff.chAlertCustomerServiceDeadline!,
+					name: "chAlertCustomerServiceDeadline",
+					label: "Alert Customer Service Deadline",
+				},
+			],
+			ClaimsManagement: [
+				{
+					control: this.ff.chClaims!,
+					name: "chClaims",
+					label: "Claims Management System",
+				},
+				{
+					control: this.ff.chClaimsManagementSystemReadOnly!,
+					name: "chClaimsManagementSystemReadOnly",
+					label: "Read-Only",
+				},
+				{
+					control: this.ff.chClaimsManagement!,
+					name: "chClaimsManagement",
+					label: "Claims Management",
+				},
+				{
+					control: this.ff.chClaimsPaymentApproval!,
+					name: "chClaimsPaymentApproval",
+					label: "Claims Payment Approval",
+				},
+				{
+					control: this.ff.chClaimsReport!,
+					name: "chClaimsReport",
+					label: "Reports",
+				},
+				{
+					control: this.ff.chAccessAllUsersClaim!,
+					name: "chAccessAllUsersClaim",
+					label: "Access All Users",
+				},
+				{
+					control: this.ff.chAccessAllBrancheClaim!,
+					name: "chAccessAllBrancheClaim",
+					label: "Access All Branches",
+				},
+				{
+					control: this.ff.chAlertClaimReminder!,
+					name: "chAlertClaimReminder",
+					label: "Alert Claim Reminder",
+				},
+			],
+			FinancialManagement: {
+				generalRoles: [
+					{
+						control: this.ff.chFinSettings!,
+						name: "chFinSettings",
+						label: "Settings",
+					},
+					{
+						control: this.ff.chDataLock!,
+						name: "chDataLock",
+						label: "Data Lock",
+					},
+					{
+						control: this.ff.chFinDisableAccounts!,
+						name: "chFinDisableAccounts",
+						label: "Disable/Enable Account",
+					},
+					{
+						control: this.ff.chAccessConfidentialAccounts!,
+						name: "chAccessConfidentialAccounts",
+						label: "Access Confidential Account",
+					},
+					{
+						control: this.ff.chAccessAllBrancheFin!,
+						name: "chAccessAllBrancheFin",
+						label: "Access All Branches",
+					},
+				],
+				makeNewRoles: [
+					{
+						control: this.ff.chFinMakeNew!,
+						name: "chFinMakeNew",
+						label: "Make New",
+					},
+					{
+						control: this.ff.chFinMakeJV!,
+						name: "chFinMakeJV",
+						label: "Journal Voucher",
+					},
+					{
+						control: this.ff.chFinMakeReceipt!,
+						name: "chFinMakeReceipt",
+						label: "Receipt Voucher",
+					},
+					{
+						control: this.ff.chFinMakePay!,
+						name: "chFinMakePay",
+						label: "Pay Voucher",
+					},
+					{
+						control: this.ff.chFinMakeReverse!,
+						name: "chFinMakeReverse",
+						label: "Reverse Voucher",
+					},
+				],
+				archivesRoles: [
+					{
+						control: this.ff.chFinArchive!,
+						name: "chFinArchive",
+						label: "Archives",
+					},
+					{
+						control: this.ff.chFinReceiptArchive!,
+						name: "chFinReceiptArchive",
+						label: "Receipt Voucher",
+					},
+					{
+						control: this.ff.chFinPayArchive!,
+						name: "chFinPayArchive",
+						label: "Pay Voucher",
+					},
+					{
+						control: this.ff.chFinDNsArchive!,
+						name: "chFinDNsArchive",
+						label: "Debit Notes",
+					},
+					{
+						control: this.ff.chFinCNsArchive!,
+						name: "chFinCNsArchive",
+						label: "Credit Notes",
+					},
+				],
+				approvalsRoles: [
+					{
+						control: this.ff.chFinApprovals!,
+						name: "chFinApprovals",
+						label: "Approvals",
+					},
+					{
+						control: this.ff.chFinanceEntryApproval!,
+						name: "chFinanceEntryApproval",
+						label: "Journal Voucher Approval",
+					},
+					{
+						control: this.ff.chFinReceiptApprovals!,
+						name: "chFinReceiptApprovals",
+						label: "Receipt Vouchers Approve",
+					},
+					{
+						control: this.ff.chFinPayApprovals!,
+						name: "chFinPayApprovals",
+						label: "Pay Vouchers Approve",
+					},
+					{
+						control: this.ff.chProdFinancialApprove!,
+						name: "chProdFinancialApprove",
+						label: "Production Entry Approvals",
+					},
+					{
+						control: this.ff.chClaimsApproval!,
+						name: "chClaimsApproval",
+						label: "Claims Payments Approvals",
+					},
+					{
+						control: this.ff.chClientsApproval!,
+						name: "chClientsApproval",
+						label: "Clients Approvals",
+					},
+				],
+				reportsRoles: [
+					{
+						control: this.ff.chFinReports!,
+						name: "chFinReports",
+						label: "Reports",
+					},
+					{
+						control: this.ff.chTrialBalance!,
+						name: "chTrialBalance",
+						label: "Trial Balance",
+					},
+					{
+						control: this.ff.chProftAndLoss!,
+						name: "chProftAndLoss",
+						label: "Profile and Loss",
+					},
+					{
+						control: this.ff.chStatementOfAccount!,
+						name: "chStatementOfAccount",
+						label: "Statement of Account",
+					},
+				],
+			},
+		};
 	}
 
-	// for (let c in this.privilegesForm.controls) {
-	// 	console.log("first");
-	// 	console.log(c);
-	// }
+	get ff() {
+		return this.privilegesForm.controls;
+	}
+
+	allItemsChecker(modulName: string, val: boolean) {
+		switch (modulName) {
+			case "MasterTable":
+				this.globalArrs.MasterTable.forEach((item: privilegeRole) => {
+					if (item.name != "chMasterTablesReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "BussinessDevelopment":
+				this.globalArrs.BussinessDevelopment.forEach((item: privilegeRole) => {
+					if (item.name != "chBusinessDevelopmentReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "ClientRegistry":
+				this.globalArrs.ClientRegistry.forEach((item: privilegeRole) => {
+					if (item.name != "chClientsRegistryAdministratorReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "Production":
+				this.globalArrs.Production.forEach((item: privilegeRole) => {
+					if (item.name != "chProductionReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "CustomerService":
+				this.globalArrs.CustomerService.forEach((item: privilegeRole) => {
+					if (item.name != "chCustomerServiceReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "ClaimsManagement":
+				this.globalArrs.ClaimsManagement.forEach((item: privilegeRole) => {
+					if (item.name != "chClaimsManagementSystemReadOnly" && val === true) item.control.patchValue(true);
+					else item.control.patchValue(false);
+				});
+				break;
+			case "FinancialManagement":
+				let key: keyof typeof this.globalArrs.FinancialManagement;
+				for (key in this.globalArrs.FinancialManagement) {
+					if (val === true) {
+						this.globalArrs.FinancialManagement[key].forEach((e) => e.control.patchValue(true));
+						this.ff.chFinance?.patchValue(true);
+					} else this.globalArrs.FinancialManagement[key].forEach((e) => e.control.patchValue(false));
+				}
+				break;
+			default:
+				console.log("err");
+		}
+	}
+
+	subItemsChecker(subMenu: string, val: boolean) {
+		let mainChecker: privilegeRole[] = [];
+
+		this.globalArrs.FinancialManagement[subMenu as keyof typeof this.globalArrs.FinancialManagement].forEach((item, i) => {
+			if (val) item.control.patchValue(true);
+			else item.control.patchValue(false);
+		});
+		let key: keyof typeof this.globalArrs.FinancialManagement;
+		for (key in this.globalArrs.FinancialManagement) {
+			if (subMenu != "generalRoles")
+				this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+					if (e.control.value === true && i > 0) mainChecker.push(e);
+				});
+			else
+				this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+					if (e.control.value === true) mainChecker.push(e);
+				});
+		}
+		if (mainChecker.length > 0) this.ff.chFinance?.patchValue(true);
+		else this.ff.chFinance?.patchValue(false);
+	}
+
+	checkMasterItem(modulName: string, subMenu?: string, val?: boolean) {
+		let checkarr!: privilegeRole[];
+		let checker: privilegeRole | undefined;
+		switch (modulName) {
+			case "MasterTable":
+				checkarr = this.globalArrs.MasterTable.filter((e) => !(e.name == "chMasterTabels" || e.name == "chMasterTablesReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.MasterTable.find((e) => e.name === "chMasterTabels")?.control.patchValue(true);
+				else this.globalArrs.MasterTable.find((e) => e.name === "chMasterTabels")?.control.patchValue(false);
+				break;
+			case "BussinessDevelopment":
+				checkarr = this.globalArrs.BussinessDevelopment.filter((e) => !(e.name == "chBussDevelopment" || e.name == "chBusinessDevelopmentReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.BussinessDevelopment.find((e) => e.name === "chBussDevelopment")?.control.patchValue(true);
+				else this.globalArrs.BussinessDevelopment.find((e) => e.name === "chBussDevelopment")?.control.patchValue(false);
+				break;
+			case "ClientRegistry":
+				checkarr = this.globalArrs.ClientRegistry.filter(
+					(e) => !(e.name == "chClientsRegistryAdmin" || e.name == "chClientsRegistryAdministratorReadOnly")
+				);
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.ClientRegistry.find((e) => e.name === "chClientsRegistryAdmin")?.control.patchValue(true);
+				else this.globalArrs.ClientRegistry.find((e) => e.name === "chClientsRegistryAdmin")?.control.patchValue(false);
+				break;
+			case "Production":
+				checkarr = this.globalArrs.Production.filter((e) => !(e.name == "chProduction" || e.name == "chProductionReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.Production.find((e) => e.name === "chProduction")?.control.patchValue(true);
+				else this.globalArrs.Production.find((e) => e.name === "chProduction")?.control.patchValue(false);
+				break;
+			case "CustomerService":
+				checkarr = this.globalArrs.CustomerService.filter((e) => !(e.name == "chCustomerService" || e.name == "chCustomerServiceReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.CustomerService.find((e) => e.name === "chCustomerService")?.control.patchValue(true);
+				else this.globalArrs.CustomerService.find((e) => e.name === "chCustomerService")?.control.patchValue(false);
+				break;
+			case "ClaimsManagement":
+				checkarr = this.globalArrs.ClaimsManagement.filter((e) => !(e.name == "chClaims" || e.name == "chClaimsManagementSystemReadOnly"));
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (checker) this.globalArrs.ClaimsManagement.find((e) => e.name === "chClaims")?.control.patchValue(true);
+				else this.globalArrs.ClaimsManagement.find((e) => e.name === "chClaims")?.control.patchValue(false);
+				break;
+			case "FinancialManagement":
+				let chosenSubMenu = this.globalArrs.FinancialManagement[subMenu as keyof typeof this.globalArrs.FinancialManagement];
+				let mainChecker: privilegeRole[] = [];
+				if (subMenu != "generalRoles") checkarr = chosenSubMenu.filter((e) => e.name !== chosenSubMenu[0].name);
+				else checkarr = chosenSubMenu.filter((e) => e.control.value === true);
+				let key: keyof typeof this.globalArrs.FinancialManagement;
+				for (key in this.globalArrs.FinancialManagement) {
+					if (subMenu != "generalRoles")
+						this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+							if (e.control.value === true && i > 0) mainChecker.push(e);
+						});
+					else
+						this.globalArrs.FinancialManagement[key].forEach((e, i) => {
+							if (e.control.value === true) mainChecker.push(e);
+						});
+				}
+				checker = checkarr.find((item: privilegeRole) => item.control.value === true);
+				if (subMenu != "generalRoles") {
+					if (checker) {
+						chosenSubMenu[0].control.patchValue(true);
+						this.ff.chFinance?.patchValue(true);
+					} else {
+						chosenSubMenu[0].control.patchValue(false);
+					}
+				} else {
+					if (checker) this.ff.chFinance?.patchValue(true);
+					else this.ff.chFinance?.patchValue(false);
+				}
+				if (mainChecker.length > 0) this.ff.chFinance?.patchValue(true);
+				else this.ff.chFinance?.patchValue(false);
+				break;
+			default:
+				console.log("err");
+		}
+	}
 
 	getAllPrivileges(sno: number) {
 		this.eventService.broadcast(reserved.isLoading, true);
