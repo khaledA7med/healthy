@@ -1,20 +1,14 @@
 import { IEmailData } from "./../../../shared/app/models/Email/email-data";
-import {
-  AfterViewInit,
-  ElementRef,
-  HostListener,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from "@angular/core";
+import { ElementRef, HostListener, ViewChild } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
+import { EmailModalComponent } from "src/app/shared/components/email/email-modal/email-modal.component";
 
 @Component({
   selector: "app-email-list",
   templateUrl: "./email-list.component.html",
   styleUrls: ["./email-list.component.scss"],
 })
-export class EmailListComponent implements OnInit, AfterViewInit {
+export class EmailListComponent implements OnInit {
   uiState = {
     isMenuBar: false,
     isPrimary: true,
@@ -68,15 +62,20 @@ export class EmailListComponent implements OnInit, AfterViewInit {
       },
     ],
   };
-
+  @ViewChild(EmailModalComponent) emailModal!: EmailModalComponent;
   @ViewChild("sideBar") sideBar!: ElementRef;
-  @ViewChildren("tabList") tabList!: QueryList<HTMLButtonElement>;
 
   constructor() {}
 
   ngOnInit(): void {
     this.uiState.allMailList = this.data?.primary;
   }
+  //#region new Email
+  openModal() {
+    this.emailModal.openModal();
+  }
+  //#endregion
+
   //#region side Bar
   showSideBar() {
     let menuBarShow =
@@ -96,9 +95,6 @@ export class EmailListComponent implements OnInit, AfterViewInit {
   }
   //#endregion
   //#region tab list
-  ngAfterViewInit(): void {
-    console.log(this.tabList);
-  }
   toggleNavItem(name: string) {
     switch (name) {
       case "primary":

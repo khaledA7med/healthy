@@ -1,4 +1,7 @@
 <div class="container-fluid">
+  <!-- email modal -->
+  <app-email-modal></app-email-modal>
+  <!-- /email modal -->
   <div class="email-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
     <!-- Side Bar -->
     <div class="email-menu-sidebar" #sideBar>
@@ -7,6 +10,7 @@
           <button
             type="button"
             class="btn btn-danger w-100 d-flex justify-content-center align-items-center"
+            (click)="openModal()"
           >
             <i class="bx bx-plus-circle me-1 fs-15"></i>
             New
