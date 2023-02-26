@@ -37,6 +37,7 @@ import {
   IClaimTransactionList,
 } from "src/app/shared/app/models/Claims/claims-util";
 import { IClaimDataForm } from "src/app/shared/app/models/Claims/iclaim-data-form";
+import { IClaimPayment } from "src/app/shared/app/models/Claims/iclaim-payment-form";
 import {
   IClaimRejectDeduct,
   IClaimRejectDeductForm,
@@ -94,6 +95,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       statusNotes: [] as IGenericResponseType[],
       requiredDocs: [] as string[],
       rejectDeductList: [] as IClaimRejectDeduct[],
+      payments: [] as IClaimPayment[],
     },
     modalConfig: {
       centered: true,
@@ -112,7 +114,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     private methods: MasterMethodsService,
     private claimService: ClaimsService,
     private eventService: EventService,
-    private util: AppUtils,
+    public util: AppUtils,
     private message: MessagesService,
     private router: Router,
     private route: ActivatedRoute
@@ -167,6 +169,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.formGroup = new FormGroup<IClaimsForms>({
+      sNo: new FormControl(null),
       claimType: new FormControl(this.uiState.claimTypes.Medical),
       clientInfo: new FormControl(null, Validators.required),
       clientName: new FormControl(null, Validators.required),
@@ -310,13 +313,13 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
   getClaim(id: string): void {
     console.log(id);
     this.uiState.editMode = true;
-    this.claimService
-      .getClaimById("3871")
-      .subscribe((res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
+    this.claimService.getClaimById(id).subscribe(
+      (res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
         console.log(res);
         if (res.body?.status) {
           let data = res.body?.data;
           this.formGroup.patchValue({
+            sNo: data?.sNo,
             claimType: data?.claimType,
             clientID: data?.clientID?.toString()!,
             clientName: data?.clientName,
@@ -372,9 +375,16 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
             data?.requiredDocumentList!,
             data?.requiredDocuments!
           );
+
+          this.uiState.claimLists.payments = data?.paymentsList!;
         }
         this.eventService.broadcast(reserved.isLoading, false);
-      });
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
   }
 
   //#endregion
@@ -622,15 +632,17 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Payments Section
-  addPayment(): void {
+  openPaymentModal(data?: IClaimPayment): void {
     this.modalRef = this.modalService.open(
       ClaimPaymentsFormComponent,
       this.uiState.modalConfig
     );
     this.modalRef.componentInstance.data = {
-      // sNo: 50,
-      clientName: "hahah",
-    };
+      ...data,
+      claimSNo: this.f.sNo?.value,
+      clientNo: this.f.clientID?.value,
+      clientName: this.f.clientName?.value,
+    } as IClaimPayment;
 
     let sub = this.modalRef.closed.subscribe((res) => {
       console.log(res);
