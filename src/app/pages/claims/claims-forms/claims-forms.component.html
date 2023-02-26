@@ -709,7 +709,7 @@
                                             List Of Payments</div>
                                         <div class="ribbon-content mt-3 text-muted">
                                             <div class="d-flex justify-content-end">
-                                                <button type="button" (click)="addPayment()"
+                                                <button type="button" (click)="openPaymentModal()"
                                                     class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
                                                     <i class="ri-menu-add-line"></i> Add Payment
                                                 </button>
@@ -727,11 +727,48 @@
                                                         <th scope="col">Created On</th>
                                                         <th scope="col">Date Of Payments</th>
                                                         <th scope="col">Date Of Cheque</th>
-                                                        <th scope="col">Actions</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="my-1 text-center text-dark fw-bold no-item-contact">
+                                                    <tr *ngFor="let pay of uiState.claimLists.payments">
+                                                        <td>{{pay.status}}</td>
+                                                        <td class="text-end">{{pay.amount | currency: 'SAR' : '' }}</td>
+                                                        <td>{{pay.paymentDetails}}</td>
+                                                        <td>{{pay.paymentType}}</td>
+                                                        <td>{{pay.bankName}}</td>
+                                                        <td>{{pay.iban}}</td>
+                                                        <td>{{pay.savedUser}}</td>
+                                                        <td>{{util.formatDate(pay.savedDate)}}</td>
+                                                        <td>{{util.formatDate(pay.dateofPayment)}}</td>
+                                                        <td>{{util.formatDate(pay.dateofCheque)}}</td>
+                                                        <td>
+                                                            <button class="btn btn-soft-info btn-sm mx-1"
+                                                                type="button"><i class="ri-printer-line"></i>
+                                                            </button>
+                                                            <button class="btn btn-soft-success btn-sm mx-1"
+                                                                (click)="openPaymentModal(pay)" type="button"><i
+                                                                    class="ri-edit-2-line"></i>
+                                                            </button>
+                                                            <div ngbDropdown display="dynamic" class="d-inline-block"
+                                                                *ngIf="pay.status !== 'Approved' && !(pay.approved === true || pay.reject === true)"
+                                                                placement="bottom-end">
+                                                                <button type="button"
+                                                                    class="btn btn-soft-primary btn-sm"
+                                                                    ngbDropdownToggle>
+                                                                    <i class="ri-more-fill align-middle"></i>
+                                                                </button>
+                                                                <div ngbDropdownMenu class="dropdown-menu">
+                                                                    <button ngbDropdownItem type="button"
+                                                                        (click)="$event.preventDefault()">Approve</button>
+                                                                    <button ngbDropdownItem type="button"
+                                                                        (click)="$event.preventDefault()">Reject</button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="my-1 text-center text-dark fw-bold"
+                                                        *ngIf="uiState.claimLists.payments.length === 0">
                                                         <td colspan="100">Add Payment To show</td>
                                                     </tr>
                                                 </tbody>

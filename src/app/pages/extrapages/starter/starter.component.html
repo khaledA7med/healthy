@@ -2,15 +2,15 @@
 <app-breadcrumbs title="Starter" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
 <!-- End Breadcrumbs -->
 
+<div class="demo-app">
 
-<div>
-    <h1>
-        {{ val3 | currency: 'SAR' : 'code'}}
-    </h1>
-    <h1>
-        {{ perc | currency: curren}}
-    </h1>
+    <div class='demo-app-main'>
+
+        <full-calendar #calendar [options]="calendarOptions" [deepChangeDetection]="true">
+            <ng-template #eventContent let-arg>
+                <b>{{ arg.timeText }}</b>
+                <i>{{ arg.event.title }}</i>
+            </ng-template>
+        </full-calendar>
+    </div>
 </div>
-
-<input type="text" [formControl]="val1" [value]="val1.value | number:'1.2-2'">
-<input type="text" [formControl]="val2">

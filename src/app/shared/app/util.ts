@@ -12,6 +12,34 @@ export default class AppUtils {
     });
   }
 
+  public formatDate(e: any) {
+    if (e) {
+      var monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var d = new Date(e),
+        month = "" + monthNames[d.getMonth()],
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [day + " " + month, year].join(", ");
+    } else {
+      return "";
+    }
+  }
+
   public formatBytes(bytes: number, decimals?: number): string {
     if (bytes === 0) {
       return "0 Bytes";
