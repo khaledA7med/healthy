@@ -1,18 +1,28 @@
 import { FormControl } from "@angular/forms";
 
 export interface IClaimPayment {
-  sNo: number;
-  claimSNo: number;
-  clientName: string;
-  clientNo: number;
-  branch: string;
-  amount: number;
-  paymentDetails: string;
-  paymentType: string;
-  bankName: string;
-  IBAN: string;
-  dateofCheque: Date;
-  dateofPayment: Date;
+  sNo?: number;
+  claimSNo?: number;
+  clientName?: string;
+  clientNo?: number;
+  branch?: string;
+  amount?: number;
+  paymentDetails?: string;
+  paymentType?: string;
+  bankName?: string;
+  iban?: string;
+  dateofCheque?: Date;
+  dateofPayment?: Date;
+
+  approved?: boolean;
+  approvedBy?: string;
+  approvedOn?: Date;
+  reject?: boolean;
+  savedDate?: Date;
+  savedUser?: string;
+  status?: string;
+  updatedBy?: string;
+  updatedOn?: Date;
 }
 
 export interface IClaimPaymentForm {

@@ -3,10 +3,13 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
+import { MasterTableService } from "src/app/core/services/master-table.service";
 import {
   IClaimPayment,
   IClaimPaymentForm,
 } from "src/app/shared/app/models/Claims/iclaim-payment-form";
+import AppUtils from "src/app/shared/app/util";
 
 @Component({
   selector: "app-claim-payments-form",
@@ -74,8 +77,8 @@ import {
           </div>
           <div class="col-lg-6 col-sm-12 my-1">
             <label for="bankName">Bank Name</label>
-            <!-- [items]="(formData | async)?.bankNames?.content!" -->
             <ng-select
+              [items]="(formData | async)?.Banks?.content!"
               placeholder="Bank Name"
               formControlName="bankName"
               bindLabel="name"
@@ -103,7 +106,7 @@ import {
               [model]="f.dateofCheque.value"
               [required]="false"
               [submitted]="submitted"
-              (dateChange)="dateOfChequeEvt($event)"
+              (dateChange)="datesHandler($event, f.dateofCheque)"
             ></app-gregorian-picker>
           </div>
           <div class="col-lg-6 col-sm-12 my-1">
@@ -112,7 +115,7 @@ import {
               [model]="f.dateofPayment.value"
               [required]="false"
               [submitted]="submitted"
-              (dateChange)="dateofChequeEvt($event)"
+              (dateChange)="datesHandler($event, f.dateofPayment)"
             ></app-gregorian-picker>
           </div>
         </div>
@@ -142,7 +145,7 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     paymentDetails: "",
     paymentType: "",
     bankName: "",
-    IBAN: "",
+    iban: "",
     dateofCheque: new Date(),
     dateofPayment: new Date(),
   };
@@ -164,7 +167,11 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClaimPaymentForm>;
   formData!: Observable<IBaseMasterTable>;
 
-  constructor(public modal: NgbActiveModal) {}
+  constructor(
+    public modal: NgbActiveModal,
+    private util: AppUtils,
+    private tables: MasterTableService
+  ) {}
 
   initForm(): void {
     this.formGroup = new FormGroup<IClaimPaymentForm>({
@@ -178,8 +185,12 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
       clientNo: new FormControl(null),
       IBAN: new FormControl(null),
       paymentDetails: new FormControl(null),
-      dateofCheque: new FormControl(null),
-      dateofPayment: new FormControl(null),
+      dateofCheque: new FormControl(
+        this.util.dateStructFormat(new Date()) as any
+      ),
+      dateofPayment: new FormControl(
+        this.util.dateStructFormat(new Date()) as any
+      ),
     });
   }
 
@@ -187,16 +198,19 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     return this.formGroup.controls;
   }
 
-  dateOfChequeEvt(evt: any) {}
-  dateofChequeEvt(evt: any) {}
+  datesHandler(e: any, control: FormControl): void {
+    control.patchValue(e.gon);
+  }
 
   onSubmit(value: any): void {
     this.modal.close();
   }
 
   ngOnInit(): void {
-    console.log(this.data);
     this.initForm();
+
+    this.formData = this.tables.getBaseData(MODULES.ClaimsForm);
+
     this.formGroup.patchValue({
       claimSNo: this.data.claimSNo,
       clientName: this.data.clientName,
@@ -213,11 +227,11 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
       amount: this.data.amount,
       bankName: this.data.bankName,
       branch: this.data.branch,
-      IBAN: this.data.IBAN,
+      IBAN: this.data.iban,
       paymentDetails: this.data.paymentDetails,
+      dateofCheque: this.util.dateStructFormat(this.data.dateofCheque) as any,
+      dateofPayment: this.util.dateStructFormat(this.data.dateofPayment) as any,
     });
-    // dateofCheque: this.data.,
-    // dateofPayment: this.data.,
   }
 
   ngOnDestroy(): void {
