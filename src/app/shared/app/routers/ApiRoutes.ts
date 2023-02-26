@@ -141,7 +141,9 @@ export const ApiRoutes = {
     edit: "/Production/Policy/Edit",
     checkEndorsNo: "/Production/Policy/CheckPolicyEnrodsNo",
     changeStatus: "/Production/Policy/ChangeStatus",
-    editCommissions: "",
+    editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
+    editEditCommission: "/Production/Policy/EditPolicyCommission",
+    updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions"
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",

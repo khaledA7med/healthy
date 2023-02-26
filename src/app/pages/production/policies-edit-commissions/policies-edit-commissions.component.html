@@ -92,3 +92,179 @@
         </div>
     </ng-template>
 </div>
+
+
+<ng-template #edit let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <!-- [formGroup]="form" (ngSubmit)="submitEditFormData(form)" -->
+        <form>
+            <div class="container-fluid">
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape"><span>Client Data</span></span>
+                            <div class="row mt-4">
+                                <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
+                                    <label for="modalClientID">Client ID</label>
+                                    <input type="number" formControlName="sclientNoNo"
+                                        class="form-control form-control-sm" id="modalClientID" readonly>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
+                                    <label for="clientName">Client Name</label>
+                                    <input type="text" formControlName="clientName" class="form-control form-control-sm"
+                                        id="modalClientName" readonly>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
+                                    <div class="accordion-info">
+                                        <div class="lables">
+                                            <label for="producersDD">Producers</label>
+                                        </div>
+                                        <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
+                                            [items]="(lookupData | async)?.Producers?.content!"
+                                            [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+                                            formControlName="producer" bindLabel="name" bindValue="name">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape">
+                                <span>Policy Details</span>
+                            </span>
+                            <div class="row mt-4">
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalAccountNo">A/C No.</label>
+                                    <input type="text" formControlName="accNo" class="form-control form-control-sm"
+                                        id="modalAccountNo" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalPolicyNo">Policy No.</label>
+                                    <input type="text" formControlName="policyNo" class="form-control form-control-sm"
+                                        id="modalPolicyNo" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalIssuedBy">Issued By</label>
+                                    <input type="text" formControlName="savedBy" class="form-control form-control-sm"
+                                        id="modalIssuedBy" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalClassOfInsurance" class="">Class of Insurance</label>
+                                    <input type="text" formControlName="className" class="form-control form-control-sm"
+                                        id="modalClassOfInsurance" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalLineOfBussiness">Line of Bussiness</label>
+                                    <input type="text" formControlName="lineOfBusiness"
+                                        class="form-control form-control-sm" id="modalLineOfBussiness" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalPeriodFrom">Period From</label>
+                                    <input type="text" formControlName="periodFrom" class="form-control form-control-sm"
+                                        id="modalPeriodFrom" readonly>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                                    <label for="modalPeriodTo">Period To</label>
+                                    <input type="text" formControlName="periodTo" class="form-control form-control-sm"
+                                        id="modalPeriodTo" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <div class="ribbon ribbon-info round-shape">Producers Commissions</div>
+                            <div class="ribbon-content mt-4 text-muted">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 align-items-end mt-2">
+                                        <label for="companyCommissionPerc">Company Commission :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" id="companyCommissionPerc"
+                                                class="form-control form-control-sm" formControlName="compCommPerc"
+                                                placeholder="0.00">
+                                            <span class="input-group-text" id="">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12 align-items-end mt-2">
+                                        <label for="fullCommissionPerc" class="fw-bold">Full Producers Commission
+                                            :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" id="fullCommissionPerc"
+                                                class="form-control form-control-sm" formControlName="producerCommPerc"
+                                                placeholder="0.00">
+                                            <span class="input-group-text" id="">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row align-items-end">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 mt-2">
+                                        <label for="producersComissionDD">Producer</label>
+                                        <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
+                                            [items]="(lookupData | async)?.Producers?.content!"
+                                            [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+                                            formControlName="producer" bindLabel="name" bindValue="name">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
+                                        <label for="producerCommissionPerc">&nbsp;</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" class="form-control" id="producerCommissionPerc"
+                                                placeholder="0%" formControlName="percentage">
+                                            <span class="input-group-text" id="perc">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
+                                        <button type="button" id="addCommissionBtn" onclick="ProducersCommissions()"
+                                            class="btn btn-primary btn-sm w-100 d-flex align-items-center justify-content-center">
+                                            Add
+                                            <i class="ri-add-circle-line mx-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col-lg-12 table-responsive">
+                                        <table class="table align-middle table-nowrap mb-0" id="commissionsTable">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Producer</th>
+                                                    <th scope="col">Percentage %</th>
+                                                    <th scope="col">Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="producerCommissionTable">
+
+                                            </tbody>
+                                            <tfoot id="totalProducerCommissionTableFooter" class="alert">
+                                                <tr>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col" id="totalProducerCommissionPerc">0</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-success" (click)="modal.close('Close click')">Save</button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

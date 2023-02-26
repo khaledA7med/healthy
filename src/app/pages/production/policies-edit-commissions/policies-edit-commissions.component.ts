@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ProductionService } from 'src/app/shared/services/production/production.service';
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { Observable, Subscription } from "rxjs";
+import { from, Observable, Subscription } from "rxjs";
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesService } from 'src/app/shared/services/messages.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { productionEditCommissionCols } from 'src/app/shared/app/grid/productionEditCommissionsCols';
@@ -17,6 +17,10 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { IEditCommissionsFilter } from 'src/app/shared/app/models/Production/i-edit-commission-filter';
+import { EditModel, EditModelData } from 'src/app/shared/app/models/Production/i-edit-commissions-forms';
+import { EventService } from 'src/app/core/services/event.service';
+import { reserved } from 'src/app/core/models/reservedWord';
+import { IAddProducers } from 'src/app/shared/app/models/Production/i-add-producers';
 
 
 @Component({
@@ -31,7 +35,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
   submitted = false;
 
   uiState = {
-    routerLink: { forms: AppRoutes.Production.editCommissions },
     gridReady: false,
     submitted: false,
     filters: {
@@ -44,13 +47,16 @@ export class PoliciesEditCommissionsComponent implements OnInit
       list: [] as IEditCommissions[],
       totalPages: 0,
     },
+    editUserMode: false as Boolean,
+    editUserData: {} as EditModelData,
   }
 
   @ViewChild("filter") editCommissionFilter!: ElementRef;
-  @ViewChild("edit") eidtModal!: ElementRef
+  @ViewChild("edit") edit!: ElementRef
+  editUserModal!: NgbModalRef;
+
 
   filterForms!: FormGroup;
-  editForm!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
 
   // to unSubscribe
@@ -83,14 +89,13 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
   constructor (
     private modalService: NgbModal,
-    private route: ActivatedRoute,
-    private router: Router,
     private message: MessagesService,
     private productionService: ProductionService,
     private appUtils: AppUtils,
     private tableRef: ElementRef,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
+    private eventService: EventService,
 
   ) { }
 
@@ -203,6 +208,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     });
   }
 
+
   get f ()
   {
     return this.filterForms.controls;
@@ -233,18 +239,55 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
   //#endregion
 
-  openEditForm (id: string): void
+
+  // Edit Form 
+
+  openEditForm (id?: string): void
   {
-    let sub = this.modalService.open(this.eidtModal, { size: "xl" });
-    sub.dismissed.subscribe(() =>
-    {
-      // this.followUpForm.reset();
-      // this.followUpForm.markAsUntouched();
-      // this.uiState.submitted = false;
+    // this.resetEditForm();
+    this.editUserModal = this.modalService.open(this.edit, {
+      centered: true,
+      backdrop: "static",
+      size: "xl",
     });
-    // this.uiState.submitted = false;
-    // this.loadFollowUpData(requestNo);
+    if (id)
+    {
+      this.eventService.broadcast(reserved.isLoading, true);
+      let sub = this.productionService.getUserData(id).subscribe(
+        (res: HttpResponse<IBaseResponse<EditModelData>>) =>
+        {
+          this.uiState.editUserMode = true;
+          this.uiState.editUserData = res.body?.data!;
+          // this.fillEditUserForm(res.body?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
+        },
+        (err: HttpErrorResponse) =>
+        {
+          this.message.popup("Oops!", err.message, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      );
+      this.subscribes.push(sub);
+    }
+
+
+    this.editUserModal.hidden.subscribe(() =>
+    {
+      // this.resetEditForm();
+      this.submitted = false;
+      this.uiState.editUserMode = false;
+    });
   }
+
+
+
+
+
+  submitEditFormData (form: any)
+  {
+    console.log(form)
+  }
+
 
   ngOnDestroy (): void
   {
@@ -252,3 +295,4 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
 }
+
