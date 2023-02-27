@@ -49,7 +49,7 @@ export class SystemAdminService {
 	}
 
 	editAllPrivileges(data: IUserRolesPrivileges): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.SystemAdmin.getPrivileges, data, {
+		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.SystemAdmin.editPrivileges, data, {
 			observe: "response",
 		});
 	}

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, TemplateRef } from "@angular/core";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
@@ -13,7 +13,11 @@ import { IUserRoles, IUserRolesForm, privilegeRole } from "src/app/shared/app/mo
 import { EventService } from "src/app/core/services/event.service";
 import { userRolesCols } from "src/app/shared/app/grid/userRolesCols";
 import { reserved } from "src/app/core/models/reservedWord";
-import { IUserRolesPrivileges, IUserRolesPrivilegesForm } from "src/app/shared/app/models/SystemAdmin/isystem-admin-privileges";
+import {
+	IUserRolesPrivileges,
+	IUserRolesPrivilegesBoolean,
+	IUserRolesPrivilegesForm,
+} from "src/app/shared/app/models/SystemAdmin/isystem-admin-privileges";
 
 @Component({
 	selector: "app-user-privileges",
@@ -35,6 +39,7 @@ export class UserPrivilegesComponent implements OnInit {
 			totalPages: 0,
 		},
 		privilagesData: {} as IUserRolesPrivileges,
+		convertedPrivilagesData: {} as IUserRolesPrivilegesBoolean,
 	};
 	subscribes: Subscription[] = [];
 	gridApi: GridApi = <GridApi>{};
@@ -46,7 +51,6 @@ export class UserPrivilegesComponent implements OnInit {
 		animateRows: true,
 		columnDefs: userRolesCols,
 		suppressCsvExport: true,
-		// paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
 		defaultColDef: {
@@ -106,6 +110,8 @@ export class UserPrivilegesComponent implements OnInit {
 				rowNodes: [params.node],
 				columns: [params.column],
 			});
+		} else {
+			this.getAllPrivileges(params.data.sno);
 		}
 	}
 
@@ -139,7 +145,7 @@ export class UserPrivilegesComponent implements OnInit {
 	//#region Roles Management
 
 	newRoleModal!: NgbModalRef;
-	roleForm!: FormGroup;
+	roleForm!: FormGroup<IUserRolesForm>;
 
 	initRoleForm() {
 		this.roleForm = new FormGroup<IUserRolesForm>({
@@ -167,13 +173,14 @@ export class UserPrivilegesComponent implements OnInit {
 
 	validationChecker(): boolean {
 		if (this.roleForm.invalid) {
-			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+			// this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
 			return false;
 		}
 		return true;
 	}
 
 	submitNewRole(form: FormGroup) {
+		this.uiState.submitted = true;
 		let data: IUserRoles = {
 			sno: 0,
 			...form.getRawValue(),
@@ -200,6 +207,7 @@ export class UserPrivilegesComponent implements OnInit {
 
 	resetAddRoleForm() {
 		this.roleForm.reset();
+		this.uiState.submitted = false;
 	}
 
 	deleteRole(sno: number) {
@@ -524,6 +532,7 @@ export class UserPrivilegesComponent implements OnInit {
 			chLetters: new FormControl(false),
 			chEnabledStatusRequst: new FormControl(false),
 			chAccessAllUsers: new FormControl(false),
+			activePrivileges: new FormArray([]),
 		});
 
 		this.globalArrs = {
@@ -1575,11 +1584,24 @@ export class UserPrivilegesComponent implements OnInit {
 
 	getAllPrivileges(sno: number) {
 		this.eventService.broadcast(reserved.isLoading, true);
+		this.resePrivilegesForm();
 		let sub = this.systemAdminService.getAllPrivileges(sno).subscribe(
 			(res: HttpResponse<IBaseResponse<IUserRolesPrivileges>>) => {
 				if (res.body?.status) {
 					this.message.toast(res.body!.message!, "success");
 					this.uiState.privilagesData = res.body?.data!;
+					let key: keyof typeof this.uiState.privilagesData;
+					for (key in this.uiState.privilagesData) {
+						if (key === "sNo") this.uiState.convertedPrivilagesData[key] = this.uiState.privilagesData[key];
+						else if (key === "activePrivileges") this.uiState.convertedPrivilagesData[key] = this.uiState.privilagesData[key];
+						else {
+							if (this.uiState.privilagesData[key] === 1) this.uiState.convertedPrivilagesData[key] = true;
+							else this.uiState.convertedPrivilagesData[key] = false;
+						}
+					}
+					this.privilegesForm.patchValue({
+						...this.uiState.convertedPrivilagesData,
+					});
 					this.eventService.broadcast(reserved.isLoading, false);
 				} else this.message.toast(res.body!.message!, "error");
 			},
@@ -1591,7 +1613,36 @@ export class UserPrivilegesComponent implements OnInit {
 		this.subscribes.push(sub);
 	}
 
-	submitPrivilegesForm(form: FormGroup) {}
+	submitPrivilegesForm(form: FormGroup) {
+		this.eventService.broadcast(reserved.isLoading, true);
+		let rawData = form.getRawValue();
+		let dataToSubmit: IUserRolesPrivileges | any = {};
+		for (let key in rawData) {
+			if (key === "sNo") dataToSubmit[key] = rawData[key];
+			else if (key === "activePrivileges") dataToSubmit[key] = rawData[key];
+			else {
+				if (rawData[key] === true) dataToSubmit[key] = 1;
+				else dataToSubmit[key] = 0;
+			}
+		}
+		let sub = this.systemAdminService.editAllPrivileges(dataToSubmit).subscribe(
+			(res: HttpResponse<IBaseResponse<number>>) => {
+				if (res.body?.status) {
+					this.message.toast(res.body!.message!, "success");
+					this.eventService.broadcast(reserved.isLoading, false);
+				} else this.message.toast(res.body!.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			}
+		);
+		this.subscribes.push(sub);
+	}
+
+	resePrivilegesForm() {
+		this.privilegesForm.reset();
+	}
 
 	//#endregion
 

@@ -26,10 +26,16 @@
 
             <div class="card px-3">
                 <div class="row">
-                    <div class="col-lg-6 py-4">
+                    <div class="col-12 d-flex justify-content-end align-items-center my-3">
+                        <button type="submit" class="btn btn-success btn-sm mx-2">
+                            <i class="ri-add-fill me-1 align-bottom"></i> Save
+                        </button>
+                        <button type="button" class="btn btn-soft-danger btn-sm" (click)="resePrivilegesForm()">
+                            <i class="ri-delete-bin-2-line"></i> Reset
+                        </button>
+                    </div>
+                    <div class="col-lg-6 pb-4">
                         <ngb-accordion #acc="ngbAccordion">
-
-
 
                             <ngb-panel id="1" title="Master Tables" cardClass="open">
                                 <ng-template ngbPanelContent="1">
@@ -210,7 +216,7 @@
 
                         </ngb-accordion>
                     </div>
-                    <div class="col-lg-6 py-4">
+                    <div class="col-lg-6 pb-4">
                         <ngb-accordion #acc="ngbAccordion">
 
                             <ngb-panel id="6" title="Claims Management System" cardClass="open">
@@ -524,17 +530,17 @@
                     <!-- Security Role -->
                     <div class="col-12 mb-2">
                         <label for="securityRole">Security Role</label>
-                        <input id="securityRole" class="form-control form-control-sm" formControlName="cecurityRole"
-                            [ngClass]="{'is-invalid': (f['securityRole'].touched || uiState.submitted) && f['securityRole'].invalid}" />
-                        <span *ngIf="(f['securityRole'].touched || uiState.submitted) && f['securityRole'].invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        <input id="securityRole" class="form-control form-control-sm" formControlName="securityRole"
+                            [ngClass]="{'is-submitted': (f.securityRole?.touched || uiState.submitted) && f.securityRole?.invalid}" />
+                        <span class="invalid-feedback fw-bold mt-0 d-inline-block"
+                            *ngIf="(f.securityRole?.touched || uiState.submitted) && f.securityRole?.invalid">Required</span>
                     </div>
 
                     <!-- Security Role Description -->
                     <div class="col-12 mb-2">
                         <label for="securityRoleDescription">Description</label>
                         <input id="securityRoleDescription" class="form-control form-control-sm"
-                            formControlName="cecurityRoleDescription" />
+                            formControlName="securityRoleDescription" />
                     </div>
 
                 </div>
