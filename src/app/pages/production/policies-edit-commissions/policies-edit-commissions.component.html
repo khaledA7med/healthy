@@ -99,9 +99,8 @@
         <h4 class="modal-title">Modal title</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        <!-- [formGroup]="form" (ngSubmit)="submitEditFormData(form)" -->
-        <form>
+    <form [formGroup]="editForm" (ngSubmit)="submitEditFormData(editForm)">
+        <div class="modal-body">
             <div class="container-fluid">
                 <div class="my-3 h-100">
                     <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
@@ -110,8 +109,8 @@
                             <div class="row mt-4">
                                 <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
                                     <label for="modalClientID">Client ID</label>
-                                    <input type="number" formControlName="sclientNoNo"
-                                        class="form-control form-control-sm" id="modalClientID" readonly>
+                                    <input type="number" formControlName="sNo" class="form-control form-control-sm"
+                                        id="modalClientID" readonly>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
                                     <label for="clientName">Client Name</label>
@@ -169,13 +168,18 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                                     <label for="modalPeriodFrom">Period From</label>
-                                    <input type="text" formControlName="periodFrom" class="form-control form-control-sm"
-                                        id="modalPeriodFrom" readonly>
+                                    <!-- <input type="date" formControlName="periodFrom" class="form-control form-control-sm"
+                                        id="modalPeriodFrom" readonly> -->
+                                    <app-gregorian-picker [model]="ff.periodFrom?.value" [required]="true"
+                                        [submitted]="submitted"
+                                        (dateChange)="periodFrom($event)"></app-gregorian-picker>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                                     <label for="modalPeriodTo">Period To</label>
-                                    <input type="text" formControlName="periodTo" class="form-control form-control-sm"
-                                        id="modalPeriodTo" readonly>
+                                    <!-- <input type="date" formControlName="periodTo" class="form-control form-control-sm"
+                                        id="modalPeriodTo" readonly> -->
+                                    <app-gregorian-picker [model]="ff.periodTo?.value" [required]="true"
+                                        [submitted]="submitted" (dateChange)="periodTo($event)"></app-gregorian-picker>
                                 </div>
                             </div>
                         </div>
@@ -221,12 +225,12 @@
                                         <label for="producerCommissionPerc">&nbsp;</label>
                                         <div class="input-group input-group-sm">
                                             <input type="number" class="form-control" id="producerCommissionPerc"
-                                                placeholder="0%" formControlName="percentage">
+                                                placeholder="0%">
                                             <span class="input-group-text" id="perc">%</span>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
-                                        <button type="button" id="addCommissionBtn" onclick="ProducersCommissions()"
+                                        <button type="button" id="addCommissionBtn" (click)="addProducersCommissions()"
                                             class="btn btn-primary btn-sm w-100 d-flex align-items-center justify-content-center">
                                             Add
                                             <i class="ri-add-circle-line mx-2"></i>
@@ -243,16 +247,24 @@
                                                     <th scope="col">Delete</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="producerCommissionTable">
-
-                                            </tbody>
-                                            <tfoot id="totalProducerCommissionTableFooter" class="alert">
-                                                <tr>
-                                                    <th scope="col">Total</th>
-                                                    <th scope="col" id="totalProducerCommissionPerc">0</th>
-                                                    <th scope="col"></th>
+                                            <tbody formArrayName="producersCommissions">
+                                                <tr *ngFor="let p of producersCommissionsArray.controls; index as i">
+                                                    <ng-container [formGroupName]="i">
+                                                        <td>{{ producersCommissionsControls(i).value
+                                                            }}
+                                                        </td>
+                                                        <td>{{ producersCommissionsControls(i).value
+                                                            }}
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-danger" type="button"
+                                                                (click)="deleteProducersCommissions(i)">
+                                                                <i class="ri-delete-bin-line"></i>
+                                                            </button>
+                                                        </td>
+                                                    </ng-container>
                                                 </tr>
-                                            </tfoot>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -261,8 +273,8 @@
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
     <div class="modal-footer">
         <button type="button" class="btn btn-sm btn-outline-success" (click)="modal.close('Close click')">Save</button>
         <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
