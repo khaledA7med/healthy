@@ -1,7 +1,11 @@
-.ng-select.form-control-sm {
+.input-group .ng-select.form-control-sm {
   padding: 0 !important;
   border: unset !important;
 }
+.ng-select.form-control-sm {
+  padding: 0 !important;
+}
+
 .input-right {
   direction: rtl;
 }

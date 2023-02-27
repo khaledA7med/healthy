@@ -6,17 +6,12 @@ import { ClaimsService } from "./../../../shared/services/claims/claims.service"
 import { claimsManageCols } from "./../../../shared/app/grid/claimsCols";
 import { IBaseFilters } from "./../../../shared/app/models/App/IBaseFilters";
 import {
-  AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
-  QueryList,
-  Renderer2,
   TemplateRef,
   ViewChild,
-  ViewChildren,
   ViewEncapsulation,
 } from "@angular/core";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -39,6 +34,8 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { IClaimsFollowUp } from "src/app/shared/app/models/Claims/iclaims-followUp";
 import { SimplebarAngularComponent } from "simplebar-angular";
+import { EmailModalComponent } from "src/app/shared/components/email/email-modal/email-modal.component";
+import { IEmailResponse } from "src/app/shared/app/models/Email/email-response";
 
 @Component({
   selector: "app-claims-list",
@@ -63,6 +60,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
       subStatus: [] as string[],
       followUpData: [] as IClaimsFollowUp[],
       totalPages: 0,
+      emailData: {} as IEmailResponse,
     },
   };
   subscribes: Subscription[] = [];
@@ -70,6 +68,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   followUpForm!: FormGroup;
   formData!: Observable<IBaseMasterTable>;
   @ViewChild("followUp") followUpCanvas!: ElementRef;
+  @ViewChild(EmailModalComponent) email!: EmailModalComponent;
 
   // Grid Definitions
   gridApi: GridApi = <GridApi>{};
@@ -346,8 +345,58 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     );
     this.subscribes.push(sub);
   }
+  //#endregion
+
+  //#region Email
+
+  openEmailModal(data: {}, name: string) {
+    switch (name) {
+      case "client":
+        this.getClientMail(data);
+        break;
+      case "insurer":
+        this.getInsurerMail(data);
+        break;
+      default:
+        return;
+    }
+  }
+
+  getClientMail(data: {}) {
+    let sub = this.claimService.getClientMailData(data).subscribe(
+      (res: HttpResponse<IBaseResponse<IEmailResponse>>) => {
+        if (res.body?.message == "Success") {
+          this.uiState.claims.emailData = res.body?.data!;
+          this.email.openModal();
+        } else {
+          this.message.popup("Sorry!", res.body?.message!, "error");
+        }
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
+  getInsurerMail(data: {}) {
+    let sub = this.claimService.getInsurerMailData(data).subscribe(
+      (res: HttpResponse<IBaseResponse<IEmailResponse>>) => {
+        if (res.body?.message == "Success") {
+          this.uiState.claims.emailData = res.body?.data!;
+          this.email.openModal();
+        } else {
+          this.message.popup("Sorry!", res.body?.message!, "error");
+        }
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
   //#endregion
+
   ngOnDestroy(): void {
     this.subscribes.forEach((sub) => sub.unsubscribe);
   }
