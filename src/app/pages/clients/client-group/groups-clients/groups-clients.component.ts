@@ -21,26 +21,23 @@ import { IClient } from "src/app/shared/app/models/Clients/iclient";
 export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() group?: IClientGroups;
 	@Input() groupsList?: IClientGroups[];
-	clientsList: IClient[] = [];
-
 	subscribes: Subscription[] = [];
 
 	addClientModal!: NgbModalRef;
-
 	addClientToGroupForm!: FormGroup;
-	addClientToGroupFormSubmitted: boolean = false;
 
 	uiState = {
 		gridReady: false,
 		filters: {
-			// pageNumber: undefined,
-			// pageSize: undefined,
 			orderBy: "groupName",
 			orderDir: "asc",
 		},
 		group: {
 			list: [] as IClientGroups[],
 		},
+		clientsList: [] as IClient[],
+
+		submitted: false as boolean,
 	};
 
 	// Grid Definitions
@@ -145,7 +142,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		let clientsSub = this.groupService.getAllClients().subscribe((res) => {
 			if (res.body?.status) {
 				// this.message.toast(res.body?.message!, "success");
-				this.clientsList = res.body?.data!;
+				this.uiState.clientsList = res.body?.data!;
 				this.addClientModal = this.modalService.open(content, {
 					ariaLabelledBy: "modal-basic-title",
 					centered: true,
@@ -153,7 +150,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 				});
 				let sub = this.addClientModal.hidden.subscribe(() => {
 					this.addClientToGroupForm.reset();
-					this.addClientToGroupFormSubmitted = false;
+					this.uiState.submitted = false;
 				});
 				this.subscribes.push(sub);
 			} else {
@@ -165,7 +162,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	submitAddClientToGroup() {
-		this.addClientToGroupFormSubmitted = true;
+		this.uiState.submitted = true;
 		let data = {
 			clientId: Number(this.addClientToGroupForm.value["clientId"]),
 			groupName: this.addClientToGroupForm.value["groupName"],

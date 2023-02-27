@@ -28,6 +28,7 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 		group: {
 			list: [] as IClientGroups[],
 		},
+		submitted: false as boolean,
 	};
 
 	// Grid Definitions
@@ -59,7 +60,6 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 	selectedGroup?: IClientGroups;
 
 	// Forms Submittion Checkers
-	addGroupFormSubmitted: boolean = false;
 	addClientToGroupFormSubmitted: boolean = false;
 	constructor(
 		public groupService: ClientsGroupsService,
@@ -137,12 +137,12 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 
 		this.addGroupModal.hidden.subscribe(() => {
 			this.addGroupForm.reset();
-			this.addGroupFormSubmitted = false;
+			this.uiState.submitted = false;
 		});
 	}
 
 	submitCreateClientGroup() {
-		this.addGroupFormSubmitted = true;
+		this.uiState.submitted = true;
 		if (!this.addGroupForm.valid) {
 			return;
 		} else {
