@@ -92,7 +92,7 @@ export class ClaimsService {
   ): Observable<HttpResponse<IBaseResponse<IClaimDataForm>>> {
     return this.http.get<IBaseResponse<IClaimDataForm>>(
       this.env + ApiRoutes.Claims.editClaim,
-      { params: { sno: id }, observe: "response" }
+      { params: { id }, observe: "response" }
     );
   }
 
