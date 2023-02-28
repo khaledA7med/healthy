@@ -112,22 +112,24 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 		this.formDataHandler();
 		this.calcHandlers();
 		let sub = this.route.paramMap.subscribe((res) => {
+			console.log(res);
 			if (res.get("id")) {
 				this.uiState.editId = res.get("id")!;
 				this.eventService.broadcast(reserved.isLoading, true);
 				this.getPolicy(this.uiState.editId);
-			} else if (res.get("invoice")) {
+			} else {
 				this.uiState.editMode = true;
 				this.eventService.broadcast(reserved.isLoading, true);
-				let invoice = res.get("invoice")!,
-					serial = res.get("invoice")!;
+				let invoice = atob(res.get("invoice")!),
+					serial = atob(res.get("serial")!);
 				this.f.searchType?.patchValue(this.uiState.policy.searching.request);
 				this.searchByEvt();
 				let data: IPolicyRequests = {
 					policySerial: invoice,
 					clientPolicySNo: serial,
 				};
-				this.fillRequestDataToForm(data);
+				console.log(data);
+				// this.fillRequestDataToForm(data);
 			}
 		});
 		this.subscribes.push(sub);
