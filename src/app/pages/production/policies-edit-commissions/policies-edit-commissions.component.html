@@ -99,7 +99,7 @@
         <h4 class="modal-title">Modal title</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <form [formGroup]="editForm" (ngSubmit)="submitEditFormData(editForm)">
+    <form [formGroup]="editForm">
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="my-3 h-100">
@@ -218,14 +218,14 @@
                                         <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
                                             [items]="(lookupData | async)?.Producers?.content!"
                                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                                            formControlName="producer" bindLabel="name" bindValue="name">
+                                            formControlName="prodCommProduser" bindLabel="name" bindValue="name">
                                         </ng-select>
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
                                         <label for="producerCommissionPerc">&nbsp;</label>
                                         <div class="input-group input-group-sm">
                                             <input type="number" class="form-control" id="producerCommissionPerc"
-                                                placeholder="0%">
+                                                placeholder="0%" formControlName="prodCommPercentage">
                                             <span class="input-group-text" id="perc">%</span>
                                         </div>
                                     </div>
@@ -250,10 +250,10 @@
                                             <tbody formArrayName="producersCommissions">
                                                 <tr *ngFor="let p of producersCommissionsArray.controls; index as i">
                                                     <ng-container [formGroupName]="i">
-                                                        <td>{{ producersCommissionsControls(i).value
+                                                        <td>{{ producersCommissionsControls(i, 'producer').value
                                                             }}
                                                         </td>
-                                                        <td>{{ producersCommissionsControls(i).value
+                                                        <td>{{ producersCommissionsControls(i, 'percentage').value
                                                             }}
                                                         </td>
                                                         <td>
@@ -276,7 +276,8 @@
         </div>
     </form>
     <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-outline-success" (click)="modal.close('Close click')">Save</button>
+        <button type="button" class="btn btn-sm btn-outline-success"
+            (click)="submitEditFormData(editForm)">Save</button>
         <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>

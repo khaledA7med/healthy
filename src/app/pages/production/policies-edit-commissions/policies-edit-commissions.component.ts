@@ -51,6 +51,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     editId: "",
     editUserMode: false as Boolean,
     editUserData: {} as EditModelData,
+    producers: [] as any
   }
 
   @ViewChild("filter") editCommissionFilter!: ElementRef;
@@ -109,6 +110,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.getLookupData();
     this.initForm();
   }
+
 
   // Table Section
   dataSource: IDatasource = {
@@ -291,7 +293,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
 
-  private initForm (): void
+  initForm (): void
   {
     this.editForm = new FormGroup<EditModel>({
       sNo: new FormControl(null),
@@ -309,6 +311,9 @@ export class PoliciesEditCommissionsComponent implements OnInit
       periodTo: new FormControl(null),
       updatedBy: new FormControl(""),
       insurComp: new FormControl(""),
+      prodCommProduser: new FormControl(null),
+      prodCommPercentage: new FormControl(null),
+
       producersCommissions: new FormArray<FormGroup<IAddProducers>>([]),
     })
   }
@@ -318,50 +323,45 @@ export class PoliciesEditCommissionsComponent implements OnInit
     return this.editForm.controls;
   }
 
-  get producersCommissionsArray ()
+  get producersCommissionsArray (): FormArray
   {
     return this.editForm.get("producersCommissions") as FormArray;
   }
 
-  producersCommissionsControls (i: number): AbstractControl
+  producersCommissionsControls (i: number, control: string): AbstractControl
   {
-    return this.producersCommissionsArray.controls[ i ];
+    return this.producersCommissionsArray.controls[ i ].get(control)!;
   }
 
-  addProducersCommissions (data?: IAddProducers)
+  addProducersCommissions ()
   {
+    let data: IAddProducers = {
+      producer: this.ff.prodCommProduser!,
+      percentage: this.ff.prodCommPercentage!
+    }
+
+    if (this.ff.producersCommissions?.invalid)
+    {
+      this.ff.producersCommissions?.markAllAsTouched();
+      return;
+    }
     let producerCommission = new FormGroup<IAddProducers>({
-      producer: new FormControl(data?.producer || null, Validators.required),
-      percentage: new FormControl(data?.percentage || null, [
+      producer: new FormControl(data?.producer!.value, Validators.required),
+      percentage: new FormControl(data.percentage!.value, [
         Validators.max(100),
         Validators.min(0),
         Validators.required,
       ]),
     });
-    if (this.ff.producersCommissions?.valid && this.uiState.editUserMode)
-    {
-      let check = this.producersCommissionsArray.getRawValue();
-      if (!check.values) this.producersCommissionsArray.push(producerCommission.value);
-      else this.message.popup("Warning", "Can't Add Any More", "error");
 
-      if (this.producersCommissionsArray.length > 0) this.ff.producersCommissions?.clearValidators();
-      else this.ff.producerCommPerc?.addValidators(Validators.required);
-    } else
-    {
-      this.ff.producersCommissions?.markAsTouched();
-    }
-
-    if (!data) producerCommission.reset();
-    else producerCommission.disable();
-
-    if (this.ff.producersCommissions?.length === 0)
-      producerCommission.controls.producer?.patchValue(this.ff.producer?.value!);
+    // if (!data) producerCommission.reset();
+    // else producerCommission.disable();
 
     this.ff.producersCommissions?.push(producerCommission);
     this.producersCommissionsArray.updateValueAndValidity();
 
-    console.log(producerCommission.value)
   }
+
 
   deleteProducersCommissions (i: number)
   {
@@ -380,8 +380,12 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.ff.lineOfBusiness?.patchValue(data.lineOfBusiness!);
     this.ff.compCommPerc?.patchValue(data.compCommPerc!);
     this.ff.producerCommPerc?.patchValue(data.producerCommPerc!);
-    this.ff.periodFrom?.patchValue(this.appUtils.dateStructFormat(data.periodFrom!) as any);
-    this.ff.periodTo?.patchValue(this.appUtils.dateStructFormat(data.periodTo!) as any);
+    this.ff.periodFrom?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodFrom!) as any
+    );
+    this.ff.periodTo?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodTo!) as any
+    );
     this.ff.sNo?.disable();
     this.ff.clientName?.disable();
     this.ff.accNo?.disable();
@@ -402,11 +406,9 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.ff.periodTo?.patchValue(e.gon);
   }
 
-
   submitEditFormData (editForm: FormGroup)
   {
-    this.submitted = true;
-    this.eventService.broadcast(reserved.isLoading, true);
+    this.uiState.submitted = true;
     const formData = editForm.getRawValue();
     const data: EditModelData = {
       sNo: this.uiState.editUserMode ? this.uiState.editUserData.sNo : 0,
@@ -416,20 +418,24 @@ export class PoliciesEditCommissionsComponent implements OnInit
       savedBy: formData.savedBy,
       className: formData.className,
       lineOfBusiness: formData.lineOfBusiness,
-      periodFrom: formData.periodFrom,
-      periodTo: formData.periodTo,
+      periodFrom: this.appUtils.dateFormater(formData.periodFrom!) as any,
+      periodTo: this.appUtils.dateFormater(formData.periodTo!) as any,
       producer: formData.producer,
+      producerCommPerc: formData.producerCommPerc,
+      compCommPerc: formData.compCommPerc,
       producersCommissions: formData.producersCommissions,
     };
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.productionService.UpdatePolicyComissions(data).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
-        this.editUserModal.dismiss();
+        // this.editUserModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         // this.resetUserForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
+        console.log(res.body?.data)
       },
       (err: HttpErrorResponse) =>
       {
@@ -438,7 +444,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
       }
     );
     this.subscribes.push(sub);
-
   }
 
 

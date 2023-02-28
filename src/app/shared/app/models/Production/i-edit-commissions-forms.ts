@@ -18,6 +18,8 @@ export interface EditModel
     periodTo?: FormControl<Date | null>;
     updatedBy?: FormControl<string | null>;
     insurComp?: FormControl<string | null>;
+    prodCommProduser?: FormControl<string | null>;
+    prodCommPercentage?: FormControl<number | null>;
     producersCommissions?: FormArray<FormGroup<IAddProducers>>;
 }
 
