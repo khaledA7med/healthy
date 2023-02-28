@@ -105,9 +105,10 @@ export class ClientReportsComponent implements OnInit {
 		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true });
 		this.modalRef.componentInstance.data = {
 			reportName: "Clients Reports",
-			url:
-				"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55232.657228351054!2d31.319837900000003!3d30.093009899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2seg!4v1677497557644!5m2!1sen!2seg" ||
-				data,
+			// url:
+			// 	"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55232.657228351054!2d31.319837900000003!3d30.093009899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2seg!4v1677497557644!5m2!1sen!2seg" ||
+			// 	data,
+			url: data,
 		};
 
 		let sub = this.modalRef.closed.subscribe((res) => {

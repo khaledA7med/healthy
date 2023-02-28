@@ -31,7 +31,7 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 					</li>
 					<button ngbDropdownItem (click)="FollowUp()" class="btn btn-sm">Follow Up</button>
 					<button ngbDropdownItem class="btn btn-sm" (click)="Edit()">Edit</button>
-					<button ngbDropdownItem class="btn btn-sm">Make Invoice</button>
+					<button ngbDropdownItem class="btn btn-sm" (click)="makeInvoice()">Make Invoice</button>
 					<li>
 						<a class="btn btn-sm dropdown-item">Change Status To &nbsp; &nbsp; &raquo;</a>
 						<ul class="dropdown-menu dropdown-submenu">
@@ -95,6 +95,17 @@ export class CustomerServiceListControlsComponent {
 
 	Edit() {
 		this._Router.navigate([AppRoutes.CustomerService.edit, this.params.data.identity]);
+	}
+
+	makeInvoice() {
+		if (this.params.data.status === this.status.Close) {
+			// this._Router.navigate([AppRoutes.Production.makeInvoice, this.params.data.identity]);
+
+			console.log(this.params.data.policySerial);
+			console.log(this.params.data.clientPolicySNo);
+		} else {
+			this.message.popup("Warning", "Request must be closed before you can make an invoice", "warning");
+		}
 	}
 
 	FollowUp() {
