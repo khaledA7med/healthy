@@ -1,5 +1,4 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { IClaimRejectDeductForm } from "./iclaim-reject-deduct-form";
 
 export interface IClaimsForms {
   clientInfo?: FormControl<string | null>;
@@ -76,22 +75,12 @@ export interface IClaimsForms {
 
   status?: FormControl<string | null>;
   claimStatusNotes?: FormControl<string | null>;
-  //  IEnumerable<BaseLookUpDto> ClaimStatusNotesList  = new List<BaseLookUpDto>();
 
   //Loss Adjuster
   lostadjuster?: FormControl<string | null>;
   lostadjusterEmail?: FormControl<string | null>; //Reference
   lostadjusterTele?: FormControl<string | null>;
   /* End Tap 1 */
-
-  // /* Payment Tap 2- Rejections / Deductions */
-  //  IEnumerable<ClaimsRejectionsDeductionsDto> ClaimRejectionDeductionsList  = new List<ClaimsRejectionsDeductionsDto>();
-  //   ClaimRejectionDeductions
-  // /* End Tap 2 */
-
-  // Tap 3 Docs
-  //  List<IFormFile> Documents  = new List<IFormFile>();
-  /* End Tap 3 */
 
   /***************        End Payment Tap     *****************/
 
@@ -103,11 +92,13 @@ export interface IClaimsForms {
   motor?: FormGroup<IClaimMotorForm>;
   /***************        End Motor       *****************/
 
-  /* General  */
-  //  IEnumerable<ClaimGeneralDto> ClaimsGeneral  = new List<ClaimGeneralDto>();
-  //   ClaimsGeneral
+  //   Claims General
   general?: FormGroup<IClaimGeneralForm>;
   /***************        End General       *****************/
+
+  // Claim Payments
+  totalPaymentsAmount?: FormControl<number | null>;
+  totalApprovalsAmount?: FormControl<number | null>;
 
   InsuranceCompanyDNCNNo?: FormControl<string | null>;
   DriverAge?: FormControl<string | null>;

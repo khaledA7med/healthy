@@ -36,7 +36,9 @@ import {
   IClaimPoliciesSearch,
   IClaimTransactionList,
 } from "src/app/shared/app/models/Claims/claims-util";
+import { IClaimApproval } from "src/app/shared/app/models/Claims/iclaim-approval-form";
 import { IClaimDataForm } from "src/app/shared/app/models/Claims/iclaim-data-form";
+import { IClaimInvoice } from "src/app/shared/app/models/Claims/iclaim-invoice-form";
 import { IClaimPayment } from "src/app/shared/app/models/Claims/iclaim-payment-form";
 import {
   IClaimRejectDeduct,
@@ -96,6 +98,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       requiredDocs: [] as string[],
       rejectDeductList: [] as IClaimRejectDeduct[],
       payments: [] as IClaimPayment[],
+      approvals: [] as IClaimApproval[],
+      invoices: [] as IClaimInvoice[],
     },
     modalConfig: {
       centered: true,
@@ -286,6 +290,10 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
         claimsGeneral: new FormArray<FormGroup<IClaimsGeneralListForm>>([]),
       }),
 
+      // Payments
+      totalPaymentsAmount: new FormControl(null),
+      totalApprovalsAmount: new FormControl(null),
+
       branch: new FormControl(null),
     });
   }
@@ -311,7 +319,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
   }
 
   getClaim(id: string): void {
-    console.log(id);
     this.uiState.editMode = true;
     this.claimService.getClaimById(id).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
@@ -377,6 +384,10 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
           );
 
           this.uiState.claimLists.payments = data?.paymentsList!;
+          this.totalPaymentsAmount();
+
+          this.uiState.claimLists.approvals = data?.claimApprovals!;
+          this.totalApprovalsAmount();
         }
         this.eventService.broadcast(reserved.isLoading, false);
       },
@@ -644,28 +655,107 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       clientName: this.f.clientName?.value,
     } as IClaimPayment;
 
-    let sub = this.modalRef.closed.subscribe((res) => {
-      console.log(res);
-    });
+    let sub = this.modalRef.componentInstance.paymentList.subscribe(
+      (res: IClaimPayment[]) => {
+        this.uiState.claimLists.payments = res;
+        this.totalPaymentsAmount();
+      }
+    );
     this.subscribes.push(sub);
   }
+
+  totalPaymentsAmount(): number {
+    let paid = this.uiState.claimLists.payments.reduce((curr, obj) => {
+      if (obj.status === "Approved") {
+        return +curr + +obj.amount!;
+      } else return +curr;
+    }, 0);
+    this.f.totalPaymentsAmount?.patchValue(+paid);
+    this.amounts.paid?.patchValue(paid);
+    return paid;
+  }
+
+  approveClaimPayment(data: IClaimPayment): void {
+    let sub = this.claimService.approveClaimPayment(data).subscribe(
+      (res: IBaseResponse<any>) => {
+        if (res.status) {
+          this.message.toast(res.message!, "success");
+          this.totalPaymentsAmount();
+        } else this.message.popup("Oops!", res.message!, "warning");
+      },
+      (err: HttpErrorResponse) =>
+        this.message.popup("Oops!", err.message!, "error")
+    );
+    this.subscribes.push(sub);
+  }
+
+  rejectClaimPayment(id: number): void {
+    let sub = this.claimService.rejectClaimPayment(id).subscribe(
+      (res: IBaseResponse<any>) => {
+        if (res.status) this.message.toast(res.message!, "success");
+        else this.message.popup("Oops!", res.message!, "warning");
+      },
+      (err: HttpErrorResponse) =>
+        this.message.popup("Oops!", err.message!, "error")
+    );
+    this.subscribes.push(sub);
+  }
+
   //#endregion
 
   //#region Approvals Section
-  addApproval(): void {
+  openApprovalModal(data?: IClaimApproval): void {
     this.modalRef = this.modalService.open(
       ClaimApprovalsFormComponent,
       this.uiState.modalConfig
     );
+
+    this.modalRef.componentInstance.data = {
+      ...data,
+      claimSNo: this.f.sNo?.value,
+      clientNo: this.f.clientID?.value,
+      clientName: this.f.clientName?.value,
+    } as IClaimApproval;
+
+    let sub = this.modalRef.componentInstance.approvalList.subscribe(
+      (res: IClaimApproval[]) => {
+        this.uiState.claimLists.approvals = res;
+        this.totalApprovalsAmount();
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
+  totalApprovalsAmount(): number {
+    let approve = this.uiState.claimLists.approvals.reduce((curr, obj) => {
+      return +curr + +obj.netAmount!;
+    }, 0);
+    this.f.totalApprovalsAmount?.patchValue(approve);
+    return +approve;
   }
   //#endregion
 
   //#region Invoices Section
-  addInvoice(): void {
+  openInvoicesModal(data?: IClaimInvoice): void {
     this.modalRef = this.modalService.open(
       ClaimInvoicesFormComponent,
       this.uiState.modalConfig
     );
+
+    this.modalRef.componentInstance.data = {
+      ...data,
+      claimSNo: this.f.sNo?.value,
+      clientNo: this.f.clientID?.value,
+      clientName: this.f.clientName?.value,
+    } as IClaimInvoice;
+
+    let sub = this.modalRef.componentInstance.invoiceList.subscribe(
+      (res: IClaimInvoice[]) => {
+        this.uiState.claimLists.invoices = res;
+        // this.
+      }
+    );
+    this.subscribes.push(sub);
   }
   //#endregion
 

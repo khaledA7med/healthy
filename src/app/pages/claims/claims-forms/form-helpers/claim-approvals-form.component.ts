@@ -1,17 +1,30 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { HttpErrorResponse } from "@angular/common/http";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import {
   IClaimApproval,
   IClaimApprovalForm,
 } from "src/app/shared/app/models/Claims/iclaim-approval-form";
+import AppUtils from "src/app/shared/app/util";
+import { ClaimsService } from "src/app/shared/services/claims/claims.service";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { SweetAlertResult } from "sweetalert2";
 
 @Component({
   selector: "app-claim-approvals-form",
   template: `
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+    <app-sub-loader *ngIf="isLoading"></app-sub-loader>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)">
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Approval Details</h4>
         <button
@@ -31,6 +44,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="labor"
                   id="labor"
                   placeholder="0.00"
@@ -45,6 +59,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="towingCharges"
                   id="towingCharges"
                   placeholder="0.00"
@@ -59,6 +74,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="spareParts"
                   id="spareParts"
                   placeholder="0.00"
@@ -73,6 +89,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="material"
                   id="material"
                   placeholder="0.00"
@@ -87,6 +104,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="totalLoss"
                   id="totalLoss"
                   placeholder="0.00"
@@ -101,6 +119,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="lumpsumAmount"
                   id="lumpsumAmount"
                   placeholder="0.00"
@@ -115,6 +134,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="VATAmount"
                   id="VATAmount"
                   placeholder="0.00"
@@ -132,6 +152,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="depreciation"
                   id="depreciation"
                   placeholder="0.00"
@@ -146,6 +167,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="deductibleExcess"
                   id="deductibleExcess"
                   placeholder="0.00"
@@ -160,6 +182,7 @@ import {
                   type="text"
                   class="form-control input-text-right"
                   InputMask
+                  (input)="totalAmountCalc()"
                   formControlName="discounts"
                   id="discounts"
                   placeholder="0.00"
@@ -211,7 +234,7 @@ import {
               <label for="dateofPayment">Date Of Payments</label>
               <app-gregorian-picker
                 [model]="f.approvalDate.value"
-                [required]="false"
+                [required]="true"
                 [submitted]="submitted"
                 (dateChange)="approvalDateEvt($event)"
               ></app-gregorian-picker>
@@ -235,7 +258,6 @@ import {
 })
 export class ClaimApprovalsFormComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup<IClaimApprovalForm>;
-  formData!: IBaseMasterTable;
   @Input() data: IClaimApproval = {
     sNo: 0,
     claimSNo: 0,
@@ -252,18 +274,36 @@ export class ClaimApprovalsFormComponent implements OnInit, OnDestroy {
     depreciation: 0,
     netAmount: 0,
     totalLoss: 0,
-    VATAmount: 0,
+    vatAmount: 0,
     discounts: 0,
     approvalDate: new Date(),
   };
 
+  @Output() approvalList: EventEmitter<IClaimApproval[]> = new EventEmitter<
+    IClaimApproval[]
+  >();
+
   submitted: boolean = false;
   editMode: boolean = false;
+  isLoading: boolean = false;
   subscribes: Subscription[] = [];
-  constructor(public modal: NgbActiveModal) {}
+  constructor(
+    public modal: NgbActiveModal,
+    private util: AppUtils,
+    private message: MessagesService,
+    private claimService: ClaimsService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
+
+    this.formGroup.patchValue({
+      claimSNo: this.data.claimSNo,
+      clientName: this.data.clientName,
+      clientNo: this.data.clientNo,
+    });
+    if (this.data.sNo) this.patchDataToForm();
+    this.totalAmountCalc();
   }
 
   initForm(): void {
@@ -285,7 +325,7 @@ export class ClaimApprovalsFormComponent implements OnInit, OnDestroy {
       totalLoss: new FormControl(null),
       VATAmount: new FormControl(null),
       discounts: new FormControl(null),
-      approvalDate: new FormControl(null),
+      approvalDate: new FormControl(null, Validators.required),
     });
   }
 
@@ -293,9 +333,150 @@ export class ClaimApprovalsFormComponent implements OnInit, OnDestroy {
     return this.formGroup.controls;
   }
 
-  approvalDateEvt(evt: any) {}
+  patchDataToForm(): void {
+    this.formGroup.patchValue({
+      sNo: this.data.sNo,
+      approvalDate: this.util.dateStructFormat(this.data.approvalDate) as any,
+      chassisNo: this.data.chassisNo,
+      deductibleExcess: this.data.deductibleExcess,
+      depreciation: this.data.depreciation,
+      discounts: this.data.discounts,
+      labor: this.data.labor,
+      lumpsumAmount: this.data.lumpsumAmount,
+      material: this.data.material,
+      netAmount: this.data.netAmount,
+      spareParts: this.data.spareParts,
+      totalAmount: this.data.totalAmount,
+      totalLoss: this.data.totalLoss,
+      towingCharges: this.data.towingCharges,
+      VATAmount: this.data.vatAmount,
+    });
+  }
 
-  onSubmit(value: any) {}
+  totalAmountCalc(): void {
+    let totals =
+      +this.f.towingCharges.value! +
+      +this.f.spareParts.value! +
+      +this.f.material.value! +
+      +this.f.totalLoss.value! +
+      +this.f.lumpsumAmount.value! +
+      +this.f.VATAmount.value! +
+      +this.f.labor.value!;
+
+    this.f.totalAmount.patchValue(totals);
+    this.f.netAmount.patchValue(
+      totals -
+        +this.f.deductibleExcess.value! -
+        +this.f.discounts.value! -
+        +this.f.depreciation.value!
+    );
+  }
+
+  approvalDateEvt(evt: any) {
+    this.f.approvalDate.patchValue(evt.gon);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  onSubmit(value: FormGroup<IClaimApprovalForm>) {
+    this.submitted = true;
+    if (!this.validationChecker()) return;
+    if (+this.f.netAmount.value! === 0) {
+      this.message
+        .templateComfirmation(
+          "Are You Sure!",
+          "<p>Net Amount = 0</p>",
+          "Yes, Sure!",
+          "primary",
+          "question"
+        )
+        .then((result: SweetAlertResult) => {
+          if (result.isConfirmed) this.sendRequestData(value);
+        });
+    } else this.sendRequestData(value);
+  }
+
+  sendRequestData(value: FormGroup<IClaimApprovalForm>) {
+    const formData = new FormData();
+    let val = value.getRawValue();
+
+    formData.append("SNo", val.sNo ? val.sNo!.toString() : "0");
+    formData.append("ClaimSNo", val.claimSNo?.toString()! ?? "0");
+    formData.append("ClientNo", val.clientNo?.toString()! ?? "0");
+    formData.append("ClientName", val.clientName!);
+    formData.append("ChassisNo", val.chassisNo!);
+    formData.append("Labor", val.labor ? val.labor?.toString() : "0");
+    formData.append(
+      "TowingCharges",
+      val.towingCharges ? val.towingCharges?.toString() : "0"
+    );
+    formData.append(
+      "SpareParts",
+      val.spareParts ? val.spareParts?.toString() : "0"
+    );
+    formData.append("Material", val.material ? val.material?.toString() : "0");
+    formData.append(
+      "LumpsumAmount",
+      val.lumpsumAmount ? val.lumpsumAmount?.toString() : "0"
+    );
+    formData.append(
+      "TotalAmount",
+      val.totalAmount ? val.totalAmount?.toString() : "0"
+    );
+    formData.append(
+      "DeductibleExcess",
+      val.deductibleExcess ? val.deductibleExcess?.toString() : "0"
+    );
+    formData.append(
+      "Depreciation",
+      val.depreciation ? val.depreciation?.toString() : "0"
+    );
+    formData.append(
+      "NetAmount",
+      val.netAmount ? val.netAmount?.toString() : "0"
+    );
+    formData.append(
+      "TotalLoss",
+      val.totalLoss ? val.totalLoss?.toString() : "0"
+    );
+    formData.append(
+      "VATAmount",
+      val.VATAmount ? val.VATAmount?.toString() : "0"
+    );
+    formData.append(
+      "Discounts",
+      val.discounts ? val.discounts?.toString() : "0"
+    );
+    formData.append(
+      "ApprovalDate",
+      this.util.dateFormater(val.approvalDate) as any
+    );
+
+    let sub = this.claimService.saveClaimApproval(formData).subscribe(
+      (res: IBaseResponse<IClaimApproval[]>) => {
+        if (res.status) {
+          this.message.toast(res.message!, "success");
+          this.approvalList.emit(res.data);
+          this.modal.close();
+        } else this.message.popup("Oops!", res.message!, "warning");
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+        this.isLoading = false;
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
