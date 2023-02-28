@@ -171,6 +171,8 @@ export const ApiRoutes = {
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
     getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
+    getClientMailData: "/Claims/NotifyClientMailData",
+    getInsurerMailData: "/Claims/NotifyInsurerMailData",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",

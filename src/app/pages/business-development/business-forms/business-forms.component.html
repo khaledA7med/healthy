@@ -1375,11 +1375,20 @@
               formControlName="branch"
               bindLabel="name"
               bindValue="name"
+              [ngClass]="{
+                'is-submitted': submitted && f.branch?.invalid
+              }"
               [clearable]="false"
               [items]="(formData | async)?.Branch?.content!"
               [loading]="formData ? false : true"
             >
             </ng-select>
+            <div
+              class="invalid-feedback fw-bold d-block"
+              *ngIf="(f.branch?.touched || submitted) && f.branch?.invalid"
+            >
+              Required
+            </div>
           </div>
         </div>
       </div>

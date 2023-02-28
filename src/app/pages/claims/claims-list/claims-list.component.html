@@ -43,6 +43,11 @@
 </div>
 
 <!------------------------------------------------ 
+                    Email
+-------------------------------------------------->
+<app-email-modal [modalData]="uiState.claims.emailData"></app-email-modal>
+
+<!------------------------------------------------ 
                 Claims  Filter
 -------------------------------------------------->
 
@@ -501,7 +506,7 @@
             [items]="(formData | async)?.AllUsers?.content!"
             [loading]="formData ? false : true"
             [clearable]="true"
-            class="form-control-sm px-0"
+            class="form-control-sm px-0 w-100"
             [ngClass]="{
               'is-invalid':
                 followUpF['names'].touched && followUpF['names'].errors
