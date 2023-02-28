@@ -1,20 +1,32 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { MasterTableService } from "src/app/core/services/master-table.service";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import {
   IClaimPayment,
   IClaimPaymentForm,
 } from "src/app/shared/app/models/Claims/iclaim-payment-form";
 import AppUtils from "src/app/shared/app/util";
+import { ClaimsService } from "src/app/shared/services/claims/claims.service";
+import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
   selector: "app-claim-payments-form",
   template: `
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+    <app-sub-loader *ngIf="isLoading"></app-sub-loader>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)">
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Payment Details</h4>
         <button
@@ -121,6 +133,7 @@ import AppUtils from "src/app/shared/app/util";
         </div>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"
@@ -128,7 +141,6 @@ import AppUtils from "src/app/shared/app/util";
         >
           Cancel
         </button>
-        <button type="submit" class="btn btn-primary btn-sm">Save</button>
       </div>
     </form>
   `,
@@ -152,7 +164,7 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
 
   submitted: boolean = false;
   editMode: boolean = false;
-
+  isLoading: boolean = false;
   paymentTypes: string[] = [
     "Direct Cheque To Client",
     "Direct Transfer To Client",
@@ -166,11 +178,15 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
 
   formGroup!: FormGroup<IClaimPaymentForm>;
   formData!: Observable<IBaseMasterTable>;
-
+  @Output() paymentList: EventEmitter<IClaimPayment[]> = new EventEmitter<
+    IClaimPayment[]
+  >();
   constructor(
     public modal: NgbActiveModal,
     private util: AppUtils,
-    private tables: MasterTableService
+    private tables: MasterTableService,
+    private message: MessagesService,
+    private claimService: ClaimsService
   ) {}
 
   initForm(): void {
@@ -202,15 +218,50 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     control.patchValue(e.gon);
   }
 
-  onSubmit(value: any): void {
-    this.modal.close();
+  onSubmit(data: FormGroup<IClaimPaymentForm>): void {
+    if (!this.validationChecker()) return;
+    this.isLoading = true;
+    const formData = new FormData();
+    let val = data.getRawValue();
+
+    formData.append("SNo", val.sNo ? val.sNo!.toString() : "0");
+    formData.append("ClaimSNo", val.claimSNo?.toString()! ?? "0");
+    formData.append("ClientNo", val.clientNo?.toString()! ?? "0");
+    formData.append("ClientName", val.clientName!);
+    formData.append("Amount", val.amount?.toString() ?? "0");
+    formData.append("PaymentDetails", val.paymentDetails ?? "");
+    formData.append("PaymentType", val.paymentType ?? "");
+    formData.append("IBAN", val.IBAN!);
+    formData.append(
+      "DateofCheque",
+      this.util.dateFormater(val.dateofCheque) as any
+    );
+    formData.append(
+      "DateofPayment",
+      this.util.dateFormater(val.dateofPayment) as any
+    );
+    formData.append("BankName", val.bankName ?? "");
+
+    let sub = this.claimService.saveClaimPayment(formData).subscribe(
+      (res: IBaseResponse<IClaimPayment[]>) => {
+        if (res.status) {
+          this.message.toast(res.message!, "success");
+          this.paymentList.emit(res.data);
+          this.modal.close();
+        } else this.message.popup("Oops!", res.message!, "warning");
+        this.isLoading = false;
+      },
+      (err: HttpErrorResponse) => {
+        this.message.popup("Oops!", err.message, "error");
+        this.isLoading = false;
+      }
+    );
+    this.subscribes.push(sub);
   }
 
   ngOnInit(): void {
     this.initForm();
-
     this.formData = this.tables.getBaseData(MODULES.ClaimsForm);
-
     this.formGroup.patchValue({
       claimSNo: this.data.claimSNo,
       clientName: this.data.clientName,
@@ -218,6 +269,18 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     });
 
     if (this.data.sNo) this.patchDataToForm();
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
   }
 
   patchDataToForm(): void {
