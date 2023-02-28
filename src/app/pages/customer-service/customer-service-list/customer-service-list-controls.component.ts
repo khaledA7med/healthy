@@ -100,7 +100,12 @@ export class CustomerServiceListControlsComponent {
 	makeInvoice() {
 		if (this.params.data.status === this.status.Close) {
 			// this._Router.navigate([AppRoutes.Production.makeInvoice, `${btoa(this.params.data.policySerial)}/${btoa(this.params.data.clientPolicySno)}`]);
-			this._Router.navigate([AppRoutes.Production.makeInvoice, btoa(this.params.data.policySerial), btoa(this.params.data.clientPolicySno)]);
+			this._Router.navigate([
+				AppRoutes.Production.makeInvoice,
+				btoa(this.params.data.policySerial),
+				btoa(this.params.data.clientPolicySno),
+				btoa(this.params.data.requestNo),
+			]);
 		} else {
 			this.message.popup("Warning", "Request must be closed before you can make an invoice", "warning");
 		}

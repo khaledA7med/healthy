@@ -25,7 +25,8 @@
                                                             placeholder="select status"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
-                                                            bindLabel="name" bindValue="name" formControlName="status">
+                                                            [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                            formControlName="status">
                                                         </ng-select>
                                                     </div>
                                                 </div>

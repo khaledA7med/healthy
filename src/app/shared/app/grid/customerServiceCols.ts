@@ -76,18 +76,21 @@ export const customerServiceManageCols: ColDef[] = [
 		headerName: "Net Premium",
 		field: "netPremium",
 		valueFormatter: GlobalCellRender.currencyFormater,
+		cellClass: ["input-text-right"],
 		minWidth: 140,
 	},
 	{
 		headerName: "Policy Fees",
 		field: "policyFees",
 		valueFormatter: GlobalCellRender.currencyFormater,
+		cellClass: ["input-text-right"],
 		minWidth: 110,
 	},
 	{
 		headerName: "Total Premium",
 		field: "totalPremium",
 		valueFormatter: GlobalCellRender.currencyFormater,
+		cellClass: ["input-text-right"],
 		minWidth: 140,
 	},
 	{

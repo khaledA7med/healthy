@@ -49,8 +49,8 @@
                     <label for="policyStatus" class="form-label">Policy Status:</label>
                     <ng-select [items]="(lookupData | async)?.PolicyStatus?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        [hideSelected]="true" [multiple]="true" bindValue="name" id="policyStatus"
-                        formControlName="status">
+                        [closeOnSelect]="false" [hideSelected]="true" [multiple]="true" bindValue="name"
+                        id="policyStatus" formControlName="status">
                     </ng-select>
                 </div>
                 <!-- Branch -->
@@ -80,7 +80,7 @@
                     <label for="producerName" class="form-label">Producer:</label>
                     <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
-                        [hideSelected]="true" id="producerName" formControlName="producer">
+                        [closeOnSelect]="false" [hideSelected]="true" id="producerName" formControlName="producer">
                     </ng-select>
                 </div>
                 <!-- Insurance Company -->

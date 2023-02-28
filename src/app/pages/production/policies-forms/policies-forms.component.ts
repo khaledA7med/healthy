@@ -116,16 +116,18 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 				this.uiState.editId = res.get("id")!;
 				this.eventService.broadcast(reserved.isLoading, true);
 				this.getPolicy(this.uiState.editId);
-			} else if (res.get("invoice") && res.get("serial")) {
+			} else if (res.get("invoice") && res.get("serial") && res.get("reqno")) {
 				this.uiState.editMode = true;
 				this.eventService.broadcast(reserved.isLoading, true);
 				let invoice = atob(res.get("invoice")!),
-					serial = atob(res.get("serial")!);
+					serial = atob(res.get("serial")!),
+					reqNo = atob(res.get("reqno")!);
 				this.f.searchType?.patchValue(this.uiState.policy.searching.request);
 				this.searchByEvt();
 				let data: IPolicyRequests = {
 					policySerial: invoice,
 					clientPolicySNo: serial,
+					requestNo: reqNo,
 				};
 				this.fillRequestDataToForm(data);
 			}
@@ -280,11 +282,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 						periodTo: new Date(policy?.periodTo!),
 						policyNo: policy?.policyNo,
 						producerCommPerc: +policy?.producerCommPerc!,
-						clientNo: +e?.clientID!,
-						clientName: e?.clientName,
-						producer: e?.producer,
+						clientNo: +client?.clientNo!,
+						clientName: client?.clientName,
+						producer: client?.producer,
 						oasisPolRef: client?.oasisPolRef,
-						endorsType: e?.endorsType,
+						endorsType: client?.endorsType,
 						endorsNo: client?.endorsNo,
 						minDriverAge: +client?.minDriverAge!,
 						claimNoOfDays: +client?.claimNoOfDays!,
@@ -296,10 +298,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 					this.f.issueType?.patchValue("endorsement");
 					this.f.requestNo?.patchValue(e.requestNo!);
 					this.uiState.policy.isRequest = true;
-					this.uiState.policySearch.clientName = e.clientName!;
-					this.uiState.policySearch.clientID = e.clientID!;
+					this.uiState.policySearch.clientName = client?.clientName!;
+					this.uiState.policySearch.clientID = client?.clientNo!;
 
-					this.modalRef.close();
+					if (!this.uiState.editMode) this.modalRef.close();
 				} else this.message.popup("Oops!", res.message!, "error");
 				this.eventService.broadcast(reserved.isLoading, false);
 			},

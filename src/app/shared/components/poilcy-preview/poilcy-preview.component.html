@@ -46,94 +46,6 @@
                     </div>
                 </div>
                 <!-- End Client Details Table -->
-                <!-- Start PAYMENT TERMS Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title text-muted text-uppercase mb-0">Payment Terms</h6>
-                    </div>
-                    <div class="card-body table-responsive table-card">
-                        <table class="table table-nowrap mb-0 overflow-auto">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Payment Date</th>
-                                    <th>(%)</th>
-                                    <th>Amount</th>
-                                    <th>VAT Amount</th>
-                                    <th>Policy Fees</th>
-                                </tr>
-                            </thead>
-                            <tbody id="payment-terms-table">
-                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length !== 0">
-                                    <tr *ngFor="let item of uiState.policyDetails.paymentTermsList">
-                                        <td>{{ item.payDate | date:"mediumDate" }}</td>
-                                        <td>{{ item.percentage }}</td>
-                                        <td>{{ item.amount | currency:
-                                            'SAR' : '' }}</td>
-                                        <td>{{ item.vatAmount | currency:
-                                            'SAR' : '' }}</td>
-                                        <td>{{ item.policyFees | currency:
-                                            'SAR' : '' }}</td>
-                                    </tr>
-                                </ng-container>
-                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length == 0">
-                                    <tr>
-                                        <td colspan="100">
-                                            <div class="alert alert-danger text-center" role="alert">
-                                                No Data Found
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </ng-container>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- End PAYMENT TERMS Table -->
-
-                <!-- Start PRODUCERS COMMISSIONS Table -->
-                <div class="card my-3">
-                    <div class="card-header">
-                        <h6 class="card-title text-muted text-uppercase mb-0">Producers Commissions</h6>
-                    </div>
-                    <div class="card-body table-responsive table-card">
-                        <table class="table table-nowrap mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Producer</th>
-                                    <th>(%)</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <!-- policiesProducersCommissions -->
-                            <tbody id="producers-commissions-table">
-                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length !== 0">
-                                    <tr *ngFor="let item of uiState.policyDetails.producersCommissionsList">
-                                        <td>{{ item.producer }}</td>
-                                        <td>{{ item.percentage }}</td>
-                                        <td>{{ item.amount | currency:
-                                            'SAR' : '' }}</td>
-                                    </tr>
-                                </ng-container>
-                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length == 0">
-                                    <tr>
-                                        <td colspan="100">
-                                            <div class="alert alert-danger text-center" role="alert">
-                                                No Data Found
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </ng-container>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- End PRODUCERS COMMISSIONS Table -->
-
-            </div>
-            <hr class="d-block d-md-none">
-
-            <hr class="d-block d-md-none">
-            <div class="col-lg-4 my-2">
                 <!-- Start INVOICE DETAILS Table -->
                 <div class="card details-tables">
                     <div class="card-header">
@@ -145,7 +57,7 @@
                                 <tbody id="policy-invoice-details-table-fh">
                                     <tr>
                                         <th class="fw-semibold">Sum Insured :</th>
-                                        <td>{{ uiState.policyDetails.sumInsur | currency :
+                                        <td class="input-text-right">{{ uiState.policyDetails.sumInsur | currency :
                                             'SAR' : '' }}
                                         </td>
                                     </tr>
@@ -213,8 +125,8 @@
                 <!-- End INVOICE DETAILS Table -->
             </div>
 
-            <!-- Start Issue Type Table -->
             <div class="col-lg-4 my-2">
+                <!-- Start Issue Type Table -->
                 <div class="card details-tables">
                     <div class="card-header">
                         <h6 class="card-title text-muted text-uppercase mb-0">Issue Type</h6>
@@ -287,10 +199,94 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- End Issue Type Table -->
+                <!-- End Issue Type Table -->
 
-            <div class="col-lg-12 my-2">
+            </div>
+
+            <div class="col-lg-4 my-2">
+                <!-- Start PAYMENT TERMS Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Payment Terms</h6>
+                    </div>
+                    <div class="card-body table-responsive table-card">
+                        <table class="table table-nowrap mb-0 overflow-auto">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>(%)</th>
+                                    <th>Amount</th>
+                                    <th>VAT Amount</th>
+                                    <th>Policy Fees</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payment-terms-table">
+                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.paymentTermsList">
+                                        <td>{{ item.payDate | date:"mediumDate" }}</td>
+                                        <td>{{ item.percentage }}</td>
+                                        <td class="input-text-right">{{ item.amount | currency:
+                                            'SAR' : '' }}</td>
+                                        <td class="input-text-right">{{ item.vatAmount | currency:
+                                            'SAR' : '' }}</td>
+                                        <td class="input-text-right">{{ item.policyFees | currency:
+                                            'SAR' : '' }}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="uiState.policyDetails.paymentTermsList?.length == 0">
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="alert my-3 alert-danger text-center" role="alert">
+                                                No Data Found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End PAYMENT TERMS Table -->
+
+                <!-- Start PRODUCERS COMMISSIONS Table -->
+                <div class="card my-3">
+                    <div class="card-header">
+                        <h6 class="card-title text-muted text-uppercase mb-0">Producers Commissions</h6>
+                    </div>
+                    <div class="card-body table-responsive table-card">
+                        <table class="table table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producer</th>
+                                    <th>(%)</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <!-- policiesProducersCommissions -->
+                            <tbody id="producers-commissions-table">
+                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length !== 0">
+                                    <tr *ngFor="let item of uiState.policyDetails.producersCommissionsList">
+                                        <td>{{ item.producer }}</td>
+                                        <td>{{ item.percentage }}</td>
+                                        <td class="input-text-right">{{ item.amount | currency:
+                                            'SAR' : '' }}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="uiState.policyDetails.producersCommissionsList?.length == 0">
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="alert my-3 alert-danger text-center" role="alert">
+                                                No Data Found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End PRODUCERS COMMISSIONS Table -->
+
                 <!-- Start Documents  -->
                 <div class="card my-3">
                     <div class="card-header">
@@ -357,7 +353,7 @@
                                 <ng-container *ngIf="uiState.policyDetails.documentList?.length == 0">
                                     <tr>
                                         <td colspan="100">
-                                            <div class="alert alert-danger text-center" role="alert">
+                                            <div class="alert my-3 alert-danger text-center" role="alert">
                                                 No Data Found
                                             </div>
                                         </td>
@@ -369,6 +365,7 @@
                 </div>
                 <!-- End Documents  -->
             </div>
+
         </div>
     </div>
     <div class="modal-footer">

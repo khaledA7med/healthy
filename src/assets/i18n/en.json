@@ -1,65 +1,65 @@
 {
-  "HEADER": {
-    "MORE": {
-      "TEXT": "More"
-    }
-  },
-  "MENUITEMS": {
-    "MASTERTABLE": {
-      "TEXT": "Master Table",
-      "LIST": {
-        "INSURANCECLASSES": "Insurance Classes"
-      }
-    },
-    "CLIENTREGISTRY": {
-      "TEXT": "Clients",
-      "LIST": {
-        "CLIENTREGISTRY": "Client Registry",
-        "CLIENTGROUPS": "Client Groups",
-        "REPORTS": "Client Reports"
-      }
-    },
-    "BUSINESSDEVELOPMENT": {
-      "TEXT": "Business Development",
-      "LIST": {
-        "MANAGEMENT": "Sales Lead Management",
-        "REPORTS": "Reports",
-        "REPORTLIST": {
-          "BUSINESSDEVELOPMENT": "Business Development",
-          "RENEWAL": "Renewal"
-        }
-      }
-    },
-    "PRODUCTION": {
-      "TEXT": "Production",
-      "LIST": {
-        "MANAGEMENT": "Policies/Endorsements Management",
-        "EDITCOMMISSIONS": "Policies/Edit Commissions"
-      }
-    },
-    "CUSTOMERSERVICE": {
-      "TEXT": "Customer Service",
-      "LIST": {
-        "MANAGEMENT": "Request Management"
-      }
-    },
-    "CLAIMS": {
-      "TEXT": "Claims",
-      "LIST": {
-        "MANAGEMENT": "Claims Management"
-      }
-    },
-    "SYSTEMADMIN": {
-      "TEXT": "System Admin",
-      "LIST": {
-        "MANAGEMENT": "System Management"
-      }
-    },
-    "MENU": {
-      "TEXT": "MENU"
-    },
-    "APPS": {
-      "TEXT": "Apps"
-    }
-  }
+	"HEADER": {
+		"MORE": {
+			"TEXT": "More"
+		}
+	},
+	"MENUITEMS": {
+		"MASTERTABLE": {
+			"TEXT": "Master Table",
+			"LIST": {
+				"INSURANCECLASSES": "Insurance Classes"
+			}
+		},
+		"CLIENTREGISTRY": {
+			"TEXT": "Clients",
+			"LIST": {
+				"CLIENTREGISTRY": "Client Registry",
+				"CLIENTGROUPS": "Client Groups",
+				"REPORTS": "Client Reports"
+			}
+		},
+		"BUSINESSDEVELOPMENT": {
+			"TEXT": "Business Development",
+			"LIST": {
+				"MANAGEMENT": "Sales Lead Management",
+				"REPORTS": "Reports",
+				"REPORTLIST": {
+					"BUSINESSDEVELOPMENT": "Business Development",
+					"RENEWAL": "Renewal"
+				}
+			}
+		},
+		"PRODUCTION": {
+			"TEXT": "Production",
+			"LIST": {
+				"MANAGEMENT": "Policies/Endorsements Management",
+				"EDITCOMMISSIONS": "Policies/Edit Commissions"
+			}
+		},
+		"CUSTOMERSERVICE": {
+			"TEXT": "Customer Service",
+			"LIST": {
+				"MANAGEMENT": "Request Management"
+			}
+		},
+		"CLAIMS": {
+			"TEXT": "Claims",
+			"LIST": {
+				"MANAGEMENT": "Claims Management"
+			}
+		},
+		"SYSTEMADMIN": {
+			"TEXT": "System Admin",
+			"LIST": {
+				"MANAGEMENT": "User Accounts Management"
+			}
+		},
+		"MENU": {
+			"TEXT": "MENU"
+		},
+		"APPS": {
+			"TEXT": "Apps"
+		}
+	}
 }
