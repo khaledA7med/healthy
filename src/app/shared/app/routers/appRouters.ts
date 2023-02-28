@@ -36,8 +36,8 @@ export const AppRoutes = {
 		details: "policy",
 		create: "production/create",
 		edit: "production/update/",
-		makeInvoice: "production/invoice/",
 		editCommissions: "production/edit-commissions",
+		makeInvoice: "production/invoice/",
 	},
 	CustomerService: {
 		base: "customer-service",
