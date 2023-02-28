@@ -37,10 +37,20 @@ import { ClaimsListComponent } from "./claims-list.component";
             >
             <ul class="dropdown-menu dropdown-submenu">
               <li>
-                <button class="btn btn-sm dropdown-item">Client</button>
+                <button
+                  class="btn btn-sm dropdown-item"
+                  (click)="showEmail('client')"
+                >
+                  Client
+                </button>
               </li>
               <li>
-                <button class="btn btn-sm dropdown-item">Insurer</button>
+                <button
+                  class="btn btn-sm dropdown-item"
+                  (click)="showEmail('insurer')"
+                >
+                  Insurer
+                </button>
               </li>
             </ul>
           </li>
@@ -88,5 +98,15 @@ export class ClaimsControlsComponent {
 
   Edit() {
     this._Router.navigate([AppRoutes.Claims.edit, this.params.data.identity]);
+  }
+
+  showEmail(name: string) {
+    let emailReqData = {
+      clientID: this.params.data.clientID,
+      claimNo: this.params.data.claimNo,
+      policyNo: this.params.data.policyNo,
+      insuranceCompany: this.params.data.insuranceCompany,
+    };
+    this.comp.openEmailModal(emailReqData, name);
   }
 }

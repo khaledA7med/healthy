@@ -15,6 +15,10 @@ import {
 } from "../../app/models/Claims/claims-util";
 import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { IClaimDataForm } from "../../app/models/Claims/iclaim-data-form";
+import { IEmailResponse } from "../../app/models/Email/email-response";
+import { IClaimPayment } from "../../app/models/Claims/iclaim-payment-form";
+import { IClaimApproval } from "../../app/models/Claims/iclaim-approval-form";
+import { IClaimInvoice } from "../../app/models/Claims/iclaim-invoice-form";
 
 @Injectable({
   providedIn: "root",
@@ -96,6 +100,57 @@ export class ClaimsService {
     );
   }
 
+  saveClaimPayment(data: FormData): Observable<IBaseResponse<IClaimPayment[]>> {
+    return this.http.post<IBaseResponse<IClaimPayment[]>>(
+      this.env + ApiRoutes.Claims.saveClaimPayment,
+      data
+    );
+  }
+
+  approveClaimPayment(data: IClaimPayment): Observable<IBaseResponse<any>> {
+    return this.http.post<IBaseResponse<IClaimPayment>>(
+      this.env + ApiRoutes.Claims.approvePayment,
+      {
+        sNo: data.sNo,
+        approved: data.approved,
+        rejected: data.reject,
+        amount: data.amount,
+        paymentDetails: data.paymentDetails,
+        paymentType: data.paymentType,
+        bankName: data.bankName,
+        iban: data.iban,
+        dateofPayment: data.dateofCheque,
+        dateofCheque: data.dateofCheque,
+      }
+    );
+  }
+
+  rejectClaimPayment(id: number): Observable<IBaseResponse<any>> {
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.Claims.rejectPayment,
+      {},
+      { params: { sno: id } }
+    );
+  }
+
+  saveClaimApproval(
+    formData: FormData
+  ): Observable<IBaseResponse<IClaimApproval[]>> {
+    return this.http.post<IBaseResponse<IClaimApproval[]>>(
+      this.env + ApiRoutes.Claims.saveClaimApproval,
+      formData
+    );
+  }
+
+  saveClaimInvoice(
+    formData: FormData
+  ): Observable<IBaseResponse<IClaimInvoice[]>> {
+    return this.http.post<IBaseResponse<IClaimInvoice[]>>(
+      this.env + ApiRoutes.Claims.saveClaimInvoice,
+      formData
+    );
+  }
+
   //#endregion
 
   getSubStatus(
@@ -125,6 +180,25 @@ export class ClaimsService {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Claims.saveFollowUps,
       email,
+      { observe: "response" }
+    );
+  }
+
+  getClientMailData(data: {}): Observable<
+    HttpResponse<IBaseResponse<IEmailResponse>>
+  > {
+    return this.http.post<IBaseResponse<IEmailResponse>>(
+      this.env + ApiRoutes.Claims.getClientMailData,
+      data,
+      { observe: "response" }
+    );
+  }
+  getInsurerMailData(data: {}): Observable<
+    HttpResponse<IBaseResponse<IEmailResponse>>
+  > {
+    return this.http.post<IBaseResponse<IEmailResponse>>(
+      this.env + ApiRoutes.Claims.getInsurerMailData,
+      data,
       { observe: "response" }
     );
   }

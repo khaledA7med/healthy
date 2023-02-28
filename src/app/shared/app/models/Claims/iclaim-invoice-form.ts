@@ -7,7 +7,7 @@ export interface IClaimInvoice {
   clientName?: string;
   invoiceNo?: string;
   invoiceDate?: Date;
-  WIPNo?: string;
+  wipNo?: string;
   chassisNo?: string;
   labor?: number;
   towingCharges?: number;
@@ -17,7 +17,7 @@ export interface IClaimInvoice {
   grandTotal?: number;
   deductibleExcess?: number;
   discount?: number;
-  VATInvoicesAmount?: number;
+  vatInvoicesAmount?: number;
   amountDue?: number;
   savedUser?: string;
   savedDate?: Date;

@@ -134,7 +134,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
       //competitors
       salesLeadCompetitorsList: new FormArray<FormGroup<ICompetitors>>([]),
       //others
-      branch: new FormControl("Riyadh"),
+      branch: new FormControl("Riyadh", Validators.required),
       sendToUW: new FormControl(false),
       // for edit
       leadNo: new FormControl(""),
