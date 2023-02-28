@@ -1,18 +1,5 @@
 <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
-        <!-- <div class="row my-2">
-    <div class="col-lg-4 col-md-6 col-sm-12">
-        <!-- <div class="row my-2">
-            <div class="col-6 d-flex justify-content-start align-items-center">
-                <h4 class="card-title">Groups List</h4>
-            </div>
-            <div class="col-6 d-flex justify-content-end">
-                <button type="button" class="btn btn-soft-info btn-sm" (click)="openAddGroupDialoge(content)">
-                    <i class="ri-add-fill me-1 align-bottom"></i> Add Group
-                </button>
-            </div>
-        </div> -->
-
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center flex-wrap gap-2">
@@ -21,7 +8,7 @@
                     </div>
                     <div class="flex-shrink-0">
                         <div class="hstack text-nowrap gap-2">
-                            <button type="button" class="btn btn-soft-info add-btn btn-sm"
+                            <button type="button" class="btn btn-success add-btn btn-sm"
                                 (click)="openAddGroupDialoge(content)">
                                 <i class="ri-add-fill me-1 align-bottom"></i> Add Group
                             </button>
@@ -52,22 +39,18 @@
                     <label for="groupName">Group Name</label>
                     <div class="input-group">
                         <input id="groupName" class="form-control form-control-sm" formControlName="groupName"
-                            [ngClass]="{ 'is-invalid': addGroupForm.dirty && form['groupName'].errors }" />
-                        <div *ngIf="addGroupForm.dirty && form['groupName'].errors" class="invalid-feedback">
-                            <div *ngIf="addGroupForm.dirty && form['groupName'].errors['required']">Group Name is
-                                required</div>
-                        </div>
+                            [ngClass]="{ 'is-submitted': (form['groupName'].touched || uiState.submitted) && addGroupForm.invalid }" />
+                        <div class="invalid-feedback mt-0 d-inline-block"
+                            *ngIf="(form['groupName'].touched || uiState.submitted) && addGroupForm.invalid">
+                            Required</div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-sm btn-success" [disabled]="!addGroupForm.valid">Save</button>
+                <button type="submit" class="btn btn-sm btn-success">Save</button>
                 <button type="button" class="btn btn-sm btn-outline-danger"
                     (click)="modal.close('cancel')">Cancel</button>
             </div>
         </form>
     </ng-template>
-
-
-
 </div>
