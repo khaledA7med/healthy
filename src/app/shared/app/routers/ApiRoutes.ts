@@ -84,7 +84,7 @@ export const ApiRoutes = {
       insurClasses: LookUpTables + BaseData.InsurClasses,
       currencies: LookUpTables + BaseData.Currencies,
       banks: LookUpTables + BaseData.Banks,
-      rejectionReason: LookUpTables + BaseData.RejectionReason,
+      rejectionReasons: LookUpTables + BaseData.RejectionReasons,
     },
     SystemAdmin: {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
@@ -143,7 +143,7 @@ export const ApiRoutes = {
     changeStatus: "/Production/Policy/ChangeStatus",
     editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
     editEditCommission: "/Production/Policy/EditPolicyCommission",
-    updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions"
+    updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -167,6 +167,8 @@ export const ApiRoutes = {
     rejectPayment: "/Claims/Reject",
     saveClaimApproval: "/Claims/SaveClaimApproval",
     saveClaimInvoice: "/Claims/SaveClaimInvoice",
+    saveClaimRejectDeduct: "/Claims/SaveClaimsRejections",
+    deleteClaimRejectDeduct: "/Claims/DeleteClaimsRejections",
     searchPolicy: "/Claims/SearchPolicy",
     SearchClientClaimData: "/Claims/SearchClientClaimData",
     subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",

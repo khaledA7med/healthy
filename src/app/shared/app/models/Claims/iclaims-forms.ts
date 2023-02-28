@@ -99,6 +99,7 @@ export interface IClaimsForms {
   // Claim Payments
   totalPaymentsAmount?: FormControl<number | null>;
   totalApprovalsAmount?: FormControl<number | null>;
+  totalInvoicesAmount?: FormControl<number | null>;
 
   InsuranceCompanyDNCNNo?: FormControl<string | null>;
   DriverAge?: FormControl<string | null>;

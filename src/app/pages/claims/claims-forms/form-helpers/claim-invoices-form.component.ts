@@ -389,8 +389,8 @@ export class ClaimInvoicesFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(value: FormGroup<IClaimInvoiceForm>): void {
+    this.submitted = true;
     if (!this.validationChecker()) return;
-
     if (+this.f.amountDue?.value! === 0)
       this.message
         .templateComfirmation(
@@ -407,9 +407,9 @@ export class ClaimInvoicesFormComponent implements OnInit, OnDestroy {
   }
 
   sendRequestData(value: FormGroup<IClaimInvoiceForm>) {
+    this.isLoading = true;
     const formData = new FormData();
     let val = value.getRawValue();
-
     formData.append("SNo", val.sNo ? val.sNo!.toString() : "0");
     formData.append("ClaimSNo", val.claimSNo?.toString()! ?? "0");
     formData.append("ClientNo", val.clientNo?.toString()! ?? "0");
@@ -418,7 +418,7 @@ export class ClaimInvoicesFormComponent implements OnInit, OnDestroy {
     formData.append("InvoiceNo", val.invoiceNo! ?? "");
     formData.append(
       "InvoiceDate",
-      this.util.dateFormater(val.invoiceNo!) as any
+      this.util.dateFormater(val.invoiceDate!) as any
     );
     formData.append("WIPNo", val.WIPNo! ?? "");
     formData.append("ChassisNo", val.chassisNo! ?? "");
@@ -462,6 +462,7 @@ export class ClaimInvoicesFormComponent implements OnInit, OnDestroy {
           this.invoiceList.emit(res.data);
           this.modal.close();
         } else this.message.popup("Oops!", res.message!, "warning");
+        this.isLoading = false;
       },
       (err: HttpErrorResponse) => {
         this.message.popup("Oops!", err.message, "error");

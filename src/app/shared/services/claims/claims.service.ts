@@ -19,6 +19,7 @@ import { IEmailResponse } from "../../app/models/Email/email-response";
 import { IClaimPayment } from "../../app/models/Claims/iclaim-payment-form";
 import { IClaimApproval } from "../../app/models/Claims/iclaim-approval-form";
 import { IClaimInvoice } from "../../app/models/Claims/iclaim-invoice-form";
+import { IClaimRejectDeduct } from "../../app/models/Claims/iclaim-reject-deduct-form";
 
 @Injectable({
   providedIn: "root",
@@ -148,6 +149,23 @@ export class ClaimsService {
     return this.http.post<IBaseResponse<IClaimInvoice[]>>(
       this.env + ApiRoutes.Claims.saveClaimInvoice,
       formData
+    );
+  }
+
+  saveClaimRejectDeduct(
+    formData: FormData
+  ): Observable<IBaseResponse<IClaimRejectDeduct[]>> {
+    return this.http.post<IBaseResponse<IClaimRejectDeduct[]>>(
+      this.env + ApiRoutes.Claims.saveClaimRejectDeduct,
+      formData
+    );
+  }
+
+  deleteClaimRejections(id: number): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Claims.deleteClaimRejectDeduct,
+      {},
+      { params: { sno: id } }
     );
   }
 

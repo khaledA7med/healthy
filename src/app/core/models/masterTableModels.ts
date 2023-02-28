@@ -44,7 +44,7 @@ export enum BaseData {
   ProducersList = "ProducersList",
   UserSecurityRoles = "UserSecurityRoles",
   Currencies = "Currencies",
-  RejectionReason = "RejectionReason",
+  RejectionReasons = "RejectionReasons",
 }
 
 export interface IBaseMasterTable {
@@ -93,7 +93,7 @@ export interface IBaseMasterTable {
   ProducersList?: Caching<IGenericResponseType[]>;
   UserSecurityRoles?: Caching<IGenericResponseType[]>;
   Currencies?: IGenericResponseType[];
-  RejectionReason?: IGenericResponseType[];
+  RejectionReasons?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

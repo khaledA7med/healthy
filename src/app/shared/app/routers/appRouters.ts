@@ -55,6 +55,6 @@ export const AppRoutes = {
     privileges: "system-admin/privileges",
   },
   Email: {
-    base: "",
+    base: "emails",
   },
 };
