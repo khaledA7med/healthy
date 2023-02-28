@@ -714,71 +714,75 @@
                                                     <i class="ri-menu-add-line"></i> Add Payment
                                                 </button>
                                             </div>
-                                            <table class="table align-middle table-nowrap mb-0">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th scope="col">Status</th>
-                                                        <th scope="col" class="text-end">Amount</th>
-                                                        <th scope="col">Payment Details</th>
-                                                        <th scope="col">Payment Type</th>
-                                                        <th scope="col">Bank Name</th>
-                                                        <th scope="col">IBAN</th>
-                                                        <th scope="col">Created By</th>
-                                                        <th scope="col">Created On</th>
-                                                        <th scope="col">Date Of Payments</th>
-                                                        <th scope="col">Date Of Cheque</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let pay of uiState.claimLists.payments">
-                                                        <td>{{pay.status}}</td>
-                                                        <td class="text-end">{{pay.amount | currency: 'SAR' : '' }}</td>
-                                                        <td>{{pay.paymentDetails}}</td>
-                                                        <td>{{pay.paymentType}}</td>
-                                                        <td>{{pay.bankName}}</td>
-                                                        <td>{{pay.iban}}</td>
-                                                        <td>{{pay.savedUser}}</td>
-                                                        <td>{{util.formatDate(pay.savedDate)}}</td>
-                                                        <td>{{util.formatDate(pay.dateofPayment)}}</td>
-                                                        <td>{{util.formatDate(pay.dateofCheque)}}</td>
-                                                        <td>
-                                                            <button class="btn btn-soft-info btn-sm mx-1"
-                                                                type="button"><i class="ri-printer-line"></i>
-                                                            </button>
-                                                            <button class="btn btn-soft-success btn-sm mx-1"
-                                                                (click)="openPaymentModal(pay)" type="button"><i
-                                                                    class="ri-edit-2-line"></i>
-                                                            </button>
-                                                            <div ngbDropdown display="dynamic" class="d-inline-block"
-                                                                *ngIf="pay.status !== 'Approved' && !(pay.approved === true || pay.reject === true)"
-                                                                placement="bottom-end">
-                                                                <button type="button"
-                                                                    class="btn btn-soft-primary btn-sm"
-                                                                    ngbDropdownToggle>
-                                                                    <i class="ri-more-fill align-middle"></i>
+                                            <ngx-simplebar>
+                                                <table class="table align-middle table-nowrap mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col" class="text-end">Amount</th>
+                                                            <th scope="col">Payment Details</th>
+                                                            <th scope="col">Payment Type</th>
+                                                            <th scope="col">Bank Name</th>
+                                                            <th scope="col">IBAN</th>
+                                                            <th scope="col">Created By</th>
+                                                            <th scope="col">Created On</th>
+                                                            <th scope="col">Date Of Payments</th>
+                                                            <th scope="col">Date Of Cheque</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let pay of uiState.claimLists.payments">
+                                                            <td>{{pay.status}}</td>
+                                                            <td class="text-end">{{pay.amount | currency: 'SAR' : '' }}
+                                                            </td>
+                                                            <td>{{pay.paymentDetails}}</td>
+                                                            <td>{{pay.paymentType}}</td>
+                                                            <td>{{pay.bankName}}</td>
+                                                            <td>{{pay.iban}}</td>
+                                                            <td>{{pay.savedUser}}</td>
+                                                            <td>{{util.formatDate(pay.savedDate)}}</td>
+                                                            <td>{{util.formatDate(pay.dateofPayment)}}</td>
+                                                            <td>{{util.formatDate(pay.dateofCheque)}}</td>
+                                                            <td>
+                                                                <button class="btn btn-soft-info btn-sm mx-1"
+                                                                    type="button"><i class="ri-printer-line"></i>
                                                                 </button>
-                                                                <div ngbDropdownMenu class="dropdown-menu">
-                                                                    <button ngbDropdownItem type="button"
-                                                                        (click)="$event.preventDefault()">Approve</button>
-                                                                    <button ngbDropdownItem type="button"
-                                                                        (click)="$event.preventDefault()">Reject</button>
+                                                                <button class="btn btn-soft-success btn-sm mx-1"
+                                                                    (click)="openPaymentModal(pay)" type="button"><i
+                                                                        class="ri-edit-2-line"></i>
+                                                                </button>
+                                                                <div ngbDropdown display="dynamic"
+                                                                    class="d-inline-block"
+                                                                    *ngIf="pay.status !== 'Approved' && !(pay.approved === true || pay.reject === true)"
+                                                                    placement="bottom-end">
+                                                                    <button type="button"
+                                                                        class="btn btn-soft-primary btn-sm"
+                                                                        ngbDropdownToggle>
+                                                                        <i class="ri-more-fill align-middle"></i>
+                                                                    </button>
+                                                                    <div ngbDropdownMenu class="dropdown-menu">
+                                                                        <button ngbDropdownItem type="button"
+                                                                            (click)="approveClaimPayment(pay)">Approve</button>
+                                                                        <button ngbDropdownItem type="button"
+                                                                            (click)="rejectClaimPayment(pay.sNo!)">Reject</button>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="my-1 text-center text-dark fw-bold"
-                                                        *ngIf="uiState.claimLists.payments.length === 0">
-                                                        <td colspan="100">Add Payment To show</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="my-1 text-center text-dark fw-bold"
+                                                            *ngIf="uiState.claimLists.payments.length === 0">
+                                                            <td colspan="100">No Payments To show</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </ngx-simplebar>
                                         </div>
                                         <div class="d-flex justify-content-end">
                                             <div class="row col-4 mb-2 mt-4">
                                                 <div class="col-lg-5 d-flex align-items-center justify-content-end">
                                                     <div class="d-flex align-items-center">
-                                                        <label for="paymentsTotalPayment" class="mb-0">
+                                                        <label for="totalPaymentsAmount" class="mb-0">
                                                             Total Payments:
                                                         </label>
                                                     </div>
@@ -786,8 +790,9 @@
                                                 <div class="col-lg-7">
                                                     <div class="input-group input-group-sm">
                                                         <input type="text" class="form-control input-text-right"
-                                                            name="paymentsTotalPayment" id="paymentsTotalPayment"
-                                                            placeholder="0.00" aria-describedby="SAR" readonly>
+                                                            formControlName="totalPaymentsAmount" InputMask
+                                                            id="totalPaymentsAmount" placeholder="0.00"
+                                                            aria-describedby="SAR" readonly>
                                                         <span class="input-group-text"
                                                             style="padding: .25rem .5rem;">SAR</span>
                                                     </div>
@@ -816,44 +821,81 @@
                                     List Of Approvals</div>
                                 <div class="ribbon-content mt-2 text-muted">
                                     <div class="d-flex justify-content-end">
-                                        <button type="button" (click)="addApproval()"
+                                        <button type="button" (click)="openApprovalModal()"
                                             class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
                                             <i class="ri-menu-add-line"></i> Add Approval
                                         </button>
                                     </div>
-                                    <table id="listOfApprovalsTable" class="table align-middle table-nowrap mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th scope="col">Chassis No</th>
-                                                <th scope="col" class="text-center">Labor</th>
-                                                <th scope="col" class="text-center">Towing Changes</th>
-                                                <th scope="col" class="text-center">Spare Parts</th>
-                                                <th scope="col" class="text-center">Material</th>
-                                                <th scope="col" class="text-center">VAT Amount</th>
-                                                <th scope="col" class="text-center">Total Amount</th>
-                                                <th scope="col" class="text-center">Depreciation</th>
-                                                <th scope="col" class="text-center">Deductible / Excess</th>
-                                                <th scope="col" class="text-center">Discounts</th>
-                                                <th scope="col" class="text-center">Total Loss</th>
-                                                <th scope="col" class="text-center">Lumpsum Amount</th>
-                                                <th scope="col" class="text-center">Net Amount</th>
-                                                <th scope="col">Updated By</th>
-                                                <th scope="col">Updated On</th>
-                                                <th scope="col">Created By</th>
-                                                <th scope="col">Created On</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <ngx-simplebar>
+                                        <table id="listOfApprovalsTable" class="table align-middle table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Chassis No</th>
+                                                    <th scope="col" class="text-end">Labor</th>
+                                                    <th scope="col" class="text-end">Towing Changes</th>
+                                                    <th scope="col" class="text-end">Spare Parts</th>
+                                                    <th scope="col" class="text-end">Material</th>
+                                                    <th scope="col" class="text-end">VAT Amount</th>
+                                                    <th scope="col" class="text-end">Total Amount</th>
+                                                    <th scope="col" class="text-end">Depreciation</th>
+                                                    <th scope="col" class="text-end">Deductible / Excess</th>
+                                                    <th scope="col" class="text-end">Discounts</th>
+                                                    <th scope="col" class="text-end">Total Loss</th>
+                                                    <th scope="col" class="text-end">Lumpsum Amount</th>
+                                                    <th scope="col" class="text-end">Net Amount</th>
+                                                    <th scope="col">Updated By</th>
+                                                    <th scope="col">Updated On</th>
+                                                    <th scope="col">Created By</th>
+                                                    <th scope="col">Created On</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let app of uiState.claimLists.approvals">
+                                                    <td>{{app.chassisNo}}</td>
+                                                    <td class="text-end">{{app.labor | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.towingCharges | currency: 'SAR' : '' }}
+                                                    </td>
+                                                    <td class="text-end">{{app.spareParts | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.material | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.vatAmount | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.totalAmount | currency: 'SAR' : '' }}
+                                                    </td>
+                                                    <td class="text-end">{{app.depreciation | currency: 'SAR' : '' }}
+                                                    </td>
+                                                    <td class="text-end">{{app.deductibleExcess | currency: 'SAR' : ''
+                                                        }}
+                                                    </td>
+                                                    <td class="text-end">{{app.discounts | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.totalLoss | currency: 'SAR' : '' }}</td>
+                                                    <td class="text-end">{{app.lumpsumAmount | currency: 'SAR' : '' }}
+                                                    </td>
+                                                    <td class="text-end">{{app.netAmount | currency: 'SAR' : '' }}</td>
+                                                    <td>{{app.updatedBy}}</td>
+                                                    <td>{{util.formatDate(app.updatedOn)}}</td>
+                                                    <td>{{app.savedUser}}</td>
+                                                    <td>{{util.formatDate(app.savedDate)}}</td>
+                                                    <td>
+                                                        <button class="btn btn-soft-success btn-sm mx-1"
+                                                            (click)="openApprovalModal(app)" type="button"><i
+                                                                class="ri-edit-2-line"></i>
+                                                        </button>
+                                                    </td>
 
-                                        </tbody>
-                                    </table>
+                                                </tr>
+                                                <tr class="my-1 text-center text-dark fw-bold"
+                                                    *ngIf="uiState.claimLists.approvals.length === 0">
+                                                    <td colspan="100">No Approvals To show</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </ngx-simplebar>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <div class="row col-4 mb-2 mt-4">
                                         <div class="col-lg-5 d-flex align-items-center justify-content-end">
                                             <div class="lables d-flex align-items-center">
-                                                <label for="approvalsTotalApproval" class="mb-0">
+                                                <label for="totalApprovalsAmount" class="mb-0">
                                                     Total Approvals:
                                                 </label>
                                             </div>
@@ -861,8 +903,8 @@
                                         <div class="col-lg-7">
                                             <div class="input-group input-group-sm">
                                                 <input type="text" class="form-control input-text-right"
-                                                    name="approvalsTotalApproval" id="approvalsTotalApproval"
-                                                    placeholder="0.00" aria-describedby="SAR" readonly>
+                                                    formControlName="totalApprovalsAmount" id="totalApprovalsAmount"
+                                                    InputMask placeholder="0.00" aria-describedby="SAR" readonly>
                                                 <span class="input-group-text" style="padding: .25rem .5rem;">SAR</span>
                                             </div>
                                         </div>
@@ -889,7 +931,7 @@
                                         List Of Invoices</div>
                                     <div class="ribbon-content mt-3 C-P-Card text-muted">
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" (click)="addInvoice()"
+                                            <button type="button" (click)="openInvoicesModal()"
                                                 class="ms-auto btn btn-sm btn-soft-primary mb-lg-2 bg-gradient waves-effect waves-light">
                                                 <i class="ri-menu-add-line"></i> Add Invoice
                                             </button>
@@ -919,7 +961,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-
+                                                <tr class="my-1 text-center text-dark fw-bold"
+                                                    *ngIf="uiState.claimLists.invoices.length === 0">
+                                                    <td colspan="100">No Invoices To show</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

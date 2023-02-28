@@ -15,6 +15,7 @@ import { SimplebarAngularModule } from "simplebar-angular";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { InputMaskDirective } from "./directives/input-mask.directive";
+import { SubLoaderModule } from "./components/sub-loader/sub-loader.module";
 
 @NgModule({
   declarations: [ScrollspyDirective, TableViewDirective, InputMaskDirective],
@@ -28,6 +29,7 @@ import { InputMaskDirective } from "./directives/input-mask.directive";
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    SubLoaderModule,
   ],
   exports: [
     ScrollspyDirective,
@@ -39,6 +41,7 @@ import { InputMaskDirective } from "./directives/input-mask.directive";
     FormsModule,
     NgbAccordionModule,
     InputMaskDirective,
+    SubLoaderModule,
   ],
 })
 export class SharedModule {}

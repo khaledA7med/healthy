@@ -1,24 +1,29 @@
 import { FormControl } from "@angular/forms";
 
 export interface IClaimApproval {
-  sNo: number;
-  claimSNo: number;
-  clientNo: number;
-  clientName: string;
-  chassisNo: string;
-  labor: number;
-  towingCharges: number;
-  spareParts: number;
-  material: number;
-  lumpsumAmount: number;
-  totalAmount: number;
-  deductibleExcess: number;
-  depreciation: number;
-  netAmount: number;
-  totalLoss: number;
-  VATAmount: number;
-  discounts: number;
-  approvalDate: Date;
+  sNo?: number;
+  claimSNo?: number;
+  clientNo?: number;
+  clientName?: string;
+  chassisNo?: string;
+  labor?: number;
+  towingCharges?: number;
+  spareParts?: number;
+  material?: number;
+  lumpsumAmount?: number;
+  totalAmount?: number;
+  deductibleExcess?: number;
+  depreciation?: number;
+  netAmount?: number;
+  totalLoss?: number;
+  vatAmount?: number;
+  discounts?: number;
+  approvalDate?: Date;
+
+  savedDate?: Date;
+  savedUser?: string;
+  updatedBy?: Date;
+  updatedOn?: string;
 }
 
 export interface IClaimApprovalForm {
