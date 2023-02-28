@@ -112,12 +112,11 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 		this.formDataHandler();
 		this.calcHandlers();
 		let sub = this.route.paramMap.subscribe((res) => {
-			console.log(res);
 			if (res.get("id")) {
 				this.uiState.editId = res.get("id")!;
 				this.eventService.broadcast(reserved.isLoading, true);
 				this.getPolicy(this.uiState.editId);
-			} else {
+			} else if (res.get("invoice") && res.get("serial")) {
 				this.uiState.editMode = true;
 				this.eventService.broadcast(reserved.isLoading, true);
 				let invoice = atob(res.get("invoice")!),
@@ -128,8 +127,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 					policySerial: invoice,
 					clientPolicySNo: serial,
 				};
-				console.log(data);
-				// this.fillRequestDataToForm(data);
+				this.fillRequestDataToForm(data);
 			}
 		});
 		this.subscribes.push(sub);
