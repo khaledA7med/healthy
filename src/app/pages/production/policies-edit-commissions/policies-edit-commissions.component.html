@@ -124,8 +124,10 @@
                                         </div>
                                         <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
                                             [items]="(lookupData | async)?.Producers?.content!"
-                                            [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                                            formControlName="producer" bindLabel="name" bindValue="name">
+                                            (change)="changeprod($event)" [loading]="lookupData ? false : true"
+                                            [ngClass]="{'is-submitted': (ff.producer?.touched || uiState.submitted) && ff.producer?.invalid}"
+                                            [clearable]="true" [searchable]="true" formControlName="producer"
+                                            bindLabel="name" bindValue="name">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -197,7 +199,7 @@
                                         <div class="input-group input-group-sm">
                                             <input type="number" id="companyCommissionPerc"
                                                 class="form-control form-control-sm" formControlName="compCommPerc"
-                                                placeholder="0.00">
+                                                placeholder="0%">
                                             <span class="input-group-text" id="">%</span>
                                         </div>
                                     </div>
@@ -207,7 +209,7 @@
                                         <div class="input-group input-group-sm">
                                             <input type="number" id="fullCommissionPerc"
                                                 class="form-control form-control-sm" formControlName="producerCommPerc"
-                                                placeholder="0.00">
+                                                (input)="formListeners($event)" placeholder="0%">
                                             <span class="input-group-text" id="">%</span>
                                         </div>
                                     </div>
@@ -217,20 +219,25 @@
                                         <label for="producersComissionDD">Producer</label>
                                         <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
                                             [items]="(lookupData | async)?.Producers?.content!"
+                                            [ngClass]="{'is-submitted': (ff.prodCommProduser?.touched) && ff.prodCommProduser?.invalid}"
                                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                                             formControlName="prodCommProduser" bindLabel="name" bindValue="name">
                                         </ng-select>
                                     </div>
+
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
                                         <label for="producerCommissionPerc">&nbsp;</label>
                                         <div class="input-group input-group-sm">
                                             <input type="number" class="form-control" id="producerCommissionPerc"
-                                                placeholder="0%" formControlName="prodCommPercentage">
+                                                (input)="formListeners($event)" placeholder="0%"
+                                                [ngClass]="{'is-submitted': (ff.prodCommPercentage?.touched) && ff.prodCommPercentage?.invalid}"
+                                                formControlName="prodCommPercentage">
                                             <span class="input-group-text" id="perc">%</span>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
                                         <button type="button" id="addCommissionBtn" (click)="addProducersCommissions()"
+                                            [disabled]="subBtn"
                                             class="btn btn-primary btn-sm w-100 d-flex align-items-center justify-content-center">
                                             Add
                                             <i class="ri-add-circle-line mx-2"></i>
@@ -265,6 +272,15 @@
                                                     </ng-container>
                                                 </tr>
                                             </tbody>
+                                            <tfoot id="totalPaymentTermFooter" class="text-danger">
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <th>
+                                                        {{uiState.totalCommissions.prodCommPercentage }}%
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -276,8 +292,7 @@
         </div>
     </form>
     <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-outline-success"
-            (click)="submitEditFormData(editForm)">Save</button>
+        <button type="button" class="btn btn-sm btn-outline-success" (click)="submitEditFormData()">Save</button>
         <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>

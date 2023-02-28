@@ -21,7 +21,6 @@ import { EditModel, EditModelData } from 'src/app/shared/app/models/Production/i
 import { EventService } from 'src/app/core/services/event.service';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { IAddProducers } from 'src/app/shared/app/models/Production/i-add-producers';
-import { identity, max } from 'lodash';
 
 
 @Component({
@@ -34,7 +33,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
 {
 
   submitted = false;
-
+  subBtn: boolean = false;
   uiState = {
     gridReady: false,
     submitted: false,
@@ -47,6 +46,13 @@ export class PoliciesEditCommissionsComponent implements OnInit
     editCommissions: {
       list: [] as IEditCommissions[],
       totalPages: 0,
+    },
+    validate: {
+      compCommPerc: 0,
+      producerCommPerc: 0
+    },
+    totalCommissions: {
+      prodCommPercentage: 0
     },
     editId: "",
     editUserMode: false as Boolean,
@@ -256,13 +262,19 @@ export class PoliciesEditCommissionsComponent implements OnInit
       (res: HttpResponse<IBaseResponse<EditModelData>>) =>
       {
         this.fillEditForm(res.body?.data!);
-        // if (res.body?.data?.producer?.startsWith('Direct Business'))
-        // {
-        //   this.ff.producerCommPerc?.disable();
-        // } else
-        // {
-        //   this.ff.producerCommPerc?.enable();
-        // }
+        if (res.body?.data?.producer?.startsWith('Direct Business'))
+        {
+          this.ff.prodCommProduser?.disable();
+          this.ff.prodCommPercentage?.disable();
+          this.ff.producerCommPerc?.disable();
+          this.subBtn = true;
+        } else
+        {
+          this.ff.prodCommProduser?.enable();
+          this.ff.prodCommPercentage?.enable();
+          this.ff.producerCommPerc?.enable();
+          this.subBtn = false;
+        }
         this.eventService.broadcast(reserved.isLoading, false);
       },
       (err: HttpErrorResponse) =>
@@ -292,13 +304,23 @@ export class PoliciesEditCommissionsComponent implements OnInit
     });
   }
 
+  validationChecker (): boolean
+  {
+    if (this.editForm.invalid)
+    {
+      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+      return false;
+    }
+    return true;
+  }
+
 
   initForm (): void
   {
     this.editForm = new FormGroup<EditModel>({
       sNo: new FormControl(null),
       clientNo: new FormControl(null),
-      producer: new FormControl(""),
+      producer: new FormControl("", Validators.required),
       clientName: new FormControl(""),
       accNo: new FormControl(""),
       policyNo: new FormControl(""),
@@ -340,11 +362,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
       percentage: this.ff.prodCommPercentage!
     }
 
-    if (this.ff.producersCommissions?.invalid)
-    {
-      this.ff.producersCommissions?.markAllAsTouched();
-      return;
-    }
     let producerCommission = new FormGroup<IAddProducers>({
       producer: new FormControl(data?.producer!.value, Validators.required),
       percentage: new FormControl(data.percentage!.value, [
@@ -354,12 +371,98 @@ export class PoliciesEditCommissionsComponent implements OnInit
       ]),
     });
 
-    // if (!data) producerCommission.reset();
-    // else producerCommission.disable();
+    if (
+      +this.ff.compCommPerc?.value! <= 0 ||
+      +this.ff.producerCommPerc?.value! > +this.ff.compCommPerc?.value! ||
+      +this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value!
+    )
+    {
+      this.message.popup("Oops!", "Can't add any more");
+      return;
+    }
+    else if (this.ff.producersCommissions?.invalid)
+    {
+      this.ff.producersCommissions?.markAllAsTouched();
+      this.message.popup("Oops!", "fill input data");
+      return;
+    } else
+    {
+      this.ff.producersCommissions?.push(producerCommission);
+      this.producersCommissionsArray.updateValueAndValidity();
+      this.totalCommissionRow();
+    }
+  }
 
-    this.ff.producersCommissions?.push(producerCommission);
-    this.producersCommissionsArray.updateValueAndValidity();
+  formListeners (e?: Event): void
+  {
+    if (+this.ff.producerCommPerc?.value! > +this.ff.compCommPerc?.value!)
+    {
+      this.ff.producerCommPerc?.patchValue(this.ff.compCommPerc?.value!);
+      return;
+    } else if (+this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value!)
+    {
+      this.ff.prodCommPercentage?.patchValue(+this.ff.producerCommPerc?.value!);
+      return;
+    }
+  }
+  // formListeners2 (e?: Event): void
+  // {
+  //   if (+this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value!)
+  //   {
+  //     this.ff.prodCommPercentage?.patchValue(+this.ff.producerCommPerc?.value!);
+  //     return;
+  //   }
+  // }
 
+
+  totalCommissionRow ()
+  {
+    const handler = {
+      emitEvent: false,
+      OnlySelf: true,
+    };
+    this.ff.producersCommissions?.controls.forEach((el) =>
+    {
+      let sub1 = el.controls.percentage?.valueChanges.subscribe((elm) =>
+      {
+        if (+elm! > +this.ff.prodCommPercentage?.value!)
+          el.controls.percentage?.patchValue(
+            +this.ff.prodCommPercentage?.value!,
+            handler
+          );
+      });
+      this.subscribes.push(sub1!);
+    });
+    let sub2 = this.producersCommissionsArray.valueChanges.subscribe(
+      (el) =>
+      {
+        this.uiState.totalCommissions = {
+          prodCommPercentage: el.reduce(
+            (prev: any, next: any) => +prev + +next.percentage,
+            0
+          )
+        };
+      }
+    );
+    this.subscribes.push(sub2);
+  }
+
+
+  changeprod (e: any)
+  {
+    if (e.id <= 4)
+    {
+      this.ff.prodCommProduser?.disable();
+      this.ff.prodCommPercentage?.disable();
+      this.ff.producerCommPerc?.disable();
+      this.subBtn = true;
+    } else
+    {
+      this.ff.prodCommProduser?.enable();
+      this.ff.prodCommPercentage?.enable();
+      this.ff.producerCommPerc?.enable();
+      this.subBtn = false;
+    }
   }
 
 
@@ -406,36 +509,63 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.ff.periodTo?.patchValue(e.gon);
   }
 
-  submitEditFormData (editForm: FormGroup)
+  submitEditFormData ()
   {
     this.uiState.submitted = true;
-    const formData = editForm.getRawValue();
-    const data: EditModelData = {
-      sNo: this.uiState.editUserMode ? this.uiState.editUserData.sNo : 0,
-      clientName: formData.clientName,
-      accNo: formData.accNo,
-      policyNo: formData.policyNo,
-      savedBy: formData.savedBy,
-      className: formData.className,
-      lineOfBusiness: formData.lineOfBusiness,
-      periodFrom: this.appUtils.dateFormater(formData.periodFrom!) as any,
-      periodTo: this.appUtils.dateFormater(formData.periodTo!) as any,
-      producer: formData.producer,
-      producerCommPerc: formData.producerCommPerc,
-      compCommPerc: formData.compCommPerc,
-      producersCommissions: formData.producersCommissions,
-    };
+    const formData = new FormData();
+    let val = this.editForm.getRawValue();
+    console.log(formData)
+    // const data: EditModelData = {
+    //   sNo: this.uiState.editUserMode ? this.uiState.editUserData.sNo : 0,
+    //   clientName: formData.clientName,
+    //   accNo: formData.accNo,
+    //   policyNo: formData.policyNo,
+    //   savedBy: formData.savedBy,
+    //   className: formData.className,
+    //   lineOfBusiness: formData.lineOfBusiness,
+    //   // periodFrom: this.appUtils.dateFormater(formData.periodFrom!) as any,
+    //   periodTo: this.appUtils.dateFormater(formData.periodTo!) as any,
+    //   producer: formData.producer,
+    //   producerCommPerc: formData.producerCommPerc,
+    //   compCommPerc: formData.compCommPerc,
+    //   producersCommissions: formData.producersCommissions,
+    // };
+    // console.log(data)
+    formData.append("clientName", val.clientName!)
+    formData.append("clientName", val.accNo!)
+    formData.append("policyNo", val.policyNo!)
+    formData.append("savedBy", val.savedBy!)
+    formData.append("className", val.className!)
+    formData.append("lineOfBusiness", val.lineOfBusiness!)
+    formData.append("producer", val.producer!)
+    formData.append("producerCommPerc", val.producerCommPerc!)
+    formData.append("compCommPerc", val.compCommPerc!)
+    formData.append("periodFrom", this.appUtils.dateFormater(val.periodFrom!));
+    formData.append("periodTo", this.appUtils.dateFormater(val.periodTo!));
+    let commissions = val.producersCommissions!;
+    for (let i = 0; i < commissions.length; i++)
+    {
+      formData.append(
+        `producersCommissions[${ i }].producer`,
+        commissions[ i ].producer!
+      );
+      formData.append(
+        `producersCommissions[${ i }].percentage`,
+        commissions[ i ].percentage?.toString()! ?? ""
+      );
+    }
+    if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.productionService.UpdatePolicyComissions(data).subscribe(
+    let sub = this.productionService.UpdatePolicyComissions(formData).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
-        // this.editUserModal.dismiss();
+        this.editUserModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        // this.resetUserForm();
+        this.resetUserForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
-        console.log(res.body?.data)
+        // console.log(data)
       },
       (err: HttpErrorResponse) =>
       {
@@ -444,6 +574,13 @@ export class PoliciesEditCommissionsComponent implements OnInit
       }
     );
     this.subscribes.push(sub);
+  }
+
+  resetUserForm (): void
+  {
+    this.editForm.reset();
+    this.ff.producersCommissions?.clear();
+    this.submitted = false;
   }
 
 

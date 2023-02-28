@@ -131,7 +131,7 @@ export class ProductionService
 		return this.http.get<IBaseResponse<any>>(this.env + ApiRoutes.Production.editEditCommission, { params: { id }, observe: "response" });
 	}
 
-	UpdatePolicyComissions (data: EditModelData): Observable<HttpResponse<IBaseResponse<EditModel>>>
+	UpdatePolicyComissions (data: FormData): Observable<HttpResponse<IBaseResponse<EditModelData>>>
 	{
 		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Production.updatePolicyCommission, data, { observe: "response" })
 	}
