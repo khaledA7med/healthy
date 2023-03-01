@@ -141,10 +141,10 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 			url: data,
 		};
 
-		let sub = this.modalRef.closed.subscribe((res) => {
-			console.log(res);
-		});
-		this.subscribes.push(sub);
+		// let sub = this.modalRef.closed.subscribe((res) => {
+		// 	console.log(res);
+		// });
+		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {

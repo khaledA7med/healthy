@@ -22,9 +22,7 @@ import AppUtils from "src/app/shared/app/util";
 	styleUrls: ["./client-reports.component.scss"],
 })
 export class ClientReportsComponent implements OnInit, OnDestroy {
-	closeResult!: string;
 	url!: any;
-
 	filterForms!: FormGroup<IClientReportFiltersForm>;
 	checkAllStatus: FormControl<boolean | null> = new FormControl(false);
 	submitted: boolean = false;
@@ -131,10 +129,10 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			url: data,
 		};
 
-		let sub = this.modalRef.closed.subscribe((res) => {
-			console.log(res);
-		});
-		this.subscribes.push(sub);
+		// let sub = this.modalRef.closed.subscribe((res) => {
+		// 	console.log(res);
+		// });
+		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {

@@ -60,7 +60,6 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 			this.uiState.lists.branchesLists = res.Branch?.content!;
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
-			console.log(res);
 		});
 		this.subscribes.push(sub);
 	}
@@ -71,7 +70,7 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 			insuranceCompany: new FormControl(null),
 			classOfBusiness: new FormControl(null),
 			producer: new FormControl(null),
-			clientData: new FormControl(null, Validators.required),
+			clientData: new FormControl(null),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -139,10 +138,10 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 			url: data,
 		};
 
-		let sub = this.modalRef.closed.subscribe((res) => {
-			console.log(res);
-		});
-		this.subscribes.push(sub);
+		// let sub = this.modalRef.closed.subscribe((res) => {
+		// 	console.log(res);
+		// });
+		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {
