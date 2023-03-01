@@ -8,6 +8,13 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
+      import("./master-tables/master-tables.module").then(
+        (m) => m.MasterTablesModule
+      ),
+  },
+  {
+    path: "",
+    loadChildren: () =>
       import("./clients/clients.module").then((m) => m.ClientsModule),
   },
   {

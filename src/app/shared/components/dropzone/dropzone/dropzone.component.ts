@@ -1,5 +1,4 @@
 import { Subscription } from "rxjs";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import {
   Component,
@@ -11,13 +10,13 @@ import {
 } from "@angular/core";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 
 @Component({
   selector: "app-dropzone",
   templateUrl: "./dropzone.component.html",
   styleUrls: ["./dropzone.component.scss"],
-  providers: [AppUtils],
 })
 export class DropzoneComponent implements OnChanges, OnDestroy {
   documentsToUpload: any[] = [];
@@ -71,28 +70,27 @@ export class DropzoneComponent implements OnChanges, OnDestroy {
   }
 
   removeImage(item: any) {
-    console.log(item);
     this.message
       .confirm("Sure!", "You Want To Delete ?!", "danger", "question")
       .then((res: any) => {
         if (res.isConfirmed) {
           this.documentsToDisplay = this.documentsToDisplay.filter(
-            (doc) => doc.name !== item.name
+            (doc) => doc.name !== item
           );
           this.documentsToUpload = this.documentsToUpload.filter(
-            (doc) => doc.name !== item.name
+            (doc) => doc.name !== item
           );
 
-          // let sub = this.masterMethod.deleteFile(item.data).subscribe(
-          //   (res: HttpResponse<IBaseResponse<boolean>>) => {
-          //     this.message.toast("Delete!", "info");
-          //     this.emitingFiles();
-          //   },
-          //   (err: HttpErrorResponse) => {
-          //     this.message.popup("Error", err.message, "error");
-          //   }
-          // );
-          // this.subscribes = sub;
+          let sub = this.masterMethod.deleteFile(item.data).subscribe(
+            (res: HttpResponse<IBaseResponse<boolean>>) => {
+              this.message.toast("Delete!", "info");
+              this.emitingFiles();
+            },
+            (err: HttpErrorResponse) =>
+              this.message.popup("Error", err.message, "error")
+          );
+          this.subscribes = sub;
+          this.emitingFiles();
         }
       });
   }
