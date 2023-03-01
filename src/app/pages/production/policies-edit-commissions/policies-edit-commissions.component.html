@@ -227,10 +227,6 @@
                                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                                             formControlName="prodCommProduser" bindLabel="name" bindValue="name">
                                         </ng-select>
-                                        <span class="invalid-feedback fw-bold"
-                                            *ngIf="(ff.prodCommProduser?.touched || uiState.submitted) && ff.prodCommProduser?.invalid">
-                                            Required
-                                        </span>
                                     </div>
 
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
