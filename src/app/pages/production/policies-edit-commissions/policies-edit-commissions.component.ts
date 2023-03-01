@@ -212,6 +212,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.offcanvasService.open(this.editCommissionFilter, { position: "end" });
   }
 
+  //#init filter form
   private initFilterForm (): void
   {
     this.filterForms = new FormGroup({
@@ -221,7 +222,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     });
   }
 
-
+  //#get filter form controls
   get f ()
   {
     return this.filterForms.controls;
@@ -288,7 +289,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
   openEditForm (id: string): void
   {
-    // this.resetEditForm();
     this.editUserModal = this.modalService.open(this.edit, {
       centered: true,
       backdrop: "static",
@@ -298,7 +298,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
     this.editUserModal.hidden.subscribe(() =>
     {
-      // this.resetEditForm();
       this.submitted = false;
       this.uiState.editUserMode = false;
     });
@@ -315,6 +314,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
 
+  //#init edit form
   initForm (): void
   {
     this.editForm = new FormGroup<EditModel>({
@@ -333,18 +333,20 @@ export class PoliciesEditCommissionsComponent implements OnInit
       periodTo: new FormControl(null),
       updatedBy: new FormControl(""),
       insurComp: new FormControl(""),
-      prodCommProduser: new FormControl(null),
-      prodCommPercentage: new FormControl(null),
+      prodCommProduser: new FormControl(null, Validators.required),
+      prodCommPercentage: new FormControl(null, Validators.required),
 
       producersCommissions: new FormArray<FormGroup<IAddProducers>>([]),
     })
   }
 
+  //#get edit form controls
   get ff ()
   {
     return this.editForm.controls;
   }
 
+  //#producersCommissions Array
   get producersCommissionsArray (): FormArray
   {
     return this.editForm.get("producersCommissions") as FormArray;
@@ -357,41 +359,44 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
   addProducersCommissions ()
   {
-    let data: IAddProducers = {
-      producer: this.ff.prodCommProduser!,
-      percentage: this.ff.prodCommPercentage!
-    }
-
-    let producerCommission = new FormGroup<IAddProducers>({
-      producer: new FormControl(data?.producer!.value, Validators.required),
-      percentage: new FormControl(data.percentage!.value, [
-        Validators.max(100),
-        Validators.min(0),
-        Validators.required,
-      ]),
-    });
 
     if (
       +this.ff.compCommPerc?.value! <= 0 ||
       +this.ff.producerCommPerc?.value! > +this.ff.compCommPerc?.value! ||
-      +this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value!
+      +this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value! ||
+      +this.uiState.totalCommissions.prodCommPercentage >=
+      +this.ff.producerCommPerc?.value!
     )
     {
       this.message.popup("Oops!", "Can't add any more");
       return;
     }
-    else if (this.ff.producersCommissions?.invalid)
+    else if (this.ff.prodCommProduser?.invalid || this.ff.prodCommPercentage?.invalid)
     {
       this.ff.producersCommissions?.markAllAsTouched();
       this.message.popup("Oops!", "fill input data");
       return;
     } else
     {
+      let data: IAddProducers = {
+        producer: this.ff.prodCommProduser!,
+        percentage: this.ff.prodCommPercentage!
+      }
+
+      let producerCommission = new FormGroup<IAddProducers>({
+        producer: new FormControl(data?.producer!.value, Validators.required),
+        percentage: new FormControl(data.percentage!.value, [
+          Validators.max(100),
+          Validators.min(0),
+          Validators.required,
+        ]),
+      });
       this.ff.producersCommissions?.push(producerCommission);
       this.producersCommissionsArray.updateValueAndValidity();
       this.totalCommissionRow();
     }
   }
+
 
   formListeners (e?: Event): void
   {
@@ -403,16 +408,15 @@ export class PoliciesEditCommissionsComponent implements OnInit
     {
       this.ff.prodCommPercentage?.patchValue(+this.ff.producerCommPerc?.value!);
       return;
+    } else if (+this.ff.compCommPerc?.value! > 0)
+    {
+      if (+this.ff.compCommPerc?.value! > 100)
+      {
+        this.ff.compCommPerc?.patchValue('100');
+        return;
+      }
     }
   }
-  // formListeners2 (e?: Event): void
-  // {
-  //   if (+this.ff.prodCommPercentage?.value! > +this.ff.producerCommPerc?.value!)
-  //   {
-  //     this.ff.prodCommPercentage?.patchValue(+this.ff.producerCommPerc?.value!);
-  //     return;
-  //   }
-  // }
 
 
   totalCommissionRow ()
@@ -514,23 +518,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.uiState.submitted = true;
     const formData = new FormData();
     let val = this.editForm.getRawValue();
-    console.log(formData)
-    // const data: EditModelData = {
-    //   sNo: this.uiState.editUserMode ? this.uiState.editUserData.sNo : 0,
-    //   clientName: formData.clientName,
-    //   accNo: formData.accNo,
-    //   policyNo: formData.policyNo,
-    //   savedBy: formData.savedBy,
-    //   className: formData.className,
-    //   lineOfBusiness: formData.lineOfBusiness,
-    //   // periodFrom: this.appUtils.dateFormater(formData.periodFrom!) as any,
-    //   periodTo: this.appUtils.dateFormater(formData.periodTo!) as any,
-    //   producer: formData.producer,
-    //   producerCommPerc: formData.producerCommPerc,
-    //   compCommPerc: formData.compCommPerc,
-    //   producersCommissions: formData.producersCommissions,
-    // };
-    // console.log(data)
     formData.append("clientName", val.clientName!)
     formData.append("clientName", val.accNo!)
     formData.append("policyNo", val.policyNo!)
@@ -565,7 +552,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
         this.resetUserForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
-        // console.log(data)
       },
       (err: HttpErrorResponse) =>
       {

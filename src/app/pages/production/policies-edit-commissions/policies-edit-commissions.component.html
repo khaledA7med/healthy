@@ -120,7 +120,7 @@
                                 <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
                                     <div class="accordion-info">
                                         <div class="lables">
-                                            <label for="producersDD">Producers</label>
+                                            <label for="producers" class="asterisk-input">Producers</label>
                                         </div>
                                         <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
                                             [items]="(lookupData | async)?.Producers?.content!"
@@ -129,6 +129,10 @@
                                             [clearable]="true" [searchable]="true" formControlName="producer"
                                             bindLabel="name" bindValue="name">
                                         </ng-select>
+                                        <div class="invalid-feedback fw-bold"
+                                            *ngIf="(ff.producer?.touched || uiState.submitted) && ff.producer?.invalid">
+                                            Required
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +192,7 @@
                     </div>
                 </div>
 
-                <div class="my-3 h-100">
+                <div class="my-3 h-100 mb-3">
                     <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
                         <div class="card-body">
                             <div class="ribbon ribbon-info round-shape">Producers Commissions</div>
@@ -198,8 +202,8 @@
                                         <label for="companyCommissionPerc">Company Commission :</label>
                                         <div class="input-group input-group-sm">
                                             <input type="number" id="companyCommissionPerc"
-                                                class="form-control form-control-sm" formControlName="compCommPerc"
-                                                placeholder="0%">
+                                                (input)="formListeners($event)" class="form-control form-control-sm"
+                                                formControlName="compCommPerc" placeholder="0%">
                                             <span class="input-group-text" id="">%</span>
                                         </div>
                                     </div>
@@ -223,6 +227,10 @@
                                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                                             formControlName="prodCommProduser" bindLabel="name" bindValue="name">
                                         </ng-select>
+                                        <span class="invalid-feedback fw-bold"
+                                            *ngIf="(ff.prodCommProduser?.touched || uiState.submitted) && ff.prodCommProduser?.invalid">
+                                            Required
+                                        </span>
                                     </div>
 
                                     <div class="col-lg-3 col-md-12 col-sm-12 mt-2">
