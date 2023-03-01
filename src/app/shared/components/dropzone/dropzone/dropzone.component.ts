@@ -18,12 +18,12 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
   templateUrl: "./dropzone.component.html",
   styleUrls: ["./dropzone.component.scss"],
 })
-export class DropzoneComponent implements OnChanges, OnDestroy {
+export class DropzoneComponent implements OnDestroy {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
   subscribes!: Subscription;
 
-  @Input() UploadedFiles: any;
+  @Input() UploadedFiles: any[] = [];
 
   @Output() files: EventEmitter<any> = new EventEmitter<any>();
 
@@ -32,10 +32,6 @@ export class DropzoneComponent implements OnChanges, OnDestroy {
     public util: AppUtils,
     private masterMethod: MasterMethodsService
   ) {}
-
-  ngOnChanges(): void {
-    if (this.UploadedFiles) this.documentsToDisplay = this.UploadedFiles;
-  }
 
   onSelectFiles(e: Event) {
     const elem = e.target as HTMLInputElement;
@@ -69,27 +65,35 @@ export class DropzoneComponent implements OnChanges, OnDestroy {
     );
   }
 
-  removeImage(item: any) {
+  removeImage(item: any, isServer?: boolean) {
     this.message
       .confirm("Sure!", "You Want To Delete ?!", "danger", "question")
       .then((res: any) => {
         if (res.isConfirmed) {
           this.documentsToDisplay = this.documentsToDisplay.filter(
-            (doc) => doc.name !== item
+            (doc) => doc.name !== item.name
           );
           this.documentsToUpload = this.documentsToUpload.filter(
-            (doc) => doc.name !== item
+            (doc) => doc.name !== item.name
           );
 
-          let sub = this.masterMethod.deleteFile(item.data).subscribe(
-            (res: HttpResponse<IBaseResponse<boolean>>) => {
-              this.message.toast("Delete!", "info");
-              this.emitingFiles();
-            },
-            (err: HttpErrorResponse) =>
-              this.message.popup("Error", err.message, "error")
-          );
-          this.subscribes = sub;
+          if (isServer) {
+            let sub = this.masterMethod.deleteFile(item.data).subscribe(
+              (res: HttpResponse<IBaseResponse<boolean>>) => {
+                if (res.body?.status) {
+                  this.message.toast("Deleted!", "info");
+                  this.emitingFiles();
+                  this.UploadedFiles = this.UploadedFiles.filter(
+                    (el) => el.name !== item.name
+                  );
+                } else
+                  this.message.popup("Oops!", res.body?.message!, "warning");
+              },
+              (err: HttpErrorResponse) =>
+                this.message.popup("Error", err.message, "error")
+            );
+            this.subscribes = sub;
+          }
           this.emitingFiles();
         }
       });
@@ -123,10 +127,57 @@ export class DropzoneComponent implements OnChanges, OnDestroy {
     this.emitingFiles();
   }
 
+  fileIcon(type: string): { cls: string; ico: string } {
+    let cls = "",
+      ico = "";
+
+    switch (type) {
+      case "msword" &&
+        "doc" &&
+        "docx" &&
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        cls = "bg-soft-secondary text-secondary";
+        ico = "ri-file-word-2-fill";
+        break;
+      case "vnd.ms-powerpoint" &&
+        "ppt" &&
+        "pptx" &&
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+        cls = "bg-soft-danger text-danger";
+        ico = "ri-file-ppt-fill";
+        break;
+      case "text" && "txt":
+        cls = "bg-soft-dark text-muted";
+        ico = "ri-file-text-fill";
+        break;
+      case "pdf":
+        cls = "bg-soft-danger text-danger";
+        ico = "ri-file-pdf-fill";
+        break;
+      case "zip":
+        cls = "bg-soft-info text-info";
+        ico = "ri-file-zip-fill";
+        break;
+      case "vnd.ms-excel" &&
+        "xls" &&
+        "xlsx" &&
+        "csv" &&
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        cls = "bg-soft-success text-success";
+        ico = "ri-file-excel-2-fill";
+        break;
+      default:
+        cls = "bg-soft-success text-success";
+        ico = "ri-error-warning-fill";
+        break;
+    }
+    return { cls: cls, ico: ico };
+  }
+
   emitingFiles() {
     this.files.emit(this.documentsToUpload);
   }
   ngOnDestroy() {
-    // this.subscribes.unsubscribe()
+    this.subscribes && this.subscribes.unsubscribe();
   }
 }

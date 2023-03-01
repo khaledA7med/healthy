@@ -371,33 +371,23 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       fax: client.fax,
       email: client.email,
       website: client.website,
+      // Date Of Incorporation
+      dateOfIncorporation: this.util.dateStructFormat(
+        client.dateOfIncorporation!
+      ) as any,
+      dateOfIncorporationHijri: this.util.dateStructFormat(
+        client.dateOfIncorporationHijri!
+      ) as any,
+
+      // Expiry Date
+      expiryDate: this.util.dateStructFormat(client.expiryDate!) as any,
+      expiryDateHijri: this.util.dateStructFormat(
+        client.expiryDateHijri!
+      ) as any,
+
+      // Retail ID Expiry Date
+      idExpiryDate: this.util.dateStructFormat(client.idExpiryDate!) as any,
     });
-
-    // @@@@@@ Dates Formating To Append Values @@@@@@ //
-    // Date Of Incorporation
-    this.f.dateOfIncorporation?.patchValue(
-      this.util.dateStructFormat(client.dateOfIncorporation!) as any
-    );
-
-    // Date Of Incorporation Hijri
-    this.f.dateOfIncorporationHijri?.patchValue(
-      this.util.dateStructFormat(client.dateOfIncorporationHijri!) as any
-    );
-
-    // Expiry Date
-    this.f.expiryDate?.patchValue(
-      this.util.dateStructFormat(client.expiryDate!) as any
-    );
-
-    // Expiry Date Hijri
-    this.f.expiryDateHijri?.patchValue(
-      this.util.dateStructFormat(client.expiryDateHijri!) as any
-    );
-
-    // Retail ID Expiry Date
-    this.f.idExpiryDate?.patchValue(
-      this.util.dateStructFormat(client.idExpiryDate!) as any
-    );
 
     this.docs = client.documentList!;
 

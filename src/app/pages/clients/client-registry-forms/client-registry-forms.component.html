@@ -192,7 +192,7 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label class="asterisk-input">Expiry Date</label>
-                      <app-gregorian-picker [required]="true" [submitted]="submitted"
+                      <app-gregorian-picker [required]="true" [model]="f.idExpiryDate?.value" [submitted]="submitted"
                         (dateChange)="retailExpiryDate($event)"></app-gregorian-picker>
                     </div>
                     <!--./col-->
