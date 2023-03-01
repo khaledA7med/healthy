@@ -1,8 +1,7 @@
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ProductionService } from 'src/app/shared/services/production/production.service';
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { from, Observable, Subscription } from "rxjs";
-import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from "rxjs";
 import { MessagesService } from 'src/app/shared/services/messages.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
@@ -10,14 +9,13 @@ import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsP
 import { productionEditCommissionCols } from 'src/app/shared/app/grid/productionEditCommissionsCols';
 import AppUtils from 'src/app/shared/app/util';
 import { IEditCommissions } from 'src/app/shared/app/models/Production/i-edit-commissions';
-import { AppRoutes } from 'src/app/shared/app/routers/appRouters';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { IEditCommissionsFilter } from 'src/app/shared/app/models/Production/i-edit-commission-filter';
-import { EditModel, EditModelData } from 'src/app/shared/app/models/Production/i-edit-commissions-forms';
+import { IEditCommissionsForm, IEditCommissionsFormData } from 'src/app/shared/app/models/Production/i-edit-commissions-forms';
 import { EventService } from 'src/app/core/services/event.service';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { IAddProducers } from 'src/app/shared/app/models/Production/i-add-producers';
@@ -29,7 +27,7 @@ import { IAddProducers } from 'src/app/shared/app/models/Production/i-add-produc
   styleUrls: [ './policies-edit-commissions.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class PoliciesEditCommissionsComponent implements OnInit
+export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy
 {
 
   submitted = false;
@@ -56,23 +54,25 @@ export class PoliciesEditCommissionsComponent implements OnInit
     },
     editId: "",
     editUserMode: false as Boolean,
-    editUserData: {} as EditModelData,
+    editUserData: {} as IEditCommissionsFormData,
     producers: [] as any
   }
 
   @ViewChild("filter") editCommissionFilter!: ElementRef;
   @ViewChild("edit") edit!: ElementRef
 
+  // Edit Form //
   editUserModal!: NgbModalRef;
-  editForm!: FormGroup<EditModel>;
+  editForm!: FormGroup<IEditCommissionsForm>;
   editFormSubmitted = false as boolean;
 
   filterForms!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
 
-  // to unSubscribe
+  // to unSubscribe //
   subscribes: Subscription[] = [];
-  // Grid Definitions
+
+  // Grid Definitions//
   gridApi: GridApi = <GridApi> {};
   gridOpts: GridOptions = {
     pagination: true,
@@ -107,7 +107,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
     private eventService: EventService,
-
   ) { }
 
   ngOnInit (): void
@@ -207,6 +206,8 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
   //#region filter Section
+
+  //open Filter Canvas
   openFilterOffcanvas (): void
   {
     this.offcanvasService.open(this.editCommissionFilter, { position: "end" });
@@ -228,6 +229,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     return this.filterForms.controls;
   }
 
+  //get LookUp Data
   getLookupData ()
   {
     this.lookupData = this.table.getBaseData(MODULES.Production);
@@ -256,11 +258,12 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
   // Edit Form 
 
+  //get user Data
   getUserData (id: string)
   {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.productionService.getUserData(id).subscribe(
-      (res: HttpResponse<IBaseResponse<EditModelData>>) =>
+      (res: HttpResponse<IBaseResponse<IEditCommissionsFormData>>) =>
       {
         this.fillEditForm(res.body?.data!);
         if (res.body?.data?.producer?.startsWith('Direct Business'))
@@ -287,6 +290,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.subscribes.push(sub);
   }
 
+  //open Edit Modal
   openEditForm (id: string): void
   {
     this.editUserModal = this.modalService.open(this.edit, {
@@ -303,6 +307,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     });
   }
 
+  //check Validation
   validationChecker (): boolean
   {
     if (this.editForm.invalid)
@@ -313,11 +318,10 @@ export class PoliciesEditCommissionsComponent implements OnInit
     return true;
   }
 
-
   //#init edit form
   initForm (): void
   {
-    this.editForm = new FormGroup<EditModel>({
+    this.editForm = new FormGroup<IEditCommissionsForm>({
       sNo: new FormControl(null),
       clientNo: new FormControl(null),
       producer: new FormControl("", Validators.required),
@@ -352,11 +356,13 @@ export class PoliciesEditCommissionsComponent implements OnInit
     return this.editForm.get("producersCommissions") as FormArray;
   }
 
+  //get producers Commissions Controls
   producersCommissionsControls (i: number, control: string): AbstractControl
   {
     return this.producersCommissionsArray.controls[ i ].get(control)!;
   }
 
+  //add Producers Commissions 
   addProducersCommissions ()
   {
 
@@ -397,7 +403,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     }
   }
 
-
+  //change percentages 
   formListeners (e?: Event): void
   {
     if (+this.ff.producerCommPerc?.value! > +this.ff.compCommPerc?.value!)
@@ -418,7 +424,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     }
   }
 
-
+  //Total Commissions
   totalCommissionRow ()
   {
     const handler = {
@@ -452,6 +458,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
 
+  //change Producers
   changeprod (e: any)
   {
     if (e.id <= 4)
@@ -469,13 +476,14 @@ export class PoliciesEditCommissionsComponent implements OnInit
     }
   }
 
-
+  //delete producer
   deleteProducersCommissions (i: number)
   {
     this.producersCommissionsArray.removeAt(i);
   }
 
-  fillEditForm (data: EditModelData)
+  //Fill edit form
+  fillEditForm (data: IEditCommissionsFormData)
   {
     this.ff.sNo?.patchValue(data.sNo!);
     this.ff.clientName?.patchValue(data.clientName!);
@@ -504,6 +512,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.ff.periodTo?.disable();
   }
 
+  //Dates
   periodFrom (e: any)
   {
     this.ff.periodFrom?.patchValue(e.gon);
@@ -513,7 +522,8 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.ff.periodTo?.patchValue(e.gon);
   }
 
-  submitEditFormData ()
+  //Submit Form
+  submitEditForm ()
   {
     this.uiState.submitted = true;
     const formData = new FormData();
@@ -549,7 +559,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
         this.editUserModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetUserForm();
+        this.resetEditForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -562,7 +572,8 @@ export class PoliciesEditCommissionsComponent implements OnInit
     this.subscribes.push(sub);
   }
 
-  resetUserForm (): void
+  //reset Edit Form
+  resetEditForm (): void
   {
     this.editForm.reset();
     this.ff.producersCommissions?.clear();

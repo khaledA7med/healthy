@@ -1,7 +1,7 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { IAddProducers } from "./i-add-producers";
 
-export interface EditModel
+export interface IEditCommissionsForm
 {
     sNo?: FormControl<number | null>;
     clientNo?: FormControl<number | null>;
@@ -23,7 +23,7 @@ export interface EditModel
     producersCommissions?: FormArray<FormGroup<IAddProducers>>;
 }
 
-export interface EditModelData
+export interface IEditCommissionsFormData
 {
     sNo?: number;
     clientNo?: number;

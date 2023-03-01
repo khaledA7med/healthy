@@ -35,6 +35,11 @@
     max-height: unset;
   }
 }
-.modal-body {
-  overflow-y: scroll;
+#addCommissionBtn {
+  margin-top: 28px;
+}
+
+.modal {
+  max-height: 900px;
+  overflow-y: auto;
 }

@@ -6,7 +6,7 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentReq } from "../../app/models/App/IDocumentReq";
 import { IEditCommissionsFilter } from "../../app/models/Production/i-edit-commission-filter";
 import { IEditCommissions } from "../../app/models/Production/i-edit-commissions";
-import { EditModel, EditModelData } from "../../app/models/Production/i-edit-commissions-forms";
+import { IEditCommissionsForm, IEditCommissionsFormData } from "../../app/models/Production/i-edit-commissions-forms";
 import { IPolicy } from "../../app/models/Production/i-policy";
 import { IChangePolicyStatusRequest } from "../../app/models/Production/i-policy-change-status-req";
 import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
@@ -126,12 +126,12 @@ export class ProductionService
 		});
 	}
 
-	getUserData (id: string): Observable<HttpResponse<IBaseResponse<EditModelData>>>
+	getUserData (id: string): Observable<HttpResponse<IBaseResponse<IEditCommissionsFormData>>>
 	{
 		return this.http.get<IBaseResponse<any>>(this.env + ApiRoutes.Production.editEditCommission, { params: { id }, observe: "response" });
 	}
 
-	UpdatePolicyComissions (data: FormData): Observable<HttpResponse<IBaseResponse<EditModelData>>>
+	UpdatePolicyComissions (data: FormData): Observable<HttpResponse<IBaseResponse<IEditCommissionsFormData>>>
 	{
 		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Production.updatePolicyCommission, data, { observe: "response" })
 	}
