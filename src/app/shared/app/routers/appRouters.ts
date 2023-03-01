@@ -11,7 +11,7 @@ export const AppRoutes = {
     notFound: "pages/not-found",
   },
   MasterTable: {
-    insuranceClasses: "/master/insurance-classes",
+    insuranceClasses: "insurance-classes",
   },
   Client: {
     base: "clients",

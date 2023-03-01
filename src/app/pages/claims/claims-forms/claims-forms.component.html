@@ -941,70 +941,79 @@
                                                 <i class="ri-menu-add-line"></i> Add Invoice
                                             </button>
                                         </div>
-                                        <table id="listOfInvoicesTable" class="table align-middle table-nowrap mb-0">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th scope="col">Invoice No.</th>
-                                                    <th scope="col">Invoice Date</th>
-                                                    <th scope="col">WIP No.</th>
-                                                    <th scope="col">Chassis No.</th>
-                                                    <th scope="col" class="text-end">Towing Changes</th>
-                                                    <th scope="col" class="text-end">Labor</th>
-                                                    <th scope="col" class="text-end">Spare Parts</th>
-                                                    <th scope="col" class="text-end">Other</th>
-                                                    <th scope="col" class="text-end">Estimated Value</th>
-                                                    <th scope="col" class="text-end">VAT Amount</th>
-                                                    <th scope="col" class="text-end">Grand Total</th>
-                                                    <th scope="col" class="text-end">Deductible Excess</th>
-                                                    <th scope="col" class="text-end">Discount</th>
-                                                    <th scope="col" class="text-end">Amount Due</th>
-                                                    <th scope="col">Updated By</th>
-                                                    <th scope="col">Updated On</th>
-                                                    <th scope="col">Created By</th>
-                                                    <th scope="col">Created On</th>
-                                                    <th scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let inv of uiState.claimLists.invoices">
-                                                    <td>{{inv.invoiceNo}}</td>
-                                                    <td>{{util.formatDate(inv.invoiceDate)}}</td>
-                                                    <td>{{inv.wipNo}}</td>
-                                                    <td>{{inv.chassisNo}}</td>
-                                                    <td class="text-end">{{inv.towingCharges | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.labor | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.spareParts | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.others | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.estimatedCharges | currency: "SAR":''}}
-                                                    </td>
-                                                    <td class="text-end">{{inv.vatInvoicesAmount | currency: "SAR":''}}
-                                                    </td>
-                                                    <td class="text-end">{{inv.grandTotal | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.deductibleExcess | currency: "SAR":''}}
-                                                    </td>
-                                                    <td class="text-end">{{inv.discount | currency: "SAR":''}}</td>
-                                                    <td class="text-end">{{inv.amountDue | currency: "SAR":''}}</td>
-                                                    <td>{{inv.updatedBy}}</td>
-                                                    <td>{{util.formatDate(inv.updatedOn)}}</td>
-                                                    <td>{{inv.savedUser}}</td>
-                                                    <td>{{util.formatDate(inv.savedDate)}}</td>
-                                                    <td>
-                                                        <button class="btn btn-soft-success btn-sm mx-1"
-                                                            (click)="openInvoicesModal(inv)" type="button"><i
-                                                                class="ri-edit-2-line"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-sm btn-soft-danger"
-                                                            (click)="removeInvoice(inv.sNo!)">
-                                                            <i class="ri-delete-bin-2-line"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="my-1 text-center text-dark fw-bold"
-                                                    *ngIf="uiState.claimLists.invoices.length === 0">
-                                                    <td colspan="100">No Invoices To show</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <ngx-simplebar>
+                                            <table id="listOfInvoicesTable"
+                                                class="table align-middle table-nowrap mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Invoice No.</th>
+                                                        <th scope="col">Invoice Date</th>
+                                                        <th scope="col">WIP No.</th>
+                                                        <th scope="col">Chassis No.</th>
+                                                        <th scope="col" class="text-end">Towing Changes</th>
+                                                        <th scope="col" class="text-end">Labor</th>
+                                                        <th scope="col" class="text-end">Spare Parts</th>
+                                                        <th scope="col" class="text-end">Other</th>
+                                                        <th scope="col" class="text-end">Estimated Value</th>
+                                                        <th scope="col" class="text-end">VAT Amount</th>
+                                                        <th scope="col" class="text-end">Grand Total</th>
+                                                        <th scope="col" class="text-end">Deductible Excess</th>
+                                                        <th scope="col" class="text-end">Discount</th>
+                                                        <th scope="col" class="text-end">Amount Due</th>
+                                                        <th scope="col">Updated By</th>
+                                                        <th scope="col">Updated On</th>
+                                                        <th scope="col">Created By</th>
+                                                        <th scope="col">Created On</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let inv of uiState.claimLists.invoices">
+                                                        <td>{{inv.invoiceNo}}</td>
+                                                        <td>{{util.formatDate(inv.invoiceDate)}}</td>
+                                                        <td>{{inv.wipNo}}</td>
+                                                        <td>{{inv.chassisNo}}</td>
+                                                        <td class="text-end">{{inv.towingCharges | currency: "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.labor | currency: "SAR":''}}</td>
+                                                        <td class="text-end">{{inv.spareParts | currency: "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.others | currency: "SAR":''}}</td>
+                                                        <td class="text-end">{{inv.estimatedCharges | currency:
+                                                            "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.vatInvoicesAmount | currency:
+                                                            "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.grandTotal | currency: "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.deductibleExcess | currency:
+                                                            "SAR":''}}
+                                                        </td>
+                                                        <td class="text-end">{{inv.discount | currency: "SAR":''}}</td>
+                                                        <td class="text-end">{{inv.amountDue | currency: "SAR":''}}</td>
+                                                        <td>{{inv.updatedBy}}</td>
+                                                        <td>{{util.formatDate(inv.updatedOn)}}</td>
+                                                        <td>{{inv.savedUser}}</td>
+                                                        <td>{{util.formatDate(inv.savedDate)}}</td>
+                                                        <td>
+                                                            <button class="btn btn-soft-success btn-sm mx-1"
+                                                                (click)="openInvoicesModal(inv)" type="button"><i
+                                                                    class="ri-edit-2-line"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-soft-danger"
+                                                                (click)="removeInvoice(inv.sNo!)">
+                                                                <i class="ri-delete-bin-2-line"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="my-1 text-center text-dark fw-bold"
+                                                        *ngIf="uiState.claimLists.invoices.length === 0">
+                                                        <td colspan="100">No Invoices To show</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </ngx-simplebar>
                                     </div>
                                     <div class="d-flex justify-content-end">
                                         <div class="row col-4 mb-2 mt-4">

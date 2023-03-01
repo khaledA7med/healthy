@@ -10,8 +10,7 @@ export const MENU: MenuItem[] = [
       {
         id: 101,
         label: "MENUITEMS.MASTERTABLE.LIST.INSURANCECLASSES",
-        // link: AppRoutes.MasterTable.insuranceClasses,
-        link: AppRoutes.Error.comingSoon,
+        link: AppRoutes.MasterTable.insuranceClasses,
         parentId: 1,
       },
     ],
@@ -128,8 +127,8 @@ export const MENU: MenuItem[] = [
         id: 701,
         label: "MENUITEMS.SYSTEMADMIN.LIST.MANAGEMENT",
         link: AppRoutes.SystemAdmin.base,
-        parentId: 7
-      }
-    ]
+        parentId: 7,
+      },
+    ],
   },
 ];

@@ -894,7 +894,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  documentsList(e: any) {
+  documentsList(e: File[]) {
     this.documentsToUpload = e;
   }
 
