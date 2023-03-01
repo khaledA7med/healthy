@@ -13,10 +13,12 @@ export const userRolesCols: ColDef[] = [
 		headerName: "Security Role",
 		field: "securityRole",
 		minWidth: 100,
+		cellStyle: { cursor: "pointer" },
 	},
 	{
 		headerName: "Security Role Description	",
 		field: "securityRoleDescription",
 		minWidth: 110,
+		cellStyle: { cursor: "pointer" },
 	},
 ];

@@ -15,5 +15,4 @@ export interface EndorsTypeByPolicy {
 export interface RequiermentsList {
 	itemCheck?: FormControl<Boolean | null>;
 	itemValue?: FormControl<string | null>;
-	// itemValue?: string;
 }

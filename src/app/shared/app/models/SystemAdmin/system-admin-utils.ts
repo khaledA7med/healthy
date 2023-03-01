@@ -27,3 +27,9 @@ export interface IUserRoles {
 	securityRoleDescription?: string;
 	savedUser?: string;
 }
+
+export interface privilegeRole {
+	control: FormControl<boolean | null>;
+	name: string;
+	label: string;
+}

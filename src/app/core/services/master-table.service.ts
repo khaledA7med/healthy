@@ -353,10 +353,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Claims.claimStatus,
           name: BaseData.ClaimStatus,
         },
-        // {
-        //   route: ApiRoutes.MasterTable.Claims.rejectionReason,
-        //   name: BaseData.RejectionReason,
-        // },
+        {
+          route: ApiRoutes.MasterTable.Claims.rejectionReasons,
+          name: BaseData.RejectionReasons,
+        },
       ],
       SystemAdmin: [
         {

@@ -8,8 +8,7 @@
         </div>
         <div class="flex-shrink-0">
           <div class="hstack text-nowrap gap-2">
-            <button type="button" class="btn btn-soft-info add-btn btn-sm"
-              (click)="openAddClientDialoge(clientContent)">
+            <button type="button" class="btn btn-success add-btn btn-sm" (click)="openAddClientDialoge(clientContent)">
               <i class="ri-add-fill me-1 align-bottom"></i> Add Client
             </button>
           </div>
@@ -34,18 +33,18 @@
   <form [formGroup]="addClientToGroupForm" (ngSubmit)="submitAddClientToGroup()">
     <div class="modal-body">
 
-      <div class="mb-3">
+      <div class="mb-1">
         <label for="clientName" class="form-label font-weight-bold">Client Name</label>
         <div class="input-group">
           <ng-select class="w-100" id="clientName" formControlName="clientId"
-            [ngClass]="{ 'is-invalid':form['clientId'].touched && form['clientId'].errors }" required>
-            <ng-option *ngFor="let name of clientsList" [value]="name.sNo">{{name.fullName}}
+            [ngClass]="{ 'is-submitted':(form['clientId'].touched || uiState.submitted) && addClientToGroupForm.invalid }"
+            required>
+            <ng-option *ngFor="let name of uiState.clientsList" [value]="name.sNo">{{name.fullName}}
             </ng-option>
           </ng-select>
-          <div *ngIf="form['clientId'].touched && form['clientId'].errors" class="invalid-feedback">
-            <div *ngIf="form['clientId'].touched && form['clientId'].errors['required']">
-              required</div>
-          </div>
+          <div class="invalid-feedback d-inline-block mt-0"
+            *ngIf="(form['clientId'].touched || uiState.submitted) && addClientToGroupForm.invalid">
+            Required</div>
         </div>
       </div>
 
@@ -53,20 +52,20 @@
         <label for="groupName" class="form-label font-weight-bold">Group Name</label>
         <div class="input-group">
           <ng-select class="w-100" id="groupName" formControlName="groupName"
-            [ngClass]="{ 'is-invalid': form['groupName'].touched && form['groupName'].errors }" required>
+            [ngClass]="{ 'is-submitted': (form['groupName'].touched || uiState.submitted) && addClientToGroupForm.invalid }"
+            required>
             <ng-option *ngFor="let name of groupsList" [value]="name.groupName">{{name.groupName}}
             </ng-option>
           </ng-select>
-          <div *ngIf="form['groupName'].touched && form['groupName'].errors" class="invalid-feedback">
-            <div *ngIf="form['groupName'].touched && form['groupName'].errors['required']">
-              required</div>
-          </div>
+          <div class="invalid-feedback d-inline-block mt-0"
+            *ngIf="(form['groupName'].touched || uiState.submitted) && addClientToGroupForm.invalid">
+            Required</div>
         </div>
       </div>
 
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-sm btn-success" [disabled]="!addClientToGroupForm.valid">Save</button>
+      <button type="submit" class="btn btn-sm btn-success">Save</button>
       <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('cancel')">Cancel</button>
     </div>
   </form>

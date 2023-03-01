@@ -8,11 +8,11 @@
                 <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                            <div class="accordion-item pt-3 px-2 ">
+                            <div class="accordion-item pt-3 px-2">
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="card ribbon-box border  shadow-none mt-2 ">
-                                            <div class="card-body ">
+                                    <div class="col-md-3 d-flex mb-2">
+                                        <div class="card ribbon-box border shadow-none mt-2" style="flex-grow: 1;">
+                                            <div class="card-body">
                                                 <span class="ribbon ribbon-info round-shape"><span>1)
                                                         Status</span></span>
                                                 <div class="row">
@@ -166,42 +166,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 my-3 d-flex justify-content-end align-items-end">
+                                        <button type="submit" class="btn btn-soft-success btn-sm bg-gradient mx-2">
+                                            Generate Test
+                                        </button>
+                                        <button type="button" id="sa-warning" (click)="resetForm();"
+                                            class="btn btn-sm btn-soft-danger">
+                                            <i class="ri-delete-bin-2-line"></i>
+                                            Clear
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </ng-template>
                 </ngb-panel>
             </ngb-accordion>
-            <div class="card mt-2">
-                <div class="container-fluid">
-                    <div class="card-body px-1 py-3">
-                        <div class="d-flex justify-content-end">
-                            <button [disabled]="filterForms.invalid" (click)="openFullscreen(content)" type="submit"
-                                id="GenerateClntRegistryReport" class="btn btn-soft-success btn-sm bg-gradient mx-2">
-                                Generate
-                            </button>
-                            <button type="button" id="sa-warning" (click)="resetForm();"
-                                class="btn btn-sm btn-soft-danger">
-                                <i class="ri-delete-bin-2-line"></i>
-                                Clear
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </form>
     </div>
 </div>
-
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Client Report</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body mx-auto">
-        <iframe [src]="url" class="justify-content-center" frameborder="5" width="100%" height="90%"></iframe>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
-    </div>
-</ng-template>

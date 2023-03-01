@@ -37,6 +37,7 @@ export const AppRoutes = {
     create: "production/create",
     edit: "production/update/",
     editCommissions: "production/edit-commissions",
+    makeInvoice: "production/invoice/",
   },
   CustomerService: {
     base: "customer-service",
@@ -54,6 +55,6 @@ export const AppRoutes = {
     privileges: "system-admin/privileges",
   },
   Email: {
-    base: "email",
+    base: "emails",
   },
 };

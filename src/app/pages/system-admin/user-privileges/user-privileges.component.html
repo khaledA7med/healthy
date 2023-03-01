@@ -7,7 +7,7 @@
                         <h4 class="card-title ">Roles</h4>
                     </div>
                     <div class="col-6 d-flex justify-content-end align-items-center">
-                        <button type="button" class="btn btn-soft-info btn-sm" (click)="openAddRoleModal(content)">
+                        <button type="button" class="btn btn-success btn-sm" (click)="openAddRoleModal(content)">
                             <i class="ri-add-fill me-1 align-bottom"></i> Add Role
                         </button>
                     </div>
@@ -26,478 +26,154 @@
 
             <div class="card px-3">
                 <div class="row">
-                    <div class="col-lg-6 py-4">
-                        <!-- Base Example -->
+                    <div class="col-12 d-flex justify-content-end align-items-center my-3">
+                        <button type="submit" class="btn btn-success btn-sm mx-2">
+                            <i class="ri-add-fill me-1 align-bottom"></i> Save
+                        </button>
+                        <button type="button" class="btn btn-soft-danger btn-sm" (click)="resePrivilegesForm()">
+                            <i class="ri-delete-bin-2-line"></i> Reset
+                        </button>
+                    </div>
+                    <div class="col-lg-6 pb-4">
                         <ngb-accordion #acc="ngbAccordion">
 
                             <ngb-panel id="1" title="Master Tables" cardClass="open">
                                 <ng-template ngbPanelContent="1">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check mb-2 col-6">
-                                                <input class="form-check-input selectAll1" type="checkbox"
-                                                    id="ChMasterTabels" formControlName="chMasterTabels">
-                                                <label class="form-check-label parent text-info" for="formCheck1">
-                                                    Master Tables
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.MasterTable">
+                                                <ng-container *ngIf="item.name === 'chMasterTabels' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('MasterTable',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chMasterTablesReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chMasterTabels' && item.name !== 'chMasterTablesReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('MasterTable')">
+                                                    <label class="form-check-label parent">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
-
-                                            <div class="form-check mb-2 col-6">
-                                                <input class="form-check-input" id="ChMasterTablesReadOnly"
-                                                    formControlName="chMasterTablesReadOnly" type="checkbox">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChMasterTablesReadOnly">
-                                                    Read-Only
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chIncuranceClasses"
-                                                    data="child-input1" type="checkbox" id="ChIncuranceClasses">
-                                                <label class="form-check-label child " for="ChIncuranceClasses">
-                                                    Insurance Classes/Lines of Bussiness
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input"
-                                                    formControlName="chCustomerServiceModule" data="child-input1"
-                                                    type="checkbox" id="chCustomerServiceModule">
-                                                <label class="form-check-label child " for="chCustomerServiceModule">
-                                                    Customer Service Module
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chInsuranceCompanies"
-                                                    data="child-input1" type="checkbox" id="ChInsuranceCompanies">
-                                                <label class="form-check-label child " for="ChInsuranceCompanies">
-                                                    Insurance Companies
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input"
-                                                    formControlName="chProductionBusinessModules" data="child-input1"
-                                                    type="checkbox" id="ChProductionBusinessModules">
-                                                <label class="form-check-label child "
-                                                    for="ChProductionBusinessModules">
-                                                    Production/Business Modules
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chInsuranceBrokers"
-                                                    data="child-input1" type="checkbox" id="ChInsuranceBrokers">
-                                                <label class="form-check-label child " for="ChInsuranceBrokers">
-                                                    Insurance Brokers
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chClaimsModule"
-                                                    data="child-input1" type="checkbox" id="ChClaimsModule">
-                                                <label class="form-check-label child " for="ChClaimsModule">
-                                                    Claims Modules
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chTypeProspects"
-                                                    data="child-input1" type="checkbox" id="ChTypeProspects">
-                                                <label class="form-check-label child " for="ChTypeProspects">
-                                                    Type Prospects
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input"
-                                                    formControlName="chListOfRequiredDocuments" data="child-input1"
-                                                    type="checkbox" id="ChListOfRequiredDocuments">
-                                                <label class="form-check-label child " for="ChListOfRequiredDocuments">
-                                                    List of Required Documents
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chBusinessActivity"
-                                                    data="child-input1" type="checkbox" id="ChBusinessActivity">
-                                                <label class="form-check-label child " for="ChBusinessActivity">
-                                                    Business Activity
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chContactsListPosition"
-                                                    data="child-input1" type="checkbox" id="ChContactsListPosition">
-                                                <label class="form-check-label child " for="ChContactsListPosition">
-                                                    Contacts List Position
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chClientsCategories"
-                                                    data="child-input1" type="checkbox" id="ChClientsCategories">
-                                                <label class="form-check-label child " for="ChClientsCategories">
-                                                    Clients Categories
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chCountries"
-                                                    data="child-input1" type="checkbox" id="ChCountries">
-                                                <label class="form-check-label child " for="ChCountries">
-                                                    Countries
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" formControlName="chDefaultEmails"
-                                                    data="child-input1" type="checkbox" id="ChDefaultEmails">
-                                                <label class="form-check-label child " for="ChDefaultEmails">
-                                                    Default Emails
-                                                </label>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </ng-template>
                             </ngb-panel>
-
 
                             <ngb-panel id="2" title="Bussiness Development" cardClass="open">
                                 <ng-template ngbPanelContent="2">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check col-6  mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chBussDevelopment">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChBussDevelopment">
-                                                    Bussiness Development
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.BussinessDevelopment">
+                                                <ng-container *ngIf="item.name === 'chBussDevelopment' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('BussinessDevelopment',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chBusinessDevelopmentReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chBussDevelopment' && item.name !== 'chBusinessDevelopmentReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox"
+                                                        (change)="checkMasterItem('BussinessDevelopment')">
+                                                    <label class="form-check-label parent">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
-                                            <div class="form-check  col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chBusinessDevelopmentReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChBusinessDevelopmentReadOnly">
-                                                    Read-Only
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chSalesforceSupport">
-                                                <label class="form-check-label child " for="ChSalesforceSupport">
-                                                    Salesforce Support
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chProspectRegistry">
-                                                <label class="form-check-label child " for="ChProspectRegistry">
-                                                    Prospects Registery
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chSalesManagement">
-                                                <label class="form-check-label child " for="ChSalesManagement">
-                                                    Sales Management
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chUnderwritingDepartment">
-                                                <label class="form-check-label child " for="ChUnderwritingDepartment">
-                                                    Underwriting Department
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chBussUnderwritingGeneral">
-                                                <label class="form-check-label child " for="ChBussUnderwritingGeneral">
-                                                    Underwriting Department General
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chBussUnderwritingMedical">
-                                                <label class="form-check-label child " for="ChBussUnderwritingMedical">
-                                                    Underwriting Department Medical
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chBusinessReports">
-                                                <label class="form-check-label child " for="ChBusinessReports">
-                                                    Business Reports
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chAccessAllUsersSales">
-                                                <label class="form-check-label child " for="ChAccessAllUsersSales">
-                                                    Access All Users Sales
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chAccessAllProducersSales">
-                                                <label class="form-check-label child " for="ChAccessAllProducersSales">
-                                                    Access All Producers
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chAccessAllBranchBussiness">
-                                                <label class="form-check-label child " for="ChAccessAllBranchBussiness">
-                                                    Access All Branch
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input2" type="checkbox"
-                                                    formControlName="chPandingSalesLead">
-                                                <label class="form-check-label child " for="chPandingSalesLead">
-                                                    Show Underwriters Alert
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox" data="child-input2"
-                                                    formControlName="chExpiredLeadsPolices">
-                                                <label class="form-check-label child " for="chExpiredLeadsPolices">
-                                                    Show Expired Leads Policies Alert
-                                                </label>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </ng-template>
                             </ngb-panel>
-
 
                             <ngb-panel id="3" title="Clients Registery" cardClass="open">
                                 <ng-template ngbPanelContent="3">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input selectAll3" type="checkbox"
-                                                    formControlName="chClientsRegistryAdmin">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChClientsRegistryAdmin">
-                                                    Clients Registery
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chClientsRegistryAdministratorReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChClientsRegistryAdministratorReadOnly">
-                                                    Read-Only
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.ClientRegistry">
+                                                <ng-container *ngIf="item.name === 'chClientsRegistryAdmin' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('ClientRegistry',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name === 'chClientsRegistryAdministratorReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chClientsRegistryAdmin' && item.name !== 'chClientsRegistryAdministratorReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('ClientRegistry')">
+                                                    <label class="form-check-label parent">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input3" type="checkbox"
-                                                    formControlName="chClientsRegistry">
-                                                <label class="form-check-label child " for="ChClientsRegistry">
-                                                    Clients Registery
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input3" type="checkbox"
-                                                    formControlName="chClientsGrouping">
-                                                <label class="form-check-label child " for="ChClientsGrouping">
-                                                    Clients Grouping
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input3" type="checkbox"
-                                                    formControlName="chAccessAllClients">
-                                                <label class="form-check-label child " for="ChAccessAllClients">
-                                                    Access All Clients
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input3" type="checkbox"
-                                                    formControlName="chAccessAllProducersClients">
-                                                <label class="form-check-label child "
-                                                    for="ChAccessAllProducersClients">
-                                                    Access All Producers
-                                                </label>
-                                            </div>
-
-                                        </div>
-
                                     </div>
                                 </ng-template>
                             </ngb-panel>
 
-
                             <ngb-panel id="4" title="Production" cardClass="open">
                                 <ng-template ngbPanelContent="4">
                                     <div class="accordion-body">
-
                                         <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input selectAll4" type="checkbox"
-                                                    formControlName="chProduction">
-                                                <label class="form-check-label parent text-info" for="ChProduction">
-                                                    Production
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.Production">
+                                                <ng-container *ngIf="item.name === 'chProduction' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('Production',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chProductionReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chProduction' && item.name !== 'chProductionReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('Production')">
+                                                    <label class="form-check-label parent">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chProductionReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChProductionReadOnly">
-                                                    Read-Only
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chProdPolicies">
-                                                <label class="form-check-label child " for="ChProdPolicies">
-                                                    Polices/Endorsments Management
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chEntryCorrection">
-                                                <label class="form-check-label child " for="ChEntryCorrection">
-                                                    Entry correction
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chProdEntryApproval">
-                                                <label class="form-check-label child " for="ChProdEntryApproval">
-                                                    Entry Approval
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chProdReports">
-                                                <label class="form-check-label child " for="ChProdReports">
-                                                    Production Reports
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="viewAllBranchs">
-                                                <label class="form-check-label child " for="ViewAllBranchs">
-                                                    Access all Branches
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chAccessAllProducersProduction">
-                                                <label class="form-check-label child "
-                                                    for="ChAccessAllProducersProduction">
-                                                    Access all Producers
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chProductionAccessAllUsers">
-                                                <label class="form-check-label child " for="ChProductionAccessAllUsers">
-                                                    Access All User
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chUpdateClientDNCNCompCNDN">
-                                                <label class="form-check-label child " for="ChUpdateClientDNCNCompCNDN">
-                                                    Update Client DN/CN and Comp CN/DN
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chUpdateDeliveryStatus">
-                                                <label class="form-check-label child " for="ChUpdateDeliveryStatus">
-                                                    Update Delivery Status
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chChangeProducerComm">
-                                                <label class="form-check-label child " for="ChChangeProducerComm">
-                                                    Change Producers Commission
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chModifyCommOut">
-                                                <label class="form-check-label child " for="ChModifyCommOut">
-                                                    Update Commission Out
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chHideCompanyCommission">
-                                                <label class="form-check-label child " for="ChHideCompanyCommission">
-                                                    Hide Company Commission
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chHideProducerCommission">
-                                                <label class="form-check-label child " for="ChHideProducerCommission">
-                                                    Hide Producers Commission
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="chExpiredPolices">
-                                                <label class="form-check-label child " for="chExpiredPolices">
-                                                    Alert Show Expired Polices
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input4" type="checkbox"
-                                                    formControlName="cHduePayments">
-                                                <label class="form-check-label child " for="CHduePayments">
-                                                    Alert Show Due Payments
-                                                </label>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </ng-template>
@@ -507,90 +183,32 @@
                                 <ng-template ngbPanelContent="5">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input selectAll5" type="checkbox"
-                                                    formControlName="chCustomerService">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChCustomerService">
-                                                    Customer Service
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.CustomerService">
+                                                <ng-container *ngIf="item.name === 'chCustomerService' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('CustomerService',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chCustomerServiceReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chCustomerService' && item.name !== 'chCustomerServiceReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('CustomerService')">
+                                                    <label class="form-check-label parent">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chCustomerServiceReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChCustomerServiceReadOnly">
-                                                    Read-Only
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chRequestsManagements">
-                                                <label class="form-check-label child " for="ChRequestsManagements">
-                                                    Requests Mangement
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chCustSerReports">
-                                                <label class="form-check-label child " for="ChCustSerReports">
-                                                    Reports
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chAccessAllUsersCustomer">
-                                                <label class="form-check-label child " for="ChAccessAllUsersCustomer">
-                                                    Access All User
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chAccessAllBrancheCustomer">
-                                                <label class="form-check-label child " for="ChAccessAllBrancheCustomer">
-                                                    Access All Branches
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chCSEntryCorrection">
-                                                <label class="form-check-label child " for="ChCSEntryCorrection">
-                                                    Entery Correction
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chComplaintsRegistry">
-                                                <label class="form-check-label child " for="ChComplaintsRegistry">
-                                                    Complaints Regisery
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chOnlineRequests">
-                                                <label class="form-check-label child " for="ChOnlineRequests">
-                                                    Online Requests
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input5" type="checkbox"
-                                                    formControlName="chAlertCustomerServiceDeadline">
-                                                <label class="form-check-label child "
-                                                    for="ChAlertCustomerServiceDeadline">
-                                                    Alert Customer Service Deadline
-                                                </label>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </ng-template>
@@ -598,78 +216,38 @@
 
                         </ngb-accordion>
                     </div>
-                    <div class="col-lg-6 py-4">
-                        <!-- Base Example -->
+                    <div class="col-lg-6 pb-4">
                         <ngb-accordion #acc="ngbAccordion">
 
                             <ngb-panel id="6" title="Claims Management System" cardClass="open">
                                 <ng-template ngbPanelContent="6">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input selectAll6" type="checkbox"
-                                                    formControlName="chClaims">
-                                                <label class="form-check-label parent text-info" for="ChClaims">
-                                                    Claims Management System
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chClaimsManagementSystemReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="ChClaimsManagementSystemReadOnly">
-                                                    Read-Only
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chClaimsManagement">
-                                                <label class="form-check-label child " for="ChClaimsManagement">
-                                                    Claims Management
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chClaimsPaymentApproval">
-                                                <label class="form-check-label child " for="ChClaimsPaymentApproval">
-                                                    Claims Payment Approval
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chClaimsReport">
-                                                <label class="form-check-label child " for="ChClaimsReport">
-                                                    Reports
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chAccessAllUsersClaim">
-                                                <label class="form-check-label child " for="ChAccessAllUsersClaim">
-                                                    Access All Users
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chAccessAllBrancheClaim">
-                                                <label class="form-check-label child " for="ChAccessAllBrancheClaim">
-                                                    Access All Branches
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input6" type="checkbox"
-                                                    formControlName="chAlertClaimReminder">
-                                                <label class="form-check-label child " for="ChAlertClaimReminder">
-                                                    Alert Claim Reminder
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.ClaimsManagement">
+                                                <ng-container *ngIf="item.name === 'chClaims' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('ClaimsManagement',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chClaimsManagementSystemReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="item.name !== 'chClaims' && item.name !== 'chClaimsManagementSystemReadOnly'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('ClaimsManagement')">
+                                                    <label class="form-check-label child">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
                                         </div>
                                     </div>
@@ -682,7 +260,8 @@
                                         <div class="row">
                                             <div class="form-check col-8 mb-2">
                                                 <input class="form-check-input selectAll7" type="checkbox"
-                                                    formControlName="chFinance">
+                                                    formControlName="chFinance"
+                                                    (change)="allItemsChecker('FinancialManagement',ff.chFinance.value!)">
                                                 <label class="form-check-label parent text-info" for="ChFinance">
                                                     Financial Management System
                                                 </label>
@@ -699,254 +278,110 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="row">
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input selectAll7-1" data="child-input7"
-                                                            type="checkbox" formControlName="chFinMakeNew">
-                                                        <label class="form-check-label parent text-info"
-                                                            for="ChFinMakeNew">
-                                                            Make New
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data1="child-input7-1" type="checkbox"
-                                                        formControlName="chFinMakeJV">
-                                                    <label class="form-check-label child " for="ChFinMakeJV">
-                                                        Journal Voucher
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data1="child-input7-1" type="checkbox"
-                                                        formControlName="chFinMakeReceipt">
-                                                    <label class="form-check-label child " for="ChFinMakeReceipt">
-                                                        Receipt Voucher
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data1="child-input7-1" type="checkbox"
-                                                        formControlName="chFinMakePay">
-                                                    <label class="form-check-label child " for="ChFinMakePay">
-                                                        Pay Voucher
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data1="child-input7-1" type="checkbox"
-                                                        formControlName="chFinMakeReverse">
-                                                    <label class="form-check-label child " for="ChFinMakeReverse">
-                                                        Reverse Voucher
-                                                    </label>
+                                                    <ng-container
+                                                        *ngFor="let item of globalArrs.FinancialManagement.makeNewRoles">
+                                                        <div class="form-check mb-2"
+                                                            *ngIf="item.name === 'chFinMakeNew'">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [formControl]="item.control"
+                                                                (change)="subItemsChecker('FinancialManagement','makeNewRoles',item.control.value!)">
+                                                            <label class="form-check-label parent text-info">
+                                                                {{item.label}}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check col-12 mb-2 ms-3"
+                                                            *ngIf="item.name !== 'chFinMakeNew'">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [formControl]="item.control"
+                                                                (change)="checkMasterItem('FinancialManagement','makeNewRoles')">
+                                                            <label class="form-check-label child">
+                                                                {{item.label}}
+                                                            </label>
+                                                        </div>
+                                                    </ng-container>
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <div class="row">
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input selectAll7-2" data="child-input7"
-                                                            type="checkbox" formControlName="chFinArchive">
-                                                        <label class="form-check-label parent text-info"
-                                                            for="ChFinArchive">
-                                                            Archives
+                                                <ng-container
+                                                    *ngFor="let item of globalArrs.FinancialManagement.archivesRoles">
+                                                    <div class="form-check mb-2" *ngIf="item.name === 'chFinArchive'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="subItemsChecker('FinancialManagement','archivesRoles',item.control.value!)">
+                                                        <label class="form-check-label parent text-info">
+                                                            {{item.label}}
                                                         </label>
                                                     </div>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data2="child-input7-2" type="checkbox"
-                                                        formControlName="chFinReceiptArchive">
-                                                    <label class="form-check-label child " for="ChFinReceiptArchive">
-                                                        Receipt Voucher
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data2="child-input7-2" type="checkbox"
-                                                        formControlName="chFinPayArchive">
-                                                    <label class="form-check-label child " for="ChFinPayArchive">
-                                                        Pay Voucher
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data2="child-input7-2" type="checkbox"
-                                                        formControlName="chFinDNsArchive">
-                                                    <label class="form-check-label child " for="ChFinDNsArchive">
-                                                        Debit Notes
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data2="child-input7-2" type="checkbox"
-                                                        formControlName="chFinCNsArchive">
-                                                    <label class="form-check-label child " for="ChFinCNsArchive">
-                                                        Credit Notes
-                                                    </label>
-                                                </div>
+                                                    <div class="form-check col-12 mb-2 ms-3"
+                                                        *ngIf="item.name !== 'chFinArchive'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="checkMasterItem('FinancialManagement','archivesRoles')">
+                                                        <label class="form-check-label child">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
-                                                <div class="row">
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input selectAll7-3" data="child-input7"
-                                                            type="checkbox" formControlName="chFinApprovals">
-                                                        <label class="form-check-label parent text-info"
-                                                            for="ChFinApprovals">
-                                                            Approvals
+                                                <ng-container
+                                                    *ngFor="let item of globalArrs.FinancialManagement.approvalsRoles">
+                                                    <div class="form-check mb-2" *ngIf="item.name === 'chFinApprovals'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="subItemsChecker('FinancialManagement','approvalsRoles',item.control.value!)">
+                                                        <label class="form-check-label parent text-info">
+                                                            {{item.label}}
                                                         </label>
                                                     </div>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chFinanceEntryApproval">
-                                                    <label class="form-check-label child " for="ChFinanceEntryApproval">
-                                                        Journal Voucher Approval
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chFinReceiptApprovals">
-                                                    <label class="form-check-label child " for="ChFinReceiptApprovals">
-                                                        Receipt Vouchers Approve
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chFinPayApprovals">
-                                                    <label class="form-check-label child " for="ChFinPayApprovals">
-                                                        Pay Vouchers Approve
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chProdFinancialApprove">
-                                                    <label class="form-check-label child " for="chProdFinancialApprove">
-                                                        Production Entry Approvals
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chClaimsApproval">
-                                                    <label class="form-check-label child " for="ChClaimsApproval">
-                                                        Claims Payments Approvals
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data3="child-input7-3" type="checkbox"
-                                                        formControlName="chClientsApproval">
-                                                    <label class="form-check-label child " for="ChClientsApproval">
-                                                        Clients Approvals
-                                                    </label>
-                                                </div>
+                                                    <div class="form-check col-12 mb-2 ms-3"
+                                                        *ngIf="item.name !== 'chFinApprovals'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="checkMasterItem('FinancialManagement','approvalsRoles')">
+                                                        <label class="form-check-label child">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
                                             </div>
                                             <div class="col-6">
-                                                <div class="row">
+                                                <ng-container
+                                                    *ngFor="let item of globalArrs.FinancialManagement.reportsRoles">
+                                                    <div class="form-check mb-2" *ngIf="item.name === 'chFinReports'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="subItemsChecker('FinancialManagement','reportsRoles',item.control.value!)">
+                                                        <label class="form-check-label parent text-info">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check col-12 mb-2 ms-3"
+                                                        *ngIf="item.name !== 'chFinReports'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="checkMasterItem('FinancialManagement','reportsRoles')">
+                                                        <label class="form-check-label child">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container
+                                                    *ngFor="let item of globalArrs.FinancialManagement.generalRoles">
                                                     <div class="form-check mb-2">
-                                                        <input class="form-check-input  selectAll7-4"
-                                                            data="child-input7" type="checkbox"
-                                                            formControlName="chFinReports">
-                                                        <label class="form-check-label parent text-info"
-                                                            for="ChFinReports">
-                                                            Reports
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="checkMasterItem('FinancialManagement','generalRoles')">
+                                                        <label class="form-check-label child">
+                                                            {{item.label}}
                                                         </label>
                                                     </div>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data4="child-input7-4" type="checkbox"
-                                                        formControlName="chTrialBalance">
-                                                    <label class="form-check-label child " for="ChTrialBalance">
-                                                        Trial Balance
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data4="child-input7-4" type="checkbox"
-                                                        formControlName="chProftAndLoss">
-                                                    <label class="form-check-label child " for="ChProftAndLoss">
-                                                        Profile and Loss
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-12 mb-2">
-                                                    <input class="form-check-input" data="child-input7"
-                                                        data4="child-input7-4" type="checkbox"
-                                                        formControlName="chStatementOfAccount">
-                                                    <label class="form-check-label child " for="ChStatementOfAccount">
-                                                        Statement of Account
-                                                    </label>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="form-check col-12 mb-2">
-                                                        <input class="form-check-input" data="child-input7"
-                                                            type="checkbox" formControlName="chFinSettings">
-                                                        <label class="form-check-label child " for="ChFinSettings">
-                                                            Settings
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="form-check col-12 mb-2">
-                                                        <input class="form-check-input" data="child-input7"
-                                                            type="checkbox" formControlName="chDataLock">
-                                                        <label class="form-check-label child " for="ChDataLock">
-                                                            Data Lock
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="form-check col-12 mb-2">
-                                                        <input class="form-check-input" data="child-input7"
-                                                            type="checkbox" formControlName="chFinDisableAccounts">
-                                                        <label class="form-check-label child "
-                                                            for="ChFinDisableAccounts">
-                                                            Disable/Enable Account
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="form-check col-12 mb-2">
-                                                        <input class="form-check-input" data="child-input7"
-                                                            type="checkbox"
-                                                            formControlName="chAccessConfidentialAccounts">
-                                                        <label class="form-check-label child "
-                                                            for="ChAccessConfidentialAccounts">
-                                                            Access Confidential Account
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="form-check col-12 mb-2">
-                                                        <input class="form-check-input" data="child-input7"
-                                                            type="checkbox" formControlName="chAccessAllBrancheFin">
-                                                        <label class="form-check-label child "
-                                                            for="ChAccessAllBrancheFin">
-                                                            Access All Branches
-                                                        </label>
-                                                    </div>
-
-                                                </div>
-
+                                                </ng-container>
 
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </ng-template>
@@ -956,482 +391,61 @@
                                 <ng-template ngbPanelContent="8">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input selectAll8" type="checkbox"
-                                                    formControlName="chHR">
+                                            <div class="form-check col-6 mb-2">
+                                                <input class="form-check-input" type="checkbox" formControlName="chHR"
+                                                    (change)="allItemsChecker('HumanResources',ff.chHR.value!)">
                                                 <label class="form-check-label parent text-info" for="ChHR">
                                                     Human Resources
                                                 </label>
                                             </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="row">
-                                                <div class="form-check mb-2 ">
-                                                    <input class="form-check-input selectAll8-1" data="child-input8"
-                                                        type="checkbox" formControlName="chPayroll">
-                                                    <label class="form-check-label parent text-info" for="ChPayroll">
-                                                        Payroll
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mx-1">
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chLoansManagement">
-                                                    <label class="form-check-label child " for="ChLoansManagement">
-                                                        Loans Management
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chGovernmentExpenses">
-                                                    <label class="form-check-label child " for="ChGovernmentExpenses">
-                                                        Government Expenses
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chHealthInsurance">
-                                                    <label class="form-check-label child " for="ChHealthInsurance">
-                                                        Health Insurance
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chAirTickets">
-                                                    <label class="form-check-label child " for="ChAirTickets">
-                                                        Air Tickets
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chRetroactiveManagement">
-                                                    <label class="form-check-label child "
-                                                        for="ChRetroactiveManagement">
-                                                        Retroactive Management
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chMobileAllowances">
-                                                    <label class="form-check-label child " for="ChMobileAllowances">
-                                                        Mobile Allowances
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chSchoolAllowanceManagement">
-                                                    <label class="form-check-label child "
-                                                        for="ChSchoolAllowanceManagement">
-                                                        School Allowances Management
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chOvertime">
-                                                    <label class="form-check-label child " for="ChOvertime">
-                                                        Overtime
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chBonusManagement">
-                                                    <label class="form-check-label child " for="ChBonusManagement">
-                                                        Bonus Management
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chDeductibles">
-                                                    <label class="form-check-label child " for="ChDeductibles">
-                                                        Deductibles
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chGeneratePayroll">
-                                                    <label class="form-check-label child " for="ChGeneratePayroll">
-                                                        Generate Payroll
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chActivatePayroll">
-                                                    <label class="form-check-label child " for="ChActivatePayroll">
-                                                        Activate Payroll
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chPayrollArchive">
-                                                    <label class="form-check-label child " for="ChPayrollArchive">
-                                                        Payroll Archive
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-6 mb-2">
-                                                    <input class="form-check-input" data="child-input8"
-                                                        data1="child-input8-1" type="checkbox"
-                                                        formControlName="chHoldSalary">
-                                                    <label class="form-check-label child " for="ChHoldSalary">
-                                                        Hold Salary
-                                                    </label>
-                                                </div>
-
-                                            </div>
-
                                             <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chStaffProfiles">
-                                                <label class="form-check-label child " for="ChStaffProfiles">
-                                                    Staff Profiles
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chJobsOffersManagement">
-                                                <label class="form-check-label child " for="ChJobsOffersManagement">
-                                                    Job Offers Management
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chStaffContracts">
-                                                <label class="form-check-label child " for="ChStaffContracts">
-                                                    Staff Contracts
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLegalLicenseAndOfficialServices">
-                                                <label class="form-check-label child "
-                                                    for="ChLegalLicenseAndOfficialServices">
-                                                    Legal License & Offical Services
-                                                </label>
-                                            </div>
-                                            <!-- -------------------------------------------------------- -->
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chVacationsManagement">
-                                                <label class="form-check-label child " for="ChVacationsManagement">
-                                                    Vacations Management
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chVacationsRequest">
-                                                <label class="form-check-label child " for="ChVacationsRequest">
-                                                    Vacations Requests
-                                                </label>
-                                            </div>
-
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chHRDeleteApprovedEntries">
-                                                <label class="form-check-label child " for="ChHRDeleteApprovedEntries">
-                                                    Delete Approved Entries
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chReports">
-                                                <label class="form-check-label child " for="ChReports">
-                                                    Reports
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chApproval">
-                                                <label class="form-check-label child " for="ChApproval">
-                                                    Approval
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAppraisalForm">
-                                                <label class="form-check-label child " for="ChAppraisalForm">
-                                                    Appraisal Form
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chSettings">
-                                                <label class="form-check-label child " for="ChSettings">
-                                                    Settings
-                                                </label>
-                                            </div>
-
-
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chRenameStaffName">
-                                                <label class="form-check-label child " for="ChRenameStaffName">
-                                                    Rename Staff Names
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chIncidents">
-                                                <label class="form-check-label child " for="ChIncidents">
-                                                    Incidents
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chSalaryandBenefits">
-                                                <label class="form-check-label child " for="ChSalaryandBenefits">
-                                                    Salary and Benefits
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chEndofService">
-                                                <label class="form-check-label child " for="ChEndofService">
-                                                    EndofService
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterWarning">
-                                                <label class="form-check-label child " for="ChLetterWarning">
-                                                    Warning
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterEmbassy">
-                                                <label class="form-check-label child " for="ChLetterEmbassy">
-                                                    Embassy
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterEndofService">
-                                                <label class="form-check-label child " for="ChLetterEndofService">
-                                                    End of Service
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterEffectiveDateNotice">
-                                                <label class="form-check-label child "
-                                                    for="ChLetterEffectiveDateNotice">
-                                                    Effective Date Notice
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterEmployment">
-                                                <label class="form-check-label child " for="ChLetterEmployment">
-                                                    Employment
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterSalaryTransfer">
-                                                <label class="form-check-label child " for="ChLetterSalaryTransfer">
-                                                    Salary Transfer
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterSalaryDefinition">
-                                                <label class="form-check-label child " for="ChLetterSalaryDefinition">
-                                                    Salary Definition
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterReleaseandDischargeForm">
-                                                <label class="form-check-label child "
-                                                    for="ChLetterReleaseandDischargeForm">
-                                                    Release and Discharge Form
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterJoiningLetters">
-                                                <label class="form-check-label child " for="ChLetterJoiningLetters">
-                                                    Jioning Letters
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterSponsorshipTransfer">
-                                                <label class="form-check-label child "
-                                                    for="ChLetterSponsorshipTransfer">
-                                                    Sponsorship Transfer Letters
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterTemporaryProfile">
-                                                <label class="form-check-label child " for="ChLetterTemporaryProfile">
-                                                    Temporary Profile Letters
-                                                </label>
-                                            </div>
-
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterFieldApplication">
-                                                <label class="form-check-label child " for="ChLetterFieldApplication">
-                                                    Field Application Letters
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chLetterAuthorization">
-                                                <label class="form-check-label child " for="ChLetterAuthorization">
-                                                    Authorization Letters
-                                                </label>
-                                            </div>
-
-
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringID">
-                                                <label class="form-check-label child " for="ChAlertExpiringID">
-                                                    IDs Expiry
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringPassport">
-                                                <label class="form-check-label child " for="ChAlertExpiringPassport">
-                                                    Passports Expiry
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringLabours">
-                                                <label class="form-check-label child " for="ChAlertExpiringLabours">
-                                                    Labours Expiry
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringContracts">
-                                                <label class="form-check-label child " for="ChAlertExpiringContracts">
-                                                    Contracts Expiry
-                                                </label>
-                                            </div>
-
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringLegal">
-                                                <label class="form-check-label child " for="ChAlertExpiringLegal">
-                                                    Legal License Expiry
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertVacationRequest">
-                                                <label class="form-check-label child " for="ChAlertVacationRequest">
-                                                    Alert Vacation Request
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertLeaveRequest">
-                                                <label class="form-check-label child " for="ChAlertLeaveRequest">
-                                                    Alert Leave Request
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertRemindinglegal">
-                                                <label class="form-check-label child " for="ChAlertRemindinglegal">
-                                                    Alert Reminding lefal
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertExpiringProbation">
-                                                <label class="form-check-label child " for="ChAlertExpiringProbation">
-                                                    Alert Expiring Probation
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input8" type="checkbox"
-                                                    formControlName="chAlertDueContracts">
-                                                <label class="form-check-label child " for="ChAlertDueContracts">
-                                                    Alert Due Contracts
-                                                </label>
-                                            </div>
-
-
-
-
-
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-check mb-2">
                                                 <input class="form-check-input" type="checkbox"
                                                     formControlName="chHRReadOnly">
                                                 <label class="form-check-label parent text-info" for="ChHRReadOnly">
                                                     Read-Only
                                                 </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 row">
+                                                <ng-container
+                                                    *ngFor="let item of globalArrs.HumanResources.payrollRoles">
+                                                    <div class="form-check col-12 mb-2"
+                                                        *ngIf="item.name === 'chPayroll'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="subItemsChecker('HumanResources','payrollRoles',item.control.value!)">
+                                                        <label class="form-check-label parent text-info">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check col-6 mb-2"
+                                                        style="padding-inline-start: 40px;"
+                                                        *ngIf="item.name !== 'chPayroll'">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [formControl]="item.control"
+                                                            (change)="checkMasterItem('HumanResources','payrollRoles')">
+                                                        <label class="form-check-label child">
+                                                            {{item.label}}
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <ng-container
+                                                        *ngFor="let item of globalArrs.HumanResources.generalRoles">
+                                                        <div class="form-check col-6 mb-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                [formControl]="item.control"
+                                                                (change)="checkMasterItem('HumanResources','generalRoles')">
+                                                            <label class="form-check-label child">
+                                                                {{item.label}}
+                                                            </label>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1443,20 +457,23 @@
                                 <ng-template ngbPanelContent="9">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input selectAll9" type="checkbox"
-                                                    formControlName="chFixedAssets">
-                                                <label class="form-check-label parent text-info" for="chFixedAssets">
-                                                    Fixed Assets
-                                                </label>
-                                            </div>
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                    formControlName="chFixedAssetsReadOnly">
-                                                <label class="form-check-label parent text-info"
-                                                    for="chFixedAssetsReadOnly">
-                                                    Read-Only
-                                                </label>
+                                            <div class="form-check mb-2 col-6"
+                                                *ngFor="let item of globalArrs.FixedAssets">
+                                                <ng-container *ngIf="item.name === 'chFixedAssets' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('FixedAssets',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name === 'chFixedAssetsReadOnly'">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
                                         </div>
                                     </div>
@@ -1467,47 +484,24 @@
                                 <ng-template ngbPanelContent="10">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input selectAll10" type="checkbox"
-                                                    formControlName="chSystemAdmin">
-                                                <label class="form-check-label parent text-info" for="ChSystemAdmin">
-                                                    System Admin
-                                                </label>
+                                            <div class="form-check mb-2 col-6" *ngFor="let item of globalArrs.SysAdmin">
+                                                <ng-container *ngIf="item.name === 'chSystemAdmin' ">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        [formControl]="item.control"
+                                                        (change)="allItemsChecker('SysAdmin',item.control.value!)">
+                                                    <label class="form-check-label parent text-info">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.name !== 'chSystemAdmin'">
+                                                    <input class="form-check-input" [formControl]="item.control"
+                                                        type="checkbox" (change)="checkMasterItem('SysAdmin')">
+                                                    <label class="form-check-label child">
+                                                        {{item.label}}
+                                                    </label>
+                                                </ng-container>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input10" type="checkbox"
-                                                    formControlName="chUsersMang">
-                                                <label class="form-check-label child " for="ChUsersMang">
-                                                    User Accounts Management
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input10" type="checkbox"
-                                                    formControlName="chSMSControlPanel">
-                                                <label class="form-check-label child " for="ChSMSControlPanel">
-                                                    SMS Control Panal
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" data="child-input10" type="checkbox"
-                                                    formControlName="chEmailsLog">
-                                                <label class="form-check-label child " for="ChEmailsLog">
-                                                    Emails Log
-                                                </label>
-                                            </div>
-
-
-
-
-                                        </div>
-
-
                                     </div>
                                 </ng-template>
                             </ngb-panel>
@@ -1536,17 +530,17 @@
                     <!-- Security Role -->
                     <div class="col-12 mb-2">
                         <label for="securityRole">Security Role</label>
-                        <input id="securityRole" class="form-control form-control-sm" formControlName="cecurityRole"
-                            [ngClass]="{'is-invalid': (f['securityRole'].touched || uiState.submitted) && f['securityRole'].invalid}" />
-                        <span *ngIf="(f['securityRole'].touched || uiState.submitted) && f['securityRole'].invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        <input id="securityRole" class="form-control form-control-sm" formControlName="securityRole"
+                            [ngClass]="{'is-submitted': (f.securityRole?.touched || uiState.submitted) && f.securityRole?.invalid}" />
+                        <span class="invalid-feedback fw-bold mt-0 d-inline-block"
+                            *ngIf="(f.securityRole?.touched || uiState.submitted) && f.securityRole?.invalid">Required</span>
                     </div>
 
                     <!-- Security Role Description -->
                     <div class="col-12 mb-2">
                         <label for="securityRoleDescription">Description</label>
                         <input id="securityRoleDescription" class="form-control form-control-sm"
-                            formControlName="cecurityRoleDescription" />
+                            formControlName="securityRoleDescription" />
                     </div>
 
                 </div>

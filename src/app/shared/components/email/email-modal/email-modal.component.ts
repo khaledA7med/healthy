@@ -19,7 +19,6 @@ import { ChangeEvent } from "@ckeditor/ckeditor5-angular/ckeditor.component";
   selector: "app-email-modal",
   templateUrl: "./email-modal.component.html",
   styleUrls: ["./email-modal.component.scss"],
-  encapsulation: ViewEncapsulation.None,
 })
 export class EmailModalComponent implements OnInit, OnChanges {
   uiState = {

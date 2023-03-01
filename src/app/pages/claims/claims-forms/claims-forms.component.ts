@@ -38,6 +38,7 @@ import {
 } from "src/app/shared/app/models/Claims/claims-util";
 import { IClaimApproval } from "src/app/shared/app/models/Claims/iclaim-approval-form";
 import { IClaimDataForm } from "src/app/shared/app/models/Claims/iclaim-data-form";
+import { IClaimEmailLogs } from "src/app/shared/app/models/Claims/iclaim-email-logs";
 import { IClaimInvoice } from "src/app/shared/app/models/Claims/iclaim-invoice-form";
 import { IClaimPayment } from "src/app/shared/app/models/Claims/iclaim-payment-form";
 import {
@@ -58,6 +59,7 @@ import { DropzoneComponent } from "src/app/shared/components/dropzone/dropzone/d
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { SweetAlertResult } from "sweetalert2";
 import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form.component";
 import { ClaimInvoicesFormComponent } from "./form-helpers/claim-invoices-form.component";
 import { ClaimPaymentsFormComponent } from "./form-helpers/claim-payments-form.component";
@@ -96,10 +98,11 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     claimLists: {
       statusNotes: [] as IGenericResponseType[],
       requiredDocs: [] as string[],
-      rejectDeductList: [] as IClaimRejectDeduct[],
+      rejectDeduct: [] as IClaimRejectDeduct[],
       payments: [] as IClaimPayment[],
       approvals: [] as IClaimApproval[],
       invoices: [] as IClaimInvoice[],
+      emailLogs: [] as IClaimEmailLogs[],
     },
     modalConfig: {
       centered: true,
@@ -293,6 +296,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       // Payments
       totalPaymentsAmount: new FormControl(null),
       totalApprovalsAmount: new FormControl(null),
+      totalInvoicesAmount: new FormControl(null),
 
       branch: new FormControl(null),
     });
@@ -388,6 +392,15 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
           this.uiState.claimLists.approvals = data?.claimApprovals!;
           this.totalApprovalsAmount();
+
+          this.uiState.claimLists.invoices = data?.claimInvoices!;
+          this.totalInvoicesAmount();
+
+          this.uiState.claimLists.rejectDeduct = data?.claimsRejections!;
+          this.totalRejectDeductAmount();
+          this.totalUnderProcessing();
+
+          this.uiState.claimLists.emailLogs = data?.emailsLog!;
         }
         this.eventService.broadcast(reserved.isLoading, false);
       },
@@ -530,6 +543,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
   otherClaimAmountValue(): void {
     this.amounts.otherCurrAmount?.patchValue(this.amounts.claimAmount?.value!);
+    if (this.uiState.editMode) this.totalUnderProcessing();
   }
 
   claimAmountValueExg(): void {
@@ -752,41 +766,105 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     let sub = this.modalRef.componentInstance.invoiceList.subscribe(
       (res: IClaimInvoice[]) => {
         this.uiState.claimLists.invoices = res;
-        // this.
+        this.totalInvoicesAmount();
       }
     );
     this.subscribes.push(sub);
   }
+  totalInvoicesAmount(): number {
+    let invoice = this.uiState.claimLists.invoices.reduce((curr, obj) => {
+      return +curr + +obj.amountDue!;
+    }, 0);
+    this.f.totalInvoicesAmount?.patchValue(invoice);
+    return +invoice;
+  }
+  removeInvoice(id: number): void {}
   //#endregion
 
   //#region Rejection/Deduction Section
-  addRejectDeduction(): void {
+  openRejectDeductModal(): void {
     this.modalRef = this.modalService.open(
       ClaimRejectDeductFormComponent,
       this.uiState.modalConfig
     );
 
     this.modalRef.componentInstance.formEditMode = this.uiState.editMode;
+    this.modalRef.componentInstance.underProcessing =
+      this.amounts.underProcessing?.value!;
+
+    this.modalRef.componentInstance.claimAmount =
+      this.amounts.claimAmount?.value!;
+
     this.modalRef.componentInstance.data = {
-      sNo: 0,
       clientName: this.f.clientName?.value,
       clientNo: this.f.clientID?.value,
+      claimSNo: this.f.sNo?.value,
     };
 
-    let sub = this.modalRef.closed.subscribe((res) => {});
-    let sub2 = this.modalRef.componentInstance.rejectDeductItem.subscribe(
-      (res: IClaimRejectDeduct) => {
-        if (this.uiState.editMode) {
-        } else {
-          this.uiState.claimLists.rejectDeductList.push(res);
-        }
+    let sub = this.modalRef.componentInstance.rejectDeductItem.subscribe(
+      (res: IClaimRejectDeduct[]) => {
+        if (this.uiState.editMode) this.uiState.claimLists.rejectDeduct = res;
+        else this.uiState.claimLists.rejectDeduct.push(res[0]);
+        this.totalRejectDeductAmount();
       }
     );
-    this.subscribes.push(sub, sub2);
+    this.subscribes.push(sub);
+  }
+
+  totalRejectDeductAmount(): void {
+    let reject = this.uiState.claimLists.rejectDeduct.reduce((curr, obj) => {
+      if (obj.type === "Rejected") return +curr + +obj.amount!;
+      return +curr;
+    }, 0);
+    let deduct = this.uiState.claimLists.rejectDeduct.reduce((curr, obj) => {
+      if (obj.type === "Deducted") return +curr + +obj.amount!;
+      return +curr;
+    }, 0);
+    this.amounts.rejected?.patchValue(+reject);
+    this.amounts.deducted?.patchValue(deduct);
   }
 
   removeRejectDeduct(i: any): void {
-    this.uiState.claimLists.rejectDeductList.splice(i, 1);
+    if (this.uiState.editMode) {
+      this.message
+        .confirm("Delete!", "Delete it!", "primary", "question")
+        .then((result: SweetAlertResult) => {
+          if (result.isConfirmed)
+            this.claimService.deleteClaimRejections(i).subscribe(
+              (res: IBaseResponse<number>) => {
+                if (res.status) {
+                  this.message.toast(res.message!, "success");
+                  this.uiState.claimLists.rejectDeduct =
+                    this.uiState.claimLists.rejectDeduct.filter(
+                      (el) => el.sNo !== i
+                    );
+                  this.totalUnderProcessing();
+                } else this.message.popup("Oops!", res.message!, "warning");
+              },
+              (err: HttpErrorResponse) =>
+                this.message.popup("Oops!", err.message!, "error")
+            );
+        });
+    } else this.uiState.claimLists.rejectDeduct.splice(i, 1);
+  }
+
+  totalUnderProcessing(): void {
+    let totals =
+      +this.amounts.paid?.value! +
+      this.amounts.deducted?.value! +
+      this.amounts.rejected?.value!;
+
+    this.amounts.underProcessing?.patchValue(
+      +this.amounts.claimAmount?.value! - totals
+    );
+
+    if (+this.amounts.claimAmount?.value! < totals) {
+      this.amounts.claimAmount?.setErrors({ invalidValue: true });
+      this.amounts.underProcessing?.setErrors({ invalidValue: true });
+    } else {
+      this.amounts.claimAmount?.setErrors(null);
+      this.amounts.underProcessing?.setErrors(null);
+    }
   }
   //#endregion
 
@@ -846,7 +924,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       this.uiState.claimLists.requiredDocs.join(";")
     );
 
-    let reject = this.uiState.claimLists.rejectDeductList;
+    let reject = this.uiState.claimLists.rejectDeduct;
     for (let i = 0; i < reject.length; i++) {
       formData.append(
         `ClaimRejectionDeductionsList[${i}].clientNo`,
