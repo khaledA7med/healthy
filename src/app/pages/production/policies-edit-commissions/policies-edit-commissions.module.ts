@@ -5,6 +5,7 @@ import { PoliciesEditCommissionsControlsComponent } from './policies-edit-commis
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AgGridModule } from 'ag-grid-angular';
+import { GregorianPickerModule } from 'src/app/shared/components/gregorian-picker/gregorian-picker.module';
 
 export const routes: Routes = [ { path: "", component: PoliciesEditCommissionsComponent } ];
 
@@ -20,6 +21,7 @@ export const routes: Routes = [ { path: "", component: PoliciesEditCommissionsCo
     RouterModule.forChild(routes),
     SharedModule,
     AgGridModule.withComponents([ PoliciesEditCommissionsControlsComponent ]),
+    GregorianPickerModule
   ]
 })
 export class PoliciesEditCommissionsModule { }

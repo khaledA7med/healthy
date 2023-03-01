@@ -214,8 +214,46 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
     return this.formGroup.controls;
   }
 
+  ngOnInit(): void {
+    this.initForm();
+    this.formData = this.tables.getBaseData(MODULES.ClaimsForm);
+    this.formGroup.patchValue({
+      claimSNo: this.data.claimSNo,
+      clientName: this.data.clientName,
+      clientNo: this.data.clientNo,
+    });
+
+    if (this.data.sNo) this.patchDataToForm();
+  }
+
+  patchDataToForm(): void {
+    this.formGroup.patchValue({
+      sNo: this.data.sNo,
+      paymentType: this.data.paymentType,
+      amount: this.data.amount,
+      bankName: this.data.bankName,
+      branch: this.data.branch,
+      IBAN: this.data.iban,
+      paymentDetails: this.data.paymentDetails,
+      dateofCheque: this.util.dateStructFormat(this.data.dateofCheque) as any,
+      dateofPayment: this.util.dateStructFormat(this.data.dateofPayment) as any,
+    });
+  }
+
   datesHandler(e: any, control: FormControl): void {
     control.patchValue(e.gon);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
   }
 
   onSubmit(data: FormGroup<IClaimPaymentForm>): void {
@@ -257,44 +295,6 @@ export class ClaimPaymentsFormComponent implements OnInit, OnDestroy {
       }
     );
     this.subscribes.push(sub);
-  }
-
-  ngOnInit(): void {
-    this.initForm();
-    this.formData = this.tables.getBaseData(MODULES.ClaimsForm);
-    this.formGroup.patchValue({
-      claimSNo: this.data.claimSNo,
-      clientName: this.data.clientName,
-      clientNo: this.data.clientNo,
-    });
-
-    if (this.data.sNo) this.patchDataToForm();
-  }
-
-  validationChecker(): boolean {
-    if (this.formGroup.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
-      return false;
-    }
-    return true;
-  }
-
-  patchDataToForm(): void {
-    this.formGroup.patchValue({
-      sNo: this.data.sNo,
-      paymentType: this.data.paymentType,
-      amount: this.data.amount,
-      bankName: this.data.bankName,
-      branch: this.data.branch,
-      IBAN: this.data.iban,
-      paymentDetails: this.data.paymentDetails,
-      dateofCheque: this.util.dateStructFormat(this.data.dateofCheque) as any,
-      dateofPayment: this.util.dateStructFormat(this.data.dateofPayment) as any,
-    });
   }
 
   ngOnDestroy(): void {

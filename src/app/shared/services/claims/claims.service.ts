@@ -15,9 +15,11 @@ import {
 } from "../../app/models/Claims/claims-util";
 import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { IClaimDataForm } from "../../app/models/Claims/iclaim-data-form";
+import { IEmailResponse } from "../../app/models/Email/email-response";
 import { IClaimPayment } from "../../app/models/Claims/iclaim-payment-form";
 import { IClaimApproval } from "../../app/models/Claims/iclaim-approval-form";
 import { IClaimInvoice } from "../../app/models/Claims/iclaim-invoice-form";
+import { IClaimRejectDeduct } from "../../app/models/Claims/iclaim-reject-deduct-form";
 
 @Injectable({
   providedIn: "root",
@@ -150,6 +152,23 @@ export class ClaimsService {
     );
   }
 
+  saveClaimRejectDeduct(
+    formData: FormData
+  ): Observable<IBaseResponse<IClaimRejectDeduct[]>> {
+    return this.http.post<IBaseResponse<IClaimRejectDeduct[]>>(
+      this.env + ApiRoutes.Claims.saveClaimRejectDeduct,
+      formData
+    );
+  }
+
+  deleteClaimRejections(id: number): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Claims.deleteClaimRejectDeduct,
+      {},
+      { params: { sno: id } }
+    );
+  }
+
   //#endregion
 
   getSubStatus(
@@ -179,6 +198,25 @@ export class ClaimsService {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Claims.saveFollowUps,
       email,
+      { observe: "response" }
+    );
+  }
+
+  getClientMailData(data: {}): Observable<
+    HttpResponse<IBaseResponse<IEmailResponse>>
+  > {
+    return this.http.post<IBaseResponse<IEmailResponse>>(
+      this.env + ApiRoutes.Claims.getClientMailData,
+      data,
+      { observe: "response" }
+    );
+  }
+  getInsurerMailData(data: {}): Observable<
+    HttpResponse<IBaseResponse<IEmailResponse>>
+  > {
+    return this.http.post<IBaseResponse<IEmailResponse>>(
+      this.env + ApiRoutes.Claims.getInsurerMailData,
+      data,
       { observe: "response" }
     );
   }

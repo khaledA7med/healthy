@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ProductionService } from 'src/app/shared/services/production/production.service';
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { Observable, Subscription } from "rxjs";
+import { from, Observable, Subscription } from "rxjs";
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesService } from 'src/app/shared/services/messages.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { productionEditCommissionCols } from 'src/app/shared/app/grid/productionEditCommissionsCols';
@@ -17,6 +17,11 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { IEditCommissionsFilter } from 'src/app/shared/app/models/Production/i-edit-commission-filter';
+import { EditModel, EditModelData } from 'src/app/shared/app/models/Production/i-edit-commissions-forms';
+import { EventService } from 'src/app/core/services/event.service';
+import { reserved } from 'src/app/core/models/reservedWord';
+import { IAddProducers } from 'src/app/shared/app/models/Production/i-add-producers';
+import { identity, max } from 'lodash';
 
 
 @Component({
@@ -31,7 +36,6 @@ export class PoliciesEditCommissionsComponent implements OnInit
   submitted = false;
 
   uiState = {
-    routerLink: { forms: AppRoutes.Production.editCommissions },
     gridReady: false,
     submitted: false,
     filters: {
@@ -44,13 +48,20 @@ export class PoliciesEditCommissionsComponent implements OnInit
       list: [] as IEditCommissions[],
       totalPages: 0,
     },
+    editId: "",
+    editUserMode: false as Boolean,
+    editUserData: {} as EditModelData,
+    producers: [] as any
   }
 
   @ViewChild("filter") editCommissionFilter!: ElementRef;
-  @ViewChild("edit") eidtModal!: ElementRef
+  @ViewChild("edit") edit!: ElementRef
+
+  editUserModal!: NgbModalRef;
+  editForm!: FormGroup<EditModel>;
+  editFormSubmitted = false as boolean;
 
   filterForms!: FormGroup;
-  editForm!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
 
   // to unSubscribe
@@ -83,14 +94,13 @@ export class PoliciesEditCommissionsComponent implements OnInit
 
   constructor (
     private modalService: NgbModal,
-    private route: ActivatedRoute,
-    private router: Router,
     private message: MessagesService,
     private productionService: ProductionService,
     private appUtils: AppUtils,
     private tableRef: ElementRef,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
+    private eventService: EventService,
 
   ) { }
 
@@ -98,7 +108,9 @@ export class PoliciesEditCommissionsComponent implements OnInit
   {
     this.initFilterForm();
     this.getLookupData();
+    this.initForm();
   }
+
 
   // Table Section
   dataSource: IDatasource = {
@@ -109,7 +121,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
       let sub = this.productionService.getEditCommission(this.uiState.filters).subscribe(
         (res: HttpResponse<IBaseResponse<IEditCommissions[]>>) =>
         {
-          this.uiState.editCommissions.totalPages = JSON.parse(res.headers.get("x-pagination")!);
+          this.uiState.editCommissions.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
           this.uiState.editCommissions.list = res.body?.data!;
 
@@ -203,6 +215,7 @@ export class PoliciesEditCommissionsComponent implements OnInit
     });
   }
 
+
   get f ()
   {
     return this.filterForms.controls;
@@ -233,18 +246,206 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
   //#endregion
 
+
+  // Edit Form 
+
+  getUserData (id: string)
+  {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService.getUserData(id).subscribe(
+      (res: HttpResponse<IBaseResponse<EditModelData>>) =>
+      {
+        this.fillEditForm(res.body?.data!);
+        // if (res.body?.data?.producer?.startsWith('Direct Business'))
+        // {
+        //   this.ff.producerCommPerc?.disable();
+        // } else
+        // {
+        //   this.ff.producerCommPerc?.enable();
+        // }
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
   openEditForm (id: string): void
   {
-    let sub = this.modalService.open(this.eidtModal, { size: "xl" });
-    sub.dismissed.subscribe(() =>
-    {
-      // this.followUpForm.reset();
-      // this.followUpForm.markAsUntouched();
-      // this.uiState.submitted = false;
+    // this.resetEditForm();
+    this.editUserModal = this.modalService.open(this.edit, {
+      centered: true,
+      backdrop: "static",
+      size: "xl",
     });
-    // this.uiState.submitted = false;
-    // this.loadFollowUpData(requestNo);
+    this.getUserData(id);
+
+    this.editUserModal.hidden.subscribe(() =>
+    {
+      // this.resetEditForm();
+      this.submitted = false;
+      this.uiState.editUserMode = false;
+    });
   }
+
+
+  initForm (): void
+  {
+    this.editForm = new FormGroup<EditModel>({
+      sNo: new FormControl(null),
+      clientNo: new FormControl(null),
+      producer: new FormControl(""),
+      clientName: new FormControl(""),
+      accNo: new FormControl(""),
+      policyNo: new FormControl(""),
+      savedBy: new FormControl(""),
+      className: new FormControl(""),
+      lineOfBusiness: new FormControl(""),
+      compCommPerc: new FormControl(""),
+      producerCommPerc: new FormControl(""),
+      periodFrom: new FormControl(null),
+      periodTo: new FormControl(null),
+      updatedBy: new FormControl(""),
+      insurComp: new FormControl(""),
+      prodCommProduser: new FormControl(null),
+      prodCommPercentage: new FormControl(null),
+
+      producersCommissions: new FormArray<FormGroup<IAddProducers>>([]),
+    })
+  }
+
+  get ff ()
+  {
+    return this.editForm.controls;
+  }
+
+  get producersCommissionsArray (): FormArray
+  {
+    return this.editForm.get("producersCommissions") as FormArray;
+  }
+
+  producersCommissionsControls (i: number, control: string): AbstractControl
+  {
+    return this.producersCommissionsArray.controls[ i ].get(control)!;
+  }
+
+  addProducersCommissions ()
+  {
+    let data: IAddProducers = {
+      producer: this.ff.prodCommProduser!,
+      percentage: this.ff.prodCommPercentage!
+    }
+
+    if (this.ff.producersCommissions?.invalid)
+    {
+      this.ff.producersCommissions?.markAllAsTouched();
+      return;
+    }
+    let producerCommission = new FormGroup<IAddProducers>({
+      producer: new FormControl(data?.producer!.value, Validators.required),
+      percentage: new FormControl(data.percentage!.value, [
+        Validators.max(100),
+        Validators.min(0),
+        Validators.required,
+      ]),
+    });
+
+    // if (!data) producerCommission.reset();
+    // else producerCommission.disable();
+
+    this.ff.producersCommissions?.push(producerCommission);
+    this.producersCommissionsArray.updateValueAndValidity();
+
+  }
+
+
+  deleteProducersCommissions (i: number)
+  {
+    this.producersCommissionsArray.removeAt(i);
+  }
+
+  fillEditForm (data: EditModelData)
+  {
+    this.ff.sNo?.patchValue(data.sNo!);
+    this.ff.clientName?.patchValue(data.clientName!);
+    this.ff.producer?.patchValue(data.producer!);
+    this.ff.accNo?.patchValue(data.accNo!);
+    this.ff.policyNo?.patchValue(data.policyNo!);
+    this.ff.savedBy?.patchValue(data.savedBy!);
+    this.ff.className?.patchValue(data.className!);
+    this.ff.lineOfBusiness?.patchValue(data.lineOfBusiness!);
+    this.ff.compCommPerc?.patchValue(data.compCommPerc!);
+    this.ff.producerCommPerc?.patchValue(data.producerCommPerc!);
+    this.ff.periodFrom?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodFrom!) as any
+    );
+    this.ff.periodTo?.patchValue(
+      this.appUtils.dateStructFormat(data?.periodTo!) as any
+    );
+    this.ff.sNo?.disable();
+    this.ff.clientName?.disable();
+    this.ff.accNo?.disable();
+    this.ff.policyNo?.disable();
+    this.ff.savedBy?.disable();
+    this.ff.className?.disable();
+    this.ff.lineOfBusiness?.disable();
+    this.ff.periodFrom?.disable();
+    this.ff.periodTo?.disable();
+  }
+
+  periodFrom (e: any)
+  {
+    this.ff.periodFrom?.patchValue(e.gon);
+  }
+  periodTo (e: any)
+  {
+    this.ff.periodTo?.patchValue(e.gon);
+  }
+
+  submitEditFormData (editForm: FormGroup)
+  {
+    this.uiState.submitted = true;
+    const formData = editForm.getRawValue();
+    const data: EditModelData = {
+      sNo: this.uiState.editUserMode ? this.uiState.editUserData.sNo : 0,
+      clientName: formData.clientName,
+      accNo: formData.accNo,
+      policyNo: formData.policyNo,
+      savedBy: formData.savedBy,
+      className: formData.className,
+      lineOfBusiness: formData.lineOfBusiness,
+      periodFrom: this.appUtils.dateFormater(formData.periodFrom!) as any,
+      periodTo: this.appUtils.dateFormater(formData.periodTo!) as any,
+      producer: formData.producer,
+      producerCommPerc: formData.producerCommPerc,
+      compCommPerc: formData.compCommPerc,
+      producersCommissions: formData.producersCommissions,
+    };
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService.UpdatePolicyComissions(data).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        // this.editUserModal.dismiss();
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.uiState.submitted = false;
+        // this.resetUserForm();
+        this.gridApi.setDatasource(this.dataSource);
+        this.message.toast(res.body?.message!, "success");
+        console.log(res.body?.data)
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.error.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
 
   ngOnDestroy (): void
   {
@@ -252,3 +453,4 @@ export class PoliciesEditCommissionsComponent implements OnInit
   }
 
 }
+

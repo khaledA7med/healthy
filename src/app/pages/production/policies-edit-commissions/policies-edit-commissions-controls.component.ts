@@ -24,22 +24,6 @@ import { PoliciesEditCommissionsComponent } from './policies-edit-commissions.co
       #actionDropdown::after {
         display: none;
       }
-      .dropdown-menu li {
-        position: relative;
-      }
-      .dropdown-menu .dropdown-submenu {
-        display: none;
-        position: absolute;
-        left: 100%;
-        top: -7px;
-      }
-      .dropdown-menu .dropdown-submenu-left {
-        right: 100%;
-        left: auto;
-      }
-      .dropdown-menu > li:hover > .dropdown-submenu {
-        display: block;
-      }
     `,
   ],
 })

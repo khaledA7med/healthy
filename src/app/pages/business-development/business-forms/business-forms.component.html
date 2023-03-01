@@ -907,9 +907,14 @@
           </div>
           <div class="col-sm-4" *ngIf="!uiState.editMode">
             <ng-select placeholder="Choose Branch" class="form-control form-control-sm" formControlName="branch"
-              bindLabel="name" bindValue="name" [clearable]="false" [items]="(formData | async)?.Branch?.content!"
+              bindLabel="name" bindValue="name" [ngClass]="{
+                'is-submitted': submitted && f.branch?.invalid
+              }" [clearable]="false" [items]="(formData | async)?.Branch?.content!"
               [loading]="formData ? false : true">
             </ng-select>
+            <div class="invalid-feedback fw-bold d-block" *ngIf="(f.branch?.touched || submitted) && f.branch?.invalid">
+              Required
+            </div>
           </div>
         </div>
       </div>
