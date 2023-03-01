@@ -5,13 +5,14 @@ import { InsuranceClassesFormComponent } from "./insurance-classes/insurance-cla
 
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
+import { AgGridModule } from "ag-grid-angular";
 
 export const routes: Routes = [
   { path: "", component: InsuranceClassesComponent },
 ];
 
 @NgModule({
-  declarations: [InsuranceClassesComponent, InsuranceClassesFormComponent],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  declarations: [ InsuranceClassesComponent, InsuranceClassesFormComponent ],
+  imports: [ CommonModule, SharedModule, RouterModule.forChild(routes), AgGridModule.withComponents([ InsuranceClassesFormComponent ]) ],
 })
-export class InsuranceClassesModule {}
+export class InsuranceClassesModule { }
