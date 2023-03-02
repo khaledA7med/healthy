@@ -361,6 +361,30 @@ export class MasterTableService {
 					route: ApiRoutes.MasterTable.Claims.rejectionReasons,
 					name: BaseData.RejectionReasons,
 				},
+				{
+					route: ApiRoutes.MasterTable.Claims.claimCaseTypes,
+					name: BaseData.ClaimCaseTypes,
+				},
+				{
+					route: ApiRoutes.MasterTable.Claims.motorClaimTypes,
+					name: BaseData.MotorClaimTypes,
+				},
+				{
+					route: ApiRoutes.MasterTable.Claims.typesOfRepair,
+					name: BaseData.TypesOfRepair,
+				},
+				{
+					route: ApiRoutes.MasterTable.Claims.hospitals,
+					name: BaseData.Hospitals,
+				},
+				{
+					route: ApiRoutes.MasterTable.Claims.carsModels,
+					name: BaseData.CarsModels,
+				},
+				{
+					route: ApiRoutes.MasterTable.Claims.cities,
+					name: BaseData.Cities,
+				},
 			],
 			SystemAdmin: [
 				{

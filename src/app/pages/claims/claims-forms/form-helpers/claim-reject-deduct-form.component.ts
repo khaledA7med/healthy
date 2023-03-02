@@ -176,16 +176,18 @@ export class ClaimRejectDeductFormComponent implements OnInit, OnDestroy {
   }
 
   validationChecker(): boolean {
-    if (
-      +this.claimAmount - +this.underProcessing + +this.f.amount?.value! >
-      this.claimAmount
-    ) {
-      this.message.popup(
-        "Attention!",
-        "Claim Amount is less than under processing amount",
-        "warning"
-      );
-      return false;
+    if (this.formEditMode) {
+      if (
+        +this.claimAmount - +this.underProcessing + +this.f.amount?.value! >
+        this.claimAmount
+      ) {
+        this.message.popup(
+          "Attention!",
+          "Claim Amount is less than under processing amount",
+          "warning"
+        );
+        return false;
+      }
     }
     if (this.formGroup.invalid) {
       this.message.popup(
