@@ -8,7 +8,11 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { IClientForms } from "src/app/shared/app/models/Clients/iclientForms";
+import {
+  IClientCorporateForm,
+  IClientForms,
+  IClientRetailForm,
+} from "src/app/shared/app/models/Clients/iclientForms";
 import { IClientsBankAccount } from "src/app/shared/app/models/Clients/iclientsBankAccountForm";
 import { ClientType } from "src/app/shared/app/models/Clients/clientUtil";
 import { Observable, Subscription } from "rxjs";
@@ -91,28 +95,36 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       officalName: new FormControl("", Validators.required),
 
       // Retail Type
-      idNo: new FormControl("", Validators.required),
-      nationality: new FormControl("", Validators.required),
-      sourceofIncome: new FormControl("", Validators.required),
-      idExpiryDate: new FormControl(null, Validators.required),
+      retail: new FormGroup<IClientRetailForm>({
+        idNo: new FormControl("", Validators.required),
+        nationality: new FormControl("", Validators.required),
+        sourceofIncome: new FormControl("", Validators.required),
+        idExpiryDate: new FormControl(null, Validators.required),
+      }),
 
       // Corporate Type
-      registrationStatus: new FormControl("", Validators.required),
-      businessActivity: new FormControl("", Validators.required),
-      marketSegment: new FormControl("", Validators.required),
-      commericalNo: new FormControl("", Validators.required),
-      dateOfIncorporation: new FormControl(null, Validators.required),
-      dateOfIncorporationHijri: new FormControl(null),
-      expiryDate: new FormControl(null, Validators.required),
-      expiryDateHijri: new FormControl(null),
-      sponsorID: new FormControl("", [
-        Validators.minLength(20),
-        Validators.maxLength(20),
-      ]),
-      unifiedNo: new FormControl(""),
-      vatNo: new FormControl("", Validators.required),
-      capital: new FormControl(""),
-      premium: new FormControl("", Validators.required),
+      corporate: new FormGroup<IClientCorporateForm>({
+        registrationStatus: new FormControl("", Validators.required),
+        businessActivity: new FormControl("", Validators.required),
+        marketSegment: new FormControl("", Validators.required),
+        commericalNo: new FormControl("", Validators.required),
+        dateOfIncorporation: new FormControl(null, Validators.required),
+        dateOfIncorporationHijri: new FormControl(null),
+        expiryDate: new FormControl(null, Validators.required),
+        expiryDateHijri: new FormControl(null),
+        sponsorID: new FormControl(null, [
+          Validators.minLength(20),
+          Validators.maxLength(20),
+        ]),
+        unifiedNo: new FormControl(""),
+        vatNo: new FormControl(null, [
+          Validators.minLength(15),
+          Validators.maxLength(15),
+          Validators.required,
+        ]),
+        capital: new FormControl(""),
+        premium: new FormControl("", Validators.required),
+      }),
 
       // National Address
       buildingNo: new FormControl(""),
@@ -160,71 +172,32 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   retailClientType(): void {
     // Retail Type
-    let retailControls = [
-      this.f.idNo!,
-      this.f.nationality!,
-      this.f.sourceofIncome!,
-      this.f.idExpiryDate!,
-    ];
-    this.setValidatorAndUpdate(retailControls);
+    this.f.retail?.enable();
 
     // Corporate Type
-    let coporateControls = [
-      this.f.registrationStatus!,
-      this.f.businessActivity!,
-      this.f.marketSegment!,
-      this.f.commericalNo!,
-      this.f.dateOfIncorporation!,
-      this.f.vatNo!,
-      this.f.premium!,
-      this.f.expiryDate!,
-    ];
-    this.removeValidatorAndUpdate(coporateControls);
+    this.f.corporate?.disable();
   }
 
   corporateClientType(): void {
     // Retail Type
-    let retailControls = [
-      this.f.idNo!,
-      this.f.nationality!,
-      this.f.sourceofIncome!,
-      this.f.idExpiryDate!,
-    ];
-    this.removeValidatorAndUpdate(retailControls);
+    this.f.retail?.disable();
 
     // Corporate Type
-    let coporateControls = [
-      this.f.registrationStatus!,
-      this.f.businessActivity!,
-      this.f.marketSegment!,
-      this.f.commericalNo!,
-      this.f.dateOfIncorporation!,
-      this.f.vatNo!,
-      this.f.premium!,
-      this.f.expiryDate!,
-    ];
-    this.setValidatorAndUpdate(coporateControls);
+    this.f.corporate?.enable();
   }
-
-  setValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.setValidators(Validators.required);
-      el.updateValueAndValidity();
-    });
-  }
-
-  removeValidatorAndUpdate(controls: FormControl[]) {
-    controls.map((el) => {
-      el.clearValidators();
-      el.updateValueAndValidity();
-    });
-  }
-
   //#endregion
 
   //#region Form Controls
-  get f() {
+  get f(): IClientForms {
     return this.formGroup.controls;
+  }
+
+  get retail(): IClientRetailForm {
+    return this.f.retail?.controls!;
+  }
+
+  get corporate(): IClientCorporateForm {
+    return this.f.corporate?.controls!;
   }
 
   get bankControlArray(): FormArray {
@@ -267,6 +240,9 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   }
 
   addContact(data?: IClientContact): void {
+    console.log(this.corporate.vatNo?.errors?.["minLength"]);
+    console.log(this.corporate.vatNo?.errors);
+
     if (this.f.clientContacts?.invalid) {
       this.f.clientContacts?.markAllAsTouched();
       return;
@@ -348,18 +324,36 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       interface: client.interface,
       screeningResult: client.screeningResult,
       officalName: client.officalName,
-      idNo: client.idNo,
-      nationality: client.nationality,
-      sourceofIncome: client.sourceofIncome,
-      registrationStatus: client.registrationStatus,
-      businessActivity: client.businessActivity,
-      marketSegment: client.marketSegment,
-      commericalNo: client.commericalNo,
-      sponsorID: client.sponsorID,
-      unifiedNo: client.unifiedNo,
-      vatNo: client.vatNo,
-      capital: client.capital,
-      premium: client.premium,
+      retail: {
+        idNo: client.idNo,
+        nationality: client.nationality,
+        sourceofIncome: client.sourceofIncome,
+        idExpiryDate: this.util.dateStructFormat(client.idExpiryDate!) as any,
+      },
+      corporate: {
+        registrationStatus: client.registrationStatus,
+        businessActivity: client.businessActivity,
+        marketSegment: client.marketSegment,
+        commericalNo: client.commericalNo,
+        sponsorID: client.sponsorID,
+        unifiedNo: client.unifiedNo,
+        vatNo: client.vatNo,
+        capital: client.capital,
+        premium: client.premium,
+        // Date Of Incorporation
+        dateOfIncorporation: this.util.dateStructFormat(
+          client.dateOfIncorporation!
+        ) as any,
+        dateOfIncorporationHijri: this.util.dateStructFormat(
+          client.dateOfIncorporationHijri!
+        ) as any,
+
+        // Expiry Date
+        expiryDate: this.util.dateStructFormat(client.expiryDate!) as any,
+        expiryDateHijri: this.util.dateStructFormat(
+          client.expiryDateHijri!
+        ) as any,
+      },
       buildingNo: client.buildingNo,
       streetName: client.streetName,
       secondryNo: client.secondryNo,
@@ -371,22 +365,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
       fax: client.fax,
       email: client.email,
       website: client.website,
-      // Date Of Incorporation
-      dateOfIncorporation: this.util.dateStructFormat(
-        client.dateOfIncorporation!
-      ) as any,
-      dateOfIncorporationHijri: this.util.dateStructFormat(
-        client.dateOfIncorporationHijri!
-      ) as any,
-
-      // Expiry Date
-      expiryDate: this.util.dateStructFormat(client.expiryDate!) as any,
-      expiryDateHijri: this.util.dateStructFormat(
-        client.expiryDateHijri!
-      ) as any,
-
-      // Retail ID Expiry Date
-      idExpiryDate: this.util.dateStructFormat(client.idExpiryDate!) as any,
     });
 
     this.docs = client.documentList!;
@@ -404,69 +382,76 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     // Display Submitting Loader
     this.eventService.broadcast(reserved.isLoading, true);
-
+    let val = clientForm.getRawValue();
     const formData = new FormData();
 
     if (this.uiState.editId) formData.append("sNo", this.uiState.editId);
 
-    formData.append("FullName", clientForm.value.fullName!);
-    formData.append("FullNameAr", clientForm.value.fullNameAr!);
-    formData.append("OfficalName", clientForm.value.officalName!);
-    formData.append("RelationshipStatus", clientForm.value.relationshipStatus!);
-    formData.append("BusinessType", clientForm.value.businessType!);
-    formData.append("Type", clientForm.value.type!);
-    formData.append("IDNo", clientForm.value.idNo!);
+    formData.append("FullName", val.fullName!);
+    formData.append("FullNameAr", val.fullNameAr!);
+    formData.append("OfficalName", val.officalName!);
+    formData.append("RelationshipStatus", val.relationshipStatus!);
+    formData.append("BusinessType", val.businessType!);
+    formData.append("Type", val.type!);
+
+    // Retail
+    formData.append("IDNo", val.retail?.idNo ?? "");
     formData.append(
       "IDExpiryDate",
-      this.util.dateFormater(clientForm.value.idExpiryDate!)
+      this.util.dateFormater(val.retail?.idExpiryDate ?? "")
     );
-    formData.append("Nationality", clientForm.value.nationality!);
-    formData.append("SourceofIncome", clientForm.value.sourceofIncome!);
-    formData.append("RegistrationStatus", clientForm.value.registrationStatus!);
-    formData.append("BusinessActivity", clientForm.value.businessActivity!);
-    formData.append("MarketSegment", clientForm.value.marketSegment!);
+    formData.append("Nationality", val.retail?.nationality ?? "");
+    formData.append("SourceofIncome", val.retail?.sourceofIncome ?? "");
+
+    // Corporate
+    formData.append(
+      "RegistrationStatus",
+      val.corporate?.registrationStatus ?? ""
+    );
+    formData.append("BusinessActivity", val.corporate?.businessActivity ?? "");
+    formData.append("MarketSegment", val.corporate?.marketSegment ?? "");
     formData.append(
       "DateOfIncorporation",
-      this.util.dateFormater(clientForm.value.dateOfIncorporation!)
+      this.util.dateFormater(val.corporate?.dateOfIncorporation ?? "")
     );
     formData.append(
       "DateOfIncorporationHijri",
-      this.util.dateFormater(clientForm.value.dateOfIncorporationHijri!)
+      this.util.dateFormater(val.corporate?.dateOfIncorporationHijri ?? "")
     );
-    formData.append("CommericalNo", clientForm.value.commericalNo!);
+    formData.append("CommericalNo", val.corporate?.commericalNo ?? "");
     formData.append(
       "ExpiryDate",
-      this.util.dateFormater(clientForm.value.expiryDate!)
+      this.util.dateFormater(val.corporate?.expiryDate ?? "")
     );
     formData.append(
       "ExpiryDateHijri",
-      this.util.dateFormater(clientForm.value.expiryDateHijri!)
+      this.util.dateFormater(val.corporate?.expiryDateHijri ?? "")
     );
-    formData.append("SponsorID", clientForm.value.sponsorID!);
-    formData.append("UnifiedNo", clientForm.value.unifiedNo!);
-    formData.append("VATNo", clientForm.value.vatNo!);
-    formData.append("Capital", clientForm.value.capital!);
-    formData.append("Premium", clientForm.value.premium!);
-    formData.append("BuildingNo", clientForm.value.buildingNo!);
-    formData.append("Tele", clientForm.value.tele!);
-    formData.append("Tele2", clientForm.value.tele2!);
-    formData.append("Fax", clientForm.value.fax!);
-    formData.append("Channel", clientForm.value.channel!);
-    formData.append("Interface", clientForm.value.interface!);
-    formData.append("Producer", clientForm.value.producer!);
-    formData.append("ScreeningResult", clientForm.value.screeningResult!);
-    formData.append("Branch", clientForm.value.branch!);
-    formData.append("StreetName", clientForm.value.streetName!);
-    formData.append("SecondryNo", clientForm.value.secondryNo!);
-    formData.append("DistrictName", clientForm.value.districtName!);
-    formData.append("PostalCode", clientForm.value.postalCode!);
-    formData.append("CityName", clientForm.value.cityName!);
-    formData.append("Email", clientForm.value.email!);
-    formData.append("Website", clientForm.value.website!);
+    formData.append("SponsorID", val.corporate?.sponsorID ?? "");
+    formData.append("UnifiedNo", val.corporate?.unifiedNo ?? "");
+    formData.append("VATNo", val.corporate?.vatNo ?? "");
+    formData.append("Capital", val.corporate?.capital ?? "");
+    formData.append("Premium", val.corporate?.premium ?? "");
+    formData.append("BuildingNo", val.buildingNo!);
+    formData.append("Tele", val.tele!);
+    formData.append("Tele2", val.tele2!);
+    formData.append("Fax", val.fax!);
+    formData.append("Channel", val.channel!);
+    formData.append("Interface", val.interface!);
+    formData.append("Producer", val.producer!);
+    formData.append("ScreeningResult", val.screeningResult!);
+    formData.append("Branch", val.branch!);
+    formData.append("StreetName", val.streetName!);
+    formData.append("SecondryNo", val.secondryNo!);
+    formData.append("DistrictName", val.districtName!);
+    formData.append("PostalCode", val.postalCode!);
+    formData.append("CityName", val.cityName!);
+    formData.append("Email", val.email!);
+    formData.append("Website", val.website!);
 
     this.contactControlArray.controls.forEach((el) => el.enable());
 
-    let contacts = clientForm.value.clientContacts!;
+    let contacts = val.clientContacts!;
 
     for (let i = 0; i < contacts.length; i++) {
       formData.append(
@@ -497,7 +482,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     this.bankControlArray.controls.forEach((el) => el.enable());
 
-    let banks = clientForm.value.clientsBankAccounts!;
+    let banks = val.clientsBankAccounts!;
 
     for (let i = 0; i < banks.length; i++) {
       formData.append(`ClientsBankAccounts[${i}].bankName`, banks[i].bankName!);
@@ -558,17 +543,17 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   // @@@@ Date Events @@@@ //
   //#region Dates
   retailExpiryDate(e: { gon: any; hijri: any }): void {
-    this.f.idExpiryDate?.patchValue(e.gon);
+    this.retail.idExpiryDate?.patchValue(e.gon);
   }
 
   coIncorporationDates(e: { gon: any; hijri: any }): void {
-    this.f.dateOfIncorporationHijri?.patchValue(e.hijri);
-    this.f.dateOfIncorporation?.patchValue(e.gon);
+    this.corporate.dateOfIncorporationHijri?.patchValue(e.hijri);
+    this.corporate.dateOfIncorporation?.patchValue(e.gon);
   }
 
   coExpiryDates(e: { gon: any; hijri: any }): void {
-    this.f.expiryDateHijri?.patchValue(e.hijri);
-    this.f.expiryDate?.patchValue(e.gon);
+    this.corporate.expiryDateHijri?.patchValue(e.hijri);
+    this.corporate.expiryDate?.patchValue(e.gon);
   }
   //#endregion
 
