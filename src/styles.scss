@@ -3,195 +3,203 @@
 @import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 
 label.asterisk-input {
-  position: relative;
-  &::after {
-    content: " *";
-    color: #f17171;
-    font-weight: bold;
-  }
+	position: relative;
+	&::after {
+		content: " *";
+		color: #f17171;
+		font-weight: bold;
+	}
 }
 
 div.asterisk-div {
-  position: relative;
-  &::after {
-    content: " *";
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin-right: 10px;
-    margin-top: 5px;
-    color: #f17171;
-    font-weight: bold;
-    font-size: 18px;
-  }
+	position: relative;
+	&::after {
+		content: " *";
+		position: absolute;
+		right: 0;
+		top: 0;
+		margin-right: 10px;
+		margin-top: 5px;
+		color: #f17171;
+		font-weight: bold;
+		font-size: 18px;
+	}
 }
 
 .input-text-right,
 .input-text-right::placeholder {
-  text-align: right !important;
+	text-align: right !important;
 }
 
 input[disabled] {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 .groupsTable .ag-row {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 // **** NG - SELECT ****//
 .ng-select-container {
-  min-height: calc(1.5em + 0.5rem + 1px) !important;
-  max-height: calc(1.5em + 0.5rem + 1px) !important;
-  background-color: var(--vz-input-bg) !important;
-  border-color: var(--vz-input-border) !important;
+	min-height: calc(1.5em + 0.5rem + 1px) !important;
+	max-height: calc(1.5em + 0.5rem + 1px) !important;
+	background-color: var(--vz-input-bg) !important;
+	border-color: var(--vz-input-border) !important;
 }
 
 .ng-input > input,
 .ng-option-disabled,
 .ng-option,
 .ng-value {
-  color: var(--vz-body-color) !important;
+	color: var(--vz-body-color) !important;
 }
 .ng-option-disabled,
 .ng-option {
-  background-color: var(--vz-input-bg) !important;
-  background-color: var(--vz-input-bg) !important;
+	background-color: var(--vz-input-bg) !important;
+	background-color: var(--vz-input-bg) !important;
 }
 
 .ng-dropdown-panel {
-  border: 1px solid var(--vz-input-border) !important;
+	border: 1px solid var(--vz-input-border) !important;
 }
 
 .ng-option-marked {
-  background-color: var(--vz-dropdown-link-hover-bg) !important;
+	background-color: var(--vz-dropdown-link-hover-bg) !important;
 }
 
 .ng-select.ng-invalid.ng-touched.is-invalid .ng-select-container,
 .ng-select.ng-invalid.is-submitted .ng-select-container {
-  border-color: #f17171 !important;
+	border-color: #f17171 !important;
 }
 
 .ng-select-disabled .ng-select-container {
-  background-color: var(--vz-input-disabled-bg) !important;
+	background-color: var(--vz-input-disabled-bg) !important;
 }
 
 .filezone-container {
-  padding: 10px;
-  background-color: var(--vz-card-bg);
-  border: 2px dashed #878a99;
-  /* border: 2px dashed rgb(133 132 132 / 23%); */
-  border-radius: 10px;
-  height: 270px;
-  table td,
-  table th {
-    vertical-align: middle;
-  }
-  input {
-    display: none;
-  }
-  #img-label {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    color: #878a99;
-    /* color: rgb(134, 133, 133); */
-    font-size: 20px;
-    font-weight: bolder;
-    cursor: pointer;
-    height: 100%;
-    width: 100%;
-    i {
-      font-size: 80px;
-      font-weight: 400;
-    }
-    div span {
-      color: #878a99 !important;
-    }
-  }
+	padding: 10px;
+	background-color: var(--vz-card-bg);
+	border: 2px dashed #878a99;
+	/* border: 2px dashed rgb(133 132 132 / 23%); */
+	border-radius: 10px;
+	height: 270px;
+	table td,
+	table th {
+		vertical-align: middle;
+	}
+	input {
+		display: none;
+	}
+	#img-label {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		color: #878a99;
+		/* color: rgb(134, 133, 133); */
+		font-size: 20px;
+		font-weight: bolder;
+		cursor: pointer;
+		height: 100%;
+		width: 100%;
+		i {
+			font-size: 80px;
+			font-weight: 400;
+		}
+		div span {
+			color: #878a99 !important;
+		}
+	}
 
-  @media screen {
-    font-size: 15px;
-  }
+	@media screen {
+		font-size: 15px;
+	}
 }
 .preview-multiple-imgs {
-  .file-output-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 35px;
-    width: 70px;
-    height: 70px;
-  }
-  table th,
-  table td {
-    vertical-align: middle;
-  }
-  &.active {
-    display: block;
-  }
-  img {
-    width: 250px;
-    margin: 0 auto;
-    &#file-preview {
-      width: 80px;
-      height: 80px;
-    }
-  }
+	.file-output-icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 35px;
+		width: 70px;
+		height: 70px;
+	}
+	table th,
+	table td {
+		vertical-align: middle;
+	}
+	&.active {
+		display: block;
+	}
+	img {
+		width: 250px;
+		margin: 0 auto;
+		&#file-preview {
+			width: 80px;
+			height: 80px;
+		}
+	}
 }
 
 //dragula.css
 .gu-mirror {
-  position: fixed !important;
-  margin: 0 !important;
-  z-index: 9999 !important;
-  opacity: 0.8;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-  filter: alpha(opacity=80);
-  pointer-events: none;
+	position: fixed !important;
+	margin: 0 !important;
+	z-index: 9999 !important;
+	opacity: 0.8;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+	filter: alpha(opacity=80);
+	pointer-events: none;
 }
 /* high-performance display:none; helper */
 .gu-hide {
-  left: -9999px !important;
+	left: -9999px !important;
 }
 /* added to mirrorContainer (default = body) while dragging */
 .gu-unselectable {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
 }
 /* added to the source element while its mirror is dragged */
 .gu-transit {
-  opacity: 0.2;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-  filter: alpha(opacity=20);
+	opacity: 0.2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+	filter: alpha(opacity=20);
 }
 
 .customize-swlInput {
-  min-height: calc(1.5em + 0.5rem + 2px) !important;
-  padding: 0.25rem 0.5rem !important;
-  font-size: 0.765625rem !important;
-  border-radius: 0.2rem !important;
-  display: block !important;
-  padding: 0.5rem 0.9rem !important;
-  font-size: 0.875rem !important;
-  font-weight: 400 !important;
-  line-height: 1.5 !important;
-  color: #212529 !important;
-  color: var(--vz-body-color) !important;
-  background-color: var(--vz-input-bg) !important;
-  background-clip: padding-box !important;
-  border: 1px solid var(--vz-input-border) !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  border-radius: 0.25rem !important;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+	min-height: calc(1.5em + 0.5rem + 2px) !important;
+	padding: 0.25rem 0.5rem !important;
+	font-size: 0.765625rem !important;
+	border-radius: 0.2rem !important;
+	display: block !important;
+	padding: 0.5rem 0.9rem !important;
+	font-size: 0.875rem !important;
+	font-weight: 400 !important;
+	line-height: 1.5 !important;
+	color: #212529 !important;
+	color: var(--vz-body-color) !important;
+	background-color: var(--vz-input-bg) !important;
+	background-clip: padding-box !important;
+	border: 1px solid var(--vz-input-border) !important;
+	-webkit-appearance: none !important;
+	-moz-appearance: none !important;
+	appearance: none !important;
+	border-radius: 0.25rem !important;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
 }
 
 .customize-swlInput:focus {
-  box-shadow: unset !important;
+	box-shadow: unset !important;
+}
+
+.bg-yellow {
+	background-color: yellow !important;
+}
+
+.dateTogglerBtn {
+	z-index: auto !important;
 }

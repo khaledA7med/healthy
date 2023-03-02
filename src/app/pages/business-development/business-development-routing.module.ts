@@ -29,7 +29,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutes.BusinessDevelopment.Reports.Renewal,
-		data: { title: "Prospects Reports" },
+		data: { title: "Policies Reports - Renewals" },
 		loadChildren: () =>
 			import("./business-development-renewal-reports/business-development-renewal-reports.module").then(
 				(m) => m.BusinessDevelopmentRenewalReportsModule

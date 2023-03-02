@@ -170,17 +170,19 @@
                                     <tr>
                                         <th class="fw-semibold">Issue Date :</th>
                                         <td>{{ (uiState.policyDetails.issueDate != undefined) ?
-                                            (uiState.policyDetails.issueDate | date:"mediumDate") : '-' }}</td>
+                                            (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") : '-' }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Inception Date :</th>
                                         <td>{{ (uiState.policyDetails.periodFrom != undefined) ?
-                                            (uiState.policyDetails.periodFrom | date:"mediumDate") : '-' }}</td>
+                                            (uiState.policyDetails.periodFrom | date:"dd MMMM,yyyy") : '-' }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Expiry Date :</th>
                                         <td>{{ (uiState.policyDetails.periodTo != undefined) ?
-                                            (uiState.policyDetails.periodTo | date:"mediumDate") : '-' }}</td>
+                                            (uiState.policyDetails.periodTo | date:"dd MMMM,yyyy") : '-' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Claim DeadLine :</th>

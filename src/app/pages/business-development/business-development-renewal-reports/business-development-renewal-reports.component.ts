@@ -113,7 +113,7 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};
 
-		let sub = this.BusinessDevelopmentService.viewProspectsReport(data).subscribe(
+		let sub = this.BusinessDevelopmentService.viewRenewalReport(data).subscribe(
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {
 					this.eventService.broadcast(reserved.isLoading, false);
@@ -134,7 +134,7 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 	openReportsViewer(data?: string): void {
 		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
 		this.modalRef.componentInstance.data = {
-			reportName: "Prospects Reports",
+			reportName: "Policies Reports - Renewals",
 			url: data,
 		};
 
