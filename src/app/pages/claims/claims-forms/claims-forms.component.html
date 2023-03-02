@@ -1142,8 +1142,8 @@
                                             <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
                                                 <label for="hospital" class="asterisk-input">Hospital</label>
                                                 <div class="input-group input-group-sm">
-                                                    <!-- [items]="(formData | async)?.Hospitals?.content!"  -->
                                                     <ng-select formControlName="hospital"
+                                                        [items]="(formData | async)?.Hospitals?.content!"
                                                         class="form-control p-0 border-0 is-invalid"
                                                         [ngClass]="{'is-submitted': (medical.hospital?.touched || uiState.submitted) && medical.hospital?.invalid}"
                                                         bindLabel="name" bindValue="name"
@@ -1163,8 +1163,8 @@
 
                                             <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
                                                 <label for="medCaseType" class="asterisk-input">Case Type</label>
-                                                <!-- [items]="(formData | async)?.medCaseTypes?.content!" -->
                                                 <ng-select formControlName="medCaseType" class="is-invalid"
+                                                    [items]="(formData | async)?.ClaimCaseTypes?.content!"
                                                     [ngClass]="{'is-submitted': (medical.medCaseType?.touched || uiState.submitted) && medical.medCaseType?.invalid}"
                                                     bindLabel="name" bindValue="name"
                                                     [loading]="formData ? false : true">
@@ -1214,8 +1214,8 @@
                                             <!-- Car Make -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="carsMake">Car Make</label>
-                                                <!-- [items]="(formData | async)?.carsMakes?.content!" -->
                                                 <ng-select formControlName="carsMake" class="is-invalid"
+                                                    [items]="(formData | async)?.CarsModels?.content!"
                                                     [ngClass]="{'is-submitted': (motor.carsMake?.touched || uiState.submitted) && motor.carsMake?.invalid}"
                                                     bindLabel="name" bindValue="name"
                                                     [loading]="formData ? false : true">
@@ -1236,8 +1236,8 @@
                                             <!-- Claim Type -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">Claim Type</label>
-                                                <!-- [items]="(formData | async)?.types?.content!" -->
                                                 <ng-select formControlName="type" class="is-invalid"
+                                                    [items]="(formData | async)?.MotorClaimTypes?.content!"
                                                     [ngClass]="{'is-submitted': (motor.type?.touched || uiState.submitted) && motor.type?.invalid}"
                                                     bindLabel="name" bindValue="name"
                                                     [loading]="formData ? false : true">
@@ -1276,9 +1276,9 @@
                                             <!-- City -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">City</label>
-                                                <!-- [items]="(formData | async)?.city?.content!" -->
                                                 <ng-select formControlName="city" class="is-invalid" bindLabel="name"
-                                                    bindValue="name" [loading]="formData ? false : true">
+                                                    [items]="(formData | async)?.Cities?.content!" bindValue="name"
+                                                    [loading]="formData ? false : true">
                                                     <ng-template ng-option-tmp let-item="item">
                                                         <div>{{ item.name }}</div>
                                                     </ng-template>
@@ -1301,8 +1301,8 @@
                                             <!-- Type Of Repair -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">Type Of Repair</label>
-                                                <!-- [items]="(formData | async)?.typeOfrepair?.content!" -->
                                                 <ng-select formControlName="typeOfrepair" class="is-invalid"
+                                                    [items]="(formData | async)?.TypesOfRepair?.content!"
                                                     bindLabel="name" bindValue="name"
                                                     [loading]="formData ? false : true">
                                                     <ng-template ng-option-tmp let-item="item">

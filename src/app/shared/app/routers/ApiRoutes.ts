@@ -88,6 +88,12 @@ export const ApiRoutes = {
       currencies: LookUpTables + BaseData.Currencies,
       banks: LookUpTables + BaseData.Banks,
       rejectionReasons: LookUpTables + BaseData.RejectionReasons,
+      claimCaseTypes: LookUpTables + BaseData.ClaimCaseTypes,
+      motorClaimTypes: LookUpTables + BaseData.MotorClaimTypes,
+      typesOfRepair: LookUpTables + BaseData.TypesOfRepair,
+      hospitals: LookUpTables + BaseData.Hospitals,
+      carsModels: LookUpTables + BaseData.CarsModels,
+      cities: LookUpTables + BaseData.Cities,
     },
     SystemAdmin: {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,

@@ -60,7 +60,7 @@ export interface IClaimDataForm extends IClaims {
   lostadjusterTele?: string;
   //   claimRejectionDeductionsList: [];
   //   claimRejectionDeductionsString: null;
-  documents?: IDocumentList[];
+  documentList?: IDocumentList[];
   medID?: string;
   hospital?: string;
   medClass?: string;

@@ -41,10 +41,7 @@ import { IClaimDataForm } from "src/app/shared/app/models/Claims/iclaim-data-for
 import { IClaimEmailLogs } from "src/app/shared/app/models/Claims/iclaim-email-logs";
 import { IClaimInvoice } from "src/app/shared/app/models/Claims/iclaim-invoice-form";
 import { IClaimPayment } from "src/app/shared/app/models/Claims/iclaim-payment-form";
-import {
-  IClaimRejectDeduct,
-  IClaimRejectDeductForm,
-} from "src/app/shared/app/models/Claims/iclaim-reject-deduct-form";
+import { IClaimRejectDeduct } from "src/app/shared/app/models/Claims/iclaim-reject-deduct-form";
 import {
   IClaimAmountForm,
   IClaimGeneralForm,
@@ -177,6 +174,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.formGroup = new FormGroup<IClaimsForms>({
       sNo: new FormControl(null),
+      policiesSNo: new FormControl(null),
       claimType: new FormControl(this.uiState.claimTypes.Medical),
       clientInfo: new FormControl(null, Validators.required),
       clientName: new FormControl(null, Validators.required),
@@ -326,7 +324,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     this.uiState.editMode = true;
     this.claimService.getClaimById(id).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
-        console.log(res);
         if (res.body?.status) {
           let data = res.body?.data;
           this.formGroup.patchValue({
@@ -401,6 +398,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
           this.totalUnderProcessing();
 
           this.uiState.claimLists.emailLogs = data?.emailsLog!;
+
+          this.docs = data?.documentList!;
         }
         this.eventService.broadcast(reserved.isLoading, false);
       },
@@ -491,6 +490,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
           // projectTitle:
           insuranceCompany: evt.insurComp,
           lineOfBusiness: evt.lineOfBusiness,
+          policiesSNo: evt.sNo!.toString(),
         });
 
         this.f.dateOfLossFrom?.patchValue(
@@ -996,7 +996,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     formData.append("insuranceCompany", val.insuranceCompany ?? "");
     formData.append("className", val.className ?? "");
     formData.append("LineOfBusiness", val.lineOfBusiness ?? "");
-    // formData.append("PoliciesSNo", sNo.value ?? "");
+    formData.append("PoliciesSNo", val.policiesSNo ?? "0");
 
     // Medical
     formData.append("membName", val.membName ?? "");
@@ -1100,7 +1100,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
     let sub = this.claimService.saveClaim(formData).subscribe(
       (res: IBaseResponse<number>) => {
-        console.log(res);
         if (res.status) {
           this.message.toast(res.message!, "success");
           if (this.uiState.editMode)

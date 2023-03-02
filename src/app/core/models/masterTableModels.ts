@@ -45,6 +45,12 @@ export enum BaseData {
   UserSecurityRoles = "UserSecurityRoles",
   Currencies = "Currencies",
   RejectionReasons = "RejectionReasons",
+  ClaimCaseTypes = "ClaimCaseTypes",
+  MotorClaimTypes = "MotorClaimTypes",
+  TypesOfRepair = "TypesOfRepair",
+  Hospitals = "Hospitals",
+  CarsModels = "CarsModels",
+  Cities = "Cities",
 }
 
 export interface IBaseMasterTable {
@@ -94,6 +100,12 @@ export interface IBaseMasterTable {
   UserSecurityRoles?: Caching<IGenericResponseType[]>;
   Currencies?: IGenericResponseType[];
   RejectionReasons?: Caching<IGenericResponseType[]>;
+  ClaimCaseTypes?: Caching<IGenericResponseType[]>;
+  MotorClaimTypes?: Caching<IGenericResponseType[]>;
+  TypesOfRepair?: Caching<IGenericResponseType[]>;
+  Hospitals?: Caching<IGenericResponseType[]>;
+  CarsModels?: Caching<IGenericResponseType[]>;
+  Cities?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {
