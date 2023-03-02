@@ -13,6 +13,12 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.MasterTable.insuranceClasses,
         parentId: 1,
       },
+      {
+        id: 102,
+        label: "MENUITEMS.MASTERTABLE.LIST.LINEOFBUSINESS",
+        link: AppRoutes.MasterTable.lineOfBusiness,
+        parentId: 1,
+      },
     ],
   },
   {

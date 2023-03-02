@@ -8,7 +8,8 @@
     "MASTERTABLE": {
       "TEXT": "Master Table",
       "LIST": {
-        "INSURANCECLASSES": "Insurance Classes"
+        "INSURANCECLASSES": "Insurance Classes",
+        "LINEOFBUSINESS": "Line Of Business"
       }
     },
     "CLIENTREGISTRY": {

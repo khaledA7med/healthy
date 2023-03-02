@@ -3,9 +3,6 @@ import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewE
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from 'rxjs';
-import { insuranceClassCols } from 'src/app/shared/app/grid/insuranceClassCols';
-import { IInsuranceClass, IInsuranceClassData } from 'src/app/shared/app/models/MasterTables/i-insurance-class';
-import { InsuranceClassesService } from 'src/app/shared/services/master-tables/insurance-classes.service';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
 import AppUtils from 'src/app/shared/app/util';
@@ -13,31 +10,36 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ILineOfBusiness, ILineOfBusinessData } from 'src/app/shared/app/models/MasterTables/i-line-of-business';
+import { LineOfBusinessService } from 'src/app/shared/services/master-tables/line-of-business.service';
+import { lineOfBusinessCols } from 'src/app/shared/app/grid/lineOfBusinessCols';
 
 
 @Component({
-  selector: 'app-insurance-classes',
-  templateUrl: './insurance-classes.component.html',
-  styleUrls: [ './insurance-classes.component.scss' ],
+  selector: 'app-line-of-business',
+  templateUrl: './line-of-business.component.html',
+  styleUrls: [ './line-of-business.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class InsuranceClassesComponent implements OnInit, OnDestroy
+export class LineOfBusinessComponent implements OnInit
 {
 
-  InsuranceFormSubmitted = false as boolean;
-  InsuranceModal!: NgbModalRef;
-  InsuranceForm!: FormGroup;
-  @ViewChild("insuranceContent") insuranceContent!: ElementRef;
+  LineOfBBussinessFormSubmitted = false as boolean;
+  LineOfBBussinessModal!: NgbModalRef;
+  LineOfBBussinessForm!: FormGroup;
+
+  @ViewChild("LineOfBBussinessContent") LineOfBBussinessContent!: ElementRef;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IInsuranceClass[],
+    list: [] as ILineOfBusiness[],
     totalPages: 0,
-    editInsuranceMode: false as Boolean,
-    editInsuranceData: {} as IInsuranceClassData,
-  };
+    editLineOfBusinessMode: false as Boolean,
+    editLineOfBusinessData: {} as ILineOfBusinessData,
+    className: ""
 
+  };
 
   subscribes: Subscription[] = [];
 
@@ -46,7 +48,7 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: insuranceClassCols,
+    columnDefs: lineOfBusinessCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -63,8 +65,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.InsuranceClassesService.getInsuranceClasses().subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) =>
+      let sub = this.LineOfBusinessService.getLineOfBusiness(this.uiState.className).subscribe(
+        (res: HttpResponse<IBaseResponse<ILineOfBusiness[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list);
@@ -79,16 +81,6 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     },
   };
-
-  constructor (
-    private InsuranceClassesService: InsuranceClassesService,
-    private tableRef: ElementRef,
-    private message: MessagesService,
-    private appUtils: AppUtils,
-    private eventService: EventService,
-    private modalService: NgbModal
-  ) { }
-
 
   onCellClicked (params: CellEvent)
   {
@@ -129,15 +121,22 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
+  constructor (
+    private LineOfBusinessService: LineOfBusinessService,
+    private tableRef: ElementRef,
+    private message: MessagesService,
+    private appUtils: AppUtils,
+    private eventService: EventService,
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit (): void
   {
-    this.initInsuranceForm();
   }
 
-  DeleteInsurance (id: string, ClassName: string)
+  DeleteLineOfBusiness (id: string)
   {
-    let sub = this.InsuranceClassesService.DeleteInsurance(id, ClassName).subscribe(
+    let sub = this.LineOfBusinessService.DeleteLineOfBusiness(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -152,10 +151,11 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openInsuranceDialoge (id?: string)
+
+  openLineOfBusinessDialoge (id?: string)
   {
-    this.resetInsuranceForm();
-    this.InsuranceModal = this.modalService.open(this.insuranceContent, {
+    this.resetLineOfBusinessForm();
+    this.LineOfBBussinessModal = this.modalService.open(this.LineOfBBussinessContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -164,11 +164,11 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.InsuranceClassesService.getEditInsuranceData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClassData>>) =>
+      let sub = this.LineOfBusinessService.getEditLineOfBusinessData(id).subscribe(
+        (res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) =>
         {
-          this.uiState.editInsuranceMode = true;
-          this.uiState.editInsuranceData = res.body?.data!;
+          this.uiState.editLineOfBusinessMode = true;
+          this.uiState.editLineOfBusinessData = res.body?.data!;
           this.fillEditInsuranceForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
@@ -181,49 +181,49 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.InsuranceModal.hidden.subscribe(() =>
+    this.LineOfBBussinessModal.hidden.subscribe(() =>
     {
-      this.resetInsuranceForm();
-      this.InsuranceFormSubmitted = false;
-      this.uiState.editInsuranceMode = false;
+      this.resetLineOfBusinessForm();
+      this.LineOfBBussinessFormSubmitted = false;
+      this.uiState.editLineOfBusinessMode = false;
     });
   }
 
-  initInsuranceForm ()
+  initLineOfBusinessForm ()
   {
-    this.InsuranceForm = new FormGroup<IInsuranceClass>({
+    this.LineOfBBussinessForm = new FormGroup<ILineOfBusiness>({
       sNo: new FormControl(null),
       className: new FormControl(null, Validators.required),
-      classNameAr: new FormControl(null),
-      abbreviation: new FormControl(null),
-      allowedToAccessInsuranceClasses: new FormControl(null)
+      lineofBusiness: new FormControl(null, Validators.required),
+      lineofBusinessAr: new FormControl(null),
+      abbreviation: new FormControl(null, Validators.required),
     })
   }
 
   get f ()
   {
-    return this.InsuranceForm.controls;
+    return this.LineOfBBussinessForm.controls;
   }
 
-  fillAddIsnuranceForm (data: IInsuranceClassData)
+  fillAddIsnuranceForm (data: ILineOfBusinessData)
   {
     this.f[ "className" ].patchValue(data.className);
-    this.f[ "classNameAr" ].patchValue(data.classNameAr);
+    this.f[ "lineofBusiness" ].patchValue(data.lineofBusiness);
+    this.f[ "lineofBusinessAr" ].patchValue(data.lineofBusinessAr);
     this.f[ "abbreviation" ].patchValue(data.abbreviation);
   }
 
-  fillEditInsuranceForm (data: IInsuranceClassData)
+  fillEditInsuranceForm (data: ILineOfBusinessData)
   {
-    this.f[ "className" ].patchValue(data.className);
-    this.f[ "classNameAr" ].patchValue(data.classNameAr);
+    this.f[ "lineofBusiness" ].patchValue(data.lineofBusiness);
+    this.f[ "lineofBusinessAr" ].patchValue(data.lineofBusinessAr);
     this.f[ "abbreviation" ].patchValue(data.abbreviation);
-    this.f[ "className" ].disable();
-    this.f[ "classNameAr" ].disable();
+
   }
 
   validationChecker (): boolean
   {
-    if (this.InsuranceForm.invalid)
+    if (this.LineOfBBussinessForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
@@ -231,25 +231,26 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitInsuranceData (form: FormGroup)
+  submitLineOfBusinessData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IInsuranceClassData = {
-      sNo: this.uiState.editInsuranceMode ? this.uiState.editInsuranceData.sNo : 0,
+    const data: ILineOfBusinessData = {
+      sNo: this.uiState.editLineOfBusinessMode ? this.uiState.editLineOfBusinessData.sNo : 0,
       className: formData.className,
-      classNameAr: formData.classNameAr,
+      lineofBusiness: formData.lineofBusiness,
+      lineofBusinessAr: formData.lineofBusinessAr,
       abbreviation: formData.abbreviation,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.InsuranceClassesService.saveInsuranceClass(data).subscribe(
+    let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.InsuranceModal.dismiss();
+        this.LineOfBBussinessModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetInsuranceForm();
+        this.resetLineOfBusinessForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -262,9 +263,9 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetInsuranceForm ()
+  resetLineOfBusinessForm ()
   {
-    this.InsuranceForm.reset();
+    this.LineOfBBussinessForm.reset();
   }
 
   ngOnDestroy (): void

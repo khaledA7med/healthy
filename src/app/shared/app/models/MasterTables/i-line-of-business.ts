@@ -1,20 +1,20 @@
 import { FormControl } from "@angular/forms"
 
-export interface IInsuranceClass
+export interface ILineOfBusiness
 {
     sNo?: FormControl<number | null>,
     identity?: FormControl<string | null>
     className?: FormControl<string | null>,
-    classNameAr?: FormControl<string | null>,
+    lineofBusiness?: FormControl<string | null>,
+    lineofBusinessAr?: FormControl<string | null>,
     abbreviation?: FormControl<string | null>,
-    allowedToAccessInsuranceClasses?: FormControl<boolean | null>
 }
-export interface IInsuranceClassData
+export interface ILineOfBusinessData
 {
     sNo?: number,
     identity?: string
     className?: string,
-    classNameAr?: string,
+    lineofBusiness?: string,
+    lineofBusinessAr?: string,
     abbreviation?: string,
-    allowedToAccessInsuranceClasses?: boolean
 }

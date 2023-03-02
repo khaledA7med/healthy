@@ -109,10 +109,18 @@ export const ApiRoutes = {
     lineOfBusiness: LookUpTables + "LineOfBusiness",
   },
   masterTables: {
-    search: "/MasterTables/InsurranceClass/Search",
-    save: "/MasterTables/InsurranceClass/Save",
-    edit: "/MasterTables/InsurranceClass/Edit",
-    delete: "/MasterTables/InsurranceClass/Delete",
+    inuranceClasses: {
+      search: "/MasterTables/InsurranceClass/Search",
+      save: "/MasterTables/InsurranceClass/Save",
+      edit: "/MasterTables/InsurranceClass/Edit",
+      delete: "/MasterTables/InsurranceClass/Delete"
+    },
+    lineOfBusiness: {
+      search: "/MasterTables/LineOfBusiness/Search",
+      save: "/MasterTables/LineOfBusiness/Save",
+      edit: "/MasterTables/LineOfBusiness/Edit",
+      delete: "/MasterTables/LineOfBusiness/Delete",
+    }
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
