@@ -528,6 +528,7 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 	validationChecker(): boolean {
 		document.body.scrollTop = 0;
 		document.documentElement.scrollTop = 0;
+		console.log(this.formGroup);
 		if (this.formGroup.invalid) return false;
 		return true;
 	}

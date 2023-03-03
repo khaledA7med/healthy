@@ -782,6 +782,7 @@
               <div class="card-body">
                 <div class="ribbon ribbon-info round-shape">Tasks</div>
                 <div class="ribbon-content mt-4 text-muted">
+
                   <div class="row my-2">
                     <!-- col type  -->
                     <div class="col-md-6 col-lg-3 d-flex flex-column">
@@ -847,7 +848,7 @@
                     <!-- /col -->
                     <!-- col task btn -->
                     <div class="col-12 my-2 d-flex justify-content-end">
-                      <button type="button" class="btn btn-sm btn-success">
+                      <button type="button" class="btn btn-sm btn-success" (click)="addTask()">
                         Add Task
                       </button>
                     </div>
@@ -862,7 +863,7 @@
                             <th scope="col" class="px-3">Type</th>
                             <th scope="col" class="px-3">Name</th>
                             <th scope="col" class="px-3">Details</th>
-                            <th scope="col" class="px-3">Date Form</th>
+                            <th scope="col" class="px-3">Date From</th>
                             <th scope="col" class="px-3">Date To</th>
                             <th scope="col" class="px-3">Assigned To</th>
                             <th scope="col" class="px-3">Assigned On</th>
@@ -871,7 +872,22 @@
                             <th scope="col" class="px-3">Actions</th>
                           </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody formArrayName="salesLeadTasks">
+                          <tr *ngFor="let c of f.salesLeadTasks?.controls; index as i">
+                            <ng-container [formGroupName]="i">
+                              <td>
+                                {{ salesleadTasksControls(i,"Type").value }}
+                              </td>
+                              <td>
+                                {{salesleadTasksControls(i,"TaskName").value }}
+                              </td>
+                              <td>
+                                {{salesleadTasksControls(i,"TaskDetails").value }}
+                              </td>
+                            </ng-container>
+                          </tr>
+
+                        </tbody>
                       </table>
                     </div>
                     <!-- /col -->
