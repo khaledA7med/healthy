@@ -673,6 +673,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       (res: IClaimPayment[]) => {
         this.uiState.claimLists.payments = res;
         this.totalPaymentsAmount();
+        this.totalUnderProcessing();
       }
     );
     this.subscribes.push(sub);
@@ -806,6 +807,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
         if (this.uiState.editMode) this.uiState.claimLists.rejectDeduct = res;
         else this.uiState.claimLists.rejectDeduct.push(res[0]);
         this.totalRejectDeductAmount();
+        this.totalUnderProcessing();
       }
     );
     this.subscribes.push(sub);

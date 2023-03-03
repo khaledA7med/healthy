@@ -19,8 +19,7 @@ export class VerticalComponent implements OnInit {
     document.documentElement.setAttribute("data-layout", "vertical");
     document.documentElement.setAttribute("data-topbar", this.layoutMode);
     document.documentElement.setAttribute("data-sidebar", this.layoutMode);
-    document.documentElement.setAttribute("data-sidebar-size", "sm-hover");
-    // document.documentElement.setAttribute("data-sidebar-size", "lg");
+    document.documentElement.setAttribute("data-sidebar-size", "lg");
     document.documentElement.setAttribute("data-layout-style", "default");
     document.documentElement.setAttribute("data-layout-mode", this.layoutMode);
     document.documentElement.setAttribute("data-layout-width", "fluid");
