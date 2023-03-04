@@ -12,14 +12,19 @@ import { GroupClientsListControlsComponent } from "./groups-clients/group-client
 export const routes: Routes = [{ path: "", component: ClientGroupComponent }];
 
 @NgModule({
-	declarations: [ClientGroupComponent, GroupsClientsComponent, ClientGroupListControlsComponent, GroupClientsListControlsComponent],
-	imports: [
-		CommonModule,
-		RouterModule.forChild(routes),
-		SharedModule,
-		ReactiveFormsModule,
-		FormsModule,
-		AgGridModule.withComponents([ClientGroupListControlsComponent, GroupClientsListControlsComponent]),
-	],
+  declarations: [
+    ClientGroupComponent,
+    GroupsClientsComponent,
+    ClientGroupListControlsComponent,
+    GroupClientsListControlsComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    ReactiveFormsModule,
+    FormsModule,
+    AgGridModule,
+  ],
 })
 export class ClientGroupModule {}

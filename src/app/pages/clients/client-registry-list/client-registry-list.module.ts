@@ -17,7 +17,7 @@ export const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
-    AgGridModule.withComponents([ClientListControlsComponent]),
+    AgGridModule,
   ],
 })
 export class ClientRegistryListModule {}
