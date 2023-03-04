@@ -8,17 +8,21 @@ import { AgGridModule } from "ag-grid-angular";
 import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 import { CustomerServiceListControlsComponent } from "./customer-service-list-controls.component";
 
-
-export const routes: Routes = [ { path: "", component: CustomerServiceListComponent } ];
+export const routes: Routes = [
+  { path: "", component: CustomerServiceListComponent },
+];
 
 @NgModule({
-	declarations: [ CustomerServiceListComponent, CustomerServiceListControlsComponent ],
-	imports: [
-		CommonModule,
-		RouterModule.forChild(routes),
-		SharedModule,
-		RangePickerModule,
-		AgGridModule.withComponents([ CustomerServiceListControlsComponent ]),
-	],
+  declarations: [
+    CustomerServiceListComponent,
+    CustomerServiceListControlsComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    RangePickerModule,
+    AgGridModule,
+  ],
 })
-export class CustomerServiceListModule { }
+export class CustomerServiceListModule {}
