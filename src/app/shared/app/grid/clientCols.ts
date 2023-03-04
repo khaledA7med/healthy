@@ -15,44 +15,51 @@ export const clientManageCols: ColDef[] = [
     headerName: "Status",
     cellRenderer: StatusCellRender.clientStatus,
     field: "status",
+    minWidth: 100,
+    maxWidth: 100,
   },
   {
     headerName: "Client ID",
     field: "sNo",
     sort: "asc",
+    minWidth: 160,
+    maxWidth: 160,
   },
   {
     headerName: "Full Name",
     field: "fullName",
-  },
-  {
-    headerName: "Full Name (Ar)",
-    field: "fullNameAr",
+    minWidth: 280,
   },
   {
     headerName: "Producer (Salesman)",
     field: "producer",
+    minWidth: 280,
   },
   {
     headerName: "Type",
     field: "type",
+    minWidth: 150,
   },
   {
     headerName: "Created By",
     field: "createdBy",
+    minWidth: 250,
   },
   {
     headerName: "Created On",
     field: "createdOn",
-    valueFormatter: GlobalCellRender.dateFormater,
+    valueFormatter: GlobalCellRender.dateTimeFormater,
+    minWidth: 180,
   },
   {
     headerName: "Approved By",
     field: "approvedBy",
+    minWidth: 200,
   },
   {
     headerName: "Approved On",
     field: "approvedDate",
-    valueFormatter: GlobalCellRender.dateFormater,
+    valueFormatter: GlobalCellRender.dateTimeFormater,
+    minWidth: 180,
   },
 ];

@@ -12,24 +12,31 @@ export interface IClientForms {
   relationshipStatus?: FormControl<string | null>;
   businessType?: FormControl<string | null>;
   type?: FormControl<string | null>;
-  idNo?: FormControl<string | null>;
-  idExpiryDate?: FormControl<Date | null>;
-  nationality?: FormControl<string | null>;
-  sourceofIncome?: FormControl<string | null>;
-  registrationStatus?: FormControl<string | null>;
-  businessActivity?: FormControl<string | null>;
-  marketSegment?: FormControl<string | null>;
-  dateOfIncorporation?: FormControl<Date | null>;
-  dateOfIncorporationHijri?: FormControl<Date | null>;
-  commericalNo?: FormControl<string | null>;
-  expiryDate?: FormControl<Date | null>;
-  expiryDateHijri?: FormControl<Date | null>;
-  sponsorID?: FormControl<string | null>;
-  unifiedNo?: FormControl<string | null>;
-  vatNo?: FormControl<string | null>;
-  capital?: FormControl<string | null>;
+
+  retail?: FormGroup<IClientRetailForm>;
+
+  // idNo?: FormControl<string | null>;
+  // idExpiryDate?: FormControl<Date | null>;
+  // nationality?: FormControl<string | null>;
+  // sourceofIncome?: FormControl<string | null>;
+
+  corporate?: FormGroup<IClientCorporateForm>;
+  // registrationStatus?: FormControl<string | null>;
+  // businessActivity?: FormControl<string | null>;
+  // marketSegment?: FormControl<string | null>;
+  // commericalNo?: FormControl<string | null>;
+  // dateOfIncorporation?: FormControl<Date | null>;
+  // dateOfIncorporationHijri?: FormControl<Date | null>;
+  // expiryDate?: FormControl<Date | null>;
+  // expiryDateHijri?: FormControl<Date | null>;
+  // sponsorID?: FormControl<string | null>;
+  // unifiedNo?: FormControl<string | null>;
+  // vatNo?: FormControl<string | null>;
+  // capital?: FormControl<string | null>;
+  // premium?: FormControl<string | null>;
+
   location?: FormControl<string | null>;
-  premium?: FormControl<string | null>;
+
   buildingNo?: FormControl<string | null>;
   poBox?: FormControl<string | null>;
   tele?: FormControl<string | null>;
@@ -51,4 +58,27 @@ export interface IClientForms {
   clientContacts?: FormArray<FormGroup<IClientContact>>;
   clientsBankAccounts?: FormArray<FormGroup<IClientsBankAccount>>;
   documents?: FormControl<string[] | null>;
+}
+
+export interface IClientRetailForm {
+  idNo?: FormControl<string | null>;
+  idExpiryDate?: FormControl<Date | null>;
+  nationality?: FormControl<string | null>;
+  sourceofIncome?: FormControl<string | null>;
+}
+
+export interface IClientCorporateForm {
+  registrationStatus?: FormControl<string | null>;
+  businessActivity?: FormControl<string | null>;
+  marketSegment?: FormControl<string | null>;
+  commericalNo?: FormControl<string | null>;
+  dateOfIncorporation?: FormControl<Date | null>;
+  dateOfIncorporationHijri?: FormControl<Date | null>;
+  expiryDate?: FormControl<Date | null>;
+  expiryDateHijri?: FormControl<Date | null>;
+  sponsorID?: FormControl<string | null>;
+  unifiedNo?: FormControl<string | null>;
+  vatNo?: FormControl<string | null>;
+  capital?: FormControl<string | null>;
+  premium?: FormControl<string | null>;
 }

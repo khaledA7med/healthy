@@ -30,6 +30,38 @@ export default class GlobalCellRender {
     }
   }
 
+  public static dateTimeFormater(e: ValueFormatterParams) {
+    if (e.value) {
+      var monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var d = new Date(e.value),
+        month = "" + monthNames[d.getMonth()],
+        day = "" + d.getDate(),
+        year = d.getFullYear(),
+        hh = "" + d.getHours(),
+        mm = "" + d.getMinutes();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      if (hh.length < 2) hh = "0" + hh;
+      if (mm.length < 2) mm = "0" + mm;
+      return [day + " " + month, year + " " + hh + ":" + mm].join(", ");
+    } else {
+      return "";
+    }
+  }
+
   public static getBusinessDateCount(startDate: Date, endDate: Date) {
     let elapsed: any, daysBeforeFirstSunday: any, daysAfterLastSunday: any;
     let ifThen = function (a: any, b: any, c: any) {
