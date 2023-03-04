@@ -378,16 +378,16 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			parent.removeChild(statusCountChecker);
 		}
 		let childContent = `<div class=" col-12 d-flex align-items-center">
-					<div class="badge bg-secondary mx-1">
+					<div class="badge bg-warning mx-1 p-1 text-dark">
 					${CustomerServiceStatusRes.Pending} <span>(${pending.length})</span>
 					</div>
-					<div class="badge bg-warning mx-1">
+					<div class="badge bg-yellow mx-1 p-1 text-dark">
 					${CustomerServiceStatusRes.NewRequest} <span>(${newReq.length})</span>
 					</div>
-					<div class="badge bg-success mx-1">
+					<div class="badge bg-success mx-1 p-1 text-dark">
 					${CustomerServiceStatusRes.Closed} <span>(${closed.length})</span>
 					</div>
-					<div class="badge bg-danger mx-1">
+					<div class="badge bg-danger mx-1 p-1 text-dark">
 					${CustomerServiceStatusRes.Cancelled} <span>(${cancelled.length})</span>
 					</div>
 					</div>`;

@@ -46,5 +46,6 @@ export const CSPoicySearchCols: ColDef[] = [
 	{
 		headerName: "Cancelled",
 		field: "cancelled",
+		cellRenderer: GlobalCellRender.CSCanceledFormater,
 	},
 ];

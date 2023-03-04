@@ -30,6 +30,7 @@ export const customerServiceManageCols: ColDef[] = [
 		headerName: "Duration - W.Days(s)",
 		field: "duration",
 		sortable: false,
+		cellRenderer: GlobalCellRender.CSDurationChecker,
 		// field: "savedDate",
 		// valueFormatter: (params) => GlobalCellRender.getBusinessDateCount(new Date(params.value), new Date()),
 		minWidth: 150,
@@ -57,11 +58,11 @@ export const customerServiceManageCols: ColDef[] = [
 		headerName: "Policy No.",
 		field: "policyNo",
 	},
-	{
-		headerName: "ClientPsNo",
-		field: "clientPolicySno",
-		minWidth: 105,
-	},
+	// {
+	// 	headerName: "ClientPsNo",
+	// 	field: "clientPolicySno",
+	// 	minWidth: 105,
+	// },
 	{
 		headerName: "Insurance Company",
 		field: "insurComp",

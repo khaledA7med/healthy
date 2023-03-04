@@ -45,13 +45,13 @@ export default class StatusCellRender {
 	public static customerServiceStatus(e: CellEvent): string {
 		switch (e.value) {
 			case CustomerServiceStatusRes.Pending:
-				return `<span class='badge bg-secondary'>${e.value}</span>`;
+				return `<span class='badge bg-warning text-dark' >${e.value}</span>`;
 			case CustomerServiceStatusRes.NewRequest:
-				return `<span class='badge bg-warning'>${e.value}</span>`;
+				return `<span class='badge bg-yellow text-dark'>${e.value}</span>`;
 			case CustomerServiceStatusRes.Closed:
-				return `<span class='badge bg-success'>${e.value}</span>`;
+				return `<span class='badge bg-success text-dark'>${e.value}</span>`;
 			case CustomerServiceStatusRes.Cancelled:
-				return `<span class='badge bg-danger'>${e.value}</span>`;
+				return `<span class='badge bg-danger text-dark'>${e.value}</span>`;
 			default:
 				return `<span class='badge bg-dark'>${e.value}</span>`;
 		}
