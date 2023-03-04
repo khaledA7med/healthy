@@ -17,5 +17,6 @@ export enum MODULES
   Claims = "Claims",
   ClaimsForm = "ClaimsForm",
   SystemAdmin = "SystemAdmin",
-  InsuranceClasses = "InsuranceClasses"
+  InsuranceClasses = "InsuranceClasses",
+  LineOfBusiness = "LineOfBusiness"
 }

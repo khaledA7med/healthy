@@ -21,7 +21,7 @@ export class MasterTableService
   getBaseData (module: string)
   {
     let data = {
-      InsuranceClasses: [
+      LineOfBusiness: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
@@ -451,7 +451,7 @@ export class MasterTableService
         this.dataSrc = data.SystemAdmin;
         break;
       case MODULES.InsuranceClasses:
-        this.dataSrc = data.InsuranceClasses;
+        this.dataSrc = data.LineOfBusiness;
         break;
       default:
         break;

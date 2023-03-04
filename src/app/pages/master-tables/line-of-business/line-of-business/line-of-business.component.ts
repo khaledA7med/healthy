@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
 import AppUtils from 'src/app/shared/app/util';
@@ -13,6 +13,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ILineOfBusiness, ILineOfBusinessData } from 'src/app/shared/app/models/MasterTables/i-line-of-business';
 import { LineOfBusinessService } from 'src/app/shared/services/master-tables/line-of-business.service';
 import { lineOfBusinessCols } from 'src/app/shared/app/grid/lineOfBusinessCols';
+import { MasterTableService } from 'src/app/core/services/master-table.service';
+import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
+import { MODULES } from 'src/app/core/models/MODULES';
 
 
 @Component({
@@ -24,6 +27,7 @@ import { lineOfBusinessCols } from 'src/app/shared/app/grid/lineOfBusinessCols';
 export class LineOfBusinessComponent implements OnInit
 {
 
+  lookupData!: Observable<IBaseMasterTable>;
   LineOfBBussinessFormSubmitted = false as boolean;
   LineOfBBussinessModal!: NgbModalRef;
   LineOfBBussinessForm!: FormGroup;
@@ -126,12 +130,20 @@ export class LineOfBusinessComponent implements OnInit
     private tableRef: ElementRef,
     private message: MessagesService,
     private appUtils: AppUtils,
+    private table: MasterTableService,
     private eventService: EventService,
     private modalService: NgbModal
   ) { }
 
   ngOnInit (): void
   {
+    this.getLookupData();
+
+  }
+
+  getLookupData ()
+  {
+    this.lookupData = this.table.getBaseData(MODULES.LineOfBusiness);
   }
 
   DeleteLineOfBusiness (id: string)
