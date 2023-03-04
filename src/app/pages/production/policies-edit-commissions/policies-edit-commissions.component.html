@@ -249,9 +249,12 @@
                                                     <input type="number" class="form-control"
                                                         id="producerCommissionPerc" (input)="formListeners($event)"
                                                         placeholder="0%"
-                                                        [ngClass]="{'is-submitted': (ff.prodCommPercentage?.touched) && ff.prodCommPercentage?.invalid}"
+                                                        [ngClass]="{'is-invalid': (ff.prodCommPercentage?.touched) && ff.prodCommPercentage?.invalid}"
                                                         formControlName="prodCommPercentage">
                                                     <span class="input-group-text" id="perc">%</span>
+                                                    <span
+                                                        *ngIf="(ff.prodCommPercentage?.touched || uiState.submitted) && ff.prodCommPercentage?.invalid"
+                                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-12 col-sm-12">

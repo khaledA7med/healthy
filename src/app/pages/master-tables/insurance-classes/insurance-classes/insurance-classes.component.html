@@ -28,7 +28,9 @@
                     <!-- Class Of Insurance -->
                     <div class="col-12 mb-2">
                         <label for="className">Class Of Insurance</label>
-                        <input id="classNameAr" class="form-control form-control-sm" formControlName="className" />
+                        <input id="classNameAr" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f['className'].touched || uiState.submitted) && f['className'].invalid}"
+                            formControlName="className" />
                         <span *ngIf="(f['className'].touched || uiState.submitted) && f['className'].invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>

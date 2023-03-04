@@ -59,6 +59,11 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
+  ngOnInit (): void
+  {
+    this.initInsuranceForm();
+  }
+
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
@@ -127,29 +132,6 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
       horizontal.update();
     }
     if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
-  }
-
-
-  ngOnInit (): void
-  {
-    this.initInsuranceForm();
-  }
-
-  DeleteInsurance (id: string, ClassName: string)
-  {
-    let sub = this.InsuranceClassesService.DeleteInsurance(id, ClassName).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
   }
 
   openInsuranceDialoge (id?: string)
@@ -265,6 +247,23 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
   resetInsuranceForm ()
   {
     this.InsuranceForm.reset();
+  }
+
+  DeleteInsurance (id: string, ClassName: string)
+  {
+    let sub = this.InsuranceClassesService.DeleteInsurance(id, ClassName).subscribe(
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
+        this.gridApi.setDatasource(this.dataSource);
+        if (res.body?.status) this.message.toast(res.body!.message!, "success");
+        else this.message.toast(res.body!.message!, "error");
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+      }
+    );
+    this.subscribes.push(sub);
   }
 
   ngOnDestroy (): void
