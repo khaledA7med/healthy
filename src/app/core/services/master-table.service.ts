@@ -450,7 +450,7 @@ export class MasterTableService
       case MODULES.SystemAdmin:
         this.dataSrc = data.SystemAdmin;
         break;
-      case MODULES.InsuranceClasses:
+      case MODULES.LineOfBusiness:
         this.dataSrc = data.LineOfBusiness;
         break;
       default:

@@ -29,7 +29,7 @@ export class LineOfBusinessService
 
   getEditLineOfBusinessData (id: string): Observable<HttpResponse<IBaseResponse<ILineOfBusinessData>>>
   {
-    return this.http.post<IBaseResponse<ILineOfBusinessData>>(this.env + ApiRoutes.masterTables.lineOfBusiness.edit, {}, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<ILineOfBusinessData>>(this.env + ApiRoutes.masterTables.lineOfBusiness.edit, { params: { id }, observe: "response" });
   }
 
   DeleteLineOfBusiness (id: string): Observable<HttpResponse<IBaseResponse<number>>>

@@ -28,11 +28,11 @@ export class LineOfBusinessComponent implements OnInit
 {
 
   lookupData!: Observable<IBaseMasterTable>;
-  LineOfBBussinessFormSubmitted = false as boolean;
+  LineOfBussinessFormSubmitted = false as boolean;
   LineOfBBussinessModal!: NgbModalRef;
-  LineOfBBussinessForm!: FormGroup;
+  LineOfBussinessForm!: FormGroup<ILineOfBusiness>;
 
-  @ViewChild("LineOfBBussinessContent") LineOfBBussinessContent!: ElementRef;
+  @ViewChild("LineOfBBussinessContent") LineOfBBussinessContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
@@ -41,7 +41,7 @@ export class LineOfBusinessComponent implements OnInit
     totalPages: 0,
     editLineOfBusinessMode: false as Boolean,
     editLineOfBusinessData: {} as ILineOfBusinessData,
-    className: ""
+    className: "Accident"
 
   };
 
@@ -137,8 +137,8 @@ export class LineOfBusinessComponent implements OnInit
 
   ngOnInit (): void
   {
+    this.initLineOfBusinessForm();
     this.getLookupData();
-
   }
 
   getLookupData ()
@@ -163,8 +163,27 @@ export class LineOfBusinessComponent implements OnInit
     this.subscribes.push(sub);
   }
 
+  getLineOfBusinessData (id: string)
+  {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.LineOfBusinessService.getEditLineOfBusinessData(id).subscribe(
+      (res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) =>
+      {
+        this.uiState.editLineOfBusinessMode = true;
+        this.uiState.editLineOfBusinessData = res.body?.data!;
+        this.fillEditLineOfBusinessForm(res.body?.data!);
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
-  openLineOfBusinessDialoge (id?: string)
+  openLineOfBusinessDialoge (id: string)
   {
     this.resetLineOfBusinessForm();
     this.LineOfBBussinessModal = this.modalService.open(this.LineOfBBussinessContent, {
@@ -173,74 +192,64 @@ export class LineOfBusinessComponent implements OnInit
       backdrop: "static",
       size: "md",
     });
-    if (id)
-    {
-      this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.LineOfBusinessService.getEditLineOfBusinessData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) =>
-        {
-          this.uiState.editLineOfBusinessMode = true;
-          this.uiState.editLineOfBusinessData = res.body?.data!;
-          this.fillEditInsuranceForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
-        }
-      );
-      this.subscribes.push(sub);
-    }
+
+    this.getLineOfBusinessData(id);
 
     this.LineOfBBussinessModal.hidden.subscribe(() =>
     {
       this.resetLineOfBusinessForm();
-      this.LineOfBBussinessFormSubmitted = false;
+      this.LineOfBussinessFormSubmitted = false;
       this.uiState.editLineOfBusinessMode = false;
     });
   }
 
   initLineOfBusinessForm ()
   {
-    this.LineOfBBussinessForm = new FormGroup<ILineOfBusiness>({
+    this.LineOfBussinessForm = new FormGroup<ILineOfBusiness>({
       sNo: new FormControl(null),
-      className: new FormControl(null, Validators.required),
-      lineofBusiness: new FormControl(null, Validators.required),
-      lineofBusinessAr: new FormControl(null),
-      abbreviation: new FormControl(null, Validators.required),
+      className: new FormControl("", Validators.required),
+      lineofBusiness: new FormControl("", Validators.required),
+      lineofBusinessAr: new FormControl(""),
+      abbreviation: new FormControl("", Validators.required),
     })
   }
 
   get f ()
   {
-    return this.LineOfBBussinessForm.controls;
+    return this.LineOfBussinessForm.controls;
   }
 
-  fillAddIsnuranceForm (data: ILineOfBusinessData)
+  fillAddLineOfBusinessForm (data: ILineOfBusinessData)
   {
-    this.f[ "className" ].patchValue(data.className);
-    this.f[ "lineofBusiness" ].patchValue(data.lineofBusiness);
-    this.f[ "lineofBusinessAr" ].patchValue(data.lineofBusinessAr);
-    this.f[ "abbreviation" ].patchValue(data.abbreviation);
+    this.f.className?.patchValue(data.className!);
+    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
+    this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
+    this.f.abbreviation?.patchValue(data.abbreviation!);
   }
 
-  fillEditInsuranceForm (data: ILineOfBusinessData)
+  fillEditLineOfBusinessForm (data: ILineOfBusinessData)
   {
-    this.f[ "lineofBusiness" ].patchValue(data.lineofBusiness);
-    this.f[ "lineofBusinessAr" ].patchValue(data.lineofBusinessAr);
-    this.f[ "abbreviation" ].patchValue(data.abbreviation);
-
+    this.f.className?.patchValue(data.className!);
+    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
+    this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
+    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.className?.disable();
   }
 
   validationChecker (): boolean
   {
-    if (this.LineOfBBussinessForm.invalid)
+    if (this.LineOfBussinessForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
     }
     return true;
+  }
+
+  filter (e: any)
+  {
+    this.uiState.className = e?.name
+    this.gridApi.setDatasource(this.dataSource);
   }
 
   submitLineOfBusinessData (form: FormGroup)
@@ -259,7 +268,7 @@ export class LineOfBusinessComponent implements OnInit
     let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.LineOfBBussinessModal.dismiss();
+        this.LineOfBBussinessModal?.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetLineOfBusinessForm();
@@ -277,7 +286,8 @@ export class LineOfBusinessComponent implements OnInit
 
   resetLineOfBusinessForm ()
   {
-    this.LineOfBBussinessForm.reset();
+    this.LineOfBussinessForm.reset();
+    this.f.className?.enable();
   }
 
   ngOnDestroy (): void

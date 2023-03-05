@@ -26,8 +26,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
 
   InsuranceFormSubmitted = false as boolean;
   InsuranceModal!: NgbModalRef;
-  InsuranceForm!: FormGroup;
-  @ViewChild("insuranceContent") insuranceContent!: ElementRef;
+  InsuranceForm!: FormGroup<IInsuranceClass>;
+  @ViewChild("insuranceContent") insuranceContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
@@ -189,18 +189,18 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
 
   fillAddIsnuranceForm (data: IInsuranceClassData)
   {
-    this.f[ "className" ].patchValue(data.className);
-    this.f[ "classNameAr" ].patchValue(data.classNameAr);
-    this.f[ "abbreviation" ].patchValue(data.abbreviation);
+    this.f.className?.patchValue(data.className!);
+    this.f.classNameAr?.patchValue(data.classNameAr!);
+    this.f.abbreviation?.patchValue(data.abbreviation!);
   }
 
   fillEditInsuranceForm (data: IInsuranceClassData)
   {
-    this.f[ "className" ].patchValue(data.className);
-    this.f[ "classNameAr" ].patchValue(data.classNameAr);
-    this.f[ "abbreviation" ].patchValue(data.abbreviation);
-    this.f[ "className" ].disable();
-    this.f[ "classNameAr" ].disable();
+    this.f.className?.patchValue(data.className!);
+    this.f.classNameAr?.patchValue(data.classNameAr!);
+    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.className?.disable();
+    this.f.classNameAr?.disable();
   }
 
   validationChecker (): boolean
@@ -247,6 +247,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
   resetInsuranceForm ()
   {
     this.InsuranceForm.reset();
+    this.f.className?.enable();
+    this.f.classNameAr?.enable();
   }
 
   DeleteInsurance (id: string, ClassName: string)
