@@ -75,6 +75,7 @@ export const ApiRoutes = {
 			endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
 			productionFieldList: LookUpTables + BaseData.ProductionFieldList,
 			productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
+			lineOfBusinessByClassNames: LookUpTables + "LineOfBusinessByClassNames",
 		},
 		Claims: {
 			claimStatus: LookUpTables + BaseData.ClaimStatus,
@@ -152,6 +153,7 @@ export const ApiRoutes = {
 		editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
 		editEditCommission: "/Production/Policy/EditPolicyCommission",
 		updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",
+		productionReport: "/Production/Policy/StatisticsReport",
 		renewalReport: "/Production/Policy/RenewalsReports",
 	},
 	CustomerService: {

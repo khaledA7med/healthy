@@ -55,10 +55,7 @@ const routes: Routes = [
 		data: {
 			title: "Policies Reports - Renewals",
 		},
-		loadChildren: () =>
-			import("../business-development/business-development-renewal-reports/business-development-renewal-reports.module").then(
-				(m) => m.BusinessDevelopmentRenewalReportsModule
-			),
+		loadChildren: () => import("./production-renewal-report/production-renewal-report.module").then((m) => m.ProductionRenewalReportModule),
 	},
 	{
 		path: AppRoutes.Production.Reports.renewalsNotice,

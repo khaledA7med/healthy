@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -10,18 +10,17 @@ import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
-import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "../../reports-viewer/reports-viewer.component";
 import { IPolicyRenewalReportForm, IPolicyRenewalReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-report";
-
+import { ProductionService } from "src/app/shared/services/production/production.service";
 @Component({
-	selector: "app-business-development-renewal-reports",
-	templateUrl: "./business-development-renewal-reports.component.html",
+	selector: "app-production-renewal-report",
+	templateUrl: "./production-renewal-report.component.html",
 	encapsulation: ViewEncapsulation.None,
-	styleUrls: ["./business-development-renewal-reports.component.scss"],
+	styleUrls: ["./production-renewal-report.component.scss"],
 })
-export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
+export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 	url!: any;
 	filterForm!: FormGroup<IPolicyRenewalReportForm>;
 	checkAllStatus: FormControl<boolean | null> = new FormControl(false);
@@ -45,7 +44,7 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 
 	constructor(
 		private modalService: NgbModal,
-		private BusinessDevelopmentService: BusinessDevelopmentService,
+		private productionService: ProductionService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
@@ -113,7 +112,7 @@ export class BusinessDevelopmentRenewalReportsComponent implements OnInit {
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};
 
-		let sub = this.BusinessDevelopmentService.viewRenewalReport(data).subscribe(
+		let sub = this.productionService.viewRenewalReport(data).subscribe(
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {
 					this.eventService.broadcast(reserved.isLoading, false);
