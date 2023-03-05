@@ -27,6 +27,12 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         }
       ],
+      InsuranceCompanies: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        }
+      ],
       Client: [
         {
           route: ApiRoutes.MasterTable.Client.clientType,
@@ -452,6 +458,9 @@ export class MasterTableService
         break;
       case MODULES.LineOfBusiness:
         this.dataSrc = data.LineOfBusiness;
+        break;
+      case MODULES.InsuranceCompanies:
+        this.dataSrc = data.InsuranceCompanies;
         break;
       default:
         break;

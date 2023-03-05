@@ -9,7 +9,8 @@
       "TEXT": "Master Table",
       "LIST": {
         "INSURANCECLASSES": "Insurance Classes",
-        "LINEOFBUSINESS": "Line Of Business"
+        "LINEOFBUSINESS": "Line Of Business",
+        "INSURANCECOMPANIES": "Insurance Companies"
       }
     },
     "CLIENTREGISTRY": {

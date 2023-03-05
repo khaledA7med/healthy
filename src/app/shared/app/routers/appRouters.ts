@@ -12,7 +12,8 @@ export const AppRoutes = {
   },
   MasterTable: {
     insuranceClasses: "insurance-classes",
-    lineOfBusiness: "line-of-business"
+    lineOfBusiness: "line-of-business",
+    insuranceCompanies: "insurance-companies"
   },
   Client: {
     base: "clients",

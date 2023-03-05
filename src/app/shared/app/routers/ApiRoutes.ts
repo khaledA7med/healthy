@@ -7,7 +7,10 @@ export const ApiRoutes = {
   },
   MasterTable: {
     MasterTables: {
-      insurClasses: LookUpTables + BaseData.InsurClasses
+      insurClasses: LookUpTables + BaseData.InsurClasses,
+      lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
+      contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
+      contactDepartment: LookUpTables + BaseData.ContactDepartment
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -120,7 +123,13 @@ export const ApiRoutes = {
       save: "/MasterTables/LineOfBusiness/Save",
       edit: "/MasterTables/LineOfBusiness/Edit",
       delete: "/MasterTables/LineOfBusiness/Delete",
-    }
+    },
+    insuranceCompanies: {
+      search: "/MasterTables/InsuranceCompanies/Search",
+      save: "/MasterTables/InsuranceCompanies/Save",
+      edit: "/MasterTables/InsuranceCompanies/Edit",
+      delete: "/MasterTables/InsuranceCompanies/Delete",
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
