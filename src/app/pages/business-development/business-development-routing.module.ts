@@ -20,7 +20,7 @@ const routes: Routes = [
 		loadChildren: () => import("./business-forms/business-forms.module").then((m) => m.BusinessFormsModule),
 	},
 	{
-		path: AppRoutes.BusinessDevelopment.Reports.Business,
+		path: AppRoutes.BusinessDevelopment.Reports.business,
 		data: { title: "Prospects Reports" },
 		loadChildren: () =>
 			import("./business-development-prospects-reports/business-development-prospects-reports.module").then(
@@ -28,7 +28,7 @@ const routes: Routes = [
 			),
 	},
 	{
-		path: AppRoutes.BusinessDevelopment.Reports.Renewal,
+		path: AppRoutes.BusinessDevelopment.Reports.renewal,
 		data: { title: "Policies Reports - Renewals" },
 		loadChildren: () =>
 			import("./business-development-renewal-reports/business-development-renewal-reports.module").then(

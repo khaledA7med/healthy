@@ -43,6 +43,31 @@ const routes: Routes = [
 		},
 		loadChildren: () => import("./policies-edit-commissions/policies-edit-commissions.module").then((m) => m.PoliciesEditCommissionsModule),
 	},
+	{
+		path: AppRoutes.Production.Reports.production,
+		data: {
+			title: "Production(statistics) Report",
+		},
+		loadChildren: () => import("./production-report/production-report.module").then((m) => m.ProductionReportModule),
+	},
+	{
+		path: AppRoutes.Production.Reports.renewal,
+		data: {
+			title: "Policies Reports - Renewals",
+		},
+		loadChildren: () =>
+			import("../business-development/business-development-renewal-reports/business-development-renewal-reports.module").then(
+				(m) => m.BusinessDevelopmentRenewalReportsModule
+			),
+	},
+	{
+		path: AppRoutes.Production.Reports.renewalsNotice,
+		data: {
+			title: "Renewal Notice",
+		},
+		loadChildren: () =>
+			import("./production-renewal-notice-report/production-renewal-notice-report.module").then((m) => m.ProductionRenewalNoticeReportModule),
+	},
 ];
 
 @NgModule({
