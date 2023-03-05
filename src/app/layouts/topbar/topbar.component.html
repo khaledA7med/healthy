@@ -85,14 +85,21 @@
             <span class="d-flex align-items-center">
               <img class="rounded-circle header-profile-user" src="assets/images/users/avatar.jpg" alt="Header Avatar">
               <span class="text-start ms-xl-2">
-                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Logged In User</span>
-                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">User Role</span>
+                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{userData.name}}</span>
+                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                  <span *ngFor="let role of userData.Role; let isLast=last">
+                    {{role}}{{isLast ? '' : ', '}}
+                  </span>
+                </span>
+                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                  {{userData.Branch}}
+                </span>
               </span>
             </span>
           </button>
           <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
             <!-- item-->
-            <h6 class="dropdown-header">Welcome Anna!</h6>
+            <h6 class="dropdown-header">Welcome {{userData.name}}!</h6>
             <a class="dropdown-item" routerLink="/apps/chat"><i
                 class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
               <span class="align-middle">Messages</span></a>

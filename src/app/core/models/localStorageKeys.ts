@@ -1,4 +1,4 @@
 export enum localStorageKeys {
-  JWT = "app:jwt",
+  JWT = "app:token",
   themeMode = "app:mode",
 }
