@@ -6,15 +6,11 @@ import { EventService } from "../../core/services/event.service";
 //Logout
 import { AuthenticationService } from "../../core/services/auth.service";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { TokenStorageService } from "../../core/services/token-storage.service";
 
-// Language
-import { CookieService } from "ngx-cookie-service";
-import { LanguageService } from "../../core/services/language.service";
-import { TranslateService } from "@ngx-translate/core";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { filter, map, mergeMap } from "rxjs/operators";
+import { UserAccess } from "src/app/core/models/iuser";
 
 @Component({
   selector: "app-topbar",
@@ -33,40 +29,21 @@ export class TopbarComponent implements OnInit {
 
   title: string = "";
 
-  flagvalue: any;
-  valueset: any;
-  countryName: any;
-  cookieValue: any;
-  userData: any;
+  userData!: UserAccess;
   emailRoute: string = AppRoutes.Email.base;
 
   constructor(
     @Inject(DOCUMENT) private document: any,
     private eventService: EventService,
-    public languageService: LanguageService,
-    public _cookiesService: CookieService,
-    public translate: TranslateService,
     private authService: AuthenticationService,
     private router: Router,
-    private route: ActivatedRoute,
-    private TokenStorageService: TokenStorageService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.userData = this.TokenStorageService.getUser();
-    this.element = document.documentElement;
+    this.userData = this.authService.getUser();
 
-    // Cookies wise Language set
-    this.cookieValue = this._cookiesService.get("lang");
-    const val = this.listLang.filter((x) => x.lang === this.cookieValue);
-    this.countryName = val.map((element) => element.text);
-    if (val.length === 0) {
-      if (this.flagvalue === undefined) {
-        this.valueset = "assets/images/flags/us.svg";
-      }
-    } else {
-      this.flagvalue = val.map((element) => element.flag);
-    }
+    this.element = document.documentElement;
 
     this.mode = localStorage.getItem(localStorageKeys.themeMode)!;
     this.changeMode(this.mode);
@@ -75,11 +52,8 @@ export class TopbarComponent implements OnInit {
   }
 
   private setTitleFromRouteData(routeData: any) {
-    if (routeData && routeData["title"]) {
-      this.title = routeData["title"];
-    } else {
-      this.title = "";
-    }
+    if (routeData && routeData["title"]) this.title = routeData["title"];
+    else this.title = "";
   }
 
   private getLatestChild(route: any) {
@@ -183,30 +157,12 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  /***
-   * Language Listing
-   */
-  listLang = [
-    { text: "English", flag: "assets/images/flags/us.svg", lang: "en" },
-    { text: "العربية", flag: "assets/images/flags/arabic.svg", lang: "ar" },
-  ];
-
-  /***
-   * Language Value Set
-   */
-  setLanguage(text: string, lang: string, flag: string) {
-    this.countryName = text;
-    this.flagvalue = flag;
-    this.cookieValue = lang;
-    this.languageService.setLanguage(lang);
-  }
-
   /**
    * Logout the user
    */
   logout() {
     this.authService.logout();
-    this.router.navigate(["/auth/login"]);
+    this.router.navigate([AppRoutes.Auth.login]);
   }
 
   windowScroll() {

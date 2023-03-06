@@ -1,14 +1,13 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
-import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { productionCols } from "src/app/shared/app/grid/productionCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -86,13 +85,21 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private eventService: EventService
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.getLookupData();
 		this.disableAmountFilter();
+		let sub = this.router.events.subscribe((evt) => {
+			if (evt instanceof NavigationEnd) {
+				if (!evt.url.includes("details")) {
+					if (this.router.getCurrentNavigation()?.extras.state!["updated"]) this.gridApi.setDatasource(this.dataSource);
+				}
+			}
+		});
+		this.subscribes.push(sub);
 	}
 
 	dataSource: IDatasource = {

@@ -14,12 +14,12 @@ import { Subscription } from "rxjs";
 				class="myIFrame justify-content-center"
 				frameborder="5"
 				width="100%"
-				height="90%"
+				height="99%"
 				referrerpolicy="no-referrer-when-downgrade"
 			></iframe>
 		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.dismiss()">Cancel</button>
+		<div class="modal-footer py-0">
+			<button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.dismiss()">Close</button>
 		</div>
 	`,
 	styles: [
@@ -28,8 +28,21 @@ import { Subscription } from "rxjs";
 				border: none;
 			}
 			.reports-body {
-				width: 95%;
-				height: 80vh;
+				width: 100%;
+				height: 100vh;
+			}
+			.dark-modal .modal-content {
+				background-color: #292b2c;
+				color: white;
+			}
+			/* .modal-body {
+				overflow-y: auto;
+			} */
+			.dark-modal .close {
+				color: white;
+			}
+			.light-blue-backdrop {
+				background-color: #5cb3fd;
 			}
 		`,
 	],

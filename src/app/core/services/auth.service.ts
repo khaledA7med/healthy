@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
-import { User } from "../models/auth.models";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
-import { IUser, LoginResponse } from "../models/iuser";
-
-const httpOptions = {
-	headers: new HttpHeaders({ "Content-Type": "application/json" }),
-};
+import { IUser, LoginResponse, UserAccess } from "../models/iuser";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { localStorageKeys } from "../models/localStorageKeys";
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable({ providedIn: "root" })
 
@@ -16,26 +14,39 @@ const httpOptions = {
  * Auth-service Component
  */
 export class AuthenticationService {
-	baseURL: string = environment.baseURL;
-	user!: User;
-	currentUserValue: any;
-	private currentUserSubject: BehaviorSubject<User>;
+  baseURL: string = environment.baseURL;
+  jwtHelper = new JwtHelperService();
+  constructor(private http: HttpClient) {}
 
-	constructor(private http: HttpClient) {
-		this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem("currentUser")!));
-	}
+  login(data: IUser): Observable<IBaseResponse<LoginResponse>> {
+    return this.http.post<IBaseResponse<LoginResponse>>(
+      this.baseURL + ApiRoutes.Users.login,
+      data
+    );
+  }
+  /**
+   * Logout the user
+   */
+  logout() {
+    // logout the user
+    localStorage.removeItem(localStorageKeys.JWT);
+  }
 
-	login(data: IUser): Observable<LoginResponse> {
-		return this.http.post(this.baseURL + ApiRoutes.Users.login, data);
-	}
-	/**
-	 * Logout the user
-	 */
-	logout() {
-		// logout the user
-		// return getFirebaseBackend()!.logout();
-		localStorage.removeItem("currentUser");
-		localStorage.removeItem("token");
-		this.currentUserSubject.next(null!);
-	}
+  get currentToken(): string {
+    return localStorage.getItem(localStorageKeys.JWT)!;
+  }
+
+  get isTokenAvailabe(): boolean {
+    return !!localStorage.getItem(localStorageKeys.JWT);
+  }
+
+  get decodeToken(): UserAccess {
+    return this.jwtHelper.decodeToken(
+      localStorage.getItem(localStorageKeys.JWT)!
+    )!;
+  }
+
+  getUser(): UserAccess {
+    return this.decodeToken;
+  }
 }

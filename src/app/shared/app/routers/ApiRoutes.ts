@@ -48,6 +48,7 @@ export const ApiRoutes = {
       InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
       logType: LookUpTables + BaseData.LogType,
+      prospectsReportsTypes: LookUpTables + BaseData.ProspectsReportsTypes,
     },
     CustomerService: {
       AllClients: LookUpTables + BaseData.AllClients,
@@ -159,6 +160,7 @@ export const ApiRoutes = {
     policyRequirements: "/BusinessDevelopment/SalesLeads/PolicyRequirments",
     save: "/BusinessDevelopment/SalesLeads/Save",
     edit: "/BusinessDevelopment/SalesLeads/Edit",
+    prospectReport: "/BusinessDevelopment/SalesLeads/ProspectsReport",
   },
   Production: {
     search: "/Production/Policy/Search",
@@ -176,6 +178,7 @@ export const ApiRoutes = {
     editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
     editEditCommission: "/Production/Policy/EditPolicyCommission",
     updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",
+    renewalReport: "/Production/Policy/RenewalsReports",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -207,6 +210,7 @@ export const ApiRoutes = {
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
     getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
+    getInsurerWorkshops: "/Claims/GetInsurerWorkshops",
     getClientMailData: "/Claims/NotifyClientMailData",
     getInsurerMailData: "/Claims/NotifyInsurerMailData",
   },

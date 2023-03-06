@@ -14,7 +14,7 @@ export const routes: Routes = [{ path: "", component: GridViewComponent }];
   declarations: [GridViewComponent, GeneralGridMenuComponent],
   imports: [
     CommonModule,
-    AgGridModule.withComponents([GeneralGridMenuComponent]),
+    AgGridModule,
     RouterModule.forChild(routes),
     NgbDropdownModule,
     SharedModule,

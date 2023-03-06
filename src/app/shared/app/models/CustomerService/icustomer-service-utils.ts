@@ -6,6 +6,12 @@ export enum CustomerServiceStatus {
 	Cancel = "Canceled",
 	NewRequest = "NewRequset",
 }
+export enum CustomerServiceStatusRes {
+	Pending = "Pending",
+	Closed = "Closed",
+	Cancelled = "Canceled",
+	NewRequest = "New Request",
+}
 
 export interface EndorsTypeByPolicy {
 	id: string;

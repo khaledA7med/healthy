@@ -29,59 +29,59 @@ export const MENU: MenuItem[] = [
   },
   {
     id: 2,
-    label: "MENUITEMS.CLIENTREGISTRY.TEXT",
-    icon: "ri-folder-user-line",
+    label: "MENUITEMS.BUSINESSDEVELOPMENT.TEXT",
+    icon: "ri-briefcase-5-line",
     subItems: [
       {
         id: 201,
-        label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTREGISTRY",
-        link: AppRoutes.Client.clientRegistry,
+        label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
+        link: AppRoutes.BusinessDevelopment.management,
         parentId: 2,
       },
       {
         id: 202,
-        label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTGROUPS",
-        link: AppRoutes.Client.groups,
+        label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTS",
         parentId: 2,
-      },
-      {
-        id: 203,
-        label: "MENUITEMS.CLIENTREGISTRY.LIST.REPORTS",
-        link: AppRoutes.Client.reports,
-        parentId: 2,
+        subItems: [
+          {
+            id: 2001,
+            label:
+              "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
+            link: AppRoutes.BusinessDevelopment.Reports.Business,
+            parentId: 202,
+          },
+          {
+            id: 2002,
+            label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.RENEWAL",
+            link: AppRoutes.BusinessDevelopment.Reports.Renewal,
+            parentId: 202,
+          },
+        ],
       },
     ],
   },
   {
     id: 3,
-    label: "MENUITEMS.BUSINESSDEVELOPMENT.TEXT",
-    icon: "ri-briefcase-5-line",
+    label: "MENUITEMS.CLIENTREGISTRY.TEXT",
+    icon: "ri-folder-user-line",
     subItems: [
       {
         id: 301,
-        label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
-        link: AppRoutes.BusinessDevelopment.management,
+        label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTREGISTRY",
+        link: AppRoutes.Client.clientRegistry,
         parentId: 3,
       },
       {
         id: 302,
-        label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTS",
+        label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTGROUPS",
+        link: AppRoutes.Client.groups,
         parentId: 3,
-        subItems: [
-          {
-            id: 3001,
-            label:
-              "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
-            link: AppRoutes.BusinessDevelopment.Reports.Business,
-            parentId: 302,
-          },
-          {
-            id: 3002,
-            label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.RENEWAL",
-            link: AppRoutes.BusinessDevelopment.Reports.Renewal,
-            parentId: 302,
-          },
-        ],
+      },
+      {
+        id: 303,
+        label: "MENUITEMS.CLIENTREGISTRY.LIST.REPORTS",
+        link: AppRoutes.Client.reports,
+        parentId: 3,
       },
     ],
   },

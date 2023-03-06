@@ -126,6 +126,16 @@ export class ClaimsService {
     );
   }
 
+  getInsurerWorkshops(
+    insurComp: string,
+    city: string
+  ): Observable<IBaseResponse<any>> {
+    return this.http.post(this.env + ApiRoutes.Claims.getInsurerWorkshops, {
+      insuranceCompany: insurComp,
+      city: city,
+    });
+  }
+
   rejectClaimPayment(id: number): Observable<IBaseResponse<any>> {
     return this.http.post<IBaseResponse<any>>(
       this.env + ApiRoutes.Claims.rejectPayment,
