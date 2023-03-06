@@ -155,20 +155,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     // Claimant Amounts Calc
     if (!this.uiState.editMode) this.claimAmountHandler();
 
-    // Set Default Dates
-    let date = new Date();
-    let now = {
-      gon: {
-        day: date.getDate(),
-        month: date.getMonth() + 1,
-        year: date.getFullYear(),
-      },
-    };
-    this.datesValuePatcher(now, this.f.intimationDate!);
-    this.datesValuePatcher(now, this.f.dateOfLoss!);
-    this.datesValuePatcher(now, this.f.dateOfReceive!);
-    this.datesValuePatcher(now, this.f.dateOfSubmission!);
-    this.datesValuePatcher(now, this.f.dateOfDeadline!);
+    this.defaultDatesSetter();
   }
 
   initForm(): void {
@@ -322,7 +309,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
   getClaim(id: string): void {
     this.uiState.editMode = true;
-    this.claimService.getClaimById(id).subscribe(
+    let sub = this.claimService.getClaimById(id).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
         if (res.body?.status) {
           let data = res.body?.data;
@@ -377,7 +364,47 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
             bankName: data?.bankName,
             bankBranch: data?.bankBranch,
             bankCity: data?.bankCity,
+
+            medical: {
+              medID: data?.medID,
+              medClass: data?.medClass,
+              hospital: data?.hospital,
+              medCaseType: data?.medCaseType,
+            },
+            motor: {
+              accidentNumber: data?.accidentNumber,
+              carPaletNo: data?.carPaletNo,
+              carsMake: data?.carsMake,
+              city: data?.city,
+              excess: data?.excess,
+              mistakePercentage: data?.mistakePercentage,
+              model: data?.model,
+              motorChassisNo: data?.motorChassisNo,
+              policyCertificateNo: data?.policyCertificateNo,
+              policyExcess: data?.policyExcess,
+              TPL: data?.tpl,
+              type: data?.type,
+              typeOfrepair: data?.typeOfrepair,
+              workshopAgency: data?.workshopAgency,
+            },
+            general: {
+              claimCertificateNo: data?.claimCertificateNo,
+              claimExcess: +data?.claimExcess?.toString()! ?? "0",
+              declarationNo: data?.declarationNo,
+              generalChassisNo: data?.generalChassisNo,
+              interimPayment: data?.interimPayment,
+              liability: data?.liability,
+              lossLocation: data?.lossLocation,
+              nameofInjured: data?.nameofInjured,
+              natureofLoss: data?.natureofLoss,
+              recovery: data?.recovery,
+              shipmentName: data?.shipmentName,
+            },
           });
+
+          data?.claimsGeneral.forEach((el) => this.addGeneralItems(el));
+
+          this.claimTypeTogglerEvt();
 
           this.setRequiredDocuments(
             data?.requiredDocumentList!,
@@ -408,6 +435,25 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
         this.eventService.broadcast(reserved.isLoading, false);
       }
     );
+    this.subscribes.push(sub);
+  }
+
+  getInsurerWorkshops(city: string): void {
+    let sub = this.claimService
+      .getInsurerWorkshops(this.f.insuranceCompany?.value!, city)
+      .subscribe(
+        (res) => {
+          console.log(res);
+        },
+        (err) => {
+          this.message.popup(
+            "Look Up!",
+            "Under Testing Call Customer Service, No data At All",
+            "error"
+          );
+        }
+      );
+    this.subscribes.push(sub);
   }
 
   //#endregion
@@ -571,6 +617,23 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
   datesValuePatcher(e: any, control: AbstractControl) {
     control.patchValue(e.gon);
+  }
+
+  defaultDatesSetter(): void {
+    // Set Default Dates
+    let date = new Date();
+    let now = {
+      gon: {
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear(),
+      },
+    };
+    this.datesValuePatcher(now, this.f.intimationDate!);
+    this.datesValuePatcher(now, this.f.dateOfLoss!);
+    this.datesValuePatcher(now, this.f.dateOfReceive!);
+    this.datesValuePatcher(now, this.f.dateOfSubmission!);
+    this.datesValuePatcher(now, this.f.dateOfDeadline!);
   }
 
   // Claim Status
@@ -886,7 +949,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       clientNo: new FormControl(null),
       item: new FormControl(el.item),
       mandatory: new FormControl(el.mandatory),
-      value: new FormControl(null, el.mandatory && Validators.required),
+      value: new FormControl(el.value, el.mandatory && Validators.required),
     });
     this.general.claimsGeneral?.push(item);
   }
@@ -917,6 +980,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let val = this.formGroup.getRawValue();
+
     const formData = new FormData();
 
     for (let doc of this.documentsToUpload) formData.append("documents", doc);
@@ -1028,10 +1092,15 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     formData.append("nameofInjured", val.general?.nameofInjured ?? "");
     formData.append("natureofLoss", val.general?.natureofLoss ?? "");
     formData.append("lossLocation", val.general?.lossLocation ?? "");
-    formData.append("PolicyExcess", val.general?.claimExcess! ?? "");
+    formData.append(
+      "PolicyExcess",
+      val.general?.claimExcess ? val.general?.claimExcess!.toString() : "0"
+    );
     formData.append(
       "interimPayment",
-      val.general?.interimPayment?.toString() ?? "0"
+      val.general?.interimPayment
+        ? val.general?.interimPayment?.toString()
+        : "0"
     );
     formData.append("recovery", val.general?.recovery ?? "");
     formData.append("liability", val.general?.liability ?? "");
@@ -1119,7 +1188,37 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  resetForm() {}
+  resetForm() {
+    this.formGroup.reset();
+    this.uiState.searchRequest = {
+      ...this.uiState.searchRequest,
+      clientName: "",
+      insuranceCompany: null,
+      classOfInsurance: null,
+      lineOfBusiness: null,
+      policyNo: null,
+    };
+    this.f.claimType?.patchValue(this.uiState.claimTypes.Medical);
+    this.claimTypeTogglerEvt();
+
+    this.uiState.policies.clientOutStanding = [];
+    this.amounts.ckClaimAmount?.patchValue(true);
+
+    // Dates
+    this.f.chIntimationDate?.patchValue(true);
+    this.f.chDateOfLoss?.patchValue(true);
+    this.f.chDateOfReceive?.patchValue(true);
+    this.f.chDateofSubmission?.patchValue(true);
+    this.f.chDateOfDeadline?.patchValue(true);
+    this.defaultDatesSetter();
+
+    this.uiState.claimLists.requiredDocs = [];
+    this.f.requiredDocumentList.clear();
+
+    this.documentsToUpload = [];
+    this.dropzone.clearImages();
+    this.uiState.submitted = false;
+  }
 
   ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
