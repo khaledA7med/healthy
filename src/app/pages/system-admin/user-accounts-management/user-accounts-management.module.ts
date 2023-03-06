@@ -7,10 +7,20 @@ import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
 import { UserAccountsManagementControlsComponent } from "./user-accounts-management-controls.component";
 
-export const routes: Routes = [{ path: "", component: UserAccountsManagementComponent }];
+export const routes: Routes = [
+  { path: "", component: UserAccountsManagementComponent },
+];
 
 @NgModule({
-	declarations: [UserAccountsManagementComponent, UserAccountsManagementControlsComponent],
-	imports: [CommonModule, RouterModule.forChild(routes), SharedModule, AgGridModule.withComponents([UserAccountsManagementControlsComponent])],
+  declarations: [
+    UserAccountsManagementComponent,
+    UserAccountsManagementControlsComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    AgGridModule,
+  ],
 })
 export class UserAccountsManagementModule {}

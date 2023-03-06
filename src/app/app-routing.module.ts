@@ -11,6 +11,8 @@ import { LayoutComponent } from "./layouts/layout.component";
 // Auth
 import { AuthGuard } from "./core/guards/auth.guard";
 import { NotFoundComponent } from "./extraspages/not-found/not-found.component";
+import { AppRoutes } from "./shared/app/routers/appRouters";
+import { UnAuthGuard } from "./core/guards/un-auth.guard";
 
 const routes: Routes = [
   {
@@ -21,9 +23,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: "auth",
+    path: AppRoutes.Auth.login,
     loadChildren: () =>
       import("./account/account.module").then((m) => m.AccountModule),
+    canActivate: [UnAuthGuard],
   },
   {
     path: "pages",

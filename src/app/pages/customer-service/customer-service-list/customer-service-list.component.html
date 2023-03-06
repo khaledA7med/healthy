@@ -63,8 +63,8 @@
                     <label for="Status" class="form-label text-muted fw-bold fs-13">Status</label>
                     <ng-select id="Status" class="is-invalid" placeholder="Select Status"
                         [items]="(lookupData | async)?.CServiceStatus?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [multiple]="true" [hideSelected]="true" [searchable]="true"
-                        formControlName="status" bindLabel="name" bindValue="name">
+                        [clearable]="true" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                        [searchable]="true" formControlName="status" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
@@ -73,7 +73,8 @@
                     <ng-select id="Type" class="is-invalid" placeholder="Select Type"
                         [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" [multiple]="true"
-                        [hideSelected]="true" formControlName="type" bindLabel="name" bindValue="name">
+                        [closeOnSelect]="false" [hideSelected]="true" formControlName="type" bindLabel="name"
+                        bindValue="name">
                     </ng-select>
                 </div>
 
@@ -104,7 +105,8 @@
                     <label for="RequestNo" class="form-label text-muted fw-bold fs-13">
                         Request No :
                     </label>
-                    <input name="RequestNo" type="text" class="form-control" id="RequestNo" placeholder="Request No">
+                    <input name="RequestNo" type="text" class="form-control" formControlName="requestNo" id="RequestNo"
+                        placeholder="Request No">
                 </div>
 
                 <div class="mb-3">
@@ -233,8 +235,8 @@
                             <ng-select [items]="(lookupData | async)?.AllUsers?.content!"
                                 [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                                 [ngClass]="{ 'is-invalid': ff['names'].touched && ff['names'].errors }"
-                                [multiple]="true" [hideSelected]="true" bindLabel="name" bindValue="name" id="users"
-                                formControlName="names">
+                                [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" bindLabel="name"
+                                bindValue="name" id="users" formControlName="names">
                             </ng-select>
                             <div *ngIf="ff['names'].touched && ff['names'].errors" class="invalid-feedback">
                                 <div *ngIf="ff['names'].touched && ff['names'].errors['required']">

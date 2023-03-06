@@ -19,7 +19,7 @@ import { ICustomerService } from "src/app/shared/app/models/CustomerService/icus
 import { customerServiceManageCols } from "src/app/shared/app/grid/customerServiceCols";
 import AppUtils from "src/app/shared/app/util";
 import { ICustomerServiceFollowUp } from "src/app/shared/app/models/CustomerService/icustomer-service-followup";
-import { CustomerServiceStatus } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
+import { CustomerServiceStatus, CustomerServiceStatusRes } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 import { IChangeCsStatusRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-req";
 RangePickerModule;
@@ -125,7 +125,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 					this.uiState.customerService.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
 					this.uiState.customerService.list = res.body?.data!;
-					this.statusCount();
+					this.drawStatusCount(res.body?.data!);
 
 					params.successCallback(this.uiState.customerService.list, this.uiState.customerService.totalPages);
 					this.uiState.gridReady = true;
@@ -356,23 +356,20 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		this.subscribes.push(sub);
 	}
 
-	statusCount(): void {
-		let sub = this.customerService.statusCount().subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				if (res.body?.status) {
-					this.uiState.statusCount = res.body.data;
-					this.drawStatusCount();
-				} else this.message.toast(res.body!.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+	drawStatusCount(data: ICustomerService[]) {
+		let pending: ICustomerService[] = data.filter((el) => {
+				return el.status === CustomerServiceStatusRes.Pending;
+			}),
+			newReq: ICustomerService[] = data.filter((el) => {
+				return el.status === CustomerServiceStatusRes.NewRequest;
+			}),
+			closed: ICustomerService[] = data.filter((el) => {
+				return el.status === CustomerServiceStatusRes.Closed;
+			}),
+			cancelled: ICustomerService[] = data.filter((el) => {
+				return el.status === CustomerServiceStatusRes.Cancelled;
+			});
 
-		this.subscribes.push(sub);
-	}
-
-	drawStatusCount() {
 		let parent = document.getElementsByClassName("ag-paging-panel")[0];
 		let child = document.createElement("div");
 		child.setAttribute("id", "statusCount");
@@ -381,17 +378,17 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			parent.removeChild(statusCountChecker);
 		}
 		let childContent = `<div class=" col-12 d-flex align-items-center">
-					<div class="badge bg-info mx-1">
-					Pending <span>(${this.uiState.statusCount?.pendingCount!})</span>
+					<div class="badge bg-warning mx-1 p-1 text-dark">
+					${CustomerServiceStatusRes.Pending} <span>(${pending.length})</span>
 					</div>
-					<div class="badge  bg-secondary mx-1">
-					New Request <span>(${this.uiState.statusCount?.newRequestCount!})</span>
+					<div class="badge bg-yellow mx-1 p-1 text-dark">
+					${CustomerServiceStatusRes.NewRequest} <span>(${newReq.length})</span>
 					</div>
-					<div class="badge bg-success mx-1">
-					Close <span>(${this.uiState.statusCount?.closeCount!})</span>
+					<div class="badge bg-success mx-1 p-1 text-dark">
+					${CustomerServiceStatusRes.Closed} <span>(${closed.length})</span>
 					</div>
-					<div class="badge bg-danger mx-1">
-					Canceled <span>(${this.uiState.statusCount?.canceledCount!})</span>
+					<div class="badge bg-danger mx-1 p-1 text-dark">
+					${CustomerServiceStatusRes.Cancelled} <span>(${cancelled.length})</span>
 					</div>
 					</div>`;
 		child.classList.add("col", "my-2");

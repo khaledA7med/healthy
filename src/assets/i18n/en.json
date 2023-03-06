@@ -6,7 +6,7 @@
   },
   "MENUITEMS": {
     "MASTERTABLE": {
-      "TEXT": "Master Table",
+      "TEXT": "Master Tables",
       "LIST": {
         "INSURANCECLASSES": "Insurance Classes",
         "LINEOFBUSINESS": "Line Of Business",
@@ -16,9 +16,9 @@
     "CLIENTREGISTRY": {
       "TEXT": "Clients",
       "LIST": {
-        "CLIENTREGISTRY": "Client Registry",
-        "CLIENTGROUPS": "Client Groups",
-        "REPORTS": "Client Reports"
+        "CLIENTREGISTRY": "Clients Registry",
+        "CLIENTGROUPS": "Clients Groups",
+        "REPORTS": "Clients Reports"
       }
     },
     "BUSINESSDEVELOPMENT": {
@@ -54,7 +54,7 @@
     "SYSTEMADMIN": {
       "TEXT": "System Admin",
       "LIST": {
-        "MANAGEMENT": "System Management"
+        "MANAGEMENT": "User Accounts Management"
       }
     },
     "MENU": {

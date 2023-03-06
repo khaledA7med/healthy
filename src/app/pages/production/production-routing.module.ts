@@ -30,7 +30,7 @@ const routes: Routes = [
 		loadChildren: () => import("./policies-forms/policies-forms.module").then((m) => m.PoliciesFormsModule),
 	},
 	{
-		path: AppRoutes.Production.makeInvoice + ":invoice/:serial",
+		path: AppRoutes.Production.makeInvoice + ":invoice/:serial/:reqno",
 		data: {
 			title: "Make Invoice",
 		},
