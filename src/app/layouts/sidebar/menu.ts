@@ -31,6 +31,12 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.MasterTable.insuranceBrokers,
         parentId: 1,
       },
+      {
+        id: 105,
+        label: "MENUITEMS.MASTERTABLE.LIST.POLICYTYPES",
+        link: AppRoutes.MasterTable.policyTypes,
+        parentId: 1,
+      },
     ],
   },
   {

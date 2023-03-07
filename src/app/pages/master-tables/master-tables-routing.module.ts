@@ -44,6 +44,16 @@ const routes: Routes = [
         (m) => m.InsuranceBrokersModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.policyTypes,
+    data: {
+      title: "Policy Types",
+    },
+    loadChildren: () =>
+      import("./policy-types/policy-types.module").then(
+        (m) => m.PolicyTypesModule
+      ),
+  },
 ];
 
 @NgModule({

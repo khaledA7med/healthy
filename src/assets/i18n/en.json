@@ -11,7 +11,8 @@
         "INSURANCECLASSES": "Insurance Classes",
         "LINEOFBUSINESS": "Line Of Business",
         "INSURANCECOMPANIES": "Insurance Companies",
-        "INSURANCEBROKERS": "Insurance Brokers"
+        "INSURANCEBROKERS": "Insurance Brokers",
+        "POLICYTYPES": "Policy Types"
       }
     },
     "CLIENTREGISTRY": {

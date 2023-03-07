@@ -14,7 +14,8 @@ export const AppRoutes = {
     insuranceClasses: "insurance-classes",
     lineOfBusiness: "line-of-business",
     insuranceCompanies: "insurance-companies",
-    insuranceBrokers: "insurance-brokers"
+    insuranceBrokers: "insurance-brokers",
+    policyTypes: "policy-types"
   },
   Client: {
     base: "clients",
