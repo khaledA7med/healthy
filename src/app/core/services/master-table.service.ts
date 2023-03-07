@@ -408,6 +408,68 @@ export class MasterTableService {
 					name: BaseData.UserSecurityRoles,
 				},
 			],
+			Reports: [
+				{
+					route: ApiRoutes.MasterTable.Reports.clientsList,
+					name: BaseData.ClientsList,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.groupsList,
+					name: BaseData.GroupsList,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.InsurClasses,
+					name: BaseData.InsurClasses,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.insuranceCompanies,
+					name: BaseData.InsuranceCompanies,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.branch,
+					name: BaseData.Branch,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.producers,
+					name: BaseData.Producers,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.policyEndorsTypes,
+					name: BaseData.PolicyEndorsTypes,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.productionReportType,
+					name: BaseData.ProductionReportType,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+					name: BaseData.ProductionReportBasedOn,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+					name: BaseData.ProductionReportCaptive,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.productionReportStatus,
+					name: BaseData.ProductionReportStatus,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.renewalNoticeReportStatus,
+					name: BaseData.RenewalNoticeReportStatus,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.cserviceStatus,
+					name: BaseData.CServiceStatus,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.csReportType,
+					name: BaseData.CSReportType,
+				},
+				{
+					route: ApiRoutes.MasterTable.Reports.allUsers,
+					name: BaseData.AllUsers,
+				},
+			],
 		};
 
 		switch (module) {
@@ -443,6 +505,9 @@ export class MasterTableService {
 				break;
 			case MODULES.SystemAdmin:
 				this.dataSrc = data.SystemAdmin;
+				break;
+			case MODULES.Reports:
+				this.dataSrc = data.Reports;
 				break;
 			default:
 				break;

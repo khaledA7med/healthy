@@ -12,6 +12,7 @@ import { ICustomerServicePolicySearch } from "../../app/models/CustomerService/i
 import { CSPolicySearchRequest } from "../../app/models/CustomerService/icustomer-service-policy-search-req";
 import { CSPolicyData } from "../../app/models/CustomerService/icustomer-service-policy";
 import { EndorsTypeByPolicy } from "../../app/models/CustomerService/icustomer-service-utils";
+import { csReportReq } from "../../app/models/CustomerService/icustomer-service-report";
 
 @Injectable({
 	providedIn: "root",
@@ -89,6 +90,12 @@ export class CustomerServiceService {
 	getRequest(id: string): Observable<HttpResponse<IBaseResponse<ICustomerService>>> {
 		return this.http.get<IBaseResponse<ICustomerService>>(this.env + ApiRoutes.CustomerService.edit, {
 			params: { id },
+			observe: "response",
+		});
+	}
+
+	viewCSReport(body: csReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
+		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.CustomerService.csReport, body, {
 			observe: "response",
 		});
 	}

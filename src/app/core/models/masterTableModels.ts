@@ -52,6 +52,12 @@ export enum BaseData {
 	Hospitals = "Hospitals",
 	CarsModels = "CarsModels",
 	Cities = "Cities",
+	ProductionReportType = "ProductionReportType",
+	ProductionReportBasedOn = "ProductionReportBasedOn",
+	ProductionReportCaptive = "ProductionReportCaptive",
+	ProductionReportStatus = "ProductionReportStatus",
+	RenewalNoticeReportStatus = "RenewalNoticeReportStatus",
+	CSReportType = "CSReportType",
 }
 
 export interface IBaseMasterTable {
@@ -108,6 +114,12 @@ export interface IBaseMasterTable {
 	Hospitals?: Caching<IGenericResponseType[]>;
 	CarsModels?: Caching<IGenericResponseType[]>;
 	Cities?: Caching<IGenericResponseType[]>;
+	ProductionReportType?: Caching<IGenericResponseType[]>;
+	ProductionReportBasedOn?: Caching<IGenericResponseType[]>;
+	ProductionReportCaptive?: Caching<IGenericResponseType[]>;
+	ProductionReportStatus?: Caching<IGenericResponseType[]>;
+	RenewalNoticeReportStatus?: Caching<IGenericResponseType[]>;
+	CSReportType?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

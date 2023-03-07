@@ -11,7 +11,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { ReportsViewerComponent } from "../../reports-viewer/reports-viewer.component";
+import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { IClientReportFiltersForm, IClientReportReq } from "src/app/shared/app/models/Clients/iclient-report";
 import AppUtils from "src/app/shared/app/util";
 
@@ -67,7 +67,6 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 	}
 
 	checkAllStatusAction(check: boolean | null) {
-		console.log(this.uiState.clientStatus.map((e) => e.name));
 		if (check) {
 			this.f.status?.patchValue(this.uiState.clientStatus.map((e) => e.name));
 		} else this.f.status?.patchValue(["Active"]);
@@ -123,16 +122,8 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
 		this.modalRef.componentInstance.data = {
 			reportName: "Clients Reports",
-			// url:
-			// 	"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55232.657228351054!2d31.319837900000003!3d30.093009899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2seg!4v1677497557644!5m2!1sen!2seg" ||
-			// 	data,
 			url: data,
 		};
-
-		// let sub = this.modalRef.closed.subscribe((res) => {
-		// 	console.log(res);
-		// });
-		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {

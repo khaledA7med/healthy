@@ -12,7 +12,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ReportsViewerComponent } from "../../reports-viewer/reports-viewer.component";
+import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 
 import {
 	IBusinessDevelopmentProspectsReportForm,
@@ -79,15 +79,21 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
-		if (controlName === "branch") {
-			if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-			else this.f.branchs?.patchValue(null);
-		} else if (controlName === "producer") {
-			if (check) this.f.producers?.patchValue(this.uiState.lists.producersLists.map((e) => e.name));
-			else this.f.producers?.patchValue(null);
-		} else if (controlName === "classOfBusiness") {
-			if (check) this.f.classofBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-			else this.f.classofBusiness?.patchValue(null);
+		switch (controlName) {
+			case "branch":
+				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
+				else this.f.branchs?.patchValue(null);
+				break;
+			case "producer":
+				if (check) this.f.producers?.patchValue(this.uiState.lists.producersLists.map((e) => e.name));
+				else this.f.producers?.patchValue(null);
+				break;
+			case "classOfBusiness":
+				if (check) this.f.classofBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
+				else this.f.classofBusiness?.patchValue(null);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -140,11 +146,6 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 			reportName: "Prospects Reports",
 			url: data,
 		};
-
-		// let sub = this.modalRef.closed.subscribe((res) => {
-		// 	console.log(res);
-		// });
-		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {

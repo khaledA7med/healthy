@@ -26,7 +26,7 @@ export const AppRoutes = {
 		management: "saleslead",
 		create: "saleslead/create",
 		edit: "saleslead/update/",
-		Reports: {
+		reports: {
 			business: "saleslead/business-report",
 			renewal: "saleslead/renewal-report",
 		},
@@ -38,7 +38,7 @@ export const AppRoutes = {
 		edit: "production/update/",
 		editCommissions: "production/edit-commissions",
 		makeInvoice: "production/invoice/",
-		Reports: {
+		reports: {
 			production: "production/production-report",
 			renewal: "production/renewal-report",
 			renewalsNotice: "production/renewal-notice-report",
@@ -48,6 +48,7 @@ export const AppRoutes = {
 		base: "customer-service",
 		create: "customer-service/create",
 		edit: "customer-service/update/",
+		reports: "customer-service/reports",
 	},
 	Claims: {
 		base: "claims",

@@ -9,14 +9,14 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <div class=" ribbon-box border shadow-none mt-2 ">
+                                    <div class=" ribbon-box border shadow-none mt-2">
                                         <div class="card-body">
                                             <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
                                                 </span></span>
-                                            <div class="row mt-4">
-                                                <div class="col-12 row my-4">
+                                            <div class="row mt-5 mx-2">
+                                                <div class="col-12 row my-2 pe-0">
                                                     <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12">
+                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client(s)
                                                             </label>
@@ -28,8 +28,8 @@
                                                             bindValue="name" formControlName="clientData">
                                                         </ng-select>
                                                     </div>
-                                                    <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12">
+                                                    <!-- Client Group(s) -->
+                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client Group(s)
                                                             </label>
@@ -87,21 +87,48 @@
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Producers</label>
+                                                        <div>
+                                                            <label for="checkall2" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall2"
+                                                                [formControl]="	uiState.checkAllControls.allProducersControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allProducersControl.value!,'producers')">
+                                                        </div>
                                                     </div>
                                                     <ng-select [items]="(lookupData | async)?.Producers?.content!"
                                                         placeholder="Select Producer"
                                                         [ngClass]="{'is-submitted': (f.producers?.touched || submitted) && f.producers?.invalid}"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" bindLabel="name"
-                                                        bindValue="name" formControlName="producers">
+                                                        [multiple]="true" [clearable]="true" [searchable]="true"
+                                                        bindLabel="name" bindValue="name" formControlName="producers">
                                                     </ng-select>
                                                     <div class="invalid-feedback d-inline-block fw-bold"
                                                         *ngIf="(f.producers?.touched || submitted) && f.producers?.invalid">
                                                         Required
                                                     </div>
                                                 </div>
-                                                <!-- Class Of Business -->
+                                                <!-- Transaction Type -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Transaction Type
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall3" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall3"
+                                                                [formControl]="uiState.checkAllControls.allTransactionTypesControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allTransactionTypesControl.value!,'transactionTypes')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
+                                                        placeholder="Select Classes Of Business"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="transactionType">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Class Of Business -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Class Of Business
                                                         </label>
@@ -140,6 +167,55 @@
                                                         formControlName="lineOfBusiness">
                                                     </ng-select>
                                                 </div>
+                                                <!-- Report Type -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Report Type</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportType?.content!"
+                                                        placeholder="Select Report Type" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="reportType">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Based On -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Based On</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportBasedOn?.content!"
+                                                        placeholder="Select Criteria" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="basedOn">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Status -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Status (Financial Approval)</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportStatus?.content!"
+                                                        placeholder="Select Status" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="status">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Capitive / Non - Capitive -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Capitive / Non - Capitive</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportCaptive?.content!"
+                                                        placeholder="Select Status" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id"
+                                                        formControlName="captive_NonPactive">
+                                                    </ng-select>
+                                                </div>
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
@@ -173,7 +249,7 @@
                                                 </div>
 
                                                 <!-- SubmittionBtns -->
-                                                <div class="col-12 mt-3 d-flex justify-content-end align-items-end">
+                                                <div class="col-12 my-3 d-flex justify-content-end align-items-end">
                                                     <button type="submit"
                                                         class="btn btn-soft-success btn-sm bg-gradient mx-2">
                                                         Generate

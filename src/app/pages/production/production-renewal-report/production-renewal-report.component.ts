@@ -11,7 +11,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ReportsViewerComponent } from "../../reports-viewer/reports-viewer.component";
+import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { IPolicyRenewalReportForm, IPolicyRenewalReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-report";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 @Component({
@@ -76,15 +76,21 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
-		if (controlName === "branch") {
-			if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-			else this.f.branchs?.patchValue(null);
-		} else if (controlName === "insuranceCompany") {
-			if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-			else this.f.insuranceCompany?.patchValue(null);
-		} else if (controlName === "classOfBusiness") {
-			if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-			else this.f.classOfBusiness?.patchValue(null);
+		switch (controlName) {
+			case "branch":
+				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
+				else this.f.branchs?.patchValue(null);
+				break;
+			case "insuranceCompany":
+				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
+				else this.f.insuranceCompany?.patchValue(null);
+				break;
+			case "classOfBusiness":
+				if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
+				else this.f.classOfBusiness?.patchValue(null);
+				break;
+			default:
+				break;
 		}
 	}
 

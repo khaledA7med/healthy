@@ -12,17 +12,18 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
-import { ProductionService } from "src/app/shared/services/production/production.service";
-import { productionReportForm } from "src/app/shared/app/models/Production/iproduction-report";
+import { csReportForm } from "src/app/shared/app/models/CustomerService/icustomer-service-report";
+import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
+
 @Component({
-	selector: "app-production-report",
-	templateUrl: "./production-report.component.html",
+	selector: "app-customer-service-report",
+	templateUrl: "./customer-service-report.component.html",
 	encapsulation: ViewEncapsulation.None,
-	styleUrls: ["./production-report.component.scss"],
+	styleUrls: ["./customer-service-report.component.scss"],
 })
-export class ProductionReportComponent implements OnInit, OnDestroy {
+export class CustomerServiceReportComponent implements OnInit {
 	url!: any;
-	filterForm!: FormGroup<productionReportForm>;
+	filterForm!: FormGroup<csReportForm>;
 	checkAllStatus: FormControl<boolean | null> = new FormControl(false);
 	submitted: boolean = false;
 	lookupData!: Observable<IBaseMasterTable>;
@@ -49,7 +50,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 	modalRef!: NgbModalRef;
 	constructor(
 		private modalService: NgbModal,
-		private productionService: ProductionService,
+		private csService: CustomerServiceService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
@@ -71,19 +72,15 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 	}
 
 	initFilterForm() {
-		this.filterForm = new FormGroup<productionReportForm>({
-			branchs: new FormControl(null),
-			clientData: new FormControl(null),
-			clientGroup: new FormControl(null),
-			transactionType: new FormControl(null),
-			producers: new FormControl(null),
-			insuranceCompany: new FormControl(null),
+		this.filterForm = new FormGroup<csReportForm>({
+			branch: new FormControl(null),
+			user: new FormControl(null),
 			classOfBusiness: new FormControl(null),
-			lineOfBusiness: new FormControl(null),
-			reportType: new FormControl(null),
-			basedOn: new FormControl(null),
+			insuranceCompany: new FormControl(null),
+			clientData: new FormControl(null),
 			status: new FormControl(null),
-			captive_NonPactive: new FormControl(null),
+			reportType: new FormControl(null),
+			currentStatus: new FormControl(null),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -91,43 +88,21 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 
 	checkAllToggler(check: boolean, controlName: string) {
 		switch (controlName) {
-			case "branch":
-				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-				else this.f.branchs?.patchValue(null);
-				break;
+			// case "branch":
+			// 	if (check) this.f.branch?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
+			// 	else this.f.branch?.patchValue(null);
+			// 	break;
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
 				else this.f.insuranceCompany?.patchValue(null);
 				break;
 			case "classOfBusiness":
-				if (check) {
-					this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-					this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-				} else this.f.classOfBusiness?.patchValue(null);
-				break;
-			case "linesOfBusiness":
-				if (check) this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-				else this.f.lineOfBusiness?.patchValue(null);
-				break;
-			case "transactionTypes":
-				if (check) this.f.transactionType?.patchValue(this.uiState.lists.transactionTypesLists.map((e) => e.name));
-				else this.f.transactionType?.patchValue(null);
-				break;
-			case "producers":
-				if (check) this.f.producers?.patchValue(this.uiState.lists.producersLists.map((e) => e.name));
-				else this.f.producers?.patchValue(null);
+				if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
+				else this.f.classOfBusiness?.patchValue(null);
 				break;
 			default:
 				break;
 		}
-	}
-
-	getLinesOfBusiness(classList: any) {
-		let cls = classList.map((el: any) => (el?.name ? el?.name : el));
-		let sub = this.productionService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.linesOfBusinessLists = res.body?.data!;
-		});
-		this.subscribes.push(sub);
 	}
 
 	minDate(e: any) {
@@ -142,7 +117,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		return this.filterForm.controls;
 	}
 
-	onSubmit(filterForm: FormGroup<productionReportForm>) {
+	onSubmit(filterForm: FormGroup<csReportForm>) {
 		this.submitted = true;
 		if (this.filterForm?.invalid) {
 			return;
@@ -155,7 +130,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};
 
-		let sub = this.productionService.viewProductionReport(data).subscribe(
+		let sub = this.csService.viewCSReport(data).subscribe(
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {
 					this.eventService.broadcast(reserved.isLoading, false);
@@ -176,7 +151,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 	openReportsViewer(data?: string): void {
 		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
 		this.modalRef.componentInstance.data = {
-			reportName: "Production(statistics) Report",
+			reportName: "CRM Reports",
 			url: data,
 		};
 	}

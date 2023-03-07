@@ -46,7 +46,8 @@
 		"CUSTOMERSERVICE": {
 			"TEXT": "Customer Service",
 			"LIST": {
-				"MANAGEMENT": "Request Management"
+				"MANAGEMENT": "Request Management",
+				"REPORTS": "Reports"
 			}
 		},
 		"CLAIMS": {

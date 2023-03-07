@@ -11,6 +11,7 @@ import { EditModel, EditModelData } from "../../app/models/Production/i-edit-com
 import { IPolicy } from "../../app/models/Production/i-policy";
 import { IChangePolicyStatusRequest } from "../../app/models/Production/i-policy-change-status-req";
 import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
+import { IPolicyRenewalNoticeReportReq } from "../../app/models/Production/ipolicy-renewal-notice-report";
 import { IPolicyRenewalReportReq } from "../../app/models/Production/ipolicy-renewal-report";
 import { IProductionFilters } from "../../app/models/Production/iproduction-filters";
 import { productionReportReq } from "../../app/models/Production/iproduction-report";
@@ -122,8 +123,8 @@ export class ProductionService {
 		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Production.updatePolicyCommission, data, { observe: "response" });
 	}
 
-	getLinesOFBusinessByClassNames(body: string[]): Observable<HttpResponse<IBaseResponse<IGenericResponseType[]>>> {
-		return this.http.post<IBaseResponse<IGenericResponseType[]>>(this.env + ApiRoutes.MasterTable.Production.lineOfBusinessByClassNames, body, {
+	getLinesOFBusinessByClassNames(body: string[]): Observable<HttpResponse<IBaseResponse<string[]>>> {
+		return this.http.post<IBaseResponse<string[]>>(this.env + ApiRoutes.MasterTable.Reports.lineOfBusinessByClassNames, body, {
 			observe: "response",
 		});
 	}
@@ -136,6 +137,11 @@ export class ProductionService {
 
 	viewRenewalReport(body: IPolicyRenewalReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
 		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.renewalReport, body, {
+			observe: "response",
+		});
+	}
+	viewRenewalNoticeReport(body: IPolicyRenewalNoticeReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
+		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.renewalNoticeReports, body, {
 			observe: "response",
 		});
 	}

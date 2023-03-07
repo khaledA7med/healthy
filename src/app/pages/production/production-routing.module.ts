@@ -44,21 +44,21 @@ const routes: Routes = [
 		loadChildren: () => import("./policies-edit-commissions/policies-edit-commissions.module").then((m) => m.PoliciesEditCommissionsModule),
 	},
 	{
-		path: AppRoutes.Production.Reports.production,
+		path: AppRoutes.Production.reports.production,
 		data: {
 			title: "Production(statistics) Report",
 		},
 		loadChildren: () => import("./production-report/production-report.module").then((m) => m.ProductionReportModule),
 	},
 	{
-		path: AppRoutes.Production.Reports.renewal,
+		path: AppRoutes.Production.reports.renewal,
 		data: {
 			title: "Policies Reports - Renewals",
 		},
 		loadChildren: () => import("./production-renewal-report/production-renewal-report.module").then((m) => m.ProductionRenewalReportModule),
 	},
 	{
-		path: AppRoutes.Production.Reports.renewalsNotice,
+		path: AppRoutes.Production.reports.renewalsNotice,
 		data: {
 			title: "Renewal Notice",
 		},
