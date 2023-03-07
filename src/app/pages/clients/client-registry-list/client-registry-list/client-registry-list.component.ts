@@ -182,7 +182,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
       );
     const agBodyViewport: HTMLElement =
       this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-viewport"
+        "#gridScrollbar .ag-body-vertical-scroll-viewport"
       );
 
     if (agBodyViewport) {

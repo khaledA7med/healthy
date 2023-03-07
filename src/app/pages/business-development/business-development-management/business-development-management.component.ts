@@ -441,5 +441,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+		this.dragulaService.destroy(this.uiState.dragulaInit);
 	}
 }

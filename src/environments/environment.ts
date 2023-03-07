@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  baseURL: "https://localhost:44376/api/v1",
-  // baseURL: "https://ibs-api.oasisoft.net/api/v1",
-  // baseURL: "https://localhost:44376/api",
+	production: false,
+	baseURL: "https://localhost:44376/api/v1",
+	// baseURL: "https://ibs-api.oasisoft.net/api/v1",
+	// baseURL: "https://localhost:44376/api",
 };
 
 /*

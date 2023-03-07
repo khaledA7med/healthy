@@ -240,9 +240,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   }
 
   addContact(data?: IClientContact): void {
-    console.log(this.corporate.vatNo?.errors?.["minLength"]);
-    console.log(this.corporate.vatNo?.errors);
-
     if (this.f.clientContacts?.invalid) {
       this.f.clientContacts?.markAllAsTouched();
       return;
@@ -516,6 +513,8 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
         // Hide Loader
         this.eventService.broadcast(reserved.isLoading, false);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
       },
       (err) => {
         this.message.popup("Sorry!", err.message!, "error");
@@ -526,8 +525,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   }
 
   validationChecker(): boolean {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
     if (this.formGroup.invalid) return false;
     return true;
   }

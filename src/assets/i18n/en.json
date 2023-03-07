@@ -38,13 +38,20 @@
       "TEXT": "Production",
       "LIST": {
         "MANAGEMENT": "Policies/Endorsements Management",
-        "EDITCOMMISSIONS": "Policies/Edit Commissions"
+        "EDITCOMMISSIONS": "Policies/Edit Commissions",
+        "REPORTS": "Reports",
+        "REPORTLIST": {
+          "PRODUCTION": "Production",
+          "RENEWAL": "Renewals",
+          "RENEWALNOTICE": "Renewals Notice"
+        }
       }
     },
     "CUSTOMERSERVICE": {
       "TEXT": "Customer Service",
       "LIST": {
-        "MANAGEMENT": "Request Management"
+        "MANAGEMENT": "Request Management",
+        "REPORTS": "Reports"
       }
     },
     "CLAIMS": {
@@ -56,7 +63,7 @@
     "SYSTEMADMIN": {
       "TEXT": "System Admin",
       "LIST": {
-        "MANAGEMENT": "System Management"
+        "MANAGEMENT": "User Accounts Management"
       }
     },
     "MENU": {

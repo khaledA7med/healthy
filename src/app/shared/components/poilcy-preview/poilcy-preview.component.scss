@@ -8,7 +8,7 @@
 			height: 100% !important;
 			td:last-child,
 			th:first-child {
-				padding: 5px 16px !important;
+				padding: 0px 16px !important;
 			}
 		}
 	}
@@ -19,7 +19,7 @@
 	}
 }
 .table > :not(caption) > * > * {
-	padding: 0.5rem 0.6rem !important;
+	padding: 0.3rem 0.8rem !important;
 }
 .dropdown-toggle::after {
 	display: none;

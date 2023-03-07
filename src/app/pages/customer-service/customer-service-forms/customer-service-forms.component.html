@@ -473,9 +473,14 @@
                                                         </div>
                                                         <input type="text" id="vatPercValue" name="vatPercValue"
                                                             class="form-control form-control-sm input-text-right"
-                                                            formControlName="vatValue" placeholder="0.00" InputMask
-                                                            readonly>
+                                                            formControlName="vatValue"
+                                                            [ngClass]="{'is-invalid': (f.vatValue?.touched || submitted) && f.vatValue?.invalid}"
+                                                            placeholder="0.00" InputMask readonly>
                                                         <span class="input-group-text" id="">SAR</span>
+                                                    </div>
+                                                    <div class="invalid-feedback fw-bold d-block"
+                                                        *ngIf="(f.vatValue?.touched || submitted) &&  f.vatValue?.invalid">
+                                                        Required
                                                     </div>
                                                 </div>
 

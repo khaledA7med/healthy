@@ -48,6 +48,7 @@ export const ApiRoutes = {
       InsuranceCompanyName: LookUpTables + BaseData.InsuranceCompanyName,
       InsuranceBrokersList: LookUpTables + BaseData.InsuranceBrokersList,
       logType: LookUpTables + BaseData.LogType,
+      prospectsReportsTypes: LookUpTables + BaseData.ProspectsReportsTypes,
     },
     CustomerService: {
       AllClients: LookUpTables + BaseData.AllClients,
@@ -104,6 +105,25 @@ export const ApiRoutes = {
       branch: LookUpTables + BaseData.Branch,
       staffProfilesNames: LookUpTables + BaseData.ProducersList,
       userSecurityRoles: LookUpTables + BaseData.UserSecurityRoles,
+    },
+    Reports: {
+      clientsList: LookUpTables + BaseData.ClientsList,
+      groupsList: LookUpTables + BaseData.GroupsList,
+      InsurClasses: LookUpTables + BaseData.InsurClasses,
+      lineOfBusinessByClassNames: LookUpTables + "LineOfBusinessByClassNames",
+      insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      branch: LookUpTables + BaseData.Branch,
+      producers: LookUpTables + BaseData.Producers,
+      policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+      productionReportType: LookUpTables + BaseData.ProductionReportType,
+      productionReportBasedOn: LookUpTables + BaseData.ProductionReportBasedOn,
+      productionReportCaptive: LookUpTables + BaseData.ProductionReportCaptive,
+      productionReportStatus: LookUpTables + BaseData.ProductionReportStatus,
+      renewalNoticeReportStatus:
+        LookUpTables + BaseData.RenewalNoticeReportStatus,
+      cserviceStatus: LookUpTables + BaseData.CServiceStatus,
+      csReportType: LookUpTables + BaseData.CSReportType,
+      allUsers: LookUpTables + BaseData.AllUsers,
     },
   },
   MasterMethods: {
@@ -171,6 +191,7 @@ export const ApiRoutes = {
     policyRequirements: "/BusinessDevelopment/SalesLeads/PolicyRequirments",
     save: "/BusinessDevelopment/SalesLeads/Save",
     edit: "/BusinessDevelopment/SalesLeads/Edit",
+    prospectReport: "/BusinessDevelopment/SalesLeads/ProspectsReport",
   },
   Production: {
     search: "/Production/Policy/Search",
@@ -188,6 +209,9 @@ export const ApiRoutes = {
     editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
     editEditCommission: "/Production/Policy/EditPolicyCommission",
     updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",
+    productionReport: "/Production/Policy/StatisticsReport",
+    renewalReport: "/Production/Policy/RenewalsReports",
+    renewalNoticeReports: "/Production/Policy/RenewalNoticeReports",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -200,6 +224,7 @@ export const ApiRoutes = {
     csRequirments: "/CustomerService/Requests/CSRequirements",
     create: "/CustomerService/Requests/Save",
     edit: "/CustomerService/Requests/Edit",
+    csReport: "/CustomerService/Requests/Reports",
     delete: "",
   },
   Claims: {
@@ -219,6 +244,7 @@ export const ApiRoutes = {
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
     getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
+    getInsurerWorkshops: "/Claims/GetInsurerWorkshops",
     getClientMailData: "/Claims/NotifyClientMailData",
     getInsurerMailData: "/Claims/NotifyInsurerMailData",
   },
@@ -237,5 +263,6 @@ export const ApiRoutes = {
     changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
     save: "/SystemAdmin/Users/Save",
     edit: "/SystemAdmin/Users/Edit",
+    privigles: "/SystemAdmin/Users/ActivePrivileges",
   },
 };

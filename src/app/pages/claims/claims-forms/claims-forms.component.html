@@ -146,6 +146,10 @@
                                                                 'SAR' : '' }}
                                                             </td>
                                                         </tr>
+                                                        <tr class="my-1 text-center text-dark fw-bold"
+                                                            *ngIf="uiState.policies.clientOutStanding.length  === 0">
+                                                            <td colspan="100">No Data To show</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </ngx-simplebar>
@@ -1277,6 +1281,7 @@
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">City</label>
                                                 <ng-select formControlName="city" class="is-invalid" bindLabel="name"
+                                                    (change)="getInsurerWorkshops($event.name)"
                                                     [items]="(formData | async)?.Cities?.content!" bindValue="name"
                                                     [loading]="formData ? false : true">
                                                     <ng-template ng-option-tmp let-item="item">

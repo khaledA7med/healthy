@@ -210,17 +210,17 @@ export class CustomerServiceFormsComponent implements OnInit {
 			endorsType: new FormControl(null, Validators.required),
 			classOfBusiness: new FormControl(null, Validators.required),
 			requestNo: new FormControl(null),
-			netPremium: new FormControl(null),
 			policyNo: new FormControl(null, Validators.required),
 			lineOfBusiness: new FormControl(null, Validators.required),
-			policyFees: new FormControl(null, Validators.required),
 			insurComp: new FormControl(null, Validators.required),
 			dateOfDeadline: new FormControl(null),
-			vatPerc: new FormControl(null),
-			vatValue: new FormControl(null),
+			vatPerc: new FormControl(0),
 			existingPolExpDate: new FormControl(null, Validators.required),
 			requestDetails: new FormControl(null),
-			totalPremium: new FormControl(null),
+			policyFees: new FormControl(0),
+			netPremium: new FormControl(0),
+			vatValue: new FormControl(0),
+			totalPremium: new FormControl(0),
 			cSSpecialConditions: new FormControl(null),
 			branch: new FormControl(null),
 			requiermentsList: new FormArray<FormGroup<RequiermentsList>>([]),
@@ -452,11 +452,11 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("ExistingPolExpDate", val.existingPolExpDate ? this.util.dateFormater(val.existingPolExpDate) : "");
 		formData.append("RequestDetails", val.requestDetails ? val.requestDetails : "");
 		formData.append("DateOfDeadline", val.dateOfDeadline ? this.util.dateFormater(val.dateOfDeadline!) : "");
-		formData.append("NetPremium", val.netPremium ? val.netPremium?.toString()! : "");
-		formData.append("VatPerc", val.vatPerc ? val.vatPerc?.toString()! : "");
-		formData.append("VatValue", val.vatValue ? val.vatValue?.toString()! : "");
-		formData.append("PolicyFees", val.policyFees ? val.policyFees?.toString()! : "");
-		formData.append("TotalPremium", val.totalPremium ? val.totalPremium?.toString()! : "");
+		formData.append("NetPremium", val.netPremium ? val.netPremium?.toString()! : "0");
+		formData.append("VatPerc", val.vatPerc ? val.vatPerc?.toString()! : "0");
+		formData.append("VatValue", val.vatValue ? val.vatValue?.toString()! : "0");
+		formData.append("PolicyFees", val.policyFees ? val.policyFees?.toString()! : "0");
+		formData.append("TotalPremium", val.totalPremium ? val.totalPremium?.toString()! : "0");
 		formData.append("Branch", val.branch ? val.branch! : "");
 		val.requiermentsList!.forEach((e, i) => {
 			formData.append(`RequiermentsList[${i}].checked`, e.itemCheck === true ? String(e.itemCheck!) : "false");

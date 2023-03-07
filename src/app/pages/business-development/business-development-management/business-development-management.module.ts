@@ -27,7 +27,7 @@ export const routes: Routes = [
     NgbPaginationModule,
     DragulaModule,
     RangePickerModule,
-    AgGridModule.withComponents([BusinessDevelopmentControlsComponent]),
+    AgGridModule,
   ],
 })
 export class BusinessDevelopmentManagementModule {}

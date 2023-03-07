@@ -19,8 +19,8 @@ export interface IClaimDataForm extends IClaims {
   claimsRejections?: IClaimRejectDeduct[];
   claimInvoices?: IClaimInvoice[];
   claimApprovals?: IClaimApproval[];
-  totalStatus?: [];
   paymentsList?: IClaimPayment[];
+  totalStatus?: [];
   emailsLog?: [];
   documentsInfo?: [];
   cNo?: number;
@@ -58,8 +58,6 @@ export interface IClaimDataForm extends IClaims {
   lostadjuster?: string;
   lostadjusterEmail?: string;
   lostadjusterTele?: string;
-  //   claimRejectionDeductionsList: [];
-  //   claimRejectionDeductionsString: null;
   documentList?: IDocumentList[];
   medID?: string;
   hospital?: string;
@@ -73,7 +71,6 @@ export interface IClaimDataForm extends IClaims {
   typeOfrepair?: string;
   city?: string;
   workshopAgency?: string;
-  //   workshopAgencyList: [];
   accidentNumber?: string;
   tpl?: number;
   excess?: number;
@@ -87,25 +84,11 @@ export interface IClaimDataForm extends IClaims {
   liability?: string;
   claimCertificateNo?: string;
   declarationNo?: string;
-  //   claimsGeneral: [];
-  //   claimsGeneralString: null;
+  claimsGeneral: [];
   generalChassisNo?: string;
   motorChassisNo?: string;
   insuranceCompanyDNCNNo?: string;
   driverAge?: string;
-  //   networkProvider: null;
-  //   dealer: null;
-  //   treatmentType: null;
-  //   claimsSpecialConditions: null;
-  //   csSpecialConditions: null;
   approvedAmount?: number;
   deductible?: number;
-  //   dateOfReminder: null;
-  //   transDate: null;
-  //   filterAccidentCheckbox: null;
-  //   clientNameID: null;
-  //   region: null;
-  //   mngRejectInfo: null;
-  //   paymentType: null;
-  //   paymentDetails: null;
 }

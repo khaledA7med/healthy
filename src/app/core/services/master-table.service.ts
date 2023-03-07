@@ -9,29 +9,26 @@ import { CachingService } from "./caching.service";
 @Injectable({
   providedIn: "root",
 })
-export class MasterTableService
-{
+export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor (private http: HttpClient, private caching: CachingService)
-  {
+  constructor(private http: HttpClient, private caching: CachingService) {
     this.dataSrc = [];
   }
 
-  getBaseData (module: string)
-  {
+  getBaseData(module: string) {
     let data = {
       LineOfBusiness: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
-        }
+        },
       ],
       InsuranceCompanies: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
-        }
+        },
       ],
       Client: [
         {
@@ -191,6 +188,11 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.BusinessDevelopment.SalesleadStatus,
           name: BaseData.SalesleadStatus,
+        },
+        {
+          route:
+            ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
+          name: BaseData.ProspectsReportsTypes,
         },
       ],
       Production: [
@@ -419,10 +421,71 @@ export class MasterTableService
           name: BaseData.UserSecurityRoles,
         },
       ],
+      Reports: [
+        {
+          route: ApiRoutes.MasterTable.Reports.clientsList,
+          name: BaseData.ClientsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.groupsList,
+          name: BaseData.GroupsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.policyEndorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportType,
+          name: BaseData.ProductionReportType,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+          name: BaseData.ProductionReportBasedOn,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+          name: BaseData.ProductionReportCaptive,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportStatus,
+          name: BaseData.ProductionReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.renewalNoticeReportStatus,
+          name: BaseData.RenewalNoticeReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.cserviceStatus,
+          name: BaseData.CServiceStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.csReportType,
+          name: BaseData.CSReportType,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.allUsers,
+          name: BaseData.AllUsers,
+        },
+      ],
     };
 
-    switch (module)
-    {
+    switch (module) {
       case MODULES.Client:
         this.dataSrc = data.Client;
         break;
@@ -462,15 +525,17 @@ export class MasterTableService
       case MODULES.InsuranceCompanies:
         this.dataSrc = data.InsuranceCompanies;
         break;
+      case MODULES.Reports:
+        this.dataSrc = data.Reports;
+        break;
       default:
         break;
     }
 
-    for (let i = 0; i < this.dataSrc.length; i++)
-    {
+    for (let i = 0; i < this.dataSrc.length; i++) {
       this.http
-        .get<any>(this.env + this.dataSrc[ i ].route, {
-          context: new HttpContext().set(MODULE_NAME, this.dataSrc[ i ].name),
+        .get<any>(this.env + this.dataSrc[i].route, {
+          context: new HttpContext().set(MODULE_NAME, this.dataSrc[i].name),
         })
         .subscribe();
     }

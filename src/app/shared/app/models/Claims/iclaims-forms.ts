@@ -165,7 +165,7 @@ export interface IClaimGeneralForm {
   nameofInjured?: FormControl<string | null>;
   natureofLoss?: FormControl<string | null>;
   lossLocation?: FormControl<string | null>;
-  claimExcess?: FormControl<string | null>;
+  claimExcess?: FormControl<number | null>;
   interimPayment?: FormControl<number | null>;
   recovery?: FormControl<string | null>;
   liability?: FormControl<string | null>;

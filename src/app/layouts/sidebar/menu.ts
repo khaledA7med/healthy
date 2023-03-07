@@ -84,13 +84,13 @@ export const MENU: MenuItem[] = [
             id: 3001,
             label:
               "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
-            link: AppRoutes.BusinessDevelopment.Reports.Business,
+            link: AppRoutes.BusinessDevelopment.reports.business,
             parentId: 302,
           },
           {
             id: 3002,
             label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.RENEWAL",
-            link: AppRoutes.BusinessDevelopment.Reports.Renewal,
+            link: AppRoutes.BusinessDevelopment.reports.renewal,
             parentId: 302,
           },
         ],
@@ -114,6 +114,31 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.Production.editCommissions,
         parentId: 4,
       },
+      {
+        id: 403,
+        label: "MENUITEMS.PRODUCTION.LIST.REPORTS",
+        parentId: 4,
+        subItems: [
+          {
+            id: 4001,
+            label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.PRODUCTION",
+            link: AppRoutes.Production.reports.production,
+            parentId: 403,
+          },
+          {
+            id: 4002,
+            label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWAL",
+            link: AppRoutes.Production.reports.renewal,
+            parentId: 403,
+          },
+          {
+            id: 4003,
+            label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWALNOTICE",
+            link: AppRoutes.Production.reports.renewalsNotice,
+            parentId: 403,
+          },
+        ],
+      },
     ],
   },
   {
@@ -125,6 +150,12 @@ export const MENU: MenuItem[] = [
         id: 501,
         label: "MENUITEMS.CUSTOMERSERVICE.LIST.MANAGEMENT",
         link: AppRoutes.CustomerService.base,
+        parentId: 5,
+      },
+      {
+        id: 502,
+        label: "MENUITEMS.CUSTOMERSERVICE.LIST.REPORTS",
+        link: AppRoutes.CustomerService.reports,
         parentId: 5,
       },
     ],

@@ -19,7 +19,7 @@ export const routes: Routes = [{ path: "", component: ClaimsListComponent }];
     RangePickerModule,
     EmailModule,
     RouterModule.forChild(routes),
-    AgGridModule.withComponents(ClaimsControlsComponent),
+    AgGridModule,
   ],
 })
 export class ClaimsListModule {}

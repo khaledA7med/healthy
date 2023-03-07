@@ -1,24 +1,29 @@
 .input-group .ng-select.form-control-sm {
-  padding: 0 !important;
-  border: unset !important;
+	padding: 0 !important;
+	border: unset !important;
 }
 .ng-select.form-control-sm {
-  padding: 0 !important;
+	padding: 0 !important;
+}
+.ng-select .ng-select-container {
+	min-height: 28px !important;
+	height: fit-content !important;
+	max-height: fit-content !important;
 }
 
 .input-right {
-  direction: rtl;
+	direction: rtl;
 }
 .custom-btn {
-  position: absolute;
-  right: 2px;
-  top: 5px;
+	position: absolute;
+	right: 2px;
+	top: 5px;
 }
 
 .custom-inp-group {
-  position: unset !important;
+	position: unset !important;
 }
 
 .custom-overflow {
-  overflow-x: auto;
+	overflow-x: auto;
 }
