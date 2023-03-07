@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { InsuranceCompaniesComponent } from './insurance-companies.component';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICellRendererParams } from "ag-grid-community";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { InsuranceClassesComponent } from './insurance-classes.component';
 
 @Component({
-  selector: 'app-insurance-classes-form',
+  selector: 'app-insurance-companies-forms',
   template: `
-  <div class="col">
+    <div class="col">
   <div ngbDropdown class="d-inline-block">
     <button type="button" class="btn btn-ghost-secondary waves-effect rounded-pill" id="actionDropdown" ngbDropdownToggle>
       <i class="ri-more-2-fill"></i>
@@ -44,13 +45,13 @@ import { InsuranceClassesComponent } from './insurance-classes.component';
 		`,
   ]
 })
-export class InsuranceClassesFormComponent
+export class InsuranceCompaniesFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceClassesComponent;
-  constructor (private message: MessagesService) { }
+  private comp!: InsuranceCompaniesComponent;
 
+  constructor (private _Router: Router, private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
   {
@@ -69,11 +70,12 @@ export class InsuranceClassesFormComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity, this.params.data.className);
+        this.comp.DeleteInsurance(this.params.data.identity);
       } else
       {
         return;
       }
     });
   }
+
 }

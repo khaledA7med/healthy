@@ -1,18 +1,18 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { InsuranceClassesComponent } from "./insurance-classes/insurance-classes.component";
-import { InsuranceClassesFormComponent } from "./insurance-classes/insurance-classes-form.component";
+import { LineOfBusinessComponent } from "./line-of-business/line-of-business.component";
+import { LineOfBusinessFormComponent } from "./line-of-business/line-of-business-form.component";
 
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
 
 export const routes: Routes = [
-  { path: "", component: InsuranceClassesComponent },
+  { path: "", component: LineOfBusinessComponent },
 ];
 
 @NgModule({
-  declarations: [InsuranceClassesComponent, InsuranceClassesFormComponent],
+  declarations: [LineOfBusinessComponent, LineOfBusinessFormComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -20,4 +20,4 @@ export const routes: Routes = [
     AgGridModule,
   ],
 })
-export class InsuranceClassesModule {}
+export class LineOfBusinessModule {}

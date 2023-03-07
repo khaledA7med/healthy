@@ -27,19 +27,6 @@
   height: fit-content !important;
   max-height: fit-content !important;
 }
-.offcanvas-body {
-  .form-control {
-    max-height: 30px;
-  }
-  .form-control.text-area {
-    max-height: unset;
-  }
-}
-#addCommissionBtn {
-  margin-top: 28px;
-}
-
-.modal {
-  max-height: 900px;
-  overflow-y: auto;
+table.table tr td:not(:last-child) {
+  min-width: 180px;
 }

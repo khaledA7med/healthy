@@ -6,6 +6,12 @@ export const ApiRoutes = {
     login: "/Account/login",
   },
   MasterTable: {
+    MasterTables: {
+      insurClasses: LookUpTables + BaseData.InsurClasses,
+      lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
+      contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
+      contactDepartment: LookUpTables + BaseData.ContactDepartment
+    },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
       producers: LookUpTables + BaseData.Producers,
@@ -124,6 +130,38 @@ export const ApiRoutes = {
     downloadDocument: "/Documents/Download",
     deleteDocument: "/Documents/Delete",
     lineOfBusiness: LookUpTables + "LineOfBusiness",
+  },
+  masterTables: {
+    inuranceClasses: {
+      search: "/MasterTables/InsurranceClass/Search",
+      save: "/MasterTables/InsurranceClass/Save",
+      edit: "/MasterTables/InsurranceClass/Edit",
+      delete: "/MasterTables/InsurranceClass/Delete"
+    },
+    lineOfBusiness: {
+      search: "/MasterTables/LineOfBusiness/Search",
+      save: "/MasterTables/LineOfBusiness/Save",
+      edit: "/MasterTables/LineOfBusiness/Edit",
+      delete: "/MasterTables/LineOfBusiness/Delete",
+    },
+    insuranceCompanies: {
+      search: "/MasterTables/InsuranceCompanies/Search",
+      save: "/MasterTables/InsuranceCompanies/Save",
+      edit: "/MasterTables/InsuranceCompanies/Edit",
+      delete: "/MasterTables/InsuranceCompanies/Delete",
+    },
+    insuranceBrokers: {
+      search: "/MasterTables/InsuranceBrokers/Search",
+      save: "/MasterTables/InsuranceBrokers/Save",
+      edit: "/MasterTables/InsuranceBrokers/Edit",
+      delete: "/MasterTables/InsuranceBrokers/Delete",
+    },
+    policyTypes: {
+      search: "/MasterTables/PolicyTypes/Search",
+      save: "/MasterTables/PolicyTypes/Save",
+      edit: "/MasterTables/PolicyTypes/Edit",
+      delete: "/MasterTables/PolicyTypes/Delete",
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",

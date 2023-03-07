@@ -1,0 +1,306 @@
+<div class="row justify-content-between align-items-center mb-3">
+    <div class="col-12 d-flex justify-content-end">
+
+        <a type="button" class="btn btn-sm btn-info mx-2  d-flex align-items-center" (click)="openInsuranceDialoge()">
+            <i class="ri-add-line align-bottom me-1"></i> Add Insurance Company
+        </a>
+
+    </div>
+</div>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>
+
+<ng-template #insuranceContent let-modal>
+    <div class="modal-header mb-0">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editInsuranceMode">Add Insurance Company</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editInsuranceMode">Edit Insurance Company</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <form [formGroup]="InsuranceForm" (ngSubmit)="submitInsuranceData(InsuranceForm)">
+        <div class="modal-body p-1" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape"><span>Insurance Company
+                                    Details</span></span>
+                            <div class="row mt-4">
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="companyName" class="asterisk-input">Company Name</label>
+                                    <input id="companyName" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.companyName?.touched || uiState.submitted) && f.companyName?.invalid}"
+                                        formControlName="companyName" />
+                                    <span
+                                        *ngIf="(f.companyName?.touched || uiState.submitted) && f.companyName?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="companyNameAr">Company Name (Ar)</label>
+                                    <input id="companyNameAr" class="form-control form-control-sm"
+                                        formControlName="companyNameAr" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="abbreviation" class="asterisk-input">Abbreviation</label>
+                                    <input id="abbreviation" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid}"
+                                        formControlName="abbreviation" />
+                                    <span
+                                        *ngIf="(f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="vatNo" class="asterisk-input">VAT No.</label>
+                                    <input id="vatNo" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.vatNo?.touched || uiState.submitted) && f.vatNo?.invalid}"
+                                        formControlName="vatNo" />
+                                    <span *ngIf="(f.vatNo?.touched || uiState.submitted) && f.vatNo?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="crNo" class="asterisk-input">CR No.</label>
+                                    <input id="crNo" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.crNo?.touched || uiState.submitted) && f.crNo?.invalid}"
+                                        formControlName="crNo" />
+                                    <span *ngIf="(f.crNo?.touched || uiState.submitted) && f.crNo?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="tele1">Tele</label>
+                                    <input id="tele1" class="form-control form-control-sm" formControlName="tele1" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="fax">Fax</label>
+                                    <input id="fax" class="form-control form-control-sm" formControlName="fax" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="unifiedNo">Unified No.</label>
+                                    <input id="unifiedNo" class="form-control form-control-sm"
+                                        formControlName="unifiedNo" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="email">Email</label>
+                                    <input id="email" class="form-control form-control-sm" formControlName="email" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="address">Address</label>
+                                    <input id="address" class="form-control form-control-sm"
+                                        formControlName="address" />
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+                                    <label for="otherDetails">Other Details</label>
+                                    <input id="otherDetails" class="form-control form-control-sm"
+                                        formControlName="otherDetails" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <div class="ribbon ribbon-info round-shape">Company Products
+                            </div>
+                            <div class="d-flex flex-column">
+                                <button type="button" (click)="addProduct()"
+                                    class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light">
+                                    <i class="ri-contacts-book-2-line"></i> Add Product
+                                </button>
+                                <div class="table-responsive">
+                                    <table class="table table-nowrap">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">Classes</th>
+                                                <th scope="col">Line Of Businesses</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="productsList">
+                                            <tr *ngFor="let c of productsListArray.controls; index as i">
+                                                <ng-container [formGroupName]="i">
+
+                                                    <td>
+                                                        <ng-select id="classOfInc" class="form-control-sm is-invalid"
+                                                            placeholder="Select Class Of Insurance"
+                                                            formControlName="classOfBusiness" bindValue="name"
+                                                            bindLabel="name" [loading]="lookupData ? false : true"
+                                                            [items]="(lookupData | async)?.InsurClasses?.content!"
+                                                            (change)="getLineOfBusiness($event?.name)">
+                                                        </ng-select>
+                                                    </td>
+
+                                                    <td>
+                                                        <ng-select id="lineOfBus" class="form-control-sm is-invalid"
+                                                            placeholder="Select Lien Of Business"
+                                                            formControlName="lineOfBusiness" bindValue="name"
+                                                            bindLabel="name" [loading]="lookupData ? false : true"
+                                                            [items]="lineOfBussArr">
+                                                        </ng-select>
+                                                    </td>
+
+                                                    <td>
+                                                        <button
+                                                            *ngIf="uiState.editInsuranceMode && productsListArray.controls[i].disabled"
+                                                            type="button" class="btn btn-sm btn-soft-info me-2"
+                                                            (click)="enableEditingRow(i, 'product')">
+                                                            <i class="ri-edit-2-line"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-soft-danger"
+                                                            (click)="remove(i, 'product')">
+                                                            <i class="ri-delete-bin-2-line"></i>
+                                                        </button>
+                                                    </td>
+
+                                                </ng-container>
+                                            </tr>
+                                            <tr *ngIf="productsListArray.controls.length === 0"
+                                                class="my-1 text-center text-dark fw-bold no-item-contact">
+                                                <td colspan="100">No items show</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3 h-100">
+                    <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <div class="ribbon ribbon-info round-shape">Company Contacts
+                            </div>
+                            <div class="ribbon-content my-4">
+                                <div class="row justify-content-center my-4">
+                                    <div class="d-flex flex-column">
+                                        <button type="button" (click)="addContact()"
+                                            class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light">
+                                            <i class="ri-contacts-book-2-line"></i> Add Contact
+                                        </button>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-nowrap mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Contact Name</th>
+                                                        <th scope="col">Contact Position</th>
+                                                        <th scope="col">Contact Email</th>
+                                                        <th scope="col">Contact Mobile No.</th>
+                                                        <th scope="col">Contact Tele</th>
+                                                        <th scope="col">Business Type</th>
+                                                        <th scope="col">Department</th>
+                                                        <th scope="col">Contact Address</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody formArrayName="contactList">
+                                                    <tr *ngFor="let c of contactListArray.controls; index as i">
+                                                        <ng-container [formGroupName]="i">
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="contactName"
+                                                                    placeholder="contact Name" />
+                                                            </td>
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="contactPosition"
+                                                                    placeholder="contact Position" />
+                                                            </td>
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="contactEmail"
+                                                                    placeholder="contact Email" />
+                                                            </td>
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="contactMobileNo"
+                                                                    placeholder="contact mobile number" />
+                                                            </td>
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="contactTele"
+                                                                    placeholder="contact Tele" />
+                                                            </td>
+
+                                                            <td>
+                                                                <ng-select formControlName="LineOfBusiness"
+                                                                    placeholder="Contact Line Of Business"
+                                                                    [items]="(lookupData | async)?.ContactLineOfBusiness?.content!"
+                                                                    bindLabel="name" bindValue="name"
+                                                                    [loading]="lookupData ? false : true">
+                                                                </ng-select>
+                                                            </td>
+
+                                                            <td>
+                                                                <ng-select formControlName="department"
+                                                                    placeholder="Contact Department"
+                                                                    [items]="(lookupData | async)?.ContactDepartment?.content!"
+                                                                    bindLabel="name" bindValue="name"
+                                                                    [loading]="lookupData ? false : true">
+                                                                </ng-select>
+                                                            </td>
+
+                                                            <td scope="col">
+                                                                <input type="text" class="form-control form-control-sm"
+                                                                    formControlName="address" placeholder="Address" />
+                                                            </td>
+
+                                                            <td>
+                                                                <button
+                                                                    *ngIf="uiState.editInsuranceMode && contactListArray.controls[i].disabled"
+                                                                    type="button" class="btn btn-sm btn-soft-info me-2"
+                                                                    (click)="enableEditingRow(i, 'contact')">
+                                                                    <i class="ri-edit-2-line"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-sm btn-soft-danger"
+                                                                    (click)="remove(i, 'contact')">
+                                                                    <i class="ri-delete-bin-2-line"></i>
+                                                                </button>
+                                                            </td>
+
+                                                        </ng-container>
+                                                    </tr>
+                                                    <tr *ngIf="contactListArray.controls.length === 0"
+                                                        class="my-1 text-center text-dark fw-bold no-item-contact">
+                                                        <td colspan="100">No items show</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="!uiState.editInsuranceMode"><i class="ri-add-line"></i>Add</button>
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="uiState.editInsuranceMode"><i class="ri-edit-line mx-1"></i>Edit</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>

@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICellRendererParams } from "ag-grid-community";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { InsuranceClassesComponent } from './insurance-classes.component';
+import { LineOfBusinessComponent } from './line-of-business.component';
 
 @Component({
-  selector: 'app-insurance-classes-form',
+  selector: 'app-line-of-business-form',
   template: `
   <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -44,13 +45,12 @@ import { InsuranceClassesComponent } from './insurance-classes.component';
 		`,
   ]
 })
-export class InsuranceClassesFormComponent
+export class LineOfBusinessFormComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceClassesComponent;
-  constructor (private message: MessagesService) { }
-
+  private comp!: LineOfBusinessComponent;
+  constructor (private _Router: Router, private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
   {
@@ -60,7 +60,7 @@ export class InsuranceClassesFormComponent
 
   Edit ()
   {
-    this.comp.openInsuranceDialoge(this.params.data.identity);
+    this.comp.openLineOfBusinessDialoge(this.params.data.identity);
   }
 
   Delete ()
@@ -69,11 +69,12 @@ export class InsuranceClassesFormComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity, this.params.data.className);
+        this.comp.DeleteLineOfBusiness(this.params.data.identity);
       } else
       {
         return;
       }
     });
   }
+
 }
