@@ -144,4 +144,10 @@ export class InsuranceCompaniesComponent implements OnInit
     );
     this.subscribes.push(sub);
   }
+
+  test ()
+  {
+    console.log("aaaaaaaaa")
+  }
+
 }
