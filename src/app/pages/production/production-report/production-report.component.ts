@@ -44,8 +44,10 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			linesOfBusinessLists: [] as string[],
 			transactionTypesLists: [] as IGenericResponseType[],
 			producersLists: [] as IGenericResponseType[],
+			clientsList: [] as IGenericResponseType[],
+			groupsLists: [] as IGenericResponseType[],
 		},
-		clientDataContorl: new FormControl(null),
+		clientDataContorl: new FormControl("Select All"),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -67,6 +69,8 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 			this.uiState.lists.transactionTypesLists = res.PolicyEndorsTypes?.content!;
 			this.uiState.lists.producersLists = res.Producers?.content!;
+			res.ClientsList?.content! ? (this.uiState.lists.clientsList = [{ id: 0, name: "Select All" }, ...res.ClientsList?.content!]) : "";
+			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select All" }, ...res.GroupsList?.content!]) : "";
 		});
 		this.subscribes.push(sub);
 	}
@@ -75,16 +79,16 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		this.filterForm = new FormGroup<productionReportForm>({
 			branchs: new FormControl(null),
 			clientData: new FormControl(null),
-			clientGroup: new FormControl(null),
+			clientGroup: new FormControl("Select All"),
 			transactionType: new FormControl(null),
 			producers: new FormControl(null),
 			insuranceCompany: new FormControl(null),
 			classOfBusiness: new FormControl(null),
 			lineOfBusiness: new FormControl(null),
-			reportType: new FormControl(null),
-			basedOn: new FormControl(null),
-			status: new FormControl(null),
-			captive_NonPactive: new FormControl(null),
+			reportType: new FormControl(1),
+			basedOn: new FormControl(1),
+			status: new FormControl(1),
+			captive_NonPactive: new FormControl(1),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -157,6 +161,8 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		this.eventService.broadcast(reserved.isLoading, true);
 		const data: any = {
 			...filterForm.getRawValue(),
+			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : "",
+			clientGroup: this.filterForm.getRawValue().clientGroup === "Select All" ? null : "",
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};

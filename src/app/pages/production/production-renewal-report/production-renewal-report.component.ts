@@ -38,9 +38,10 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			branchesLists: [] as IGenericResponseType[],
 			insuranceCompanyControlLists: [] as IGenericResponseType[],
 			classOfBusinessLists: [] as IGenericResponseType[],
+			clientsList: [] as IGenericResponseType[],
+			producersList: [] as IGenericResponseType[],
 		},
-		clientDataContorl: new FormControl(null),
-		custProducersList: [] as IGenericResponseType[],
+		clientDataContorl: new FormControl("Select All"),
 	};
 	modalRef!: NgbModalRef;
 
@@ -60,7 +61,8 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.branchesLists = res.Branch?.content!;
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
-			res.Producers?.content! ? (this.uiState.custProducersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
+			res.ClientsList?.content! ? (this.uiState.lists.clientsList = [{ id: 0, name: "Select All" }, ...res.ClientsList?.content!]) : "";
+			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 		});
 		this.subscribes.push(sub);
 	}
@@ -70,7 +72,7 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			branchs: new FormControl(null),
 			insuranceCompany: new FormControl(null),
 			classOfBusiness: new FormControl(null),
-			producer: new FormControl(null),
+			producer: new FormControl("Select All"),
 			clientData: new FormControl(null),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
@@ -121,6 +123,7 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 		this.eventService.broadcast(reserved.isLoading, true);
 		const data: IPolicyRenewalReportReq = {
 			...filterForm.getRawValue(),
+			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : filterForm.getRawValue().clientData,
 			producer: filterForm.getRawValue().producer === "Select All" ? null : filterForm.getRawValue().producer,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,

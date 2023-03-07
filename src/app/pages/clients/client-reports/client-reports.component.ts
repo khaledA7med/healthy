@@ -2,7 +2,7 @@ import { HttpResponse } from "@angular/common/http";
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
@@ -24,13 +24,23 @@ import AppUtils from "src/app/shared/app/util";
 export class ClientReportsComponent implements OnInit, OnDestroy {
 	url!: any;
 	filterForms!: FormGroup<IClientReportFiltersForm>;
-	checkAllStatus: FormControl<boolean | null> = new FormControl(false);
+
 	submitted: boolean = false;
 	lookupData!: Observable<IBaseMasterTable>;
 
 	subscribes: Subscription[] = [];
 	uiState = {
-		clientStatus: [] as any[],
+		checkAllContorls: {
+			checkAllStatus: new FormControl(false),
+			checkAllBranches: new FormControl(false),
+		},
+		lists: {
+			clientStatus: [] as IGenericResponseType[],
+			crNoList: [] as IGenericResponseType[],
+			producersList: [] as IGenericResponseType[],
+			typesList: [] as IGenericResponseType[],
+			branchesLists: [] as IGenericResponseType[],
+		},
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -47,7 +57,11 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		this.lookupData = this.table.getBaseData(MODULES.Client);
 
 		let sub = this.lookupData.subscribe((res) => {
-			this.uiState.clientStatus = res.ClientStatus?.content!;
+			this.uiState.lists.clientStatus = res.ClientStatus?.content!;
+			this.uiState.lists.branchesLists = res.Branch?.content!;
+			res.CommericalNo?.content! ? (this.uiState.lists.crNoList = [{ id: 0, name: "Select All" }, ...res.CommericalNo?.content!]) : "";
+			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
+			res.ClientTypes?.content! ? (this.uiState.lists.typesList = [{ id: 0, name: "Select All" }, ...res.ClientTypes?.content!]) : "";
 		});
 		this.subscribes.push(sub);
 	}
@@ -57,19 +71,28 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			status: new FormControl(["Active"]),
 			name: new FormControl(""),
 			accountNumber: new FormControl(""),
-			crNO: new FormControl(""),
-			producer: new FormControl("", Validators.required),
-			type: new FormControl(""),
+			crNO: new FormControl("Select All"),
+			producer: new FormControl("Select All", Validators.required),
+			type: new FormControl("Select All"),
 			branchs: new FormControl([]),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
 	}
 
-	checkAllStatusAction(check: boolean | null) {
-		if (check) {
-			this.f.status?.patchValue(this.uiState.clientStatus.map((e) => e.name));
-		} else this.f.status?.patchValue(["Active"]);
+	checkAllStatusAction(check: boolean | null, controlName: string) {
+		switch (controlName) {
+			case "status":
+				if (check) this.f.status?.patchValue(this.uiState.lists.clientStatus.map((e) => e.name));
+				else this.f.status?.patchValue(["Active"]);
+				break;
+			case "branch":
+				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
+				else this.f.branchs?.patchValue(null);
+				break;
+			default:
+				break;
+		}
 	}
 
 	get f() {
@@ -90,6 +113,9 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		}
 		const data: IClientReportReq = {
 			...filterForm.getRawValue(),
+			crNO: filterForm.getRawValue().crNO === "Select All" ? null : filterForm.getRawValue().crNO,
+			producer: filterForm.getRawValue().producer === "Select All" ? null : filterForm.getRawValue().producer,
+			type: filterForm.getRawValue().type === "Select All" ? null : filterForm.getRawValue().type,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};

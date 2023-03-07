@@ -21,7 +21,7 @@
                                                             <label for="status">Choose Client(s)
                                                             </label>
                                                         </div>
-                                                        <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
+                                                        <ng-select [items]="uiState.lists.clientsList"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"
@@ -96,7 +96,7 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Producer</label>
                                                     </div>
-                                                    <ng-select [items]="uiState.custProducersList"
+                                                    <ng-select [items]="uiState.lists.producersList"
                                                         placeholder="Select Producer"
                                                         [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"

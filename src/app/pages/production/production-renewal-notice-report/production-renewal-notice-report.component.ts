@@ -36,12 +36,14 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			allLinesOfBusinessControl: new FormControl(false),
 		},
 		lists: {
-			// branchesLists: [] as IGenericResponseType[],
+			branchesLists: [] as IGenericResponseType[],
+			clientsLists: [] as IGenericResponseType[],
+			groupsLists: [] as IGenericResponseType[],
 			insuranceCompanyControlLists: [] as IGenericResponseType[],
 			classOfBusinessLists: [] as IGenericResponseType[],
 			linesOfBusinessLists: [] as string[],
 		},
-		clientDataContorl: new FormControl(null),
+		clientDataContorl: new FormControl("Select all"),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -58,22 +60,24 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
 
 		let sub = this.lookupData.subscribe((res) => {
-			// this.uiState.lists.branchesLists = res.Branch?.content!;
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
+			res.Branch?.content! ? (this.uiState.lists.branchesLists = [{ id: 0, name: "Select all" }, ...res.Branch?.content!]) : "";
+			res.ClientsList?.content! ? (this.uiState.lists.clientsLists = [{ id: 0, name: "Select all" }, ...res.ClientsList?.content!]) : "";
+			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select all" }, ...res.GroupsList?.content!]) : "";
 		});
 		this.subscribes.push(sub);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<IPolicyRenewalNoticeReportForm>({
-			branch: new FormControl(null),
+			branch: new FormControl("Select all"),
 			clientData: new FormControl(null),
-			clientGroup: new FormControl(null),
+			clientGroup: new FormControl("Select all"),
 			insuranceCompany: new FormControl(null),
 			classOfBusiness: new FormControl(null),
 			lineOfBusiness: new FormControl(null),
-			reportType: new FormControl(null),
+			reportType: new FormControl(1),
 			reportDate: new FormControl(null, Validators.required),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
@@ -87,10 +91,6 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 
 	checkAllToggler(check: boolean, controlName: string) {
 		switch (controlName) {
-			// case "branch":
-			// 	if (check) this.f.branch?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-			// 	else this.f.branch?.patchValue(null);
-			// 	break;
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
 				else this.f.insuranceCompany?.patchValue(null);
@@ -143,6 +143,9 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		this.eventService.broadcast(reserved.isLoading, true);
 		const data: any = {
 			...filterForm.getRawValue(),
+			branch: filterForm.getRawValue().branch === "Select all" ? null : filterForm.getRawValue().branch,
+			clientData: this.uiState.clientDataContorl.getRawValue() === "Select all" ? null : filterForm.getRawValue().clientData,
+			clientGroup: filterForm.getRawValue().clientGroup === "Select all" ? null : filterForm.getRawValue().clientGroup,
 			reportDate: this.utils.dateFormater(filterForm.getRawValue().reportDate) as any,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
