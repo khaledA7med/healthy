@@ -27,3 +27,6 @@
   height: fit-content !important;
   max-height: fit-content !important;
 }
+table.table tr td:not(:last-child) {
+  min-width: 180px;
+}
