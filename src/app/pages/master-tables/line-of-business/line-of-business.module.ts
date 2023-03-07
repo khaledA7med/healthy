@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LineOfBusinessComponent } from './line-of-business/line-of-business.component';
-import { LineOfBusinessFormComponent } from './line-of-business/line-of-business-form.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { LineOfBusinessComponent } from "./line-of-business/line-of-business.component";
+import { LineOfBusinessFormComponent } from "./line-of-business/line-of-business-form.component";
 
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
@@ -12,14 +12,12 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    LineOfBusinessComponent,
-    LineOfBusinessFormComponent
-  ],
+  declarations: [LineOfBusinessComponent, LineOfBusinessFormComponent],
   imports: [
     CommonModule,
     SharedModule,
-    RouterModule.forChild(routes), AgGridModule.withComponents([ LineOfBusinessFormComponent ])
-  ]
+    RouterModule.forChild(routes),
+    AgGridModule,
+  ],
 })
-export class LineOfBusinessModule { }
+export class LineOfBusinessModule {}
