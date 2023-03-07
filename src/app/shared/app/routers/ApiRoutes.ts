@@ -130,6 +130,12 @@ export const ApiRoutes = {
       edit: "/MasterTables/InsuranceCompanies/Edit",
       delete: "/MasterTables/InsuranceCompanies/Delete",
     },
+    insuranceBrokers: {
+      search: "/MasterTables/InsuranceBrokers/Search",
+      save: "/MasterTables/InsuranceBrokers/Save",
+      edit: "/MasterTables/InsuranceBrokers/Edit",
+      delete: "/MasterTables/InsuranceBrokers/Delete",
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",

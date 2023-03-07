@@ -10,7 +10,8 @@
       "LIST": {
         "INSURANCECLASSES": "Insurance Classes",
         "LINEOFBUSINESS": "Line Of Business",
-        "INSURANCECOMPANIES": "Insurance Companies"
+        "INSURANCECOMPANIES": "Insurance Companies",
+        "INSURANCEBROKERS": "Insurance Brokers"
       }
     },
     "CLIENTREGISTRY": {

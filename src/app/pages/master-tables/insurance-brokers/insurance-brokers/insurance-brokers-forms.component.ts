@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { InsuranceClassesComponent } from './insurance-classes.component';
+import { InsuranceBrokersComponent } from './insurance-brokers.component';
 
 @Component({
-  selector: 'app-insurance-classes-form',
+  selector: 'app-insurance-brokers-forms',
   template: `
   <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -44,13 +44,13 @@ import { InsuranceClassesComponent } from './insurance-classes.component';
 		`,
   ]
 })
-export class InsuranceClassesFormComponent
+export class InsuranceBrokersFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceClassesComponent;
-  constructor (private message: MessagesService) { }
+  private comp!: InsuranceBrokersComponent;
 
+  constructor (private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
   {
@@ -69,11 +69,12 @@ export class InsuranceClassesFormComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity, this.params.data.className);
+        this.comp.DeleteInsurance(this.params.data.identity);
       } else
       {
         return;
       }
     });
   }
+
 }
