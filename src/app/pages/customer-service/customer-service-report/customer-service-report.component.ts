@@ -46,6 +46,7 @@ export class CustomerServiceReportComponent implements OnInit {
 			transactionTypesLists: [] as IGenericResponseType[],
 			producersLists: [] as IGenericResponseType[],
 		},
+		clientDataContorl: new FormControl(null),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -84,6 +85,11 @@ export class CustomerServiceReportComponent implements OnInit {
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+	}
+
+	setClientData(e: any) {
+		let data = `${e.id}, ${e.name}`;
+		this.f.clientData?.patchValue(data);
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {

@@ -25,7 +25,7 @@
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" formControlName="clientData">
+                                                            bindValue="name" [formControl]="uiState.clientDataContorl">
                                                         </ng-select>
                                                     </div>
                                                     <!-- User -->

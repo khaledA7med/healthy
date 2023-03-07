@@ -39,6 +39,8 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			insuranceCompanyControlLists: [] as IGenericResponseType[],
 			classOfBusinessLists: [] as IGenericResponseType[],
 		},
+		clientDataContorl: new FormControl(null),
+		custProducersList: [] as IGenericResponseType[],
 	};
 	modalRef!: NgbModalRef;
 
@@ -54,11 +56,11 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Production);
-
 		let sub = this.lookupData.subscribe((res) => {
 			this.uiState.lists.branchesLists = res.Branch?.content!;
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
+			res.Producers?.content! ? (this.uiState.custProducersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 		});
 		this.subscribes.push(sub);
 	}
@@ -73,6 +75,11 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+	}
+
+	setClientData(e: any) {
+		let data = `${e.id}, ${e.name}`;
+		this.f.clientData?.patchValue(data);
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
@@ -114,6 +121,7 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 		this.eventService.broadcast(reserved.isLoading, true);
 		const data: IPolicyRenewalReportReq = {
 			...filterForm.getRawValue(),
+			producer: filterForm.getRawValue().producer === "Select All" ? null : filterForm.getRawValue().producer,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};
@@ -142,11 +150,6 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			reportName: "Policies Reports - Renewals",
 			url: data,
 		};
-
-		// let sub = this.modalRef.closed.subscribe((res) => {
-		// 	console.log(res);
-		// });
-		// this.subscribes.push(sub);
 	}
 
 	ngOnDestroy(): void {

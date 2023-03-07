@@ -45,6 +45,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			transactionTypesLists: [] as IGenericResponseType[],
 			producersLists: [] as IGenericResponseType[],
 		},
+		clientDataContorl: new FormControl(null),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -87,6 +88,11 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+	}
+
+	setClientData(e: any) {
+		let data = `${e.id}, ${e.name}`;
+		this.f.clientData?.patchValue(data);
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
@@ -154,7 +160,6 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};
-
 		let sub = this.productionService.viewProductionReport(data).subscribe(
 			(res: HttpResponse<IBaseResponse<any>>) => {
 				if (res.body?.status) {

@@ -41,6 +41,7 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			classOfBusinessLists: [] as IGenericResponseType[],
 			linesOfBusinessLists: [] as string[],
 		},
+		clientDataContorl: new FormControl(null),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -77,6 +78,11 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+	}
+
+	setClientData(e: any) {
+		let data = `${e.id}, ${e.name}`;
+		this.f.clientData?.patchValue(data);
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
