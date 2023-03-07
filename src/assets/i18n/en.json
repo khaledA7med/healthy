@@ -12,7 +12,11 @@
         "LINEOFBUSINESS": "Line Of Business",
         "INSURANCECOMPANIES": "Insurance Companies",
         "INSURANCEBROKERS": "Insurance Brokers",
-        "POLICYTYPES": "Policy Types"
+        "POLICYTYPES": "Policy Types",
+        "NATIONALITIES": "Nationalities",
+        "BUSINESSACTIVITY": "Business Activity",
+        "LEGALSTATUS": "Legal Status",
+        "LOCATIONS": "Locations"
       }
     },
     "CLIENTREGISTRY": {

@@ -158,9 +158,33 @@ export const ApiRoutes = {
     },
     policyTypes: {
       search: "/MasterTables/PolicyTypes/Search",
-      save: "/MasterTables/PolicyTypes/Save",
+      create: "/MasterTables/PolicyTypes/Create",
       edit: "/MasterTables/PolicyTypes/Edit",
       delete: "/MasterTables/PolicyTypes/Delete",
+    },
+    nationalities: {
+      search: "/MasterTables/Nationalities/Search",
+      save: "/MasterTables/Nationalities/Save",
+      edit: "/MasterTables/Nationalities/Edit",
+      delete: "/MasterTables/Nationalities/Delete",
+    },
+    businessActivity: {
+      search: "/MasterTables/BusinessActivity/Search",
+      save: "/MasterTables/BusinessActivity/Save",
+      edit: "/MasterTables/BusinessActivity/Edit",
+      delete: "/MasterTables/BusinessActivity/Delete",
+    },
+    legalStatus: {
+      search: "/MasterTables/LegalStatus/Search",
+      save: "/MasterTables/LegalStatus/Save",
+      edit: "/MasterTables/LegalStatus/Edit",
+      delete: "/MasterTables/LegalStatus/Delete",
+    },
+    locations: {
+      search: "/MasterTables/Locations/Search",
+      save: "/MasterTables/Locations/Save",
+      edit: "/MasterTables/Locations/Edit",
+      delete: "/MasterTables/Locations/Delete",
     },
   },
   Clients: {

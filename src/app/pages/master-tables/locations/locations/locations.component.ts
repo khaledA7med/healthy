@@ -10,31 +10,31 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { policyTypesCols } from 'src/app/shared/app/grid/policyTypesCols';
-import { PolicyTypesService } from 'src/app/shared/services/master-tables/policy-types.service';
-import { IPolicyTypes, IPolicyTypesData } from 'src/app/shared/app/models/MasterTables/i-policy-types';
+import { locationsCols } from 'src/app/shared/app/grid/locationsCols';
+import { LocationsService } from 'src/app/shared/services/master-tables/locations.service';
+import { ILocations, ILocationsData } from 'src/app/shared/app/models/MasterTables/i-locations';
 
 @Component({
-  selector: 'app-policy-types',
-  templateUrl: './policy-types.component.html',
-  styleUrls: [ './policy-types.component.scss' ],
+  selector: 'app-locations',
+  templateUrl: './locations.component.html',
+  styleUrls: [ './locations.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class PolicyTypesComponent implements OnInit, OnDestroy
+export class LocationsComponent implements OnInit, OnDestroy
 {
 
-  PolicyTypesFormSubmitted = false as boolean;
-  PolicyTypesModal!: NgbModalRef;
-  PolicyTypesForm!: FormGroup<IPolicyTypes>;
-  @ViewChild("PolicyTypesContent") PolicyTypesContent!: TemplateRef<any>;
+  LocationsFormSubmitted = false as boolean;
+  LocationsModal!: NgbModalRef;
+  LocationsForm!: FormGroup<ILocations>;
+  @ViewChild("LocationsContent") LocationsContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IPolicyTypes[],
+    list: [] as ILocations[],
     totalPages: 0,
-    editPolicyTypesMode: false as Boolean,
-    editPolicyTypesData: {} as IPolicyTypesData,
+    editLocationsMode: false as Boolean,
+    editLocationsData: {} as ILocationsData,
   };
 
   subscribes: Subscription[] = [];
@@ -44,7 +44,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: policyTypesCols,
+    columnDefs: locationsCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -58,7 +58,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
   };
 
   constructor (
-    private PolicyTypesService: PolicyTypesService,
+    private LocationsService: LocationsService,
     private tableRef: ElementRef,
     private message: MessagesService,
     private appUtils: AppUtils,
@@ -68,15 +68,15 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initpolicyTypesForm();
+    this.initLocationsForm();
   }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.PolicyTypesService.getPolicyTypes().subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypes[]>>) =>
+      let sub = this.LocationsService.getLocations().subscribe(
+        (res: HttpResponse<IBaseResponse<ILocations[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list);
@@ -131,10 +131,10 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
-  openPolicyTypeDialoge (id?: string)
+  openLocationsDialoge (id?: string)
   {
-    this.resetPolicyTypesForm();
-    this.PolicyTypesModal = this.modalService.open(this.PolicyTypesContent, {
+    this.resetLocationsForm();
+    this.LocationsModal = this.modalService.open(this.LocationsContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -143,12 +143,12 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.PolicyTypesService.getEditPolicyTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypesData>>) =>
+      let sub = this.LocationsService.getEditLocations(id).subscribe(
+        (res: HttpResponse<IBaseResponse<ILocationsData>>) =>
         {
-          this.uiState.editPolicyTypesMode = true;
-          this.uiState.editPolicyTypesData = res.body?.data!;
-          this.fillAddPolicyTypesForm(res.body?.data!);
+          this.uiState.editLocationsMode = true;
+          this.uiState.editLocationsData = res.body?.data!;
+          this.fillAddLocationsForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
         (err: HttpErrorResponse) =>
@@ -160,40 +160,40 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.PolicyTypesModal.hidden.subscribe(() =>
+    this.LocationsModal.hidden.subscribe(() =>
     {
-      this.resetPolicyTypesForm();
-      this.PolicyTypesFormSubmitted = false;
-      this.uiState.editPolicyTypesMode = false;
+      this.resetLocationsForm();
+      this.LocationsFormSubmitted = false;
+      this.uiState.editLocationsMode = false;
     });
   }
 
-  initpolicyTypesForm ()
+  initLocationsForm ()
   {
-    this.PolicyTypesForm = new FormGroup<IPolicyTypes>({
+    this.LocationsForm = new FormGroup<ILocations>({
       sno: new FormControl(null),
-      policyType: new FormControl(null, Validators.required),
+      locationName: new FormControl(null, Validators.required),
     })
   }
 
   get f ()
   {
-    return this.PolicyTypesForm.controls;
+    return this.LocationsForm.controls;
   }
 
-  fillAddPolicyTypesForm (data: IPolicyTypesData)
+  fillAddLocationsForm (data: ILocationsData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.locationName?.patchValue(data.locationName!);
   }
 
-  fillEditPolicyTypesForm (data: IPolicyTypesData)
+  fillEditLocationsForm (data: ILocationsData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.locationName?.patchValue(data.locationName!);
   }
 
   validationChecker (): boolean
   {
-    if (this.PolicyTypesForm.invalid)
+    if (this.LocationsForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
@@ -201,23 +201,23 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitPolicyTypesData (form: FormGroup)
+  submitLocationsData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IPolicyTypesData = {
-      sno: this.uiState.editPolicyTypesMode ? this.uiState.editPolicyTypesData.sno : 0,
-      policyType: formData.policyType,
+    const data: ILocationsData = {
+      sno: this.uiState.editLocationsMode ? this.uiState.editLocationsData.sno : 0,
+      locationName: formData.locationName,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.PolicyTypesService.savePolicyTypes(data).subscribe(
+    let sub = this.LocationsService.saveLocations(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.PolicyTypesModal.dismiss();
+        this.LocationsModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetPolicyTypesForm();
+        this.resetLocationsForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -230,14 +230,14 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetPolicyTypesForm ()
+  resetLocationsForm ()
   {
-    this.PolicyTypesForm.reset();
+    this.LocationsForm.reset();
   }
 
-  DeleteInsurance (id: string)
+  DeleteLocations (id: string)
   {
-    let sub = this.PolicyTypesService.DeletePolicyTypes(id).subscribe(
+    let sub = this.LocationsService.DeleteLocations(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -256,5 +256,6 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
   {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
+
 
 }

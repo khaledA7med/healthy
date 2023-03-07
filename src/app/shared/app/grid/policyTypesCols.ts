@@ -1,6 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { PolicyTypesFromsComponent } from "src/app/pages/master-tables/policy-types/policy-types/policy-types-froms.component";
-PolicyTypesFromsComponent
+
 
 export const policyTypesCols: ColDef[] = [
     {

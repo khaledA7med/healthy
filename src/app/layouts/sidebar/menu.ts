@@ -37,6 +37,30 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.MasterTable.policyTypes,
         parentId: 1,
       },
+      {
+        id: 106,
+        label: "MENUITEMS.MASTERTABLE.LIST.NATIONALITIES",
+        link: AppRoutes.MasterTable.nationalities,
+        parentId: 1,
+      },
+      {
+        id: 107,
+        label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSACTIVITY",
+        link: AppRoutes.MasterTable.businessActivity,
+        parentId: 1,
+      },
+      {
+        id: 108,
+        label: "MENUITEMS.MASTERTABLE.LIST.LEGALSTATUS",
+        link: AppRoutes.MasterTable.legalStatus,
+        parentId: 1,
+      },
+      {
+        id: 109,
+        label: "MENUITEMS.MASTERTABLE.LIST.LOCATIONS",
+        link: AppRoutes.MasterTable.locations,
+        parentId: 1,
+      },
     ],
   },
   {

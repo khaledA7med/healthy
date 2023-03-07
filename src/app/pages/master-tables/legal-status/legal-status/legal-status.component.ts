@@ -10,31 +10,32 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { policyTypesCols } from 'src/app/shared/app/grid/policyTypesCols';
-import { PolicyTypesService } from 'src/app/shared/services/master-tables/policy-types.service';
-import { IPolicyTypes, IPolicyTypesData } from 'src/app/shared/app/models/MasterTables/i-policy-types';
+import { legalStatusCols } from 'src/app/shared/app/grid/legalStatusCols';
+import { LegalStatusService } from 'src/app/shared/services/master-tables/legal-status.service';
+import { ILegalStatus, ILegalStatusData } from 'src/app/shared/app/models/MasterTables/i-legal-status';
 
 @Component({
-  selector: 'app-policy-types',
-  templateUrl: './policy-types.component.html',
-  styleUrls: [ './policy-types.component.scss' ],
+  selector: 'app-legal-status',
+  templateUrl: './legal-status.component.html',
+  styleUrls: [ './legal-status.component.scss' ],
   encapsulation: ViewEncapsulation.None,
+
 })
-export class PolicyTypesComponent implements OnInit, OnDestroy
+export class LegalStatusComponent implements OnInit, OnDestroy
 {
 
-  PolicyTypesFormSubmitted = false as boolean;
-  PolicyTypesModal!: NgbModalRef;
-  PolicyTypesForm!: FormGroup<IPolicyTypes>;
-  @ViewChild("PolicyTypesContent") PolicyTypesContent!: TemplateRef<any>;
+  LegalStatusFormSubmitted = false as boolean;
+  LegalStatusModal!: NgbModalRef;
+  LegalStatusForm!: FormGroup<ILegalStatus>;
+  @ViewChild("LegalStatusContent") LegalStatusContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IPolicyTypes[],
+    list: [] as ILegalStatus[],
     totalPages: 0,
-    editPolicyTypesMode: false as Boolean,
-    editPolicyTypesData: {} as IPolicyTypesData,
+    editLegalStatusMode: false as Boolean,
+    editLegalStatusData: {} as ILegalStatusData,
   };
 
   subscribes: Subscription[] = [];
@@ -44,7 +45,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: policyTypesCols,
+    columnDefs: legalStatusCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -58,7 +59,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
   };
 
   constructor (
-    private PolicyTypesService: PolicyTypesService,
+    private LegalStatusService: LegalStatusService,
     private tableRef: ElementRef,
     private message: MessagesService,
     private appUtils: AppUtils,
@@ -68,15 +69,15 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initpolicyTypesForm();
+    this.initLegalStatusForm();
   }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.PolicyTypesService.getPolicyTypes().subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypes[]>>) =>
+      let sub = this.LegalStatusService.getLegalStatus().subscribe(
+        (res: HttpResponse<IBaseResponse<ILegalStatus[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list);
@@ -131,10 +132,10 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
-  openPolicyTypeDialoge (id?: string)
+  openLegalStatusDialoge (id?: string)
   {
-    this.resetPolicyTypesForm();
-    this.PolicyTypesModal = this.modalService.open(this.PolicyTypesContent, {
+    this.resetLegalStatusForm();
+    this.LegalStatusModal = this.modalService.open(this.LegalStatusContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -143,12 +144,12 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.PolicyTypesService.getEditPolicyTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypesData>>) =>
+      let sub = this.LegalStatusService.getEditLegalStatus(id).subscribe(
+        (res: HttpResponse<IBaseResponse<ILegalStatusData>>) =>
         {
-          this.uiState.editPolicyTypesMode = true;
-          this.uiState.editPolicyTypesData = res.body?.data!;
-          this.fillAddPolicyTypesForm(res.body?.data!);
+          this.uiState.editLegalStatusMode = true;
+          this.uiState.editLegalStatusData = res.body?.data!;
+          this.fillAddLegalStatusForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
         (err: HttpErrorResponse) =>
@@ -160,40 +161,40 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.PolicyTypesModal.hidden.subscribe(() =>
+    this.LegalStatusModal.hidden.subscribe(() =>
     {
-      this.resetPolicyTypesForm();
-      this.PolicyTypesFormSubmitted = false;
-      this.uiState.editPolicyTypesMode = false;
+      this.resetLegalStatusForm();
+      this.LegalStatusFormSubmitted = false;
+      this.uiState.editLegalStatusMode = false;
     });
   }
 
-  initpolicyTypesForm ()
+  initLegalStatusForm ()
   {
-    this.PolicyTypesForm = new FormGroup<IPolicyTypes>({
+    this.LegalStatusForm = new FormGroup<ILegalStatus>({
       sno: new FormControl(null),
-      policyType: new FormControl(null, Validators.required),
+      legalStatus: new FormControl(null, Validators.required),
     })
   }
 
   get f ()
   {
-    return this.PolicyTypesForm.controls;
+    return this.LegalStatusForm.controls;
   }
 
-  fillAddPolicyTypesForm (data: IPolicyTypesData)
+  fillAddLegalStatusForm (data: ILegalStatusData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.legalStatus?.patchValue(data.legalStatus!);
   }
 
-  fillEditPolicyTypesForm (data: IPolicyTypesData)
+  fillEditLegalStatusForm (data: ILegalStatusData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.legalStatus?.patchValue(data.legalStatus!);
   }
 
   validationChecker (): boolean
   {
-    if (this.PolicyTypesForm.invalid)
+    if (this.LegalStatusForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
@@ -201,23 +202,23 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitPolicyTypesData (form: FormGroup)
+  submitLegalStatusData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IPolicyTypesData = {
-      sno: this.uiState.editPolicyTypesMode ? this.uiState.editPolicyTypesData.sno : 0,
-      policyType: formData.policyType,
+    const data: ILegalStatusData = {
+      sno: this.uiState.editLegalStatusMode ? this.uiState.editLegalStatusData.sno : 0,
+      legalStatus: formData.legalStatus,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.PolicyTypesService.savePolicyTypes(data).subscribe(
+    let sub = this.LegalStatusService.saveLegalStatus(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.PolicyTypesModal.dismiss();
+        this.LegalStatusModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetPolicyTypesForm();
+        this.resetLegalStatusForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -230,14 +231,14 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetPolicyTypesForm ()
+  resetLegalStatusForm ()
   {
-    this.PolicyTypesForm.reset();
+    this.LegalStatusForm.reset();
   }
 
-  DeleteInsurance (id: string)
+  DeleteLegalStatus (id: string)
   {
-    let sub = this.PolicyTypesService.DeletePolicyTypes(id).subscribe(
+    let sub = this.LegalStatusService.DeleteLegalStatus(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);

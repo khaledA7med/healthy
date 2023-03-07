@@ -10,31 +10,31 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { policyTypesCols } from 'src/app/shared/app/grid/policyTypesCols';
-import { PolicyTypesService } from 'src/app/shared/services/master-tables/policy-types.service';
-import { IPolicyTypes, IPolicyTypesData } from 'src/app/shared/app/models/MasterTables/i-policy-types';
+import { businessActivityCols } from 'src/app/shared/app/grid/businessActivityCols';
+import { BusinessActivityService } from 'src/app/shared/services/master-tables/business-activity.service';
+import { IBusinessActivity, IBusinessActivityData } from 'src/app/shared/app/models/MasterTables/i-business-activity';
 
 @Component({
-  selector: 'app-policy-types',
-  templateUrl: './policy-types.component.html',
-  styleUrls: [ './policy-types.component.scss' ],
+  selector: 'app-business-activity',
+  templateUrl: './business-activity.component.html',
+  styleUrls: [ './business-activity.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class PolicyTypesComponent implements OnInit, OnDestroy
+export class BusinessActivityComponent implements OnInit, OnDestroy
 {
 
-  PolicyTypesFormSubmitted = false as boolean;
-  PolicyTypesModal!: NgbModalRef;
-  PolicyTypesForm!: FormGroup<IPolicyTypes>;
-  @ViewChild("PolicyTypesContent") PolicyTypesContent!: TemplateRef<any>;
+  BusinessActivityFormSubmitted = false as boolean;
+  BusinessActivityModal!: NgbModalRef;
+  BusinessActivityForm!: FormGroup<IBusinessActivity>;
+  @ViewChild("BusinessActivityContent") BusinessActivityContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IPolicyTypes[],
+    list: [] as IBusinessActivity[],
     totalPages: 0,
-    editPolicyTypesMode: false as Boolean,
-    editPolicyTypesData: {} as IPolicyTypesData,
+    editBusinessActivityMode: false as Boolean,
+    editBusinessActivityData: {} as IBusinessActivityData,
   };
 
   subscribes: Subscription[] = [];
@@ -44,7 +44,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: policyTypesCols,
+    columnDefs: businessActivityCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -58,7 +58,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
   };
 
   constructor (
-    private PolicyTypesService: PolicyTypesService,
+    private BusinessActivityService: BusinessActivityService,
     private tableRef: ElementRef,
     private message: MessagesService,
     private appUtils: AppUtils,
@@ -68,15 +68,15 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initpolicyTypesForm();
+    this.initBusinessActivityForm();
   }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.PolicyTypesService.getPolicyTypes().subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypes[]>>) =>
+      let sub = this.BusinessActivityService.getBusinessActivity().subscribe(
+        (res: HttpResponse<IBaseResponse<IBusinessActivity[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list);
@@ -131,10 +131,10 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
-  openPolicyTypeDialoge (id?: string)
+  openBusinessActivityDialoge (id?: string)
   {
-    this.resetPolicyTypesForm();
-    this.PolicyTypesModal = this.modalService.open(this.PolicyTypesContent, {
+    this.resetBusinessActivityForm();
+    this.BusinessActivityModal = this.modalService.open(this.BusinessActivityContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -143,12 +143,12 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.PolicyTypesService.getEditPolicyTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypesData>>) =>
+      let sub = this.BusinessActivityService.getEditBusinessActivity(id).subscribe(
+        (res: HttpResponse<IBaseResponse<IBusinessActivityData>>) =>
         {
-          this.uiState.editPolicyTypesMode = true;
-          this.uiState.editPolicyTypesData = res.body?.data!;
-          this.fillAddPolicyTypesForm(res.body?.data!);
+          this.uiState.editBusinessActivityMode = true;
+          this.uiState.editBusinessActivityData = res.body?.data!;
+          this.fillAddBusinessActivityForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
         (err: HttpErrorResponse) =>
@@ -160,40 +160,40 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.PolicyTypesModal.hidden.subscribe(() =>
+    this.BusinessActivityModal.hidden.subscribe(() =>
     {
-      this.resetPolicyTypesForm();
-      this.PolicyTypesFormSubmitted = false;
-      this.uiState.editPolicyTypesMode = false;
+      this.resetBusinessActivityForm();
+      this.BusinessActivityFormSubmitted = false;
+      this.uiState.editBusinessActivityMode = false;
     });
   }
 
-  initpolicyTypesForm ()
+  initBusinessActivityForm ()
   {
-    this.PolicyTypesForm = new FormGroup<IPolicyTypes>({
+    this.BusinessActivityForm = new FormGroup<IBusinessActivity>({
       sno: new FormControl(null),
-      policyType: new FormControl(null, Validators.required),
+      businessActivity: new FormControl(null, Validators.required),
     })
   }
 
   get f ()
   {
-    return this.PolicyTypesForm.controls;
+    return this.BusinessActivityForm.controls;
   }
 
-  fillAddPolicyTypesForm (data: IPolicyTypesData)
+  fillAddBusinessActivityForm (data: IBusinessActivityData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.businessActivity?.patchValue(data.businessActivity!);
   }
 
-  fillEditPolicyTypesForm (data: IPolicyTypesData)
+  fillEditBusinessActivityForm (data: IBusinessActivityData)
   {
-    this.f.policyType?.patchValue(data.policyType!);
+    this.f.businessActivity?.patchValue(data.businessActivity!);
   }
 
   validationChecker (): boolean
   {
-    if (this.PolicyTypesForm.invalid)
+    if (this.BusinessActivityForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
@@ -201,23 +201,23 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitPolicyTypesData (form: FormGroup)
+  submitBusinessActivityData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IPolicyTypesData = {
-      sno: this.uiState.editPolicyTypesMode ? this.uiState.editPolicyTypesData.sno : 0,
-      policyType: formData.policyType,
+    const data: IBusinessActivityData = {
+      sno: this.uiState.editBusinessActivityMode ? this.uiState.editBusinessActivityData.sno : 0,
+      businessActivity: formData.businessActivity,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.PolicyTypesService.savePolicyTypes(data).subscribe(
+    let sub = this.BusinessActivityService.saveBusinessActivity(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.PolicyTypesModal.dismiss();
+        this.BusinessActivityModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetPolicyTypesForm();
+        this.resetBusinessActivityForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -230,14 +230,14 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetPolicyTypesForm ()
+  resetBusinessActivityForm ()
   {
-    this.PolicyTypesForm.reset();
+    this.BusinessActivityForm.reset();
   }
 
-  DeleteInsurance (id: string)
+  DeleteBusinessActivity (id: string)
   {
-    let sub = this.PolicyTypesService.DeletePolicyTypes(id).subscribe(
+    let sub = this.BusinessActivityService.DeleteBusinessActivity(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -256,5 +256,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
   {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
+
+
 
 }

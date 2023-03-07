@@ -54,6 +54,46 @@ const routes: Routes = [
         (m) => m.PolicyTypesModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.nationalities,
+    data: {
+      title: "Nationalities",
+    },
+    loadChildren: () =>
+      import("./nationalities/nationalities.module").then(
+        (m) => m.NationalitiesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessActivity,
+    data: {
+      title: "Business Activity",
+    },
+    loadChildren: () =>
+      import("./business-activity/business-activity.module").then(
+        (m) => m.BusinessActivityModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.legalStatus,
+    data: {
+      title: "Legal Status",
+    },
+    loadChildren: () =>
+      import("./legal-status/legal-status.module").then(
+        (m) => m.LegalStatusModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.locations,
+    data: {
+      title: "Locations",
+    },
+    loadChildren: () =>
+      import("./locations/locations.module").then(
+        (m) => m.LocationsModule
+      ),
+  },
 ];
 
 @NgModule({
