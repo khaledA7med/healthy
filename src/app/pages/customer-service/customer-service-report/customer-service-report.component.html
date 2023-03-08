@@ -16,12 +16,12 @@
                                             <div class="row mt-5 mx-2">
                                                 <div class="col-12 row my-2 pe-0">
                                                     <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
+                                                    <div class="col-lg-3 col-md-4 col-sm-12  mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client(s)
                                                             </label>
                                                         </div>
-                                                        <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
+                                                        <ng-select [items]="uiState.lists.clientsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"
@@ -29,12 +29,12 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- User -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
+                                                    <div class="col-lg-3 col-md-4 col-sm-12  mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">User
                                                             </label>
                                                         </div>
-                                                        <ng-select [items]="(lookupData | async)?.AllUsers?.content!"
+                                                        <ng-select [items]="uiState.lists.usersLists!"
                                                             placeholder="Select User"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"
@@ -47,14 +47,8 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Branch
                                                         </label>
-                                                        <div>
-                                                            <label for="checkall1" class="mx-2">Select All</label>
-                                                            <!-- <input type="checkbox" id="checkall1"
-                                                                [formControl]="uiState.checkAllControls.allBranchControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allBranchControl.value!,'branch')"> [multiple]="true"-->
-                                                        </div>
                                                     </div>
-                                                    <ng-select [items]="(lookupData | async)?.Branch?.content!"
+                                                    <ng-select [items]="uiState.lists.branchesLists"
                                                         placeholder="Select Branch(s)"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [closeOnSelect]="false"
@@ -102,6 +96,24 @@
                                                         formControlName="classOfBusiness">
                                                     </ng-select>
                                                 </div>
+                                                <!-- Status -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Status</label>
+                                                        <div>
+                                                            <label for="checkall3" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall3"
+                                                                [formControl]="uiState.checkAllControls.allStatusControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allStatusControl.value!,'status')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select [items]="(lookupData | async)?.CServiceStatus?.content!"
+                                                        placeholder="Select Status" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="status">
+                                                    </ng-select>
+                                                </div>
                                                 <!-- Report Type -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -113,15 +125,15 @@
                                                         bindLabel="name" bindValue="id" formControlName="reportType">
                                                     </ng-select>
                                                 </div>
-                                                <!-- Status -->
+                                                <!-- Current Status -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mt-2 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Status</label>
+                                                        <label for="status">Current Status</label>
                                                     </div>
-                                                    <ng-select [items]="(lookupData | async)?.CServiceStatus?.content!"
+                                                    <ng-select [items]="(lookupData | async)?.CSReportStatus?.content!"
                                                         placeholder="Select Status" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id" formControlName="status">
+                                                        bindLabel="name" bindValue="id" formControlName="currentStatus">
                                                     </ng-select>
                                                 </div>
                                                 <!-- minDate -->

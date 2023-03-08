@@ -58,6 +58,8 @@ export enum BaseData {
 	ProductionReportStatus = "ProductionReportStatus",
 	RenewalNoticeReportStatus = "RenewalNoticeReportStatus",
 	CSReportType = "CSReportType",
+	CSReportStatus = "CSReportStatus",
+	ClaimsReportType = "ClaimsReportType",
 }
 
 export interface IBaseMasterTable {
@@ -120,6 +122,8 @@ export interface IBaseMasterTable {
 	ProductionReportStatus?: Caching<IGenericResponseType[]>;
 	RenewalNoticeReportStatus?: Caching<IGenericResponseType[]>;
 	CSReportType?: Caching<IGenericResponseType[]>;
+	CSReportStatus?: Caching<IGenericResponseType[]>;
+	ClaimsReportType?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

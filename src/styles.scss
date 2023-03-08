@@ -1,6 +1,10 @@
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
 
+// body {
+// 	font-family: var(--vz-body-font-family);
+// }
+
 label.asterisk-input {
 	position: relative;
 	&::after {

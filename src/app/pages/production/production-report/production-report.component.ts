@@ -13,7 +13,7 @@ import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import { productionReportForm } from "src/app/shared/app/models/Production/iproduction-report";
+import { productionReportForm, productionReportReq } from "src/app/shared/app/models/Production/iproduction-report";
 @Component({
 	selector: "app-production-report",
 	templateUrl: "./production-report.component.html",
@@ -159,10 +159,10 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		}
 		// Display Submitting Loader
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: any = {
+		const data: productionReportReq = {
 			...filterForm.getRawValue(),
-			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : "",
-			clientGroup: this.filterForm.getRawValue().clientGroup === "Select All" ? null : "",
+			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : filterForm.getRawValue().clientData,
+			clientGroup: filterForm.getRawValue().clientGroup === "Select All" ? null : filterForm.getRawValue().clientGroup,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};

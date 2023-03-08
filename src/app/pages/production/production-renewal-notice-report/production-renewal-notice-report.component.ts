@@ -13,7 +13,7 @@ import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import { IPolicyRenewalNoticeReportForm } from "src/app/shared/app/models/Production/ipolicy-renewal-notice-report";
+import { IPolicyRenewalNoticeReportForm, IPolicyRenewalNoticeReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-notice-report";
 @Component({
 	selector: "app-production-renewal-notice-report",
 	templateUrl: "./production-renewal-notice-report.component.html",
@@ -141,7 +141,7 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		}
 		// Display Submitting Loader
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: any = {
+		const data: IPolicyRenewalNoticeReportReq = {
 			...filterForm.getRawValue(),
 			branch: filterForm.getRawValue().branch === "Select all" ? null : filterForm.getRawValue().branch,
 			clientData: this.uiState.clientDataContorl.getRawValue() === "Select all" ? null : filterForm.getRawValue().clientData,
