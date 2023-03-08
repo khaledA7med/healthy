@@ -28,6 +28,7 @@ export const AppRoutes = {
   BusinessDevelopment: {
     base: "saleslead",
     management: "saleslead",
+    dashboard: "saleslead/dashboard",
     create: "saleslead/create",
     edit: "saleslead/update/",
     reports: {

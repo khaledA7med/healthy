@@ -13,10 +13,10 @@ $font-size-mixing: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
 
 // border-color
 .border-dark {
-  border-color: var(--#{$variable-prefix}dark) !important;
+  border-color: var(--#{$prefix}dark) !important;
 }
 .border-light {
-  border-color: var(--#{$variable-prefix}light) !important;
+  border-color: var(--#{$prefix}light) !important;
 }
 
 // Border Style
@@ -53,10 +53,10 @@ $border-style-mixing: double, dashed, groove, outset, ridge, dotted, inset;
 [data-layout-mode="dark"] {
   .link-dark,
   .link-light {
-    color: var(--#{$variable-prefix}dark);
+    color: var(--#{$prefix}dark);
     &:focus,
     &:hover {
-      color: rgba(var(--#{$variable-prefix}dark-rgb), 0.75);
+      color: rgba(var(--#{$prefix}dark-rgb), 0.75);
     }
   }
 }
@@ -301,11 +301,11 @@ code {
 }
 // card
 .card-logo-light {
-  display: var(--#{$variable-prefix}card-logo-light);
+  display: var(--#{$prefix}card-logo-light);
 }
 
 .card-logo-dark {
-  display: var(--#{$variable-prefix}card-logo-dark);
+  display: var(--#{$prefix}card-logo-dark);
 }
 
 [data-layout-mode="dark"] {
