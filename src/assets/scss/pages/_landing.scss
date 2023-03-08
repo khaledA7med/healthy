@@ -53,7 +53,7 @@
         font-weight: $font-weight-medium;
         transition: all 0.4s;
         font-family: $font-family-secondary;
-        color: var(--#{$variable-prefix}dark);
+        color: var(--#{$prefix}dark);
         padding: 14px;
 
         @media (max-width: 991.98px) {
@@ -97,7 +97,7 @@
     .navbar-nav {
       .nav-item {
         .nav-link {
-          color: var(--#{$variable-prefix}dark);
+          color: var(--#{$prefix}dark);
         }
       }
     }
@@ -116,7 +116,7 @@
 // hero section
 
 .hero-section {
-  background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.5);
+  background-color: rgba(var(--#{$prefix}light-rgb), 0.5);
 
   .hero-shape-svg {
     svg {

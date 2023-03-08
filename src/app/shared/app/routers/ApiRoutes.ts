@@ -4,13 +4,14 @@ const LookUpTables = "/LookupTables/";
 export const ApiRoutes = {
 	Users: {
 		login: "/Account/login",
+    refesh: "/Account/RefreshToken",
 	},
 	MasterTable: {
 		MasterTables: {
 			insurClasses: LookUpTables + BaseData.InsurClasses,
 			lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
 			contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
-			contactDepartment: LookUpTables + BaseData.ContactDepartment,
+			contactDepartment: LookUpTables + BaseData.ContactDepartment,,
 		},
 		Client: {
 			clientType: LookUpTables + BaseData.ClientType,
@@ -137,7 +138,7 @@ export const ApiRoutes = {
 			search: "/MasterTables/InsurranceClass/Search",
 			save: "/MasterTables/InsurranceClass/Save",
 			edit: "/MasterTables/InsurranceClass/Edit",
-			delete: "/MasterTables/InsurranceClass/Delete",
+			delete: "/MasterTables/InsurranceClass/Delete",,
 		},
 		lineOfBusiness: {
 			search: "/MasterTables/LineOfBusiness/Search",

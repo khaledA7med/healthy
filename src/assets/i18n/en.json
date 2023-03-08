@@ -27,6 +27,7 @@
 			"TEXT": "Business Development",
 			"LIST": {
 				"MANAGEMENT": "Sales Lead Management",
+				"DASHBOARD": "Dashboard",
 				"REPORTS": "Reports",
 				"REPORTLIST": {
 					"BUSINESSDEVELOPMENT": "Business Development",

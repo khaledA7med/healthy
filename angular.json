@@ -45,7 +45,8 @@
 							"lottie-web",
 							"sweetalert2",
 							"ag-grid-community",
-							"dragula"
+							"dragula",
+							"@ckeditor/ckeditor5-build-classic"
 						],
 						"outputPath": "dist/oasis",
 						"index": "src/index.html",
@@ -57,14 +58,14 @@
 						"styles": [
 							"node_modules/@fullcalendar/common/main.css",
 							"node_modules/@fullcalendar/daygrid/main.css",
+							"./node_modules/@fullcalendar/timegrid/main.css",
+							"./node_modules/@fullcalendar/list/main.css",
 							"node_modules/shepherd.js/dist/css/shepherd.css",
 							"node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
 							"src/assets/scss/config/creative/bootstrap.scss",
 							"src/assets/scss/config/creative/app.scss",
 							"src/assets/scss/icons.scss",
-							"src/styles.scss",
-							"./node_modules/@fullcalendar/timegrid/main.css",
-							"./node_modules/@fullcalendar/list/main.css"
+							"src/styles.scss"
 						],
 						"scripts": []
 					},

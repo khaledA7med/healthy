@@ -71,6 +71,12 @@ export const MENU: MenuItem[] = [
 		subItems: [
 			{
 				id: 301,
+				label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.DASHBOARD",
+				link: AppRoutes.BusinessDevelopment.dashboard,
+				parentId: 3,
+			},
+			{
+				id: 302,
 				label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
 				link: AppRoutes.BusinessDevelopment.management,
 				parentId: 3,
