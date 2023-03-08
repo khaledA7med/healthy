@@ -84,20 +84,20 @@
   --#{$prefix}border-color: #{$gray-300};
 
   // dropdown
-  --#{$prefix}dropdown-bg: #{$white};
-  --#{$prefix}dropdown-link-color: #{$gray-900};
-  --#{$prefix}dropdown-link-hover-color: #{shade-color($gray-900, 10%)};
-  --#{$prefix}dropdown-link-hover-bg: #{$gray-100};
+  --#{$variable-prefix}dropdown-bg: #{$white};
+  --#{$variable-prefix}dropdown-link-color: #{$gray-900};
+  --#{$variable-prefix}dropdown-link-hover-color: #{shade-color($gray-900, 10%)};
+  --#{$variable-prefix}dropdown-link-hover-bg: #{$gray-100};
   --#{$prefix}dropdown-border-width: 0;
 
   // card
-  --#{$prefix}card-bg: #{$white};
-  --#{$prefix}card-cap-bg: #{$white};
+  --#{$variable-prefix}card-bg: #{$white};
+  --#{$variable-prefix}card-cap-bg: #{$white};
   --#{$prefix}card-logo-dark: block;
   --#{$prefix}card-logo-light: none;
 
   // modal
-  --#{$prefix}modal-bg: #{$white};
+  --#{$variable-prefix}modal-bg: #{$white};
 
   // nav tabs
   --#{$prefix}nav-tabs-link-active-color: #{$gray-700};

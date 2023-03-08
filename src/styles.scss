@@ -1,10 +1,6 @@
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
 
-// body {
-// 	font-family: var(--vz-body-font-family);
-// }
-
 label.asterisk-input {
   position: relative;
   &::after {
@@ -46,7 +42,7 @@ input[disabled] {
 .ng-select-container {
   min-height: calc(1.5em + 0.5rem + 1px) !important;
   max-height: calc(1.5em + 0.5rem + 1px) !important;
-  background-color: var(--bs-input-bg) !important;
+  background-color: var(--vz-input-bg) !important;
   border-color: var(--bs-input-border) !important;
 }
 
@@ -59,7 +55,6 @@ input[disabled] {
 .ng-option-disabled,
 .ng-option {
   background-color: var(--bs-input-bg) !important;
-  background-color: var(--bs-input-bg) !important;
 }
 
 .ng-dropdown-panel {
@@ -67,7 +62,7 @@ input[disabled] {
 }
 
 .ng-option-marked {
-  background-color: var(--bs-dropdown-link-hover-bg) !important;
+  background-color: var(--vz-dropdown-link-hover-bg) !important;
 }
 
 .ng-select.ng-invalid.ng-touched.is-invalid .ng-select-container,
@@ -81,7 +76,7 @@ input[disabled] {
 
 .filezone-container {
   padding: 10px;
-  background-color: var(--bs-card-bg);
+  background-color: var(--vz-card-bg);
   border: 2px dashed #878a99;
   /* border: 2px dashed rgb(133 132 132 / 23%); */
   border-radius: 10px;
@@ -184,10 +179,10 @@ input[disabled] {
   font-weight: 400 !important;
   line-height: 1.5 !important;
   color: #212529 !important;
-  color: var(--bs-body-color) !important;
-  background-color: var(--bs-input-bg) !important;
+  color: var(--vz-body-color) !important;
+  background-color: var(--vz-input-bg) !important;
   background-clip: padding-box !important;
-  border: 1px solid var(--bs-input-border) !important;
+  border: 1px solid var(--vz-input-border) !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
