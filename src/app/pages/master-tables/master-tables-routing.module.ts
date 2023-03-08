@@ -94,6 +94,66 @@ const routes: Routes = [
         (m) => m.LocationsModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.Sales.QuotingRequirements,
+    data: {
+      title: "Quoting Requirements",
+    },
+    loadChildren: () =>
+      import("./business-development/sales/quoting-requirements/quoting-requirements.module").then(
+        (m) => m.QuotingRequirementsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.Sales.PolicyIssuanceRequirements,
+    data: {
+      title: "Policy Issuance Requirements",
+    },
+    loadChildren: () =>
+      import("./business-development/sales/policy-issuance-requirements/policy-issuance-requirements.module").then(
+        (m) => m.PolicyIssuanceRequirementsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.Sales.ProspectLossReasons,
+    data: {
+      title: "Prospect Loss Reasons",
+    },
+    loadChildren: () =>
+      import("./business-development/sales/prospect-loss-reasons/prospect-loss-reasons.module").then(
+        (m) => m.ProspectLossReasonsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CompanyRejectionReasons,
+    data: {
+      title: "Company Rejection Reasons",
+    },
+    loadChildren: () =>
+      import("./business-development/cancellation-rejection-reasons/company-rejection-reasons/company-rejection-reasons.module").then(
+        (m) => m.CompanyRejectionReasonsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.ClientRejectionReasons,
+    data: {
+      title: "Client Rejection Reasons",
+    },
+    loadChildren: () =>
+      import("./business-development/cancellation-rejection-reasons/client-rejection-reasons/client-rejection-reasons.module").then(
+        (m) => m.ClientRejectionReasonsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CancellationReasons,
+    data: {
+      title: "Cancellation Reasons",
+    },
+    loadChildren: () =>
+      import("./business-development/cancellation-rejection-reasons/cancellation-reasonssons/cancellation-reasonsons.module").then(
+        (m) => m.CancellationReasonsonsModule
+      ),
+  },
 ];
 
 @NgModule({

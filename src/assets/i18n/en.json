@@ -16,7 +16,22 @@
         "NATIONALITIES": "Nationalities",
         "BUSINESSACTIVITY": "Business Activity",
         "LEGALSTATUS": "Legal Status",
-        "LOCATIONS": "Locations"
+        "LOCATIONS": "Locations",
+        "BUSINESSDEVELOPMENT": {
+          "TEXT": "Business Development",
+          "SALES": {
+            "TEXT": "Sales",
+            "QUOTINGREQUIREMENTS": "Quoting Requirements",
+            "POLICYISSUANCEREQUIREMENTS": "Policy Issuance Requirements",
+            "PROSPECTLOSSREASONS": "Prospect Loss Reasons"
+          },
+          "CANCELLATION/REJECTIONREASONS": {
+            "TEXT": "Cancellation/Rejection Reasons",
+            "COMPANYREJECTIONREASONS": "Company Rejection Reasons",
+            "CLIENTREJECTIONREASONS": "Client Rejection Reasons",
+            "CANCELLATIONREASONS": "Cancellation Reasons"
+          }
+        }
       }
     },
     "CLIENTREGISTRY": {

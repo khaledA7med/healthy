@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { LineOfBusinessComponent } from './line-of-business.component';
+import { CancellationReasonsComponent } from './cancellation-reasons.component';
 
 @Component({
-  selector: 'app-line-of-business-form',
+  selector: 'app-cancellation-reasons-forms',
   template: `
   <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -43,11 +43,12 @@ import { LineOfBusinessComponent } from './line-of-business.component';
 		`,
   ]
 })
-export class LineOfBusinessFormComponent
+export class CancellationReasonsFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: LineOfBusinessComponent;
+  private comp!: CancellationReasonsComponent;
+
   constructor (private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
@@ -58,7 +59,7 @@ export class LineOfBusinessFormComponent
 
   Edit ()
   {
-    this.comp.openLineOfBusinessDialoge(this.params.data.identity);
+    this.comp.openCancellationReasonsDialoge(this.params.data.identity);
   }
 
   Delete ()
@@ -67,7 +68,7 @@ export class LineOfBusinessFormComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteLineOfBusiness(this.params.data.identity);
+        this.comp.DeleteCancellationReasons(this.params.data.identity);
       } else
       {
         return;

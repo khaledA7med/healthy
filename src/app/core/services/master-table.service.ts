@@ -9,14 +9,17 @@ import { CachingService } from "./caching.service";
 @Injectable({
   providedIn: "root",
 })
-export class MasterTableService {
+export class MasterTableService
+{
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor(private http: HttpClient, private caching: CachingService) {
+  constructor (private http: HttpClient, private caching: CachingService)
+  {
     this.dataSrc = [];
   }
 
-  getBaseData(module: string) {
+  getBaseData (module: string)
+  {
     let data = {
       LineOfBusiness: [
         {
@@ -28,6 +31,34 @@ export class MasterTableService {
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
+        },
+      ],
+      QuotingRequirements: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+      ],
+      PolicyIssuanceRequirements: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
         },
       ],
       Client: [
@@ -485,7 +516,8 @@ export class MasterTableService {
       ],
     };
 
-    switch (module) {
+    switch (module)
+    {
       case MODULES.Client:
         this.dataSrc = data.Client;
         break;
@@ -525,6 +557,12 @@ export class MasterTableService {
       case MODULES.InsuranceCompanies:
         this.dataSrc = data.InsuranceCompanies;
         break;
+      case MODULES.QuotingRequirements:
+        this.dataSrc = data.QuotingRequirements;
+        break;
+      case MODULES.PolicyIssuanceRequirements:
+        this.dataSrc = data.PolicyIssuanceRequirements;
+        break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;
         break;
@@ -532,10 +570,11 @@ export class MasterTableService {
         break;
     }
 
-    for (let i = 0; i < this.dataSrc.length; i++) {
+    for (let i = 0; i < this.dataSrc.length; i++)
+    {
       this.http
-        .get<any>(this.env + this.dataSrc[i].route, {
-          context: new HttpContext().set(MODULE_NAME, this.dataSrc[i].name),
+        .get<any>(this.env + this.dataSrc[ i ].route, {
+          context: new HttpContext().set(MODULE_NAME, this.dataSrc[ i ].name),
         })
         .subscribe();
     }

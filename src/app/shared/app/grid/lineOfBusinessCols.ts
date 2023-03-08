@@ -1,6 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { LineOfBusinessFormComponent } from "src/app/pages/master-tables/line-of-business/line-of-business/line-of-business-form.component";
-LineOfBusinessFormComponent
+
 export const lineOfBusinessCols: ColDef[] = [
     {
         colId: "action",

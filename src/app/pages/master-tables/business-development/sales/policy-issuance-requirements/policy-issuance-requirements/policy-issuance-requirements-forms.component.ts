@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { LineOfBusinessComponent } from './line-of-business.component';
+import { PolicyIssuanceRequirementsComponent } from './policy-issuance-requirements.component';
 
 @Component({
-  selector: 'app-line-of-business-form',
+  selector: 'app-policy-issuance-requirements-forms',
   template: `
   <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -43,11 +43,11 @@ import { LineOfBusinessComponent } from './line-of-business.component';
 		`,
   ]
 })
-export class LineOfBusinessFormComponent
+export class PolicyIssuanceRequirementsFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: LineOfBusinessComponent;
+  private comp!: PolicyIssuanceRequirementsComponent;
   constructor (private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
@@ -58,7 +58,7 @@ export class LineOfBusinessFormComponent
 
   Edit ()
   {
-    this.comp.openLineOfBusinessDialoge(this.params.data.identity);
+    this.comp.openPolicyIssuanceRequirementsDialoge(this.params.data.identity);
   }
 
   Delete ()
@@ -67,7 +67,7 @@ export class LineOfBusinessFormComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteLineOfBusiness(this.params.data.identity);
+        this.comp.DeletePolicyIssuanceRequirements(this.params.data.identity);
       } else
       {
         return;

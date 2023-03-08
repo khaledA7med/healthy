@@ -61,6 +61,63 @@ export const MENU: MenuItem[] = [
         link: AppRoutes.MasterTable.locations,
         parentId: 1,
       },
+      {
+        id: 110,
+        label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.TEXT",
+        parentId: 1,
+        subItems: [
+          {
+            id: 1010,
+            label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.TEXT",
+            parentId: 110,
+            subItems: [
+              {
+                id: 10010,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.QUOTINGREQUIREMENTS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales.QuotingRequirements,
+                parentId: 1010,
+              },
+              {
+                id: 10011,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.POLICYISSUANCEREQUIREMENTS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales.PolicyIssuanceRequirements,
+                parentId: 1010,
+              },
+              {
+                id: 10012,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.PROSPECTLOSSREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales.ProspectLossReasons,
+                parentId: 1010,
+              },
+            ],
+          },
+          {
+            id: 1011,
+            label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.TEXT",
+            parentId: 110,
+            subItems: [
+              {
+                id: 10010,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.COMPANYREJECTIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CompanyRejectionReasons,
+                parentId: 1011,
+              },
+              {
+                id: 10011,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CLIENTREJECTIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.ClientRejectionReasons,
+                parentId: 1011,
+              },
+              {
+                id: 10012,
+                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CANCELLATIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CancellationReasons,
+                parentId: 1011,
+              },
+            ],
+          }
+        ],
+      },
     ],
   },
   {

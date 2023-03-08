@@ -20,6 +20,18 @@ export const AppRoutes = {
     businessActivity: "business-activity",
     legalStatus: "legal-status",
     locations: "locations",
+    businessDevelopment: {
+      Sales: {
+        QuotingRequirements: "quoting-requirements",
+        PolicyIssuanceRequirements: "policy-issuance-requirements",
+        ProspectLossReasons: "prospect-loss-reasons"
+      },
+      CancellationRejectionReasons: {
+        CompanyRejectionReasons: "company-rejection-reasons",
+        ClientRejectionReasons: "client-rejection-reasons",
+        CancellationReasons: "cancellation-reasons"
+      }
+    }
   },
   Client: {
     base: "clients",

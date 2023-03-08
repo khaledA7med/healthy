@@ -9,6 +9,7 @@ export const ApiRoutes = {
     MasterTables: {
       insurClasses: LookUpTables + BaseData.InsurClasses,
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
+      insuranceComapnies: LookUpTables + BaseData.InsuranceCompanies,
       contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
       contactDepartment: LookUpTables + BaseData.ContactDepartment
     },
@@ -186,6 +187,48 @@ export const ApiRoutes = {
       edit: "/MasterTables/Locations/Edit",
       delete: "/MasterTables/Locations/Delete",
     },
+    BusinessDevelopment: {
+      Sales: {
+        QuotingRequirements: {
+          search: "/MasterTables/SalesQuotingRequirements/Search",
+          save: "/MasterTables/SalesQuotingRequirements/Save",
+          edit: "/MasterTables/SalesQuotingRequirements/Edit",
+          delete: "/MasterTables/SalesQuotingRequirements/Delete",
+        },
+        PolicyIssuanceRequirements: {
+          search: "/MasterTables/SalesPolicyRequirements/Search",
+          save: "/MasterTables/SalesPolicyRequirements/Save",
+          edit: "/MasterTables/SalesPolicyRequirements/Edit",
+          delete: "/MasterTables/SalesPolicyRequirements/Delete",
+        },
+        ProspectsLossReasons: {
+          search: "/MasterTables/ProspectsLossReasons/Search",
+          save: "/MasterTables/ProspectsLossReasons/Save",
+          edit: "/MasterTables/ProspectsLossReasons/Edit",
+          delete: "/MasterTables/ProspectsLossReasons/Delete",
+        },
+      },
+      CancellationRejectionReasons: {
+        CompanyRejectionReason: {
+          search: "/MasterTables/CompanyRejectionReason/Search",
+          save: "/MasterTables/CompanyRejectionReason/Save",
+          edit: "/MasterTables/CompanyRejectionReason/Edit",
+          delete: "/MasterTables/CompanyRejectionReason/Delete",
+        },
+        ClientRejectionReason: {
+          search: "/MasterTables/ClientRejectionReason/Search",
+          save: "/MasterTables/ClientRejectionReason/Save",
+          edit: "/MasterTables/ClientRejectionReason/Edit",
+          delete: "/MasterTables/ClientRejectionReason/Delete",
+        },
+        CancellationReason: {
+          search: "/MasterTables/CancellationReason/Search",
+          save: "/MasterTables/CancellationReason/Save",
+          edit: "/MasterTables/CancellationReason/Edit",
+          delete: "/MasterTables/CancellationReason/Delete",
+        },
+      },
+    }
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",
