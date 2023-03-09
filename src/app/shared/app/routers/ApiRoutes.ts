@@ -13,6 +13,7 @@ export const ApiRoutes = {
       insuranceComapnies: LookUpTables + BaseData.InsuranceCompanies,
       contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
       contactDepartment: LookUpTables + BaseData.ContactDepartment,
+      TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -231,7 +232,27 @@ export const ApiRoutes = {
           delete: "/MasterTables/CancellationReason/Delete",
         },
       },
-    }
+    },
+    clientCategories: {
+      search: "/MasterTables/ClientsCategory/Search",
+      save: "/MasterTables/ClientsCategory/Save",
+      edit: "/MasterTables/ClientsCategory/Edit",
+      delete: "/MasterTables/ClientsCategory/Delete",
+    },
+    customerService: {
+      InsuranceCompaniesDocuments: {
+      },
+      customerServiceRequirements: {
+      },
+      complaintsTypes: {
+      },
+      complaintsSettings: {
+      },
+      complaintsSuspectiveCauses: {
+      },
+      cancellationReasons: {
+      },
+    },
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",

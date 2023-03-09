@@ -118,6 +118,55 @@ export const MENU: MenuItem[] = [
           }
         ],
       },
+      {
+        id: 111,
+        label: "MENUITEMS.MASTERTABLE.LIST.CLIENTCATEGORIES",
+        link: AppRoutes.MasterTable.clientCategories,
+        parentId: 1,
+      },
+      {
+        id: 112,
+        label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.TEXT",
+        parentId: 1,
+        subItems: [
+          {
+            id: 1012,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.INSURANCECOMPANIESDOCUMENTS",
+            link: AppRoutes.MasterTable.customerService.insuranceCompaniesDocuments,
+            parentId: 112,
+          },
+          {
+            id: 1013,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICEREQUIREMENTS",
+            link: AppRoutes.MasterTable.customerService.customerServiceRequirements,
+            parentId: 112,
+          },
+          {
+            id: 1014,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSTYPES",
+            link: AppRoutes.MasterTable.customerService.complaintsTypes,
+            parentId: 112,
+          },
+          {
+            id: 1015,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSETTINGS",
+            link: AppRoutes.MasterTable.customerService.complaintsSettings,
+            parentId: 112,
+          },
+          {
+            id: 1016,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSUSPECTIVECAUSES",
+            link: AppRoutes.MasterTable.customerService.complaintsSuspectiveCauses,
+            parentId: 112,
+          },
+          {
+            id: 1017,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CANCELLATIONREASONS",
+            link: AppRoutes.MasterTable.customerService.cancellationReason,
+            parentId: 112,
+          },
+        ]
+      }
     ],
   },
   {

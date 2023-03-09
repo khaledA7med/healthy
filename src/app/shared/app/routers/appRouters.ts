@@ -31,6 +31,15 @@ export const AppRoutes = {
         ClientRejectionReasons: "client-rejection-reasons",
         CancellationReasons: "cancellation-reasons"
       }
+    },
+    clientCategories: "client-categories",
+    customerService: {
+      insuranceCompaniesDocuments: " insurance-companies-documents",
+      customerServiceRequirements: "customer-service-requirements",
+      complaintsTypes: "complaints-types",
+      complaintsSettings: "complaints-settings",
+      complaintsSuspectiveCauses: "complaints-suspective-causes",
+      cancellationReason: "cancellation-reasons",
     }
   },
   Client: {

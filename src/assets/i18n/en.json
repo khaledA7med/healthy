@@ -31,6 +31,16 @@
             "CLIENTREJECTIONREASONS": "Client Rejection Reasons",
             "CANCELLATIONREASONS": "Cancellation Reasons"
           }
+        },
+        "CLIENTCATEGORIES": "Client Categories",
+        "CUSTOMERSERVICE": {
+          "TEXT": "Customer Service",
+          "INSURANCECOMPANIESDOCUMENTS": "Insurance Companies Documents",
+          "CUSTOMERSERVICEREQUIREMENTS": "Customer Service Requirements",
+          "COMPLAINTSTYPES": "Complaints Types",
+          "COMPLAINTSSETTINGS": "Complaints Settings",
+          "COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
+          "CANCELLATIONREASONS": "Cancellation Reasons"
         }
       }
     },

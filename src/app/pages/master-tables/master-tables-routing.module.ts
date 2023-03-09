@@ -154,6 +154,76 @@ const routes: Routes = [
         (m) => m.CancellationReasonsonsModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.clientCategories,
+    data: {
+      title: "Client Categories",
+    },
+    loadChildren: () =>
+      import("./client-categories/client-categories.module").then(
+        (m) => m.ClientCategoriesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.insuranceCompaniesDocuments,
+    data: {
+      title: "Insurance Companies Documents",
+    },
+    loadChildren: () =>
+      import("./customer-service/insurance-companies-documents/insurance-companies-documents.module").then(
+        (m) => m.InsuranceCompaniesDocumentsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.customerServiceRequirements,
+    data: {
+      title: "Customer Service Requirements",
+    },
+    loadChildren: () =>
+      import("./customer-service/customer-service-requirements/customer-service-requirements.module").then(
+        (m) => m.CustomerServiceRequirementsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.complaintsTypes,
+    data: {
+      title: "Complaints Types",
+    },
+    loadChildren: () =>
+      import("./customer-service/complaints-types/complaints-types.module").then(
+        (m) => m.ComplaintsTypesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.complaintsSettings,
+    data: {
+      title: "Complaints Settings",
+    },
+    loadChildren: () =>
+      import("./customer-service/complaints-settings/complaints-settings.module").then(
+        (m) => m.ComplaintsSettingsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.complaintsSuspectiveCauses,
+    data: {
+      title: "Complaints Suspective Causes",
+    },
+    loadChildren: () =>
+      import("./customer-service/complaints-suspective-causes/complaints-suspective-causes.module").then(
+        (m) => m.ComplaintsSuspectiveCausesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.customerService.cancellationReason,
+    data: {
+      title: "Cancellation Reasons",
+    },
+    loadChildren: () =>
+      import("./customer-service/cancellation-reasons/cancellation-reasons.module").then(
+        (m) => m.CancellationReasonsModule
+      ),
+  },
 ];
 
 @NgModule({
