@@ -43,13 +43,11 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
     editPolicyIssuanceRequirementsData: {} as IPolicyIssuanceRequirementsData,
     class: "Accident",
     lineOfBusiness: "Group Personal Accident",
-    insuranceCompanies: "--All--"
-
-
-
-
+    insuranceCompanies: "--All--",
+    defaultTick: 0
   };
 
+  isChecked!: number;
   subscribes: Subscription[] = [];
 
   gridApi: GridApi = <GridApi> {};
@@ -188,6 +186,21 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
+  checkValue (event: any)
+  {
+    console.log(event);
+    this.uiState.defaultTick = event;
+  }
+
+  changeClass (e: any)
+  {
+    this.uiState.class = e?.name
+  }
+  changeLineOfBusiness (e: any)
+  {
+    this.uiState.lineOfBusiness = e?.name
+  }
+
   filter (e: any)
   {
     this.uiState.insuranceCompanies = e?.name
@@ -296,7 +309,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
       itemArabic: formData.itemArabic,
       description: formData.description,
       descriptionArabic: formData.descriptionArabic,
-      defaultTick: formData.defaultTick,
+      defaultTick: this.uiState.defaultTick,
       lineOfBusiness: formData.lineOfBusiness,
       insuranceCopmany: formData.insuranceCompanies
     };

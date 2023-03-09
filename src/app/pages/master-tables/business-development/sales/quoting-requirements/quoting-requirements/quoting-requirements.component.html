@@ -13,7 +13,7 @@
                                     placeholder="Select Class Of Insurance" formControlName="class" bindValue="name"
                                     bindLabel="name" [loading]="lookupData ? false : true"
                                     [items]="(lookupData | async)?.InsurClasses?.content!"
-                                    (change)="getLineOfBusiness($event?.name)">
+                                    (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
                                 </ng-select>
                                 <span *ngIf="(f.class?.touched || uiState.submitted) && f.class?.invalid"
                                     class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
@@ -24,7 +24,7 @@
                                 <ng-select id="lineOfBusiness" class="form-control-sm is-invalid"
                                     placeholder="Select Lien Of Business" formControlName="lineOfBusiness"
                                     bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                    [items]="lineOfBussArr">
+                                    (change)="changeLineOfBusiness($event)" [items]="lineOfBussArr">
                                 </ng-select>
                                 <span
                                     *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
@@ -66,19 +66,19 @@
 
                             <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                 <label for="description">Description</label>
-                                <input id="description" class="form-control form-control-sm"
-                                    formControlName="description" />
+                                <textarea id="description" class="form-control form-control-sm"
+                                    formControlName="description"></textarea>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                 <label for="descriptionArabic">Description (Ar)</label>
-                                <input id="descriptionArabic" class="form-control form-control-sm"
-                                    formControlName="descriptionArabic" />
+                                <textarea id="descriptionArabic" class="form-control form-control-sm"
+                                    formControlName="descriptionArabic"></textarea>
                             </div>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label" for="defaultTick">Default</label>
-                            <input class="form-check-input" type="checkbox" value="" id="defaultTick"
-                                formControlName="defaultTick">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked"
+                                (change)="checkValue(isChecked? 1 : 0)" id="defaultTick" formControlName="defaultTick">
                         </div>
 
                         <div class="card">
@@ -141,13 +141,14 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-2">
                         <label for="description">Description</label>
-                        <input id="description" class="form-control form-control-sm" formControlName="description" />
+                        <textarea id="description" class="form-control form-control-sm"
+                            formControlName="description"></textarea>
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-2">
                         <label for="descriptionArabic">Description (Ar)</label>
-                        <input id="descriptionArabic" class="form-control form-control-sm"
-                            formControlName="descriptionArabic" />
+                        <textarea id="descriptionArabic" class="form-control form-control-sm"
+                            formControlName="descriptionArabic"></textarea>
                     </div>
                 </div>
             </div>

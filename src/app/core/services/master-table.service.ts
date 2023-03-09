@@ -32,6 +32,14 @@ export class MasterTableService
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
         },
+        {
+          route: ApiRoutes.MasterTable.Client.contactLineOfBusiness,
+          name: BaseData.ContactLineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.Client.contactDepartment,
+          name: BaseData.ContactDepartment,
+        },
       ],
       QuotingRequirements: [
         {

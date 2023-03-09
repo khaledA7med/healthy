@@ -43,13 +43,10 @@ export class QuotingRequirementsComponent implements OnInit
     editQuotingRequirementsData: {} as IQuotingRequirementsData,
     class: "Accident",
     lineOfBusiness: "Group Personal Accident",
-    insuranceCompanies: "--All--"
-
-
-
-
+    insuranceCompanies: "--All--",
+    defaultTick: 0
   };
-
+  isChecked!: number;
   subscribes: Subscription[] = [];
 
   gridApi: GridApi = <GridApi> {};
@@ -188,6 +185,21 @@ export class QuotingRequirementsComponent implements OnInit
     this.subscribes.push(sub);
   }
 
+  checkValue (event: any)
+  {
+    console.log(event);
+    this.uiState.defaultTick = event;
+  }
+
+  changeClass (e: any)
+  {
+    this.uiState.class = e?.name
+  }
+  changeLineOfBusiness (e: any)
+  {
+    this.uiState.lineOfBusiness = e?.name
+  }
+
   filter (e: any)
   {
     this.uiState.insuranceCompanies = e?.name
@@ -296,7 +308,7 @@ export class QuotingRequirementsComponent implements OnInit
       itemArabic: formData.itemArabic,
       description: formData.description,
       descriptionArabic: formData.descriptionArabic,
-      defaultTick: formData.defaultTick,
+      defaultTick: this.uiState.defaultTick,
       lineOfBusiness: formData.lineOfBusiness,
       insuranceCopmany: formData.insuranceCompanies
     };
