@@ -40,14 +40,13 @@ export class AuthenticationService {
     return !!localStorage.getItem(localStorageKeys.JWT);
   }
 
-  get decodeToken(): UserAccess {
+  decodeToken(): UserAccess {
     return this.jwtHelper.decodeToken(
       localStorage.getItem(localStorageKeys.JWT)!
     )!;
   }
 
   getUser(): UserAccess {
-    console.log(this.decodeToken);
-    return this.decodeToken;
+    return this.decodeToken();
   }
 }

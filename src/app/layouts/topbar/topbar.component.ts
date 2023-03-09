@@ -11,7 +11,6 @@ import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { filter, map, mergeMap } from "rxjs/operators";
 import { UserAccess } from "src/app/core/models/iuser";
-import { BehaviorSubject, Observable } from "rxjs";
 
 @Component({
   selector: "app-topbar",
@@ -30,7 +29,7 @@ export class TopbarComponent implements OnInit {
 
   title: string = "";
 
-  userData!: BehaviorSubject<UserAccess>;
+  userData!: UserAccess;
   emailRoute: string = AppRoutes.Email.base;
 
   constructor(
@@ -42,7 +41,7 @@ export class TopbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userData.next(this.authService.getUser());
+    this.userData = this.authService.getUser();
 
     this.element = document.documentElement;
 
