@@ -47,6 +47,7 @@ export class AuthenticationService {
   }
 
   getUser(): UserAccess {
+    console.log(this.decodeToken);
     return this.decodeToken;
   }
 }
