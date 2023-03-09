@@ -48,6 +48,7 @@ export const AppRoutes = {
 			renewal: "production/renewal-report",
 			renewalsNotice: "production/renewal-notice-report",
 		},
+		archive: { dcNote: "production/archives/DebitCreditNotes" },
 	},
 	CustomerService: {
 		base: "customer-service",

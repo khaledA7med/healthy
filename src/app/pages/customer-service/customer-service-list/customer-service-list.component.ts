@@ -1,9 +1,8 @@
 import { CustomerServiceService } from "./../../../shared/services/customer-service/customer-service.service";
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, StatusPanelDef } from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
@@ -28,7 +27,7 @@ RangePickerModule;
 	selector: "app-customer-service-list",
 	templateUrl: "./customer-service-list.component.html",
 	styleUrls: ["./customer-service-list.component.scss"],
-	providers: [AppUtils],
+
 	encapsulation: ViewEncapsulation.None,
 })
 export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -391,7 +390,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 					${CustomerServiceStatusRes.Cancelled} <span>(${cancelled.length})</span>
 					</div>
 					</div>`;
-		child.classList.add("col", "my-2");
+		child.classList.add("col", " my-2");
 		child.innerHTML = "";
 		child.innerHTML = childContent;
 		parent.prepend(child);

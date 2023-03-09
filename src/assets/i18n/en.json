@@ -45,6 +45,10 @@
 					"PRODUCTION": "Production",
 					"RENEWAL": "Renewals",
 					"RENEWALNOTICE": "Renewals Notice"
+				},
+				"ARCHIVES": "Archives",
+				"ARCHIVESLIST": {
+					"DCNOTES": "Debit / Credit Notes (Clients Premium)"
 				}
 			}
 		},

@@ -144,6 +144,19 @@ export const MENU: MenuItem[] = [
 					},
 				],
 			},
+			{
+				id: 404,
+				label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
+				parentId: 4,
+				subItems: [
+					{
+						id: 4001,
+						label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
+						link: AppRoutes.Production.archive.dcNote,
+						parentId: 403,
+					},
+				],
+			},
 		],
 	},
 	{

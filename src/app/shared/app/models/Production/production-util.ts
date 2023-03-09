@@ -102,6 +102,19 @@ export interface IPoliciesRef {
 	producer?: string;
 }
 
+export interface DCNotesModel {
+	connectionType?: string | null;
+	printedBy?: string | null;
+	docSNo?: string | null;
+	clientName?: string | null;
+	type?: string | null;
+	source?: string | null;
+	plain?: boolean | null;
+	userFullName?: string | null;
+	pram?: number | null;
+	reportType?: number | null;
+}
+
 export function refundChecker(params: any) {
 	return params.data && (params.data.endorsType === "Refund" || params.data.endorsType === "Cancellation")
 		? ["input-text-right", "text-danger"]
