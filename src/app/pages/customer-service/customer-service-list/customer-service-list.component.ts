@@ -47,7 +47,7 @@ RangePickerModule;
   selector: "app-customer-service-list",
   templateUrl: "./customer-service-list.component.html",
   styleUrls: ["./customer-service-list.component.scss"],
-  providers: [AppUtils],
+
   encapsulation: ViewEncapsulation.None,
 })
 export class CustomerServiceListComponent

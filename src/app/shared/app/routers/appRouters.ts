@@ -24,13 +24,13 @@ export const AppRoutes = {
       Sales: {
         QuotingRequirements: "quoting-requirements",
         PolicyIssuanceRequirements: "policy-issuance-requirements",
-        ProspectLossReasons: "prospect-loss-reasons"
+        ProspectLossReasons: "prospect-loss-reasons",
       },
       CancellationRejectionReasons: {
         CompanyRejectionReasons: "company-rejection-reasons",
         ClientRejectionReasons: "client-rejection-reasons",
-        CancellationReasons: "cancellation-reasons"
-      }
+        CancellationReasons: "cancellation-reasons",
+      },
     },
     clientCategories: "client-categories",
     customerService: {
@@ -40,7 +40,7 @@ export const AppRoutes = {
       complaintsSettings: "complaints-settings",
       complaintsSuspectiveCauses: "complaints-suspective-causes",
       cancellationReason: "cancellation-reasons",
-    }
+    },
   },
   Client: {
     base: "clients",
@@ -73,6 +73,7 @@ export const AppRoutes = {
       renewal: "production/renewal-report",
       renewalsNotice: "production/renewal-notice-report",
     },
+    archive: { dcNote: "production/archives/DebitCreditNotes" },
   },
   CustomerService: {
     base: "customer-service",

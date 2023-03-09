@@ -9,7 +9,7 @@
             <ng-template ngbPanelContent="1" *ngSwitchCase="false">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                     <div class="container-fluid mb-3">
-                        <div class="row my-2">
+                        <div class="row  my-2">
 
                             <!-- ID -->
                             <div class="col-lg-4 col-md-6 col-sm-12 my-1">
@@ -66,7 +66,7 @@
             <ng-template ngbPanelContent="1" *ngSwitchCase="true">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                     <div class="container-fluid mb-3">
-                        <div class="row my-2">
+                        <div class="row  my-2">
                             <!-- ID -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="id" class="asterisk-input">Client ID</label>
@@ -136,7 +136,7 @@
             <ng-template ngbPanelContent="2" *ngSwitchCase="false">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="container-fluid mb-3">
-                        <div class="row my-2">
+                        <div class="row  my-2">
                             <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                 <!-- Endors Type -->
                                 <div class="accordion-info mb-2">
@@ -321,7 +321,7 @@
                                 <div class="card-body">
                                     <div class="ribbon ribbon-info round-shape">Policy/Endorsement Details</div>
                                     <div class="ribbon-content mt-4 text-muted">
-                                        <div class="row my-2">
+                                        <div class="row  my-2">
                                             <div class="col-12 my-1">
                                                 <!-- Endors Type -->
                                                 <div class="accordion-info mb-2">
@@ -417,7 +417,7 @@
                                 <div class="card-body">
                                     <div class="ribbon ribbon-info round-shape">Policy/Endorsement Details</div>
                                     <div class="ribbon-content mt-4 text-muted">
-                                        <div class="row my-2">
+                                        <div class="row  my-2">
                                             <div class="col-12 my-1">
                                                 <!-- Net Premium -->
                                                 <div class="accordion-info mb-2">
@@ -533,7 +533,7 @@
                                 <div class="card-body">
                                     <div class="ribbon ribbon-info round-shape">Policy/Endorsement Details</div>
                                     <div class="ribbon-content mt-4 text-muted">
-                                        <div class="row my-2">
+                                        <div class="row  my-2">
                                             <div class="col-12 my-1 table-responsive">
                                                 <table class="table align-middle table-nowrap mb-0"
                                                     id="requiermentsTbl">
@@ -591,7 +591,7 @@
             <ng-template ngbPanelContent="3">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingThree">
                     <div class="container-fluid mb-3">
-                        <div class="row my-2">
+                        <div class="row  my-2">
                             <div class="col-xl-6 col-lg-12 col-md-12 mt-2">
                                 <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
                                     <div class="card-body">
@@ -690,7 +690,7 @@
     </ngb-accordion>
 
     <!-- start Buttons -->
-    <div class="my-2 d-lg-flex d-md-flex justify-content-end align-items-end">
+    <div class=" my-2 d-lg-flex d-md-flex justify-content-end align-items-end">
 
         <div class="col-lg-3 col-md-6">
             <!-- In Case Of Create Start -->
@@ -802,10 +802,7 @@
 
                 </div>
             </div>
-            <!-- <div class="ag-theme-alpine" appTableView>
-                <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
-                </ag-grid-angular>
-            </div> -->
+
             <app-CS-Policy-list [filter]="searchClientForm.value" (dataEvent)="fillCSFormData($event)"
                 #PolicyData></app-CS-Policy-list>
         </div>

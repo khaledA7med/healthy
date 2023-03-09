@@ -73,49 +73,62 @@ export const MENU: MenuItem[] = [
             subItems: [
               {
                 id: 10010,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.QUOTINGREQUIREMENTS",
-                link: AppRoutes.MasterTable.businessDevelopment.Sales.QuotingRequirements,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.QUOTINGREQUIREMENTS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales
+                  .QuotingRequirements,
                 parentId: 1010,
               },
               {
                 id: 10011,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.POLICYISSUANCEREQUIREMENTS",
-                link: AppRoutes.MasterTable.businessDevelopment.Sales.PolicyIssuanceRequirements,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.POLICYISSUANCEREQUIREMENTS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales
+                  .PolicyIssuanceRequirements,
                 parentId: 1010,
               },
               {
                 id: 10012,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.PROSPECTLOSSREASONS",
-                link: AppRoutes.MasterTable.businessDevelopment.Sales.ProspectLossReasons,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.SALES.PROSPECTLOSSREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment.Sales
+                  .ProspectLossReasons,
                 parentId: 1010,
               },
             ],
           },
           {
             id: 1011,
-            label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.TEXT",
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.TEXT",
             parentId: 110,
             subItems: [
               {
                 id: 10010,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.COMPANYREJECTIONREASONS",
-                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CompanyRejectionReasons,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.COMPANYREJECTIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment
+                  .CancellationRejectionReasons.CompanyRejectionReasons,
                 parentId: 1011,
               },
               {
                 id: 10011,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CLIENTREJECTIONREASONS",
-                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.ClientRejectionReasons,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CLIENTREJECTIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment
+                  .CancellationRejectionReasons.ClientRejectionReasons,
                 parentId: 1011,
               },
               {
                 id: 10012,
-                label: "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CANCELLATIONREASONS",
-                link: AppRoutes.MasterTable.businessDevelopment.CancellationRejectionReasons.CancellationReasons,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.BUSINESSDEVELOPMENT.CANCELLATION/REJECTIONREASONS.CANCELLATIONREASONS",
+                link: AppRoutes.MasterTable.businessDevelopment
+                  .CancellationRejectionReasons.CancellationReasons,
                 parentId: 1011,
               },
             ],
-          }
+          },
         ],
       },
       {
@@ -131,14 +144,18 @@ export const MENU: MenuItem[] = [
         subItems: [
           {
             id: 1012,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.INSURANCECOMPANIESDOCUMENTS",
-            link: AppRoutes.MasterTable.customerService.insuranceCompaniesDocuments,
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.INSURANCECOMPANIESDOCUMENTS",
+            link: AppRoutes.MasterTable.customerService
+              .insuranceCompaniesDocuments,
             parentId: 112,
           },
           {
             id: 1013,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICEREQUIREMENTS",
-            link: AppRoutes.MasterTable.customerService.customerServiceRequirements,
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICEREQUIREMENTS",
+            link: AppRoutes.MasterTable.customerService
+              .customerServiceRequirements,
             parentId: 112,
           },
           {
@@ -149,24 +166,28 @@ export const MENU: MenuItem[] = [
           },
           {
             id: 1015,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSETTINGS",
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSETTINGS",
             link: AppRoutes.MasterTable.customerService.complaintsSettings,
             parentId: 112,
           },
           {
             id: 1016,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSUSPECTIVECAUSES",
-            link: AppRoutes.MasterTable.customerService.complaintsSuspectiveCauses,
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.COMPLAINTSSUSPECTIVECAUSES",
+            link: AppRoutes.MasterTable.customerService
+              .complaintsSuspectiveCauses,
             parentId: 112,
           },
           {
             id: 1017,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CANCELLATIONREASONS",
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CANCELLATIONREASONS",
             link: AppRoutes.MasterTable.customerService.cancellationReason,
             parentId: 112,
           },
-        ]
-      }
+        ],
+      },
     ],
   },
   {
@@ -218,7 +239,8 @@ export const MENU: MenuItem[] = [
         subItems: [
           {
             id: 3001,
-            label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
+            label:
+              "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
             link: AppRoutes.BusinessDevelopment.reports.business,
             parentId: 302,
           },
@@ -270,6 +292,19 @@ export const MENU: MenuItem[] = [
             id: 4003,
             label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWALNOTICE",
             link: AppRoutes.Production.reports.renewalsNotice,
+            parentId: 403,
+          },
+        ],
+      },
+      {
+        id: 404,
+        label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
+        parentId: 4,
+        subItems: [
+          {
+            id: 4001,
+            label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
+            link: AppRoutes.Production.archive.dcNote,
             parentId: 403,
           },
         ],

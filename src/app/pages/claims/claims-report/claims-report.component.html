@@ -14,9 +14,9 @@
                                             <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
-                                                <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12   my-2">
                                                     <!-- Branches -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Branch
                                                             </label>
@@ -30,7 +30,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Client(s) -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client(s)
                                                             </label>
@@ -43,7 +43,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Client Group -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Client Group
                                                             </label>
@@ -57,9 +57,9 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12   my-2">
                                                     <!-- Status -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Status</label>
                                                             <div>
@@ -77,7 +77,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Sub Status -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Sub Status</label>
                                                             <div>
@@ -95,7 +95,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Rejection Reason -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Rejection Reason</label>
                                                         </div>
@@ -109,9 +109,9 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12   my-2">
                                                     <!-- Insurance Company -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Insurance Company
                                                             </label>
@@ -132,7 +132,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Class Of Business -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Class Of Business
                                                             </label>
@@ -154,7 +154,7 @@
                                                         </ng-select>
                                                     </div>
                                                     <!-- Line Of Business -->
-                                                    <div class="col-12 pe-0 my-2">
+                                                    <div class="col-12 pe-0  my-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Line Of Business
                                                             </label>
@@ -175,7 +175,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12   my-2">
 
                                                     <!-- Report Type -->
                                                     <div class="col-12 pe-0 my-1">
@@ -225,7 +225,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- SubmittionBtns -->
-                                                <div class="col-12 my-3 d-flex justify-content-end align-items-end">
+                                                <div class="col-12 my-3 d-flex justify-content-between align-items-end">
                                                     <div class="mx-2">
                                                         <div class="d-flex justify-content-center align-items-center">
                                                             <input type="checkbox" id="exZero"
@@ -234,15 +234,17 @@
                                                                 class="m-0">ExcludeZeroClaimAmount</label>
                                                         </div>
                                                     </div>
-                                                    <button type="submit"
-                                                        class="btn btn-soft-success btn-sm bg-gradient mx-2">
-                                                        Generate
-                                                    </button>
-                                                    <button type="button" id="sa-warning" (click)="resetForm();"
-                                                        class="btn btn-sm btn-soft-danger">
-                                                        <i class="ri-delete-bin-2-line"></i>
-                                                        Clear
-                                                    </button>
+                                                    <div>
+                                                        <button type="submit"
+                                                            class="btn btn-soft-success btn-sm bg-gradient mx-2">
+                                                            Generate
+                                                        </button>
+                                                        <button type="button" id="sa-warning" (click)="resetForm();"
+                                                            class="btn btn-sm btn-soft-danger">
+                                                            <i class="ri-delete-bin-2-line"></i>
+                                                            Clear
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
