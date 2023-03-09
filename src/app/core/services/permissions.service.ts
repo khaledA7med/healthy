@@ -1,13 +1,11 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, of } from "rxjs";
-import { catchError, map, take, tap } from "rxjs/operators";
+import { BehaviorSubject } from "rxjs";
+import { map, take, tap } from "rxjs/operators";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
 import { Privigles } from "../models/iuser";
-import { localStorageKeys } from "../models/localStorageKeys";
-import { ClientsPermissions } from "../roles/clients-permissions";
 
 @Injectable({
   providedIn: "root",
@@ -20,13 +18,6 @@ export class PermissionsService {
   );
 
   constructor(private http: HttpClient) {}
-
-  refreshToken(token: string, refresh: string) {
-    return this.http.post(this.env + ApiRoutes.Users.refesh, {
-      accessToken: token,
-      refreshToken: refresh,
-    });
-  }
 
   getAccessRoles(): BehaviorSubject<Privigles> | any {
     if (this.permissions.value !== null) {
@@ -51,21 +42,11 @@ export class PermissionsService {
         return false;
       }),
       map((authorized) => (authorized ? true : false)),
-      take(1),
-      catchError((err: HttpErrorResponse): any => {
-        if (err.status === 401) {
-          const token = localStorage.getItem(localStorageKeys.JWT);
-          const refesh = localStorage.getItem(localStorageKeys.Refresh);
-          return this.refreshToken(token!, refesh!).pipe(
-            map((res) => {
-              console.log(res);
-              return true;
-            })
-          );
-        } else {
-          return of(false);
-        }
-      })
+      take(1)
     );
+  }
+
+  clearPermissions(): void {
+    this.permissions.next(null!);
   }
 }
