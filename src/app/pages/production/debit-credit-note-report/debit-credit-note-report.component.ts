@@ -20,6 +20,7 @@ import { productionReportForm, productionReportReq } from "src/app/shared/app/mo
 import { DebitCreditNotesCols } from "src/app/shared/app/grid/debitCreditNotesCols";
 import { debitCreditNoteForm, IdebitCreditNoteFilter } from "src/app/shared/app/models/Production/iproduction-notes-filters";
 import { IDebitCreditNote } from "src/app/shared/app/models/Production/iproduction-notes";
+import { DCNotesModel } from "src/app/shared/app/models/Production/production-util";
 @Component({
 	selector: "app-debit-credit-note-report",
 	templateUrl: "./debit-credit-note-report.component.html",
@@ -132,7 +133,7 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 	onRowClicked(e: RowClickedEvent) {
 		this.uiState.selectedNote = e.data;
 		this.eventService.broadcast(reserved.isLoading, true);
-		let newData = {
+		let newData: DCNotesModel = {
 			docSNo: e.data.docSNo,
 			clientName: e.data.clientName,
 			type: e.data.type,
