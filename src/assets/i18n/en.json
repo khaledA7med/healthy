@@ -46,6 +46,7 @@
       "TEXT": "Business Development",
       "LIST": {
         "MANAGEMENT": "Sales Lead Management",
+        "DASHBOARD": "Dashboard",
         "REPORTS": "Reports",
         "REPORTLIST": {
           "BUSINESSDEVELOPMENT": "Business Development",
@@ -76,7 +77,8 @@
     "CLAIMS": {
       "TEXT": "Claims",
       "LIST": {
-        "MANAGEMENT": "Claims Management"
+        "MANAGEMENT": "Claims Management",
+        "REPORTS": "Reports"
       }
     },
     "SYSTEMADMIN": {

@@ -44,6 +44,7 @@ export const AppRoutes = {
   BusinessDevelopment: {
     base: "saleslead",
     management: "saleslead",
+    dashboard: "saleslead/dashboard",
     create: "saleslead/create",
     edit: "saleslead/update/",
     reports: {
@@ -74,6 +75,7 @@ export const AppRoutes = {
     base: "claims",
     create: "claims/create",
     edit: "claims/update/",
+    reports: "claims/reports",
   },
   SystemAdmin: {
     base: "system-admin",

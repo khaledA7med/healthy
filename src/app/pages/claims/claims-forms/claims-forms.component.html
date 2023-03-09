@@ -756,7 +756,8 @@
                                                             <td>{{util.formatDate(pay.dateofCheque)}}</td>
                                                             <td>
                                                                 <button class="btn btn-soft-info btn-sm mx-1"
-                                                                    type="button"><i class="ri-printer-line"></i>
+                                                                    type="button" (click)="openViewReport(pay)"><i
+                                                                        class="ri-printer-line"></i>
                                                                 </button>
                                                                 <button class="btn btn-soft-success btn-sm mx-1"
                                                                     (click)="openPaymentModal(pay)" type="button"><i

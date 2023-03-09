@@ -16,25 +16,26 @@
                                             <div class="row mt-5 mx-2">
                                                 <div class="col-12 row my-2 pe-0">
                                                     <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
+                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client(s)
                                                             </label>
                                                         </div>
-                                                        <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
+                                                        <ng-select [items]="uiState.lists.clientsList"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" formControlName="clientData">
+                                                            bindValue="name" [formControl]="uiState.clientDataContorl"
+                                                            (change)="setClientData($event)">
                                                         </ng-select>
                                                     </div>
                                                     <!-- Client Group(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-0 mb-2">
+                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Choose Client Group(s)
                                                             </label>
                                                         </div>
-                                                        <ng-select [items]="(lookupData | async)?.GroupsList?.content!"
+                                                        <ng-select [items]="uiState.lists.groupsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" bindLabel="name"

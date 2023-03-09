@@ -25,3 +25,9 @@ export interface UserAccess {
   UserId?: string;
   Role?: string[];
 }
+
+export interface Privigles {
+  Clients?: string[];
+  Production?: string[];
+  CustomerService?: string[];
+}

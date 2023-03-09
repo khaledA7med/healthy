@@ -180,8 +180,8 @@ File: Custom Css File
                 width: 32px;
                 height: 32px;
                 line-height: 0px;
-                background-color: var(--#{$variable-prefix}light);
-                border-color: var(--#{$variable-prefix}light);
+                background-color: var(--#{$prefix}light);
+                border-color: var(--#{$prefix}light);
                 left: -14px;
                 top: -42px;
                 z-index: 1;
@@ -224,7 +224,7 @@ File: Custom Css File
               }
               &:not(:last-child) {
                 &::after {
-                  background-color: var(--#{$variable-prefix}light);
+                  background-color: var(--#{$prefix}light);
                   width: 100%;
                   left: calc(50% + 15px);
                   z-index: 0;
@@ -351,7 +351,7 @@ File: Custom Css File
 // filter slider
 .ngx-slider {
   .ngx-slider-bar {
-    background: var(--#{$variable-prefix}light) !important;
+    background: var(--#{$prefix}light) !important;
   }
 
   .ngx-slider-selection {
@@ -426,7 +426,7 @@ File: Custom Css File
 }
 
 .ng-select.ng-select-disabled > .ng-select-container {
-  background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.75);
+  background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
   .ng-value-container .ng-value.ng-value-disabled {
     background-color: $secondary;
   }
@@ -443,12 +443,12 @@ File: Custom Css File
 
   th {
     color: $table-color;
-    background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.75);
+    background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
 
     &.gridjs-th-sort {
       &:focus,
       &:hover {
-        background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.85);
+        background-color: rgba(var(--#{$prefix}light-rgb), 0.85);
       }
     }
   }
@@ -489,7 +489,7 @@ File: Custom Css File
   border-color: $form-check-input-checked-border-color;
   @if $enable-gradients {
     background-image: escape-svg($form-check-input-checked-bg-image),
-      var(--#{$variable-prefix}gradient);
+      var(--#{$prefix}gradient);
   } @else {
     background-image: escape-svg($form-check-input-checked-bg-image);
   }

@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { ClientGuard } from "src/app/core/guards/clients/client.guard";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
       import("./client-registry-list/client-registry-list.module").then(
         (m) => m.ClientRegistryListModule
       ),
+    canActivate: [ClientGuard],
   },
   {
     path: AppRoutes.Client.clientRegistry + "/:id",

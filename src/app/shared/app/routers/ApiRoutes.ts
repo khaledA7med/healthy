@@ -4,6 +4,7 @@ const LookUpTables = "/LookupTables/";
 export const ApiRoutes = {
   Users: {
     login: "/Account/login",
+    refesh: "/Account/RefreshToken",
   },
   MasterTable: {
     MasterTables: {
@@ -11,7 +12,7 @@ export const ApiRoutes = {
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
       insuranceComapnies: LookUpTables + BaseData.InsuranceCompanies,
       contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
-      contactDepartment: LookUpTables + BaseData.ContactDepartment
+      contactDepartment: LookUpTables + BaseData.ContactDepartment,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -125,6 +126,8 @@ export const ApiRoutes = {
       cserviceStatus: LookUpTables + BaseData.CServiceStatus,
       csReportType: LookUpTables + BaseData.CSReportType,
       allUsers: LookUpTables + BaseData.AllUsers,
+      csReportStatus: LookUpTables + BaseData.CSReportStatus,
+      claimsReportType: LookUpTables + BaseData.ClaimsReportType,
     },
   },
   MasterMethods: {
@@ -137,7 +140,7 @@ export const ApiRoutes = {
       search: "/MasterTables/InsurranceClass/Search",
       save: "/MasterTables/InsurranceClass/Save",
       edit: "/MasterTables/InsurranceClass/Edit",
-      delete: "/MasterTables/InsurranceClass/Delete"
+      delete: "/MasterTables/InsurranceClass/Delete",
     },
     lineOfBusiness: {
       search: "/MasterTables/LineOfBusiness/Search",
@@ -307,13 +310,15 @@ export const ApiRoutes = {
     deleteClaimRejectDeduct: "/Claims/DeleteClaimsRejections",
     searchPolicy: "/Claims/SearchPolicy",
     SearchClientClaimData: "/Claims/SearchClientClaimData",
-    subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",
+    subStatus: "/Claims/GetSubStatusByStatus",
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
     getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
     getInsurerWorkshops: "/Claims/GetInsurerWorkshops",
     getClientMailData: "/Claims/NotifyClientMailData",
     getInsurerMailData: "/Claims/NotifyInsurerMailData",
+    claimsReport: "/Claims/Reports",
+    archiveReport: "/Claims/ArchiveReport",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",

@@ -221,8 +221,7 @@ export class MasterTableService
           name: BaseData.SalesleadStatus,
         },
         {
-          route:
-            ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
+          route: ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
           name: BaseData.ProspectsReportsTypes,
         },
       ],
@@ -512,6 +511,22 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.Reports.allUsers,
           name: BaseData.AllUsers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.csReportStatus,
+          name: BaseData.CSReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Claims.claimStatus,
+          name: BaseData.ClaimStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Claims.rejectionReasons,
+          name: BaseData.RejectionReasons,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.claimsReportType,
+          name: BaseData.ClaimsReportType,
         },
       ],
     };

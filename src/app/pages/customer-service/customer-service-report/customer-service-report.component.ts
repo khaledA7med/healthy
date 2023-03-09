@@ -3,7 +3,7 @@ import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { Caching, IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
@@ -12,7 +12,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
-import { csReportForm } from "src/app/shared/app/models/CustomerService/icustomer-service-report";
+import { csReportForm, csReportReq } from "src/app/shared/app/models/CustomerService/icustomer-service-report";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
 
 @Component({
@@ -21,7 +21,7 @@ import { CustomerServiceService } from "src/app/shared/services/customer-service
 	encapsulation: ViewEncapsulation.None,
 	styleUrls: ["./customer-service-report.component.scss"],
 })
-export class CustomerServiceReportComponent implements OnInit {
+export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 	url!: any;
 	filterForm!: FormGroup<csReportForm>;
 	checkAllStatus: FormControl<boolean | null> = new FormControl(false);
@@ -31,21 +31,22 @@ export class CustomerServiceReportComponent implements OnInit {
 	subscribes: Subscription[] = [];
 	uiState = {
 		checkAllControls: {
-			allBranchControl: new FormControl(false),
+			allStatusControl: new FormControl(false),
 			allInsuranceCompanyControl: new FormControl(false),
 			allClassOfBusinessControl: new FormControl(false),
-			allLinesOfBusinessControl: new FormControl(false),
-			allTransactionTypesControl: new FormControl(false),
-			allProducersControl: new FormControl(false),
 		},
 		lists: {
+			usersLists: [] as IGenericResponseType[],
+			clientsLists: [] as IGenericResponseType[],
 			branchesLists: [] as IGenericResponseType[],
 			insuranceCompanyControlLists: [] as IGenericResponseType[],
 			classOfBusinessLists: [] as IGenericResponseType[],
 			linesOfBusinessLists: [] as string[],
 			transactionTypesLists: [] as IGenericResponseType[],
 			producersLists: [] as IGenericResponseType[],
+			statusList: [] as IGenericResponseType[],
 		},
+		clientDataContorl: new FormControl("Select All"),
 	};
 	modalRef!: NgbModalRef;
 	constructor(
@@ -62,19 +63,23 @@ export class CustomerServiceReportComponent implements OnInit {
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
 
 		let sub = this.lookupData.subscribe((res) => {
-			this.uiState.lists.branchesLists = res.Branch?.content!;
+			res.ClientsList?.content! ? (this.uiState.lists.clientsLists = [{ id: 0, name: "Select All" }, ...res.ClientsList?.content!]) : "";
+			res.AllUsers?.content! ? (this.uiState.lists.usersLists = [{ id: 0, name: "Select All" }, ...res.AllUsers?.content!]) : "";
+			res.Branch?.content! ? (this.uiState.lists.branchesLists = [{ id: 0, name: "Select All" }, ...res.Branch?.content!]) : "";
+
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 			this.uiState.lists.transactionTypesLists = res.PolicyEndorsTypes?.content!;
 			this.uiState.lists.producersLists = res.Producers?.content!;
+			this.uiState.lists.statusList = res.CServiceStatus?.content!;
 		});
 		this.subscribes.push(sub);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<csReportForm>({
-			branch: new FormControl(null),
-			user: new FormControl(null),
+			branch: new FormControl("Select All"),
+			user: new FormControl("Select All"),
 			classOfBusiness: new FormControl(null),
 			insuranceCompany: new FormControl(null),
 			clientData: new FormControl(null),
@@ -86,12 +91,13 @@ export class CustomerServiceReportComponent implements OnInit {
 		});
 	}
 
+	setClientData(e: any) {
+		let data = `${e.id}, ${e.name}`;
+		this.f.clientData?.patchValue(data);
+	}
+
 	checkAllToggler(check: boolean, controlName: string) {
 		switch (controlName) {
-			// case "branch":
-			// 	if (check) this.f.branch?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-			// 	else this.f.branch?.patchValue(null);
-			// 	break;
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
 				else this.f.insuranceCompany?.patchValue(null);
@@ -99,6 +105,10 @@ export class CustomerServiceReportComponent implements OnInit {
 			case "classOfBusiness":
 				if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
 				else this.f.classOfBusiness?.patchValue(null);
+				break;
+			case "status":
+				if (check) this.f.status?.patchValue(this.uiState.lists.statusList.map((e) => e.name));
+				else this.f.status?.patchValue(null);
 				break;
 			default:
 				break;
@@ -124,8 +134,11 @@ export class CustomerServiceReportComponent implements OnInit {
 		}
 		// Display Submitting Loader
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: any = {
+		const data: csReportReq = {
 			...filterForm.getRawValue(),
+			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : filterForm.getRawValue().clientData,
+			user: this.filterForm.getRawValue().user === "Select All" ? null : filterForm.getRawValue().user,
+			branch: this.filterForm.getRawValue().branch === "Select All" ? null : filterForm.getRawValue().branch,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
 		};

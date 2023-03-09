@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { AuthenticationService } from "../core/services/auth.service";
 
 import { EventService } from "../core/services/event.service";
 import { LAYOUT_VERTICAL } from "./layout.model";
@@ -17,10 +16,7 @@ import { LAYOUT_VERTICAL } from "./layout.model";
 export class LayoutComponent implements OnInit, OnDestroy {
   layoutType!: string;
   subscribe: Subscription[] = [];
-  constructor(
-    private eventService: EventService,
-    private auth: AuthenticationService
-  ) {}
+  constructor(private eventService: EventService) {}
   ngOnInit(): void {
     this.layoutType = LAYOUT_VERTICAL;
 
@@ -29,10 +25,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       this.layoutType = layout;
     });
 
-    const sub2 = this.auth.getAccessRoles().subscribe((res) => {
-      console.log(res);
-    });
-    this.subscribe.push(sub, sub2);
+    this.subscribe.push(sub);
   }
 
   ngOnDestroy(): void {

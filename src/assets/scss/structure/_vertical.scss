@@ -1249,32 +1249,32 @@
 .bg-vertical-gradient {
   background: linear-gradient(
     to right,
-    var(--#{$variable-prefix}primary),
-    var(--#{$variable-prefix}success)
+    var(--#{$prefix}primary),
+    var(--#{$prefix}success)
   );
 }
 
 .bg-vertical-gradient-2 {
   background: linear-gradient(
     to right,
-    var(--#{$variable-prefix}info),
-    var(--#{$variable-prefix}secondary)
+    var(--#{$prefix}info),
+    var(--#{$prefix}secondary)
   );
 }
 
 .bg-vertical-gradient-3 {
   background: linear-gradient(
     to right,
-    var(--#{$variable-prefix}info),
-    var(--#{$variable-prefix}success)
+    var(--#{$prefix}info),
+    var(--#{$prefix}success)
   );
 }
 
 .bg-vertical-gradient-4 {
   background: linear-gradient(
     to right,
-    var(--#{$variable-prefix}dark),
-    var(--#{$variable-prefix}primary)
+    var(--#{$prefix}dark),
+    var(--#{$prefix}primary)
   );
 }
 

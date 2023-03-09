@@ -26,7 +26,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--#{$variable-prefix}dark-rgb), 0.075);
+    background-color: rgba(var(--#{$prefix}dark-rgb), 0.075);
     border-radius: 10px;
     border: 2px solid $card-bg;
   }
@@ -61,13 +61,13 @@ th {
   &.gridjs-th {
     border-top: 0;
     color: $table-color;
-    background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.75);
+    background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
   }
 
   &.gridjs-th-sort {
     &:focus,
     &:hover {
-      background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.85);
+      background-color: rgba(var(--#{$prefix}light-rgb), 0.85);
     }
   }
 }
@@ -225,7 +225,7 @@ button {
     border-color: $form-check-input-checked-border-color;
     @if $enable-gradients {
       background-image: escape-svg($form-check-input-checked-bg-image),
-        var(--#{$variable-prefix}gradient);
+        var(--#{$prefix}gradient);
     } @else {
       background-image: escape-svg($form-check-input-checked-bg-image);
     }

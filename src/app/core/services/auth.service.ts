@@ -49,8 +49,4 @@ export class AuthenticationService {
   getUser(): UserAccess {
     return this.decodeToken;
   }
-
-  getAccessRoles() {
-    return this.http.post(this.env + ApiRoutes.SystemAdmin.privigles, {});
-  }
 }

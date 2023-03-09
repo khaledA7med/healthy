@@ -152,6 +152,12 @@ export const MENU: MenuItem[] = [
     subItems: [
       {
         id: 301,
+        label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.DASHBOARD",
+        link: AppRoutes.BusinessDevelopment.dashboard,
+        parentId: 3,
+      },
+      {
+        id: 302,
         label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
         link: AppRoutes.BusinessDevelopment.management,
         parentId: 3,
@@ -163,8 +169,7 @@ export const MENU: MenuItem[] = [
         subItems: [
           {
             id: 3001,
-            label:
-              "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
+            label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.REPORTLIST.BUSINESSDEVELOPMENT",
             link: AppRoutes.BusinessDevelopment.reports.business,
             parentId: 302,
           },
@@ -250,6 +255,12 @@ export const MENU: MenuItem[] = [
         id: 601,
         label: "MENUITEMS.CLAIMS.LIST.MANAGEMENT",
         link: AppRoutes.Claims.base,
+        parentId: 6,
+      },
+      {
+        id: 602,
+        label: "MENUITEMS.CLAIMS.LIST.REPORTS",
+        link: AppRoutes.Claims.reports,
         parentId: 6,
       },
     ],
