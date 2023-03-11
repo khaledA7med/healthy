@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { QuotingRequirementsFormsComponent } from "src/app/pages/master-tables/business-development/sales/quoting-requirements/quoting-requirements/quoting-requirements-forms.component";
+import GlobalCellRender from "./globalCellRender";
 
 export const quotingRequirementsCols: ColDef[] = [
     {
@@ -35,6 +36,6 @@ export const quotingRequirementsCols: ColDef[] = [
     {
         headerName: "Default",
         field: "defaultTick",
-        minWidth: 120,
+        cellRenderer: GlobalCellRender.NotifyChecker,
     }
 ];

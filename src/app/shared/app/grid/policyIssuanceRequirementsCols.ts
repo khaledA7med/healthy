@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { PolicyIssuanceRequirementsFormsComponent } from "src/app/pages/master-tables/business-development/sales/policy-issuance-requirements/policy-issuance-requirements/policy-issuance-requirements-forms.component";
+import GlobalCellRender from "./globalCellRender";
 
 export const policyIssuanceRequirementsCols: ColDef[] = [
     {
@@ -35,6 +36,7 @@ export const policyIssuanceRequirementsCols: ColDef[] = [
     {
         headerName: "Default",
         field: "defaultTick",
-        minWidth: 120,
+        cellRenderer: GlobalCellRender.NotifyChecker,
+
     }
 ];
