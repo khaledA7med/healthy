@@ -8,7 +8,6 @@ import { CachingService } from "./caching.service";
 
 @Injectable({
   providedIn: "root",
-  providedIn: "root",
 })
 export class MasterTableService
 {
