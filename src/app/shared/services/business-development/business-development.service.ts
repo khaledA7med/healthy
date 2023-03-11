@@ -67,11 +67,7 @@ export class BusinessDevelopmentService {
 			observe: "response",
 		});
 	}
-	viewRenewalReport(body: IPolicyRenewalReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.renewalReport, body, {
-			observe: "response",
-		});
-	}
+
 	getSalesLeadById(id: string): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.get<IBaseResponse<any>>(this.env + ApiRoutes.BusinessDevelopment.edit, { params: { id }, observe: "response" });
 	}

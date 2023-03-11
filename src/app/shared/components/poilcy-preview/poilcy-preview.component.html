@@ -63,21 +63,21 @@
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Client DN/CN No. :</th>
-                                        <td>{{ uiState.policyDetails.clientDncnno }}</td>
+                                        <td class="input-text-right">{{ uiState.policyDetails.clientDncnno }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Net Premium :</th>
-                                        <td>{{ uiState.policyDetails.netPremium | currency :
+                                        <td class="input-text-right">{{ uiState.policyDetails.netPremium | currency :
                                             'SAR' : ''
                                             }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Policy Fees :</th>
-                                        <td class="d-flex align-items-center">
+                                        <td class="d-flex align-items-center justify-content-end">
                                             <span *ngIf="uiState.policyDetails.deductFees"
-                                                class="text-primary fs-20 text-center"><i class="ri-checkbox-fill"></i>
+                                                class="text-primary input-text-right"><i class="ri-checkbox-fill"></i>
                                             </span>
-                                            <span *ngIf="!uiState.policyDetails.deductFees" class="fs-20 text-center"><i
+                                            <span *ngIf="!uiState.policyDetails.deductFees" class="input-text-right"><i
                                                     class="ri-checkbox-blank-line"></i></span>
                                             <label for="Deduct" class="mx-2 mb-0">Deduct
                                             </label>
@@ -87,34 +87,34 @@
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">VAT (%) :</th>
-                                        <td>{{ uiState.policyDetails.vatPerc }}</td>
+                                        <td class="input-text-right">{{ uiState.policyDetails.vatPerc }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">VAT Value :</th>
-                                        <td>{{ uiState.policyDetails.vatValue | currency:
+                                        <td class="input-text-right">{{ uiState.policyDetails.vatValue | currency:
                                             'SAR' : '' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Totlal Premium :</th>
-                                        <td>{{ uiState.policyDetails.totalPremium | currency:
+                                        <td class="input-text-right">{{ uiState.policyDetails.totalPremium | currency:
                                             'SAR' : '' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Company Comm. DN/CN No. :</th>
-                                        <td>{{ uiState.policyDetails.compCommDncnno }}</td>
+                                        <td class="input-text-right">{{ uiState.policyDetails.compCommDncnno }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Commission (%) :</th>
-                                        <td>{{ uiState.policyDetails.compCommPerc }}</td>
+                                        <td class="input-text-right">{{ uiState.policyDetails.compCommPerc }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Company Commission :</th>
-                                        <td>{{ uiState.policyDetails.compComm | currency:
+                                        <td class="input-text-right">{{ uiState.policyDetails.compComm | currency:
                                             'SAR' : '' }}</td>
                                     </tr>
                                     <tr>
                                         <th class="fw-semibold">Commission VAT :</th>
-                                        <td>{{ uiState.policyDetails.compCommVat | currency:
+                                        <td class="input-text-right">{{ uiState.policyDetails.compCommVat | currency:
                                             'SAR' : '' }}</td>
                                     </tr>
                                 </tbody>
@@ -202,7 +202,6 @@
                     </div>
                 </div>
                 <!-- End Issue Type Table -->
-
             </div>
 
             <div class="col-lg-4 my-2">
@@ -288,7 +287,8 @@
                     </div>
                 </div>
                 <!-- End PRODUCERS COMMISSIONS Table -->
-
+            </div>
+            <div class="col-12 my-2">
                 <!-- Start Documents  -->
                 <div class="card my-3">
                     <div class="card-header">
@@ -372,12 +372,19 @@
     </div>
     <div class="modal-footer">
         <!-- Close Btn -->
-        <button type="button" class="btn btn-sm btn-light" class="btn btn-sm btn-light"
-            (click)="modal.close('Close click')">
+        <button [disabled]="uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1"
+            class="btn btn-sm btn-info mx-2" (click)="changeStatus('Approve')">
+            Approve
+        </button>
+        <button [disabled]="uiState.policyDetails.reject == 1 || uiState.policyDetails.done == 1"
+            class="btn btn-sm btn-secondary mx-2" (click)="changeStatus('Reject')">
+            Reject
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">
             Close
         </button>
         <!-- Change status Btn -->
-        <div ngbDropdown placement="top-right" class="dropdown d-flex justify-content-center align-items-center">
+        <!-- <div ngbDropdown placement="top-right" class="dropdown d-flex justify-content-center align-items-center">
             <button type="button" class="btn btn-sm btn-soft-info" ngbDropdownToggle>
                 <i class="ri-more-fill align-middle"></i>
             </button>
@@ -396,6 +403,6 @@
                     No Action
                 </button>
             </div>
-        </div>
+        </div> -->
     </div>
 </ng-template>

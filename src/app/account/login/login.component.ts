@@ -82,6 +82,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         (res: IBaseResponse<LoginResponse>) => {
           if (res.status) {
             localStorage.setItem(localStorageKeys.JWT, res.data?.accessToken!);
+            localStorage.setItem(
+              localStorageKeys.Refresh,
+              res.data?.refreshToken!
+            );
             this.message.toast("Logged In Successfully", "success");
             this.router.navigate([this.returnUrl]);
           } else this.message.toast(res.message!, "error");

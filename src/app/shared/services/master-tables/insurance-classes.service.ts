@@ -31,7 +31,7 @@ export class InsuranceClassesService
 
   getEditInsuranceData (id: string): Observable<HttpResponse<IBaseResponse<IInsuranceClassData>>>
   {
-    return this.http.post<IBaseResponse<IInsuranceClassData>>(this.env + ApiRoutes.masterTables.inuranceClasses.edit, {}, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IInsuranceClassData>>(this.env + ApiRoutes.masterTables.inuranceClasses.edit, { params: { id }, observe: "response" });
   }
 
   DeleteInsurance (id: string, ClassName: string): Observable<HttpResponse<IBaseResponse<number>>>

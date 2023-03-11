@@ -19,5 +19,8 @@ export enum MODULES
   SystemAdmin = "SystemAdmin",
   InsuranceClasses = "InsuranceClasses",
   LineOfBusiness = "LineOfBusiness",
-  InsuranceCompanies = "InsuranceCompanies"
+  InsuranceCompanies = "InsuranceCompanies",
+  QuotingRequirements = "QuotingRequirements",
+  PolicyIssuanceRequirements = "PolicyIssuanceRequirements",
+  Reports = "Reports",
 }

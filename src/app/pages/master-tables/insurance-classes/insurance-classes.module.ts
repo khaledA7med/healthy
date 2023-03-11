@@ -12,7 +12,12 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ InsuranceClassesComponent, InsuranceClassesFormComponent ],
-  imports: [ CommonModule, SharedModule, RouterModule.forChild(routes), AgGridModule.withComponents([ InsuranceClassesFormComponent ]) ],
+  declarations: [InsuranceClassesComponent, InsuranceClassesFormComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(routes),
+    AgGridModule,
+  ],
 })
-export class InsuranceClassesModule { }
+export class InsuranceClassesModule {}

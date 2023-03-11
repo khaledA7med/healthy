@@ -1,0 +1,51 @@
+<div class="row justify-content-between align-items-center mb-3">
+    <div class="col-12 d-flex justify-content-end">
+
+        <a type="button" class="btn btn-sm btn-info mx-2  d-flex align-items-center"
+            (click)="openBusinessActivityDialoge()">
+            <i class="ri-add-line align-bottom me-1"></i> Add Business Activity
+        </a>
+
+    </div>
+</div>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>
+
+<ng-template #BusinessActivityContent let-modal>
+    <div class="modal-header mb-0">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editBusinessActivityMode">Add Business Activity
+        </h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editBusinessActivityMode">Edit Business Activity
+        </h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <form [formGroup]="BusinessActivityForm" (ngSubmit)="submitBusinessActivityData(BusinessActivityForm)">
+        <div class="modal-body p-1" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="col-12 row">
+
+                    <div class="col-12 mb-2">
+                        <label for="businessActivity" class="asterisk-input">Nationality</label>
+                        <input id="businessActivity" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f.businessActivity?.touched || uiState.submitted) && f.businessActivity?.invalid}"
+                            formControlName="businessActivity" />
+                        <span *ngIf="(f.businessActivity?.touched || uiState.submitted) && f.businessActivity?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="!uiState.editBusinessActivityMode"><i class="ri-add-line"></i>Add</button>
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="uiState.editBusinessActivityMode"><i class="ri-edit-line mx-1"></i>Edit</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>

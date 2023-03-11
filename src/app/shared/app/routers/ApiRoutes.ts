@@ -4,13 +4,16 @@ const LookUpTables = "/LookupTables/";
 export const ApiRoutes = {
   Users: {
     login: "/Account/login",
+    refesh: "/Account/RefreshToken",
   },
   MasterTable: {
     MasterTables: {
       insurClasses: LookUpTables + BaseData.InsurClasses,
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
+      insuranceComapnies: LookUpTables + BaseData.InsuranceCompanies,
       contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
-      contactDepartment: LookUpTables + BaseData.ContactDepartment
+      contactDepartment: LookUpTables + BaseData.ContactDepartment,
+      TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -106,6 +109,27 @@ export const ApiRoutes = {
       staffProfilesNames: LookUpTables + BaseData.ProducersList,
       userSecurityRoles: LookUpTables + BaseData.UserSecurityRoles,
     },
+    Reports: {
+      clientsList: LookUpTables + BaseData.ClientsList,
+      groupsList: LookUpTables + BaseData.GroupsList,
+      InsurClasses: LookUpTables + BaseData.InsurClasses,
+      lineOfBusinessByClassNames: LookUpTables + "LineOfBusinessByClassNames",
+      insuranceCompanies: LookUpTables + BaseData.InsuranceCompanies,
+      branch: LookUpTables + BaseData.Branch,
+      producers: LookUpTables + BaseData.Producers,
+      policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+      productionReportType: LookUpTables + BaseData.ProductionReportType,
+      productionReportBasedOn: LookUpTables + BaseData.ProductionReportBasedOn,
+      productionReportCaptive: LookUpTables + BaseData.ProductionReportCaptive,
+      productionReportStatus: LookUpTables + BaseData.ProductionReportStatus,
+      renewalNoticeReportStatus:
+        LookUpTables + BaseData.RenewalNoticeReportStatus,
+      cserviceStatus: LookUpTables + BaseData.CServiceStatus,
+      csReportType: LookUpTables + BaseData.CSReportType,
+      allUsers: LookUpTables + BaseData.AllUsers,
+      csReportStatus: LookUpTables + BaseData.CSReportStatus,
+      claimsReportType: LookUpTables + BaseData.ClaimsReportType,
+    },
   },
   MasterMethods: {
     downloadDocument: "/Documents/Download",
@@ -117,7 +141,7 @@ export const ApiRoutes = {
       search: "/MasterTables/InsurranceClass/Search",
       save: "/MasterTables/InsurranceClass/Save",
       edit: "/MasterTables/InsurranceClass/Edit",
-      delete: "/MasterTables/InsurranceClass/Delete"
+      delete: "/MasterTables/InsurranceClass/Delete",
     },
     lineOfBusiness: {
       search: "/MasterTables/LineOfBusiness/Search",
@@ -130,6 +154,104 @@ export const ApiRoutes = {
       save: "/MasterTables/InsuranceCompanies/Save",
       edit: "/MasterTables/InsuranceCompanies/Edit",
       delete: "/MasterTables/InsuranceCompanies/Delete",
+    },
+    insuranceBrokers: {
+      search: "/MasterTables/InsuranceBrokers/Search",
+      save: "/MasterTables/InsuranceBrokers/Save",
+      edit: "/MasterTables/InsuranceBrokers/Edit",
+      delete: "/MasterTables/InsuranceBrokers/Delete",
+    },
+    policyTypes: {
+      search: "/MasterTables/PolicyTypes/Search",
+      create: "/MasterTables/PolicyTypes/Create",
+      edit: "/MasterTables/PolicyTypes/Edit",
+      delete: "/MasterTables/PolicyTypes/Delete",
+    },
+    nationalities: {
+      search: "/MasterTables/Nationalities/Search",
+      save: "/MasterTables/Nationalities/Save",
+      edit: "/MasterTables/Nationalities/Edit",
+      delete: "/MasterTables/Nationalities/Delete",
+    },
+    businessActivity: {
+      search: "/MasterTables/BusinessActivity/Search",
+      save: "/MasterTables/BusinessActivity/Save",
+      edit: "/MasterTables/BusinessActivity/Edit",
+      delete: "/MasterTables/BusinessActivity/Delete",
+    },
+    legalStatus: {
+      search: "/MasterTables/LegalStatus/Search",
+      save: "/MasterTables/LegalStatus/Save",
+      edit: "/MasterTables/LegalStatus/Edit",
+      delete: "/MasterTables/LegalStatus/Delete",
+    },
+    locations: {
+      search: "/MasterTables/Locations/Search",
+      save: "/MasterTables/Locations/Save",
+      edit: "/MasterTables/Locations/Edit",
+      delete: "/MasterTables/Locations/Delete",
+    },
+    BusinessDevelopment: {
+      Sales: {
+        QuotingRequirements: {
+          search: "/MasterTables/SalesQuotingRequirements/Search",
+          save: "/MasterTables/SalesQuotingRequirements/Save",
+          edit: "/MasterTables/SalesQuotingRequirements/Edit",
+          delete: "/MasterTables/SalesQuotingRequirements/Delete",
+        },
+        PolicyIssuanceRequirements: {
+          search: "/MasterTables/SalesPolicyRequirements/Search",
+          save: "/MasterTables/SalesPolicyRequirements/Save",
+          edit: "/MasterTables/SalesPolicyRequirements/Edit",
+          delete: "/MasterTables/SalesPolicyRequirements/Delete",
+        },
+        ProspectsLossReasons: {
+          search: "/MasterTables/ProspectsLossReasons/Search",
+          save: "/MasterTables/ProspectsLossReasons/Save",
+          edit: "/MasterTables/ProspectsLossReasons/Edit",
+          delete: "/MasterTables/ProspectsLossReasons/Delete",
+        },
+      },
+      CancellationRejectionReasons: {
+        CompanyRejectionReason: {
+          search: "/MasterTables/CompanyRejectionReason/Search",
+          save: "/MasterTables/CompanyRejectionReason/Save",
+          edit: "/MasterTables/CompanyRejectionReason/Edit",
+          delete: "/MasterTables/CompanyRejectionReason/Delete",
+        },
+        ClientRejectionReason: {
+          search: "/MasterTables/ClientRejectionReason/Search",
+          save: "/MasterTables/ClientRejectionReason/Save",
+          edit: "/MasterTables/ClientRejectionReason/Edit",
+          delete: "/MasterTables/ClientRejectionReason/Delete",
+        },
+        CancellationReason: {
+          search: "/MasterTables/CancellationReason/Search",
+          save: "/MasterTables/CancellationReason/Save",
+          edit: "/MasterTables/CancellationReason/Edit",
+          delete: "/MasterTables/CancellationReason/Delete",
+        },
+      },
+    },
+    clientCategories: {
+      search: "/MasterTables/ClientsCategory/Search",
+      save: "/MasterTables/ClientsCategory/Save",
+      edit: "/MasterTables/ClientsCategory/Edit",
+      delete: "/MasterTables/ClientsCategory/Delete",
+    },
+    customerService: {
+      InsuranceCompaniesDocuments: {
+      },
+      customerServiceRequirements: {
+      },
+      complaintsTypes: {
+      },
+      complaintsSettings: {
+      },
+      complaintsSuspectiveCauses: {
+      },
+      cancellationReasons: {
+      },
     },
   },
   Clients: {
@@ -178,7 +300,9 @@ export const ApiRoutes = {
     editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
     editEditCommission: "/Production/Policy/EditPolicyCommission",
     updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",
+    productionReport: "/Production/Policy/StatisticsReport",
     renewalReport: "/Production/Policy/RenewalsReports",
+    renewalNoticeReports: "/Production/Policy/RenewalNoticeReports",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",
@@ -191,6 +315,7 @@ export const ApiRoutes = {
     csRequirments: "/CustomerService/Requests/CSRequirements",
     create: "/CustomerService/Requests/Save",
     edit: "/CustomerService/Requests/Edit",
+    csReport: "/CustomerService/Requests/Reports",
     delete: "",
   },
   Claims: {
@@ -206,13 +331,15 @@ export const ApiRoutes = {
     deleteClaimRejectDeduct: "/Claims/DeleteClaimsRejections",
     searchPolicy: "/Claims/SearchPolicy",
     SearchClientClaimData: "/Claims/SearchClientClaimData",
-    subStatus: "/Claims/GetSubStatusByStatus/Claims/Search",
+    subStatus: "/Claims/GetSubStatusByStatus",
     followUps: "/Claims/GetClaimFollowUps",
     saveFollowUps: "/Claims/SaveClaimFollowUp",
     getClaimStatusNotes: "/Claims/GetClaimStatusNotes",
     getInsurerWorkshops: "/Claims/GetInsurerWorkshops",
     getClientMailData: "/Claims/NotifyClientMailData",
     getInsurerMailData: "/Claims/NotifyInsurerMailData",
+    claimsReport: "/Claims/Reports",
+    archiveReport: "/Claims/ArchiveReport",
   },
   LookUpTables: {
     allActiveClients: "/LookupTables/AllClientbyStatus",
@@ -229,5 +356,6 @@ export const ApiRoutes = {
     changePasswordAsync: "/SystemAdmin/Users/ChangePasswordAsync",
     save: "/SystemAdmin/Users/Save",
     edit: "/SystemAdmin/Users/Edit",
+    privigles: "/SystemAdmin/Users/ActivePrivileges",
   },
 };

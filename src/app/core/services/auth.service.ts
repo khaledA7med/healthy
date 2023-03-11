@@ -14,13 +14,13 @@ import { JwtHelperService } from "@auth0/angular-jwt";
  * Auth-service Component
  */
 export class AuthenticationService {
-  baseURL: string = environment.baseURL;
+  private readonly env: string = environment.baseURL;
   jwtHelper = new JwtHelperService();
   constructor(private http: HttpClient) {}
 
   login(data: IUser): Observable<IBaseResponse<LoginResponse>> {
     return this.http.post<IBaseResponse<LoginResponse>>(
-      this.baseURL + ApiRoutes.Users.login,
+      this.env + ApiRoutes.Users.login,
       data
     );
   }

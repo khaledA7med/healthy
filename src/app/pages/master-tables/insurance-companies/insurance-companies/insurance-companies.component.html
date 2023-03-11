@@ -2,7 +2,7 @@
     <div class="col-12 d-flex justify-content-end">
 
         <a type="button" class="btn btn-sm btn-info mx-2  d-flex align-items-center" (click)="openInsuranceDialoge()">
-            <i class="ri-add-line align-bottom me-1"></i> Add Insurance Class
+            <i class="ri-add-line align-bottom me-1"></i> Add Insurance Company
         </a>
 
     </div>
@@ -138,7 +138,8 @@
                                                         <ng-select id="classOfInc" class="form-control-sm is-invalid"
                                                             placeholder="Select Class Of Insurance"
                                                             formControlName="classOfBusiness" bindValue="name"
-                                                            bindLabel="name" [loading]="lookupData ? false : true"
+                                                            appendTo="table" bindLabel="name"
+                                                            [loading]="lookupData ? false : true"
                                                             [items]="(lookupData | async)?.InsurClasses?.content!"
                                                             (change)="getLineOfBusiness($event?.name)">
                                                         </ng-select>
@@ -146,7 +147,7 @@
 
                                                     <td>
                                                         <ng-select id="lineOfBus" class="form-control-sm is-invalid"
-                                                            placeholder="Select Lien Of Business"
+                                                            placeholder="Select Lien Of Business" appendTo="table"
                                                             formControlName="lineOfBusiness" bindValue="name"
                                                             bindLabel="name" [loading]="lookupData ? false : true"
                                                             [items]="lineOfBussArr">
@@ -246,7 +247,7 @@
                                                                 <ng-select formControlName="LineOfBusiness"
                                                                     placeholder="Contact Line Of Business"
                                                                     [items]="(lookupData | async)?.ContactLineOfBusiness?.content!"
-                                                                    bindLabel="name" bindValue="name"
+                                                                    bindLabel="name" bindValue="name" appendTo="table"
                                                                     [loading]="lookupData ? false : true">
                                                                 </ng-select>
                                                             </td>
@@ -255,7 +256,7 @@
                                                                 <ng-select formControlName="department"
                                                                     placeholder="Contact Department"
                                                                     [items]="(lookupData | async)?.ContactDepartment?.content!"
-                                                                    bindLabel="name" bindValue="name"
+                                                                    bindLabel="name" bindValue="name" appendTo="table"
                                                                     [loading]="lookupData ? false : true">
                                                                 </ng-select>
                                                             </td>

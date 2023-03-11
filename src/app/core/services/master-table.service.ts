@@ -8,6 +8,7 @@ import { CachingService } from "./caching.service";
 
 @Injectable({
   providedIn: "root",
+  providedIn: "root",
 })
 export class MasterTableService
 {
@@ -25,7 +26,7 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
-        }
+        },
       ],
       InsuranceCompanies: [
         {
@@ -33,12 +34,40 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
+          route: ApiRoutes.MasterTable.Client.contactLineOfBusiness,
           name: BaseData.ContactLineOfBusiness,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
+          route: ApiRoutes.MasterTable.Client.contactDepartment,
           name: BaseData.ContactDepartment,
+        },
+      ],
+      QuotingRequirements: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+      ],
+      PolicyIssuanceRequirements: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
         },
       ],
       Client: [
@@ -199,6 +228,10 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.BusinessDevelopment.SalesleadStatus,
           name: BaseData.SalesleadStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
+          name: BaseData.ProspectsReportsTypes,
         },
       ],
       Production: [
@@ -427,6 +460,84 @@ export class MasterTableService
           name: BaseData.UserSecurityRoles,
         },
       ],
+      Reports: [
+        {
+          route: ApiRoutes.MasterTable.Reports.clientsList,
+          name: BaseData.ClientsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.groupsList,
+          name: BaseData.GroupsList,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.InsurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.insuranceCompanies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.policyEndorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportType,
+          name: BaseData.ProductionReportType,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+          name: BaseData.ProductionReportBasedOn,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportBasedOn,
+          name: BaseData.ProductionReportCaptive,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.productionReportStatus,
+          name: BaseData.ProductionReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.renewalNoticeReportStatus,
+          name: BaseData.RenewalNoticeReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.cserviceStatus,
+          name: BaseData.CServiceStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.csReportType,
+          name: BaseData.CSReportType,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.allUsers,
+          name: BaseData.AllUsers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.csReportStatus,
+          name: BaseData.CSReportStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Claims.claimStatus,
+          name: BaseData.ClaimStatus,
+        },
+        {
+          route: ApiRoutes.MasterTable.Claims.rejectionReasons,
+          name: BaseData.RejectionReasons,
+        },
+        {
+          route: ApiRoutes.MasterTable.Reports.claimsReportType,
+          name: BaseData.ClaimsReportType,
+        },
+      ],
     };
 
     switch (module)
@@ -469,6 +580,15 @@ export class MasterTableService
         break;
       case MODULES.InsuranceCompanies:
         this.dataSrc = data.InsuranceCompanies;
+        break;
+      case MODULES.QuotingRequirements:
+        this.dataSrc = data.QuotingRequirements;
+        break;
+      case MODULES.PolicyIssuanceRequirements:
+        this.dataSrc = data.PolicyIssuanceRequirements;
+        break;
+      case MODULES.Reports:
+        this.dataSrc = data.Reports;
         break;
       default:
         break;
