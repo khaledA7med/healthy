@@ -12,14 +12,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: AppRoutes.CustomerService.dashboard,
-    data: { title: "Requests Dashboard" },
-    loadChildren: () =>
-      import(
-        "./dashboard-customer-service/dashboard-customer-service.module"
-      ).then((m) => m.DashboardCustomerServiceModule),
-  },
-  {
     path: AppRoutes.CustomerService.create,
     data: { title: "Customer Service Registry" },
     loadChildren: () =>

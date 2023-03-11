@@ -20,16 +20,16 @@ export class PermissionsService {
   constructor(private http: HttpClient) {}
 
   getAccessRoles(): BehaviorSubject<Privigles> | any {
-    if (this.permissions.value !== null) {
-      return this.permissions;
-    } else {
-      return this.http
-        .post<IBaseResponse<Privigles>>(
-          this.env + ApiRoutes.SystemAdmin.privigles,
-          {}
-        )
-        .pipe(tap((perm) => this.permissions.next(perm.data!)));
-    }
+    // if (this.permissions.value !== null) {
+    //   return this.permissions;
+    // } else {
+    return this.http
+      .post<IBaseResponse<Privigles>>(
+        this.env + ApiRoutes.SystemAdmin.privigles,
+        {}
+      )
+      .pipe(tap((perm) => this.permissions.next(perm.data!)));
+    // }
   }
 
   getClientPrivilege(privilege: string[]): BehaviorSubject<boolean> {

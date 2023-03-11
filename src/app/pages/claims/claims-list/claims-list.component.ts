@@ -28,14 +28,20 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { NgbDate, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbDate,
+  NgbOffcanvas,
+  NgbOffcanvasRef,
+} from "@ng-bootstrap/ng-bootstrap";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { IClaimsFollowUp } from "src/app/shared/app/models/Claims/iclaims-followUp";
-import { SimplebarAngularComponent } from "simplebar-angular";
 import { EmailModalComponent } from "src/app/shared/components/email/email-modal/email-modal.component";
 import { IEmailResponse } from "src/app/shared/app/models/Email/email-response";
+import { DashboardClaimsComponent } from "../dashboard-claims/dashboard-claims.component";
+import { IActiveClientWithInsuranceClaim } from "src/app/shared/app/models/Claims/iclaim-summary";
+import { claimsStatus } from "src/app/shared/app/models/Claims/claims-util";
 
 @Component({
   selector: "app-claims-list",
@@ -63,7 +69,9 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
       emailData: {} as IEmailResponse,
     },
   };
-  subscribes: Subscription[] = [];
+
+  canvasRef!: NgbOffcanvasRef;
+
   filterForm!: FormGroup<IClaimsFilter>;
   followUpForm!: FormGroup;
   formData!: Observable<IBaseMasterTable>;
@@ -93,6 +101,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     onSortChanged: (e) => this.onSort(e),
     onPaginationChanged: (e) => this.onPageChange(e),
   };
+  subscribes: Subscription[] = [];
   constructor(
     private tableRef: ElementRef,
     private claimService: ClaimsService,
@@ -104,6 +113,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formData = this.table.getBaseData(MODULES.Claims);
+    this.initFilterForm();
   }
 
   //#region Table
@@ -171,31 +181,12 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-horizontal-scroll-viewport"
-      );
-    const agBodyViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-viewport"
-      );
-
-    if (agBodyViewport) {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport) {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
   }
   //#endregion
 
   //#region filter
   openFilterCanvas(name: TemplateRef<any>) {
     this.offcanvasService.open(name, { position: "end" });
-    this.initFilterForm();
   }
 
   private initFilterForm() {
@@ -395,6 +386,31 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
+  //#endregion
+
+  // #region Summary Section Event Binder
+  openDashboard(): void {
+    this.canvasRef = this.offcanvasService.open(DashboardClaimsComponent, {
+      position: "top",
+      panelClass: "claims-panel",
+    });
+    const sub = this.canvasRef.componentInstance.summaryData.subscribe(
+      (res: IActiveClientWithInsuranceClaim) => this.summaryEvtBinder(res)
+    );
+    this.subscribes.push(sub);
+  }
+
+  summaryEvtBinder(e: IActiveClientWithInsuranceClaim) {
+    this.filterForm.reset();
+    this.filterForm.patchValue({
+      clientName: e.clientName,
+      status: [claimsStatus.active, claimsStatus.pending],
+      claimType: e.claimType,
+      insurCompany: e.insuranceCompany,
+      subStatus: [],
+    });
+    this.submitFilterForm();
+  }
   //#endregion
 
   ngOnDestroy(): void {

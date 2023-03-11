@@ -21,48 +21,51 @@ import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import {
-  ActiveRequestsByClientCols,
-  ActiveRequestsByInsuranceCompanyCols,
-} from "src/app/shared/app/grid/summaryCustomerServiceCols";
+  ActiveRequestsByClientsCols,
+  ActiveRequestsGropedByIcsCols,
+} from "src/app/shared/app/grid/summaryClaimsCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { ClaimsType } from "src/app/shared/app/models/Claims/claims-util";
 import {
-  IActiveClientWithInsurance,
-  IActiveRequestsByClassOfBusiness,
+  IActiveClientWithInsuranceClaim,
   IActiveRequestsByClient,
-  IActiveRequestsByInsuranceCompany,
-  ICustomerServiceSummary,
-} from "src/app/shared/app/models/CustomerService/icustomer-service-summary";
-import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
+  IActiveRequestsGropedByIcs,
+  IClaimSummary,
+} from "src/app/shared/app/models/Claims/iclaim-summary";
+import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 
 @Component({
-  selector: "app-dashboard-customer-service",
-  templateUrl: "./dashboard-customer-service.component.html",
-  styleUrls: ["./dashboard-customer-service.component.scss"],
+  selector: "app-dashboard-claims",
+  templateUrl: "./dashboard-claims.component.html",
+  styleUrls: ["./dashboard-claims.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
+export class DashboardClaimsComponent implements OnInit, OnDestroy {
   uiState = {
     clientsList: [] as IActiveRequestsByClient[],
-    insurCompList: [] as IActiveRequestsByInsuranceCompany[],
-    classOfBusiness: [] as IActiveRequestsByClassOfBusiness[],
+    insurCompList: [] as IActiveRequestsGropedByIcs[],
+    claimTypes: [
+      ClaimsType.Medical,
+      ClaimsType.Motor,
+      ClaimsType.General,
+    ] as string[],
+    claimTypeList: [ClaimsType.Medical, ClaimsType.Motor, ClaimsType.General],
   };
 
-  @Output() summaryData: EventEmitter<IActiveClientWithInsurance> =
-    new EventEmitter<IActiveClientWithInsurance>();
+  @Output() summaryData: EventEmitter<IActiveClientWithInsuranceClaim> =
+    new EventEmitter<IActiveClientWithInsuranceClaim>();
 
-  selectedClient!: IActiveClientWithInsurance;
+  selectedClient!: IActiveClientWithInsuranceClaim;
 
   // Charts Definitions
   chartOptions!: AgChartOptions;
 
   // Grid Definitions
-  clientGridApi: GridApi = <GridApi>{};
-  clientGridOpts: GridOptions = {
+  globalGridOpts: GridOptions = {
     pagination: false,
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: ActiveRequestsByClientCols,
     suppressCsvExport: true,
     rowSelection: "single",
     defaultColDef: {
@@ -71,39 +74,39 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
       sortable: false,
       resizable: true,
     },
+  };
+
+  clientGridApi: GridApi = <GridApi>{};
+  clientGridOpts: GridOptions = {
+    ...this.globalGridOpts,
+    columnDefs: ActiveRequestsByClientsCols,
     onGridReady: (e) => this.onClientGridReady(e),
     onCellClicked: (e) => this.onClientCellClicked(e),
   };
 
-  insuranceGridApi: GridApi = <GridApi>{};
-  insuranceGridOpts: GridOptions = {
-    pagination: false,
-    rowModelType: "infinite",
-    editType: "fullRow",
-    animateRows: true,
-    columnDefs: ActiveRequestsByInsuranceCompanyCols,
-    suppressCsvExport: true,
-    rowSelection: "single",
-    defaultColDef: {
-      flex: 1,
-      minWidth: 100,
-      sortable: false,
-      resizable: true,
-    },
-    onGridReady: (e) => this.onInsuranceGridReady(e),
-    onCellClicked: (e) => this.onInsuranceCellClicked(e),
+  ICGridApi: GridApi = <GridApi>{};
+  ICGridOpts: GridOptions = {
+    ...this.globalGridOpts,
+    columnDefs: ActiveRequestsGropedByIcsCols,
+    onGridReady: (e) => this.onICGridReady(e),
+    onCellClicked: (e) => this.onICCellClicked(e),
   };
 
   subscribes: Subscription[] = [];
   constructor(
     private tableRef: ElementRef,
-    private customerService: CustomerServiceService,
+    private claimsService: ClaimsService,
     private eventService: EventService
   ) {}
 
   ngOnInit(): void {
-    this.getSummaryData();
-    this.drawChartData(this.uiState.classOfBusiness);
+    this.getSummaryData([
+      ClaimsType.General,
+      ClaimsType.Medical,
+      ClaimsType.Motor,
+    ]);
+
+    this.drawChartData(this.uiState.insurCompList);
 
     const sub = this.eventService.subscribe(reserved.changeMode, (mode) =>
       this.applyChartTheme(mode)
@@ -111,19 +114,16 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  getSummaryData(): void {
-    const sub = this.customerService
-      .getRequestsSummary()
-      .subscribe((res: IBaseResponse<ICustomerServiceSummary>) => {
+  getSummaryData(claimTypes: string[]): void {
+    const sub = this.claimsService
+      .getClaimSummary(claimTypes)
+      .subscribe((res: IBaseResponse<IClaimSummary>) => {
         if (res.status) {
-          this.uiState.classOfBusiness =
-            res.data?.activeRequestsByClassOfBusiness!;
-          this.uiState.insurCompList =
-            res.data?.activeRequestsByInsuranceCompany!;
-          this.uiState.clientsList = res.data?.activeRequestsByClient!;
+          this.uiState.insurCompList = res.data?.activeRequestsGropedByIcs!;
+          this.uiState.clientsList = res.data?.activeRequestsByClients!;
           this.clientGridApi.setDatasource(this.clientDataSource);
-          this.insuranceGridApi.setDatasource(this.insuranceDataSource);
-          this.drawChartData(this.uiState.classOfBusiness);
+          this.ICGridApi.setDatasource(this.ICDataSource);
+          this.drawChartData(this.uiState.insurCompList);
         }
       });
     this.subscribes.push(sub);
@@ -140,14 +140,14 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
       }
     },
   };
-  insuranceDataSource: IDatasource = {
+  ICDataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       if (this.uiState.insurCompList.length) {
         params.successCallback(
           this.uiState.insurCompList,
           this.uiState.insurCompList.length
         );
-        this.insuranceGridApi.hideOverlay();
+        this.ICGridApi.hideOverlay();
       }
     },
   };
@@ -157,22 +157,32 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
     this.clientGridApi.sizeColumnsToFit();
     this.clientGridApi.showLoadingOverlay();
   }
+
   onClientCellClicked(e: CellEvent) {
-    this.selectedClient = { ...this.selectedClient, ...e.data };
+    this.selectedClient = {
+      ...this.selectedClient,
+      ...e.data,
+      claimType: this.uiState.claimTypes,
+    };
     this.summaryData.emit(this.selectedClient);
   }
 
-  onInsuranceGridReady(param: GridReadyEvent) {
-    this.insuranceGridApi = param.api;
-    this.insuranceGridApi.sizeColumnsToFit();
-    this.insuranceGridApi.showLoadingOverlay();
+  onICGridReady(param: GridReadyEvent) {
+    this.ICGridApi = param.api;
+    this.ICGridApi.sizeColumnsToFit();
+    this.ICGridApi.showLoadingOverlay();
   }
-  onInsuranceCellClicked(e: CellEvent) {
-    this.selectedClient = { ...this.selectedClient, ...e.data };
+
+  onICCellClicked(e: CellEvent) {
+    this.selectedClient = {
+      ...this.selectedClient,
+      ...e.data,
+      claimType: this.uiState.claimTypes,
+    };
     this.summaryData.emit(this.selectedClient);
   }
 
-  drawChartData(data: IActiveRequestsByClassOfBusiness[]) {
+  drawChartData(data: IActiveRequestsGropedByIcs[]) {
     this.chartOptions = {
       autoSize: true,
       data: data,
@@ -182,11 +192,11 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
       series: [
         {
           type: "pie",
-          calloutLabelKey: "classOfBusiness",
+          calloutLabelKey: "insuranceCompany",
           fillOpacity: 0.9,
           strokeWidth: 0,
-          angleKey: "count",
-          sectorLabelKey: "count",
+          angleKey: "noOfRequests",
+          sectorLabelKey: "noOfRequests",
           calloutLabel: {
             enabled: false,
           },
@@ -230,7 +240,7 @@ export class DashboardCustomerServiceComponent implements OnInit, OnDestroy {
           tooltip: {
             renderer: ({ datum, calloutLabelKey, title, sectorLabelKey }) => {
               return {
-                title: datum.classOfBusiness,
+                title: datum.insuranceCompany,
                 content: `${datum[calloutLabelKey!]}: ${
                   datum[sectorLabelKey!]
                 }`,
