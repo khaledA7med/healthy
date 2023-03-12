@@ -29,11 +29,7 @@ export class TopbarComponent implements OnInit {
 
   title: string = "";
 
-  userData: UserAccess = {
-    Branch: "",
-    name: "",
-    Role: [""],
-  };
+  userData!: UserAccess;
   emailRoute: string = AppRoutes.Email.base;
 
   constructor(
@@ -46,8 +42,6 @@ export class TopbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.userData = this.authService.getUser();
-
-    console.log(this.userData);
 
     this.element = document.documentElement;
 

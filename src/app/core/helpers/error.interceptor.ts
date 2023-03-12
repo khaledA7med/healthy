@@ -6,13 +6,15 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { AuthenticationService } from "../services/auth.service";
+import { localStorageKeys } from "../models/localStorageKeys";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private auth: AuthenticationService, private router: Router) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -20,15 +22,23 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
-
-        // if (err.status === 401) {
-        //     // auto logout if 401 response returned from api
-        //     this.authenticationService.logout();
-        //     location.reload();
-        // }
-        // const error = err.error.message || err.statusText;
-        // return throwError(error);
+        if (err.status === 401) {
+          const token = localStorage.getItem(localStorageKeys.JWT);
+          const refesh = localStorage.getItem(localStorageKeys.Refresh);
+          if (refesh) {
+            return this.auth.refreshToken(token!, refesh!).pipe(
+              catchError((err) => {
+                this.auth.logout();
+                this.router.navigate(["/login"]);
+                return of(err);
+              })
+            );
+          } else {
+            this.auth.logout();
+            this.router.navigate(["/login"]);
+            return of(false);
+          }
+        }
         return throwError(err);
       })
     );

@@ -7,10 +7,8 @@ import {
   UrlTree,
 } from "@angular/router";
 import { Observable } from "rxjs";
-import { map, take } from "rxjs/operators";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { map } from "rxjs/operators";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { Privigles } from "../../models/iuser";
 import { ClientsPermissions } from "../../roles/clients-permissions";
 import { PermissionsService } from "../../services/permissions.service";
 
@@ -31,24 +29,24 @@ export class ClientGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return true;
-    // return this.permission
-    //   .getClientPrivilege([
-    //     ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
-    //   ])
-    //   .pipe(
-    //     map((hasAccess: boolean) => {
-    //       if (!hasAccess) {
-    //         this.message.popup(
-    //           "Attention!",
-    //           "You Are Not Authorized To Access",
-    //           "warning"
-    //         );
-    //         this.router.navigate(["/"]);
-    //       }
+    // return true;
+    return this.permission
+      .getClientPrivilege([
+        ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
+      ])
+      .pipe(
+        map((hasAccess: boolean) => {
+          if (!hasAccess) {
+            this.message.popup(
+              "Attention!",
+              "You Are Not Authorized To Access",
+              "warning"
+            );
+            this.router.navigate(["/"]);
+          }
 
-    //       return hasAccess;
-    //     })
-    //   );
+          return hasAccess;
+        })
+      );
   }
 }

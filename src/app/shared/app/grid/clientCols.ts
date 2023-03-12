@@ -22,8 +22,8 @@ export const clientManageCols: ColDef[] = [
     headerName: "Client ID",
     field: "sNo",
     sort: "asc",
-    minWidth: 160,
-    maxWidth: 160,
+    minWidth: 100,
+    maxWidth: 100,
   },
   {
     headerName: "Full Name",

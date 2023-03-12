@@ -7,6 +7,8 @@ import { IUser, LoginResponse, UserAccess } from "../models/iuser";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { tap } from "rxjs/operators";
+import { PermissionsService } from "./permissions.service";
 
 @Injectable({ providedIn: "root" })
 
@@ -16,7 +18,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 export class AuthenticationService {
   private readonly env: string = environment.baseURL;
   jwtHelper = new JwtHelperService();
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private perm: PermissionsService) {}
 
   login(data: IUser): Observable<IBaseResponse<LoginResponse>> {
     return this.http.post<IBaseResponse<LoginResponse>>(
@@ -30,6 +32,8 @@ export class AuthenticationService {
   logout() {
     // logout the user
     localStorage.removeItem(localStorageKeys.JWT);
+    localStorage.removeItem(localStorageKeys.Refresh);
+    this.perm.clearPermissions();
   }
 
   get currentToken(): string {
@@ -40,13 +44,30 @@ export class AuthenticationService {
     return !!localStorage.getItem(localStorageKeys.JWT);
   }
 
-  decodeToken(): UserAccess {
+  get decodeToken(): UserAccess {
     return this.jwtHelper.decodeToken(
       localStorage.getItem(localStorageKeys.JWT)!
     )!;
   }
 
   getUser(): UserAccess {
-    return this.decodeToken();
+    return this.decodeToken;
+  }
+
+  refreshToken(token: string, refresh: string) {
+    return this.http
+      .post(this.env + ApiRoutes.Users.refesh, {
+        accessToken: token,
+        refreshToken: refresh,
+      })
+      .pipe(
+        tap((res: IBaseResponse<LoginResponse>) => {
+          localStorage.setItem(localStorageKeys.JWT, res.data?.accessToken!);
+          localStorage.setItem(
+            localStorageKeys.Refresh,
+            res.data?.refreshToken!
+          );
+        })
+      );
   }
 }

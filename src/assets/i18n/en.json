@@ -55,7 +55,8 @@
 		"CUSTOMERSERVICE": {
 			"TEXT": "Customer Service",
 			"LIST": {
-				"MANAGEMENT": "Request Management",
+				"MANAGEMENT": "Requests Management",
+				"DASHBOARD": "Dashboard",
 				"REPORTS": "Reports"
 			}
 		},

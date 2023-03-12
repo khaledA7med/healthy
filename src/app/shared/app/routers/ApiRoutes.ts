@@ -229,6 +229,7 @@ export const ApiRoutes = {
 		create: "/CustomerService/Requests/Save",
 		edit: "/CustomerService/Requests/Edit",
 		csReport: "/CustomerService/Requests/Reports",
+		summary: "/CustomerService/Requests/Summary",
 		delete: "",
 	},
 	Claims: {
@@ -253,6 +254,7 @@ export const ApiRoutes = {
 		getInsurerMailData: "/Claims/NotifyInsurerMailData",
 		claimsReport: "/Claims/Reports",
 		archiveReport: "/Claims/ArchiveReport",
+		summary: "/Claims/Summary",
 	},
 	LookUpTables: {
 		allActiveClients: "/LookupTables/AllClientbyStatus",

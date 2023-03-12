@@ -4,7 +4,7 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { NgbOffcanvas, NgbOffcanvasRef } from "@ng-bootstrap/ng-bootstrap";
 
 import PerfectScrollbar from "perfect-scrollbar";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -21,13 +21,15 @@ import { ICustomerServiceFollowUp } from "src/app/shared/app/models/CustomerServ
 import { CustomerServiceStatus, CustomerServiceStatusRes } from "src/app/shared/app/models/CustomerService/icustomer-service-utils";
 import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 import { IChangeCsStatusRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-req";
+import { DashboardCustomerServiceComponent } from "../dashboard-customer-service/dashboard-customer-service.component";
+import { IActiveClientWithInsurance } from "src/app/shared/app/models/CustomerService/icustomer-service-summary";
 RangePickerModule;
 
 @Component({
 	selector: "app-customer-service-list",
 	templateUrl: "./customer-service-list.component.html",
 	styleUrls: ["./customer-service-list.component.scss"],
-
+	providers: [AppUtils],
 	encapsulation: ViewEncapsulation.None,
 })
 export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -37,7 +39,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	@ViewChild("followUp") FollowUpCanvas!: ElementRef;
 	@ViewChild("datePicker") datePicker!: ElementRef;
 
-	context: any = { comp: this };
+	canvasRef!: NgbOffcanvasRef;
 
 	uiState = {
 		routerLink: { forms: AppRoutes.CustomerService.create },
@@ -285,7 +287,9 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	}
 
 	openCustomerServiceFollowUp(requestNo: string): void {
-		let sub = this.offcanvasService.open(this.FollowUpCanvas, { position: "end" });
+		let sub = this.offcanvasService.open(this.FollowUpCanvas, {
+			position: "end",
+		});
 		sub.dismissed.subscribe(() => {
 			this.followUpForm.reset();
 			this.followUpForm.markAsUntouched();
@@ -390,11 +394,40 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 					${CustomerServiceStatusRes.Cancelled} <span>(${cancelled.length})</span>
 					</div>
 					</div>`;
-		child.classList.add("col", " my-2");
+		child.classList.add("col", "my-2");
 		child.innerHTML = "";
 		child.innerHTML = childContent;
 		parent.prepend(child);
 	}
+
+	//#region Summary Event Binder
+	openDashboard(): void {
+		this.canvasRef = this.offcanvasService.open(DashboardCustomerServiceComponent, { position: "top", panelClass: "customer-panel" });
+		const sub = this.canvasRef.componentInstance.summaryData.subscribe((res: IActiveClientWithInsurance) => this.summaryEvtBinder(res));
+		this.subscribes.push(sub);
+	}
+
+	summaryEvtBinder(e: IActiveClientWithInsurance) {
+		this.filterForms.patchValue({
+			client: e.clientName,
+			status: ["New Request", "Pending"],
+			type: ["Medical", "Motor", "Life", "General"],
+			insuranceCompany: e.insurComp,
+
+			requestNo: null,
+			branch: null,
+			pendingReason: null,
+			classOfBusniess: null,
+			createdBy: null,
+			deadline: null,
+			deadlineFrom: null,
+			deadlineTo: null,
+			duration: null,
+		});
+		this.onCSFilter();
+	}
+
+	//#endregion
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

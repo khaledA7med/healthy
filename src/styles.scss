@@ -25,6 +25,17 @@ div.asterisk-div {
   }
 }
 
+.gridScrollbar .ag-body-horizontal-scroll-viewport,
+.gridScrollbar .ag-body-vertical-scroll-viewport {
+  position: relative;
+  overflow: hidden !important;
+}
+
+.ps__rail-x,
+.ps__rail-y {
+  opacity: 0.6;
+}
+
 .input-text-right,
 .input-text-right::placeholder {
   text-align: right !important;
@@ -52,6 +63,12 @@ input[disabled] {
 .ng-value {
   color: var(--bs-body-color) !important;
 }
+
+.ng-select-multiple .ng-value-icon,
+.ng-select-multiple .ng-value-label {
+  color: #fff !important;
+}
+
 .ng-option-disabled,
 .ng-option {
   background-color: var(--bs-input-bg) !important;
@@ -78,7 +95,6 @@ input[disabled] {
   padding: 10px;
   background-color: var(--vz-card-bg);
   border: 2px dashed #878a99;
-  /* border: 2px dashed rgb(133 132 132 / 23%); */
   border-radius: 10px;
   height: 270px;
   table td,

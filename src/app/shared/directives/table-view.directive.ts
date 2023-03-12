@@ -1,13 +1,14 @@
-import { Directive, ElementRef, OnDestroy } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { EventService } from "../../core/services/event.service";
 import { localStorageKeys } from "../../core/models/localStorageKeys";
 import { reserved } from "../../core/models/reservedWord";
+import PerfectScrollbar from "perfect-scrollbar";
 
 @Directive({
   selector: "[appTableView]",
 })
-export class TableViewDirective implements OnDestroy {
+export class TableViewDirective implements OnDestroy, AfterViewInit {
   mode: string =
     localStorage.getItem(localStorageKeys.themeMode) || reserved.lightMode;
 
@@ -18,6 +19,32 @@ export class TableViewDirective implements OnDestroy {
     this.subscribe = this.eventService.subscribe(reserved.changeMode, (mode) =>
       this.loadMode(mode)
     );
+  }
+  ngAfterViewInit(): void {
+    const agBodyHorizontalViewport: HTMLElement =
+      this.elem.nativeElement.querySelector(
+        ".gridScrollbar .ag-body-horizontal-scroll-viewport"
+      );
+    const agBodyViewport: HTMLElement = this.elem.nativeElement.querySelector(
+      ".gridScrollbar .ag-body-vertical-scroll-viewport"
+    );
+
+    if (agBodyViewport) {
+      const vertical = new PerfectScrollbar(agBodyViewport, {
+        wheelPropagation: true,
+        wheelSpeed: 1,
+        minScrollbarLength: 20,
+      });
+      vertical.update();
+    }
+    if (agBodyHorizontalViewport) {
+      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport, {
+        wheelPropagation: true,
+        wheelSpeed: 1,
+        minScrollbarLength: 20,
+      });
+      horizontal.update();
+    }
   }
 
   loadMode(mode: string): void {
