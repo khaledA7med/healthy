@@ -9,9 +9,9 @@ import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { Caching, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { IChangeLeadStatusRequest } from "../../app/models/BusinessDevelopment/ibusiness-development-req";
 import { ISalesLeadFollowUps } from "../../app/models/BusinessDevelopment/ibusiness-development-followups";
-import { IRequirement } from "../../app/models/BusinessDevelopment/irequirement";
+import { IRequirement, IRequirementRequest } from "../../app/models/BusinessDevelopment/irequirement";
 import { IBusinessDevelopmentProspectsReportReq } from "../../app/models/BusinessDevelopment/ibusiness-development-prospects-report";
-import { IPolicyRenewalReportReq } from "../../app/models/Production/ipolicy-renewal-report";
+import { ISalesLeadFollowUpsReq } from "../../app/models/BusinessDevelopment/business-development-util";
 
 @Injectable({
 	providedIn: "root",
@@ -40,7 +40,7 @@ export class BusinessDevelopmentService {
 		);
 	}
 
-	saveNote(data: {}): Observable<HttpResponse<IBaseResponse<any>>> {
+	saveNote(data: ISalesLeadFollowUpsReq): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.post(this.env + ApiRoutes.BusinessDevelopment.saveNote, data, { observe: "response" });
 	}
 
@@ -52,7 +52,7 @@ export class BusinessDevelopmentService {
 		return this.http.post(this.env + ApiRoutes.BusinessDevelopment.quotingRequirements, data, { observe: "response" });
 	}
 
-	policyRequirements(data: {}): Observable<HttpResponse<IBaseResponse<IRequirement[]>>> {
+	policyRequirements(data: IRequirementRequest): Observable<HttpResponse<IBaseResponse<IRequirement[]>>> {
 		return this.http.post(this.env + ApiRoutes.BusinessDevelopment.policyRequirements, data, { observe: "response" });
 	}
 

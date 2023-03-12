@@ -11,7 +11,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { productionCols } from "src/app/shared/app/grid/productionCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
-import { IProductionFilters } from "src/app/shared/app/models/Production/iproduction-filters";
+import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
@@ -47,7 +47,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		filterByAmount: false,
 	};
 
-	filterForm!: FormGroup;
+	filterForm!: FormGroup<IProductionFiltersForm>;
 	lookupData!: Observable<IBaseMasterTable>;
 	@ViewChild("filter") policiesFilter!: ElementRef;
 
@@ -170,7 +170,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup({
+		this.filterForm = new FormGroup<IProductionFiltersForm>({
 			status: new FormControl(["Active"]),
 			branch: new FormControl(""),
 			ourRef: new FormControl(""),
@@ -226,47 +226,55 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.uiState.filters = {
 			...this.uiState.filters,
 			...this.filterForm.value,
-			amount: JSON.stringify(this.f["amount"].value),
-			amountNo: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo"].value) : "",
-			amountNo2: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo2"].value) : "",
+			issueFrom: this.appUtils.dateFormater(this.f.issueFrom?.value) as any,
+			issueTo: this.appUtils.dateFormater(this.f.issueTo?.value) as any,
+			financeApproveFrom: this.appUtils.dateFormater(this.f.financeApproveFrom?.value) as any,
+			financeApproveTo: this.appUtils.dateFormater(this.f.financeApproveTo?.value) as any,
+			inceptionFrom: this.appUtils.dateFormater(this.f.inceptionFrom?.value) as any,
+			inceptionTo: this.appUtils.dateFormater(this.f.inceptionTo?.value) as any,
+			financeEntryFrom: this.appUtils.dateFormater(this.f.financeEntryFrom?.value) as any,
+			financeEntryTo: this.appUtils.dateFormater(this.f.financeEntryTo?.value) as any,
+			amount: JSON.stringify(this.f.amount?.value) as any,
+			amountNo: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo?.value) : "",
+			amountNo2: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo2?.value) : "",
 		};
 	}
 
 	setIssueRangeFilter(e: any) {
-		this.f["issueFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["issueTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.issueFrom?.patchValue(e.from);
+		this.f.issueTo?.patchValue(e.to);
 	}
 
 	setFinApprovedRangeFilter(e: any) {
-		this.f["financeApproveFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["financeApproveTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.financeApproveFrom?.patchValue(e.from);
+		this.f.financeApproveTo?.patchValue(e.to);
 	}
 
 	setInceptionRangeFilter(e: any) {
-		this.f["inceptionFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["inceptionTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.inceptionFrom?.patchValue(e.from);
+		this.f.inceptionTo?.patchValue(e.to);
 	}
 
 	setFinEntryRangeFilter(e: any) {
-		this.f["financeEntryFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["financeEntryTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.financeEntryFrom?.patchValue(e.from);
+		this.f.financeEntryTo?.patchValue(e.to);
 	}
 
 	disableAmountFilter() {
-		if (this.f["amount"].value === false) {
-			this.f["field"].reset();
-			this.f["operatordList"].reset();
-			this.f["amountNo"].reset();
-			this.f["amountNo2"].reset();
-			this.f["field"].disable();
-			this.f["operatordList"].disable();
-			this.f["amountNo"].disable();
-			this.f["amountNo2"].disable();
+		if (this.f.amount?.value === false) {
+			this.f.field?.reset();
+			this.f.operatordList?.reset();
+			this.f.amountNo?.reset();
+			this.f.amountNo2?.reset();
+			this.f.field?.disable();
+			this.f.operatordList?.disable();
+			this.f.amountNo?.disable();
+			this.f.amountNo2?.disable();
 		} else {
-			this.f["field"].enable();
-			this.f["operatordList"].enable();
-			this.f["amountNo"].enable();
-			this.f["amountNo2"].enable();
+			this.f.field?.enable();
+			this.f.operatordList?.enable();
+			this.f.amountNo?.enable();
+			this.f.amountNo2?.enable();
 		}
 	}
 
