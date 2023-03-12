@@ -1,0 +1,92 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)" name="ClntReportsForm" id="ClntReportForm"
+    autocomplete="off">
+    <div class="row card">
+        <div class="col-12 mb-2 card-body">
+            <div class=" ribbon-box border shadow-none">
+                <div>
+                    <span class="ribbon ribbon-info round-shape"><span>Details
+                        </span></span>
+                    <div class="row mt-5 mx-2">
+
+                        <!-- Class Of Business -->
+                        <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="status">Class Of Business
+                                </label>
+                            </div>
+                            <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                                placeholder="Select Classes Of Business" [loading]="lookupData ? false : true"
+                                [hideSelected]="true" [clearable]="true" [searchable]="true"
+                                [ngClass]="{'is-submitted': (f.class?.touched || uiState.submitted) && f.class?.invalid}"
+                                bindLabel="name" bindValue="name" formControlName="class"
+                                (change)="getLineOfBusiness($event.name)">
+                            </ng-select>
+                            <span *ngIf="(f.class?.touched || uiState.submitted) && f.class?.invalid"
+                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        </div>
+                        <!-- Line Of Business -->
+                        <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="status">Line Of Business
+                                </label>
+                            </div>
+                            <ng-select [items]="uiState.lists.linesOfBusiness" placeholder="Select Line Of Business"
+                                [loading]="lookupData ? false : true" [hideSelected]="true" [clearable]="true"
+                                [searchable]="true"
+                                [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
+                                bindLabel="name" bindValue="name" formControlName="lineOfBusiness"
+                                (change)="gridApi.setDatasource(dataSource);">
+                            </ng-select>
+                            <span *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
+                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                            <label for="item" class="asterisk-input">Item En.</label>
+                            <input id="item" class="form-control form-control-sm"
+                                [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
+                                formControlName="item" />
+                            <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
+                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                            <label for="item" class="asterisk-input">Item Ar.</label>
+                            <input id="item" class="form-control form-control-sm"
+                                [ngClass]="{'is-invalid': (f.itemArabic?.touched || uiState.submitted) && f.itemArabic?.invalid}"
+                                formControlName="itemArabic" />
+                            <span *ngIf="(f.itemArabic?.touched || uiState.submitted) && f.itemArabic?.invalid"
+                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                            <label for="description">Description</label>
+                            <textarea id="description" class="form-control form-control-sm"
+                                formControlName="description" rows="3"></textarea>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                            <label for="descriptionArabic">Description (Ar)</label>
+                            <textarea id="descriptionArabic" class="form-control form-control-sm"
+                                formControlName="descriptionArabic" rows="3"></textarea>
+                        </div>
+
+                        <!-- SubmittionBtns -->
+                        <div class="col-12 my-3 d-flex justify-content-end align-items-end">
+                            <button type="submit" class="btn btn-soft-success btn-sm bg-gradient mx-2">
+                                Save
+                            </button>
+                            <button type="button" id="sa-warning" (click)="resetForm();"
+                                class="btn btn-sm btn-soft-danger">
+                                <i class="ri-delete-bin-2-line"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 30vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>

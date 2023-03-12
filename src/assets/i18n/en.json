@@ -1,111 +1,115 @@
 {
-  "HEADER": {
-    "MORE": {
-      "TEXT": "More"
-    }
-  },
-  "MENUITEMS": {
-    "MASTERTABLE": {
-      "TEXT": "Master Table",
-      "LIST": {
-        "INSURANCECLASSES": "Insurance Classes",
-        "LINEOFBUSINESS": "Line Of Business",
-        "INSURANCECOMPANIES": "Insurance Companies",
-        "INSURANCEBROKERS": "Insurance Brokers",
-        "POLICYTYPES": "Policy Types",
-        "NATIONALITIES": "Nationalities",
-        "BUSINESSACTIVITY": "Business Activity",
-        "LEGALSTATUS": "Legal Status",
-        "LOCATIONS": "Locations",
-        "BUSINESSDEVELOPMENT": {
-          "TEXT": "Business Development",
-          "SALES": {
-            "TEXT": "Sales",
-            "QUOTINGREQUIREMENTS": "Quoting Requirements",
-            "POLICYISSUANCEREQUIREMENTS": "Policy Issuance Requirements",
-            "PROSPECTLOSSREASONS": "Prospect Loss Reasons"
-          },
-          "CANCELLATION/REJECTIONREASONS": {
-            "TEXT": "Cancellation/Rejection Reasons",
-            "COMPANYREJECTIONREASONS": "Company Rejection Reasons",
-            "CLIENTREJECTIONREASONS": "Client Rejection Reasons",
-            "CANCELLATIONREASONS": "Cancellation Reasons"
-          }
-        },
-        "CLIENTCATEGORIES": "Client Categories",
-        "CUSTOMERSERVICE": {
-          "TEXT": "Customer Service",
-          "INSURANCECOMPANIESDOCUMENTS": "Insurance Companies Documents",
-          "CUSTOMERSERVICEREQUIREMENTS": "Customer Service Requirements",
-          "COMPLAINTSTYPES": "Complaints Types",
-          "COMPLAINTSSETTINGS": "Complaints Settings",
-          "COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
-          "CANCELLATIONREASONS": "Cancellation Reasons"
-        }
-      }
-    },
-    "CLIENTREGISTRY": {
-      "TEXT": "Clients",
-      "LIST": {
-        "CLIENTREGISTRY": "Client Registry",
-        "CLIENTGROUPS": "Client Groups",
-        "REPORTS": "Client Reports"
-      }
-    },
-    "BUSINESSDEVELOPMENT": {
-      "TEXT": "Business Development",
-      "LIST": {
-        "MANAGEMENT": "Sales Lead Management",
-        "DASHBOARD": "Dashboard",
-        "REPORTS": "Reports",
-        "REPORTLIST": {
-          "BUSINESSDEVELOPMENT": "Business Development",
-          "RENEWAL": "Renewal"
-        }
-      }
-    },
-    "PRODUCTION": {
-      "TEXT": "Production",
-      "LIST": {
-        "MANAGEMENT": "Policies/Endorsements Management",
-        "EDITCOMMISSIONS": "Policies/Edit Commissions",
-        "REPORTS": "Reports",
-        "REPORTLIST": {
-          "PRODUCTION": "Production",
-          "RENEWAL": "Renewals",
-          "RENEWALNOTICE": "Renewals Notice"
-        },
-        "ARCHIVES": "Archives",
-        "ARCHIVESLIST": {
-          "DCNOTES": "Debit / Credit Notes (Clients Premium)"
-        }
-      }
-    },
-    "CUSTOMERSERVICE": {
-      "TEXT": "Customer Service",
-      "LIST": {
-        "MANAGEMENT": "Request Management",
-        "REPORTS": "Reports"
-      }
-    },
-    "CLAIMS": {
-      "TEXT": "Claims",
-      "LIST": {
-        "MANAGEMENT": "Claims Management",
-        "REPORTS": "Reports"
-      }
-    },
-    "SYSTEMADMIN": {
-      "TEXT": "System Admin",
-      "LIST": {
-        "MANAGEMENT": "User Accounts Management"
-      }
-    },
-    "MENU": {
-      "TEXT": "MENU"
-    },
-    "APPS": {
-      "TEXT": "Apps"
-    }
-  }
+	"HEADER": {
+		"MORE": {
+			"TEXT": "More"
+		}
+	},
+	"MENUITEMS": {
+		"MASTERTABLE": {
+			"TEXT": "Master Table",
+			"LIST": {
+				"INSURANCECLASSES": "Insurance Classes",
+				"LINEOFBUSINESS": "Line Of Business",
+				"INSURANCECOMPANIES": "Insurance Companies",
+				"INSURANCEBROKERS": "Insurance Brokers",
+				"POLICYTYPES": "Policy Types",
+				"NATIONALITIES": "Nationalities",
+				"BUSINESSACTIVITY": "Business Activity",
+				"LEGALSTATUS": "Legal Status",
+				"LOCATIONS": "Locations",
+				"BUSINESSDEVELOPMENT": {
+					"TEXT": "Business Development",
+					"SALES": {
+						"TEXT": "Sales",
+						"QUOTINGREQUIREMENTS": "Quoting Requirements",
+						"POLICYISSUANCEREQUIREMENTS": "Policy Issuance Requirements",
+						"PROSPECTLOSSREASONS": "Prospect Loss Reasons"
+					},
+					"CANCELLATION/REJECTIONREASONS": {
+						"TEXT": "Cancellation/Rejection Reasons",
+						"COMPANYREJECTIONREASONS": "Company Rejection Reasons",
+						"CLIENTREJECTIONREASONS": "Client Rejection Reasons",
+						"CANCELLATIONREASONS": "Cancellation Reasons"
+					}
+				},
+				"CLIENTCATEGORIES": "Client Categories",
+				"CUSTOMERSERVICE": {
+					"TEXT": "Customer Service",
+					"INSURANCECOMPANIESDOCUMENTS": "Insurance Companies Documents",
+					"CUSTOMERSERVICEREQUIREMENTS": "Customer Service Requirements",
+					"COMPLAINTSTYPES": "Complaints Types",
+					"COMPLAINTSSETTINGS": "Complaints Settings",
+					"COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
+					"CANCELLATIONREASONS": "Cancellation Reasons"
+				},
+				"PRODUCTION": {
+					"TEXT": "Production",
+					"LIBRARYOFCOVERS": "Library Of Covers"
+				}
+			}
+		},
+		"CLIENTREGISTRY": {
+			"TEXT": "Clients",
+			"LIST": {
+				"CLIENTREGISTRY": "Client Registry",
+				"CLIENTGROUPS": "Client Groups",
+				"REPORTS": "Client Reports"
+			}
+		},
+		"BUSINESSDEVELOPMENT": {
+			"TEXT": "Business Development",
+			"LIST": {
+				"MANAGEMENT": "Sales Lead Management",
+				"DASHBOARD": "Dashboard",
+				"REPORTS": "Reports",
+				"REPORTLIST": {
+					"BUSINESSDEVELOPMENT": "Business Development",
+					"RENEWAL": "Renewal"
+				}
+			}
+		},
+		"PRODUCTION": {
+			"TEXT": "Production",
+			"LIST": {
+				"MANAGEMENT": "Policies/Endorsements Management",
+				"EDITCOMMISSIONS": "Policies/Edit Commissions",
+				"REPORTS": "Reports",
+				"REPORTLIST": {
+					"PRODUCTION": "Production",
+					"RENEWAL": "Renewals",
+					"RENEWALNOTICE": "Renewals Notice"
+				},
+				"ARCHIVES": "Archives",
+				"ARCHIVESLIST": {
+					"DCNOTES": "Debit / Credit Notes (Clients Premium)"
+				}
+			}
+		},
+		"CUSTOMERSERVICE": {
+			"TEXT": "Customer Service",
+			"LIST": {
+				"MANAGEMENT": "Request Management",
+				"REPORTS": "Reports"
+			}
+		},
+		"CLAIMS": {
+			"TEXT": "Claims",
+			"LIST": {
+				"MANAGEMENT": "Claims Management",
+				"REPORTS": "Reports"
+			}
+		},
+		"SYSTEMADMIN": {
+			"TEXT": "System Admin",
+			"LIST": {
+				"MANAGEMENT": "User Accounts Management"
+			}
+		},
+		"MENU": {
+			"TEXT": "MENU"
+		},
+		"APPS": {
+			"TEXT": "Apps"
+		}
+	}
 }
