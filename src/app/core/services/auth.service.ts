@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { environment } from "src/environments/environment";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { IUser, LoginResponse, UserAccess } from "../models/iuser";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { tap } from "rxjs/operators";
+import { catchError, tap } from "rxjs/operators";
 import { PermissionsService } from "./permissions.service";
 
 @Injectable({ providedIn: "root" })

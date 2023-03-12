@@ -29,7 +29,6 @@ export class ClientGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    // return true;
     return this.permission
       .getClientPrivilege([
         ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
