@@ -1,7 +1,6 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
-import PerfectScrollbar from "perfect-scrollbar";
 import { Subscription } from "rxjs";
 import { CSPoicySearchCols } from "src/app/shared/app/grid/csPolicySearchCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -14,7 +13,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 	selector: "app-CS-Policy-list",
 	template: `
 		<div class="ag-theme-alpine" appTableView>
-			<ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts"> </ag-grid-angular>
+			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts"> </ag-grid-angular>
 		</div>
 	`,
 	styles: [],
@@ -55,18 +54,6 @@ export class CustomerServiceListComponent implements OnDestroy, OnInit {
 		this.gridApi.sizeColumnsToFit();
 		this.gridApi.showNoRowsOverlay();
 		this.gridOpts.api!.setColumnDefs(CSPoicySearchCols);
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 	}
 
 	// Policies Section

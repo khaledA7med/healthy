@@ -6,10 +6,11 @@ import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { ISystemAdminFilters } from "../../app/models/SystemAdmin/isystem-admin-filters";
 import { ISystemAdmin } from "../../app/models/SystemAdmin/isystem-admin";
-import { IUserRoles, UserDetails } from "../../app/models/SystemAdmin/system-admin-utils";
+import { IUserRoles } from "../../app/models/SystemAdmin/system-admin-utils";
 import { UserModelData } from "../../app/models/SystemAdmin/isystem-admin-user-form";
 import { IChangeUserStatus } from "../../app/models/SystemAdmin/isystem-admin-req";
 import { IUserRolesPrivileges } from "../../app/models/SystemAdmin/isystem-admin-privileges";
+import { UserDetails } from "../../app/models/SystemAdmin/isystem-admin-user-details";
 
 @Injectable({
 	providedIn: "root",

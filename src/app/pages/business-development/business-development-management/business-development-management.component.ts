@@ -3,7 +3,6 @@ import { Observable, Subscription, using } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import PerfectScrollbar from "perfect-scrollbar";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IBusinessDevelopment } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development";
@@ -221,17 +220,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 		if ((this, this.uiState.salesLead.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 

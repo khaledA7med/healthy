@@ -3,9 +3,8 @@ import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { Caching, IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
-import PerfectScrollbar from "perfect-scrollbar";
 
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
@@ -16,7 +15,6 @@ import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import { productionReportForm, productionReportReq } from "src/app/shared/app/models/Production/iproduction-report";
 import { DebitCreditNotesCols } from "src/app/shared/app/grid/debitCreditNotesCols";
 import { debitCreditNoteForm, IdebitCreditNoteFilter } from "src/app/shared/app/models/Production/iproduction-notes-filters";
 import { IDebitCreditNote } from "src/app/shared/app/models/Production/iproduction-notes";
@@ -88,18 +86,6 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 		this.gridApi.setDatasource(this.dataSource);
 		this.gridApi.sizeColumnsToFit();
 		this.gridOpts.api!.setColumnDefs(DebitCreditNotesCols);
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 	}
 
 	dataSource: IDatasource = {
