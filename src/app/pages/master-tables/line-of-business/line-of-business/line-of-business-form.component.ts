@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
-import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
 import { LineOfBusinessComponent } from './line-of-business.component';
@@ -50,7 +48,7 @@ export class LineOfBusinessFormComponent
 
   private params!: ICellRendererParams;
   private comp!: LineOfBusinessComponent;
-  constructor (private _Router: Router, private message: MessagesService) { }
+  constructor (private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
   {

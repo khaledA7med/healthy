@@ -25,7 +25,7 @@ export class PolicyTypesService
 
   savePolicyTypes (data: IPolicyTypesData): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.policyTypes.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.policyTypes.create, data, { observe: "response" });
   }
 
 

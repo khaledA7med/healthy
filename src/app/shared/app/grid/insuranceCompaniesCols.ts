@@ -12,11 +12,12 @@ export const insuranceCompaniesCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sNo",
-        minWidth: 100,
+        minWidth: 70,
     },
     {
         headerName: "Company Name",
         field: "companyName",
+        minWidth: 320,
     },
     {
         headerName: "Company Name(Ar)",
@@ -26,32 +27,30 @@ export const insuranceCompaniesCols: ColDef[] = [
     {
         headerName: "VAT No.",
         field: "vatNo",
-        minWidth: 250,
+        minWidth: 150,
     },
     {
         headerName: "CR No.",
         field: "crNo",
-        minWidth: 250,
+        minWidth: 150,
     },
     {
         headerName: "Unified No.",
         field: "unifiedNo",
-        minWidth: 250,
+        minWidth: 150,
     },
     {
         headerName: "Tel",
         field: "tele1",
-        minWidth: 250,
     },
     {
         headerName: "Email",
         field: "email",
-        minWidth: 250,
     },
     {
         headerName: "Address",
         field: "address",
-        minWidth: 450,
+        minWidth: 600,
     },
     {
         headerName: "Abbreviation",

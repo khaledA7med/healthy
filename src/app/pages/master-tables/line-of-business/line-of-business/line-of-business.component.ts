@@ -22,13 +22,13 @@ import { MODULES } from "src/app/core/models/MODULES";
 	styleUrls: ["./line-of-business.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class LineOfBusinessComponent implements OnInit {
+export class LineOfBusinessComponent implements OnInit, OnDestroy {
 	lookupData!: Observable<IBaseMasterTable>;
 	LineOfBussinessFormSubmitted = false as boolean;
-	LineOfBBussinessModal!: NgbModalRef;
+	LineOfBussinessModal!: NgbModalRef;
 	LineOfBussinessForm!: FormGroup<ILineOfBusiness>;
 
-	@ViewChild("LineOfBBussinessContent") LineOfBBussinessContent!: TemplateRef<any>;
+	@ViewChild("LineOfBussinessContent") LineOfBussinessContent!: TemplateRef<any>;
 
 	uiState = {
 		gridReady: false,
@@ -151,7 +151,7 @@ export class LineOfBusinessComponent implements OnInit {
 
 	openLineOfBusinessDialoge(id: string) {
 		this.resetLineOfBusinessForm();
-		this.LineOfBBussinessModal = this.modalService.open(this.LineOfBBussinessContent, {
+		this.LineOfBussinessModal = this.modalService.open(this.LineOfBussinessContent, {
 			ariaLabelledBy: "modal-basic-title",
 			centered: true,
 			backdrop: "static",
@@ -160,7 +160,7 @@ export class LineOfBusinessComponent implements OnInit {
 
 		this.getLineOfBusinessData(id);
 
-		this.LineOfBBussinessModal.hidden.subscribe(() => {
+		this.LineOfBussinessModal.hidden.subscribe(() => {
 			this.resetLineOfBusinessForm();
 			this.LineOfBussinessFormSubmitted = false;
 			this.uiState.editLineOfBusinessMode = false;
@@ -223,7 +223,7 @@ export class LineOfBusinessComponent implements OnInit {
 		this.eventService.broadcast(reserved.isLoading, true);
 		let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
 			(res: HttpResponse<IBaseResponse<number>>) => {
-				this.LineOfBBussinessModal?.dismiss();
+				this.LineOfBussinessModal?.dismiss();
 				this.eventService.broadcast(reserved.isLoading, false);
 				this.uiState.submitted = false;
 				this.resetLineOfBusinessForm();

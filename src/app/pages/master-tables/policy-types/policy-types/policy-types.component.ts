@@ -19,7 +19,7 @@ import { IPolicyTypes, IPolicyTypesData } from "src/app/shared/app/models/Master
 	styleUrls: ["./policy-types.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class PolicyTypesComponent implements OnInit {
+export class PolicyTypesComponent implements OnInit, OnDestroy {
 	PolicyTypesFormSubmitted = false as boolean;
 	PolicyTypesModal!: NgbModalRef;
 	PolicyTypesForm!: FormGroup<IPolicyTypes>;
