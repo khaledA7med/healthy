@@ -1,0 +1,23 @@
+.offcanvas.claims-panel {
+  --bs-offcanvas-height: 35vh !important;
+  @media (max-width: 1400px) and (min-width: 991px) {
+    --bs-offcanvas-height: 45vh !important;
+  }
+  @media (max-width: 991px) {
+    --bs-offcanvas-height: 100vh !important;
+  }
+  .offcanvas-body {
+    ag-grid-angular {
+      @media (max-width: 1400px) and (min-width: 991px) {
+        height: 250px !important;
+      }
+    }
+  }
+}
+.ag-chart-wrapper {
+  canvas {
+    @media (max-width: 1400px) and (min-width: 991px) {
+      height: 250px !important;
+    }
+  }
+}

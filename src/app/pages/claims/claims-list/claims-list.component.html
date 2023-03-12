@@ -1,5 +1,5 @@
 <div class="row justify-content-between align-items-center mb-3">
-  <div class="col-2 form-group row align-items-center">
+  <div class="col-3 form-group row align-items-center">
     <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
     <div class="col-sm-4">
       <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
@@ -13,6 +13,9 @@
     </div>
   </div>
   <div class="col-3 d-flex justify-content-end">
+    <button class="btn btn-sm btn-primary mx-2 d-flex align-items-center" (click)="openDashboard()">
+      Summary
+    </button>
     <button class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openFilterCanvas(filter)">
       <i class="ri-filter-3-line me-1"></i>
       Filters
@@ -23,7 +26,7 @@
   </div>
 </div>
 <div class="ag-theme-alpine" appTableView>
-  <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+  <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
   </ag-grid-angular>
 </div>
 

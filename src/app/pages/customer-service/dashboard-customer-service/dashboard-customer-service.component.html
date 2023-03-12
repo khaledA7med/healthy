@@ -1,0 +1,22 @@
+<div class="container-fluid offcanvas-body">
+    <div class="row">
+        <div class="col-lg-4 col-md-12">
+            <div class="ag-theme-alpine ag-theme-aaa" appTableView>
+                <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 27vh;"
+                    [gridOptions]="clientGridOpts">
+                </ag-grid-angular>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12">
+            <div class="ag-theme-alpine ag-theme-aaa" appTableView>
+                <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 27vh;"
+                    [gridOptions]="insuranceGridOpts">
+                </ag-grid-angular>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12">
+            <ag-charts-angular [options]="chartOptions">
+            </ag-charts-angular>
+        </div>
+    </div>
+</div>
