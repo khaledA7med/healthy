@@ -6,7 +6,10 @@ import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IBusinessDevelopment } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development";
-import { IBusinessDevelopmentFilters } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-filters";
+import {
+	IBusinessDevelopmentFilters,
+	IBusinessDevelopmentFiltersForm,
+} from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-filters";
 import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelopmentCols";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
@@ -15,7 +18,7 @@ import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { HttpResponse, HttpErrorResponse } from "@angular/common/http";
-import { SalesLeadStatus, SalesLeadType } from "src/app/shared/app/models/BusinessDevelopment/business-development-util";
+import { ISalesLeadFollowUpsForm, SalesLeadStatus, SalesLeadType } from "src/app/shared/app/models/BusinessDevelopment/business-development-util";
 import { DragulaService } from "ng2-dragula";
 import AppUtils from "src/app/shared/app/util";
 import { SweetAlertResult } from "sweetalert2";
@@ -65,10 +68,10 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	};
 
 	// Follow Up Canvas
-	followUpForm!: FormGroup;
+	followUpForm!: FormGroup<ISalesLeadFollowUpsForm>;
 
 	// filter form
-	filterForm!: FormGroup;
+	filterForm!: FormGroup<IBusinessDevelopmentFiltersForm>;
 
 	lookupData!: Observable<IBaseMasterTable>;
 	leadType: any = [
@@ -306,7 +309,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup({
+		this.filterForm = new FormGroup<IBusinessDevelopmentFiltersForm>({
 			clientName: new FormControl(null),
 			groupName: new FormControl(null),
 			status: new FormControl([]),
@@ -335,17 +338,21 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		this.uiState.filters = {
 			...this.uiState.filters,
 			...this.filterForm.value,
+			deadlineFrom: this.appUtils.dateFormater(this.f.deadlineFrom?.value!) as any,
+			deadlineTo: this.appUtils.dateFormater(this.f.deadlineTo?.value!) as any,
+			savedOnFrom: this.appUtils.dateFormater(this.f.savedOnFrom?.value!) as any,
+			savedOnTo: this.appUtils.dateFormater(this.f.savedOnTo?.value!) as any,
 		};
 	}
 
 	setDeadLineFilter(e: any) {
-		this.f["deadlineFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["deadlineTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.deadlineFrom?.patchValue(e.from);
+		this.f.deadlineTo?.patchValue(e.to);
 	}
 
 	setSavedOnFilter(e: any) {
-		this.f["savedOnFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["savedOnTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.savedOnFrom?.patchValue(e.from);
+		this.f.savedOnTo?.patchValue(e.to);
 	}
 
 	onSalesLeadFilters(): void {
@@ -361,7 +368,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 
 	//#region FollowUp Cancvas
 	private initFollowUpForm(): void {
-		this.followUpForm = new FormGroup({
+		this.followUpForm = new FormGroup<ISalesLeadFollowUpsForm>({
 			names: new FormControl([], Validators.required),
 			msg: new FormControl(null, Validators.required),
 			no: new FormControl(null),
@@ -401,7 +408,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	sendFollowUp() {
-		this.ff["no"].patchValue(this.uiState.followUpData.leadNo);
+		this.ff.no?.patchValue(this.uiState.followUpData.leadNo);
 		this.uiState.submitted = true;
 		if (!this.followUpForm.valid) {
 			return;

@@ -1,3 +1,4 @@
+import { FormControl } from "@angular/forms";
 import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { IBaseFilters } from "../App/IBaseFilters";
 
@@ -66,4 +67,15 @@ export enum claimsStatus {
 	pending = "Pending",
 	rejected = "Rejected",
 	canceled = "Canceled",
+}
+
+export interface IClaimsFollowUpForm {
+	no?: FormControl<string | null>;
+	names?: FormControl<string[] | null>;
+	msg?: FormControl<string | null>;
+}
+export interface IClaimsFollowUpReq {
+	no?: FormControl<string | null>;
+	names?: FormControl<string[] | null>;
+	msg?: FormControl<string | null>;
 }
