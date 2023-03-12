@@ -5,6 +5,7 @@ import { InsuranceCompaniesDocumentsFormsComponent } from './insurance-companies
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
+import { DropzoneModule } from 'src/app/shared/components/dropzone/dropzone.module';
 
 export const routes: Routes = [ { path: "", component: InsuranceCompaniesDocumentsComponent } ];
 
@@ -18,6 +19,7 @@ export const routes: Routes = [ { path: "", component: InsuranceCompaniesDocumen
     SharedModule,
     RouterModule.forChild(routes),
     AgGridModule,
+    DropzoneModule
   ]
 })
 export class InsuranceCompaniesDocumentsModule { }

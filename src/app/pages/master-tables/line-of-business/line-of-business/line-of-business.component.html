@@ -6,60 +6,70 @@
             <ng-template ngbPanelContent="1">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                     <div class="container-fluid mb-3">
-                        <div class="row mb-2">
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="className" class="asterisk-input">Line Of Insurance</label>
-                                <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
-                                    [items]="(lookupData | async)?.InsurClasses?.content!"
-                                    [loading]="lookupData ? false : true" (change)="filter($event)"
-                                    [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
-                                    [clearable]="true" [searchable]="true" formControlName="className" bindLabel="name"
-                                    bindValue="name">
-                                </ng-select>
-                                <span *ngIf="(f.className?.touched || uiState.submitted) && f.className?.invalid"
-                                    class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                            </div>
+                        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                            <div class="card-body">
+                                <div class="ribbon ribbon-info round-shape">
+                                    Line Of Business
+                                </div>
+                                <div class="row my-4">
+                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                        <label for="className" class="asterisk-input">Line Of Insurance</label>
+                                        <ng-select id="className" class="is-invalid"
+                                            placeholder="Select Class Of Insurance"
+                                            [items]="(lookupData | async)?.InsurClasses?.content!"
+                                            [loading]="lookupData ? false : true" (change)="filter($event)"
+                                            [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
+                                            [clearable]="true" [searchable]="true" formControlName="className"
+                                            bindLabel="name" bindValue="name">
+                                        </ng-select>
+                                        <span
+                                            *ngIf="(f.className?.touched || uiState.submitted) && f.className?.invalid"
+                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="lineofBusiness" class="asterisk-input">Class Of Business</label>
-                                <input id="lineofBusiness" class="form-control form-control-sm"
-                                    [ngClass]="{'is-invalid': (f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid}"
-                                    formControlName="lineofBusiness" />
-                                <span
-                                    *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
-                                    class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                            </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                        <label for="lineofBusiness" class="asterisk-input">Class Of Business</label>
+                                        <input id="lineofBusiness" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': (f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid}"
+                                            formControlName="lineofBusiness" />
+                                        <span
+                                            *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
+                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="lineofBusinessAr">Class Of Business (Ar)</label>
-                                <input id="lineofBusinessAr" class="form-control form-control-sm"
-                                    formControlName="lineofBusinessAr" />
-                            </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                        <label for="lineofBusinessAr">Class Of Business (Ar)</label>
+                                        <input id="lineofBusinessAr" class="form-control form-control-sm"
+                                            formControlName="lineofBusinessAr" />
+                                    </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="abbreviation" class="asterisk-input">Abbreviation</label>
-                                <input id="abbreviation" class="form-control form-control-sm"
-                                    [ngClass]="{'is-invalid': (f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid}"
-                                    formControlName="abbreviation" />
-                                <span *ngIf="(f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid"
-                                    class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                            </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                        <label for="abbreviation" class="asterisk-input">Abbreviation</label>
+                                        <input id="abbreviation" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': (f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid}"
+                                            formControlName="abbreviation" />
+                                        <span
+                                            *ngIf="(f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid"
+                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                    </div>
 
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="container-fluid">
-                            <div class="card-body px-1 py-3">
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-sm btn-success me-2">
-                                        <i class="ri-add-line"></i>
-                                        Add
-                                    </button>
-                                    <button type="button" id="sa-warning" (click)="resetLineOfBusinessForm();"
-                                        class="btn btn-sm btn-soft-danger">
-                                        <i class="ri-delete-bin-2-line"></i>
-                                        Clear
-                                    </button>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="container-fluid">
+                                    <div class="card-body px-1 py-3">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-sm btn-success me-2">
+                                                <i class="ri-add-line"></i>
+                                                Add
+                                            </button>
+                                            <button type="button" id="sa-warning" (click)="resetLineOfBusinessForm();"
+                                                class="btn btn-sm btn-soft-danger">
+                                                <i class="ri-delete-bin-2-line"></i>
+                                                Clear
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +81,7 @@
 </form>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 

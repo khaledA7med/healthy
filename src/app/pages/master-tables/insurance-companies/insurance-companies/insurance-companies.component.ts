@@ -1,16 +1,14 @@
 import { IProductsList } from './../../../../shared/app/models/MasterTables/insurance-companies/i-products-list';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { EventService } from "src/app/core/services/event.service";
-import PerfectScrollbar from 'perfect-scrollbar';
 import { Observable, Subscription } from 'rxjs';
 import { Caching, IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
 import { insuranceCompaniesCols } from 'src/app/shared/app/grid/insuranceCompaniesCols';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { IInsuranceClass } from 'src/app/shared/app/models/MasterTables/i-insurance-class';
 import { IInsuranceCompanies, IInsuranceCompaniesData } from 'src/app/shared/app/models/MasterTables/insurance-companies/i-insurance-companies';
 import { MasterMethodsService } from 'src/app/shared/services/master-methods.service';
 import { InsuranceCompaniesService } from 'src/app/shared/services/master-tables/insurance-companies.service';
@@ -69,7 +67,6 @@ export class InsuranceCompaniesComponent implements OnInit
     private masterService: MasterMethodsService,
     private message: MessagesService,
     private InsuranceCompaniesService: InsuranceCompaniesService,
-    private tableRef: ElementRef,
     private eventService: EventService,
     private modalService: NgbModal,
     private table: MasterTableService,
@@ -93,7 +90,7 @@ export class InsuranceCompaniesComponent implements OnInit
         (res: HttpResponse<IBaseResponse<IInsuranceCompanies[]>>) =>
         {
           this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list);
+          params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
@@ -128,21 +125,6 @@ export class InsuranceCompaniesComponent implements OnInit
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     // this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-    const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-    if (agBodyViewport)
-    {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport)
-    {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
-    if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
   getLineOfBusiness (className: string)

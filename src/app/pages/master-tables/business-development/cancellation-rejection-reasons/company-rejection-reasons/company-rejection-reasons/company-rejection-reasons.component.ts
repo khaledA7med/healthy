@@ -79,7 +79,7 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy
         (res: HttpResponse<IBaseResponse<ICompanyRejectionReasons[]>>) =>
         {
           this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list);
+          params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
@@ -114,21 +114,6 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     // this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-    const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-    if (agBodyViewport)
-    {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport)
-    {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
-    if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
   openCompanyRejectionReasonsDialoge (id?: string)

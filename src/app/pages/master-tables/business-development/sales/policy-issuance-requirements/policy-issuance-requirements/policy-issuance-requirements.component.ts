@@ -6,7 +6,6 @@ import { Observable, Subscription } from 'rxjs';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
@@ -81,7 +80,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
         (res: HttpResponse<IBaseResponse<IPolicyIssuanceRequirements[]>>) =>
         {
           this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list);
+          params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
@@ -116,27 +115,11 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     // this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-    const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-    if (agBodyViewport)
-    {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport)
-    {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
-    if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
   constructor (
     private masterService: MasterMethodsService,
     private PolicyIssuanceRequirementsService: PolicyIssuanceRequirementsService,
-    private tableRef: ElementRef,
     private message: MessagesService,
     private table: MasterTableService,
     private eventService: EventService,

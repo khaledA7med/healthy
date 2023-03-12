@@ -241,6 +241,8 @@ export const ApiRoutes = {
     },
     customerService: {
       InsuranceCompaniesDocuments: {
+        search: "/MasterTables/CustomerService/CompanyDocuments",
+        upload: "/MasterTables/CustomerService/UploadCompanyDocuments"
       },
       customerServiceRequirements: {
       },

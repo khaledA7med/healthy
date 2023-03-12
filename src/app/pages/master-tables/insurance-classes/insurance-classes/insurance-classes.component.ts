@@ -8,9 +8,7 @@ import { IInsuranceClass, IInsuranceClassData } from 'src/app/shared/app/models/
 import { InsuranceClassesService } from 'src/app/shared/services/master-tables/insurance-classes.service';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
-import AppUtils from 'src/app/shared/app/util';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import PerfectScrollbar from 'perfect-scrollbar';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -72,7 +70,7 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
         (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) =>
         {
           this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list);
+          params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
@@ -89,7 +87,6 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     private InsuranceClassesService: InsuranceClassesService,
     private tableRef: ElementRef,
     private message: MessagesService,
-    private appUtils: AppUtils,
     private eventService: EventService,
     private modalService: NgbModal
   ) { }
@@ -117,21 +114,6 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     // this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-    const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-    if (agBodyViewport)
-    {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport)
-    {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
-    if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
   }
 
   openInsuranceDialoge (id?: string)

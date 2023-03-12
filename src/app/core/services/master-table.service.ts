@@ -47,10 +47,6 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
-          name: BaseData.LineOfBusiness,
-        },
-        {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
         },
@@ -67,6 +63,16 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
+        },
+      ],
+      InsuranceCompaniesDocuments: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.TypeOfCustomerServices,
+          name: BaseData.TypeOfCustomerServices,
         },
       ],
       Client: [
@@ -585,6 +591,9 @@ export class MasterTableService
         break;
       case MODULES.PolicyIssuanceRequirements:
         this.dataSrc = data.PolicyIssuanceRequirements;
+        break;
+      case MODULES.InsuranceCompaniesDocuments:
+        this.dataSrc = data.InsuranceCompaniesDocuments;
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;
