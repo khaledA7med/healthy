@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -11,7 +11,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
-import { ILibrariesForm } from "src/app/shared/app/models/MasterTables/production/i-libraries-form";
+import { ILibrariesForm, ILibrariesReq } from "src/app/shared/app/models/MasterTables/production/i-libraries-form";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { MasterTableProductionService } from "src/app/shared/services/master-tables/production/production.service";
@@ -29,8 +29,9 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	@Input() saveURI!: string;
 	@Input() editURI!: string;
 	@Input() deleteURI!: string;
-
+	@ViewChild("editDialoge") EditItemDialoge!: TemplateRef<any>;
 	formGroup!: FormGroup<ILibrariesForm>;
+	editFormGroup!: FormGroup<ILibrariesForm>;
 	submitted: boolean = false;
 	lookupData!: Observable<IBaseMasterTable>;
 
@@ -42,6 +43,8 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 			itemsList: [] as ILibrariesFilter[],
 			linesOfBusiness: [] as IGenericResponseType[],
 		},
+		editItemData: {} as ILibrariesReq,
+		editMode: false as Boolean,
 	};
 	gridApi: GridApi = <GridApi>{};
 	gridOpts: GridOptions = {
@@ -125,22 +128,23 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.initFilterForm();
+		this.initEditForm();
 		this.lookupData = this.table.getBaseData(MODULES.MasterTableProductionLibraries);
 	}
 
 	initFilterForm() {
 		this.formGroup = new FormGroup<ILibrariesForm>({
-			sNo: new FormControl(null),
-			type: new FormControl(null),
-			defaultTick: new FormControl(null),
+			sNo: new FormControl(0),
+			type: new FormControl(""),
+			defaultTick: new FormControl(false),
 			class: new FormControl(null),
 			lineOfBusiness: new FormControl(null),
-			insuranceCopmany: new FormControl(null),
+			insuranceCopmany: new FormControl(""),
 			item: new FormControl(null),
 			itemArabic: new FormControl(null),
 			description: new FormControl(null),
 			descriptionArabic: new FormControl(null),
-			identity: new FormControl(null),
+			identity: new FormControl(""),
 		});
 	}
 
@@ -155,39 +159,111 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		return this.formGroup.controls;
 	}
 
-	onSubmit(filterForm: FormGroup<ILibrariesForm>) {
+	getEditItemData(id: string) {
+		let sub = this.productionService.editItem(this.editURI, id).subscribe(
+			(res: IBaseResponse<ILibrariesReq>) => {
+				if (res?.status) {
+					this.uiState.editMode = true;
+					this.uiState.editItemData = res.data!;
+					this.editFormGroup.patchValue({
+						...this.uiState.editItemData,
+						defaultTick: this.uiState.editItemData.defaultTick === 1 ? true : false,
+					});
+
+					console.log(this.editFormGroup.getRawValue());
+					this.openEditItemDialoge();
+				} else this.message.toast(res.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
+		);
+		this.subscribes.push(sub);
+	}
+
+	deleteItem(id: string) {
+		let sub = this.productionService.deleteItem(this.deleteURI, id).subscribe(
+			(res: IBaseResponse<any>) => {
+				if (res?.status) {
+					this.gridApi.setDatasource(this.dataSource);
+					this.message.toast(res.message!, "success");
+				} else this.message.toast(res.message!, "error");
+			},
+			(err: HttpErrorResponse) => {
+				this.message.popup("Oops!", err.message, "error");
+			}
+		);
+		this.subscribes.push(sub);
+	}
+
+	onSubmit(formGroup: FormGroup<ILibrariesForm>) {
 		this.submitted = true;
 		if (this.formGroup?.invalid) {
 			return;
 		}
 
 		this.eventService.broadcast(reserved.isLoading, true);
-
-		// let sub = this.productionService.viewCSReport(data).subscribe(
-		// 	(res: HttpResponse<IBaseResponse<any>>) => {
-		// 		if (res.body?.status) {
-		// 			this.eventService.broadcast(reserved.isLoading, false);
-		// 			this.message.toast(res.body.message!, "success");
-		// 			this.openReportsViewer(res.body.data);
-		// 		} else this.message.popup("Sorry!", res.body?.message!, "warning");
-		// 		// Hide Loader
-		// 		this.eventService.broadcast(reserved.isLoading, false);
-		// 	},
-		// 	(err) => {
-		// 		this.eventService.broadcast(reserved.isLoading, false);
-		// 		this.message.popup("Sorry!", err.message!, "error");
-		// 	}
-		// );
-		// this.subscribes.push(sub);
-	}
-
-	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "CRM Reports",
-			url: data,
+		const data: ILibrariesReq = {
+			...formGroup.getRawValue(),
+			defaultTick: formGroup.getRawValue().defaultTick === true ? 1 : 0,
 		};
+		let sub = this.productionService.saveItem(this.saveURI, data).subscribe(
+			(res: IBaseResponse<any>) => {
+				if (res.status) {
+					if (this.uiState.editMode) {
+						this.modalRef.dismiss();
+						this.eventService.broadcast(reserved.isLoading, false);
+					}
+					this.message.toast(res.message!, "success");
+					this.gridApi.setDatasource(this.dataSource);
+				} else this.message.popup("Sorry!", res.message!, "warning");
+				// Hide Loader
+				this.eventService.broadcast(reserved.isLoading, false);
+			},
+			(err) => {
+				this.eventService.broadcast(reserved.isLoading, false);
+				this.message.popup("Sorry!", err.message!, "error");
+			}
+		);
+		this.subscribes.push(sub);
 	}
+
+	//#region Edit Dialoge
+
+	initEditForm() {
+		this.editFormGroup = new FormGroup<ILibrariesForm>({
+			sNo: new FormControl(null),
+			type: new FormControl(null),
+			defaultTick: new FormControl(null),
+			class: new FormControl(null),
+			lineOfBusiness: new FormControl(null),
+			insuranceCopmany: new FormControl(null),
+			item: new FormControl(null),
+			itemArabic: new FormControl(null),
+			description: new FormControl(null),
+			descriptionArabic: new FormControl(null),
+			identity: new FormControl(null),
+		});
+	}
+
+	openEditItemDialoge() {
+		this.modalRef = this.modalService.open(this.EditItemDialoge, {
+			ariaLabelledBy: "modal-basic-title",
+			centered: true,
+			backdrop: "static",
+			size: "lg",
+		});
+
+		this.modalRef.hidden.subscribe(() => {
+			this.resetEditForm();
+		});
+	}
+
+	resetEditForm() {
+		this.editFormGroup.reset();
+	}
+
+	//#endregion
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
