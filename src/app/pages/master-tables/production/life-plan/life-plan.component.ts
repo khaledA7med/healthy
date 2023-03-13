@@ -1,36 +1,30 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { Caching, IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ILibrariesForm, ILibrariesReq } from "src/app/shared/app/models/MasterTables/production/i-libraries-form";
-import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { MasterTableProductionService } from "src/app/shared/services/master-tables/production/production.service";
-import { masterTableLibrariesCols } from "src/app/shared/app/grid/masterTableLibrariesCols";
-import { ILibrariesFilter } from "src/app/shared/app/models/MasterTables/production/i-libraries-filter";
+import { ILifePlanFilter } from "src/app/shared/app/models/MasterTables/production/i-life-plan-filter";
+import { ILifePlanForm, ILifePlanReq } from "src/app/shared/app/models/MasterTables/production/i-life-plan-form";
+import { masterTableLifePlanCols } from "src/app/shared/app/grid/MasterTableLifePlanCols";
 
 @Component({
-	selector: "app-libraries-form",
-	templateUrl: "./libraries-form.component.html",
-	styleUrls: ["./libraries-form.component.scss"],
+	selector: "app-life-plan",
+	templateUrl: "./life-plan.component.html",
+	styleUrls: ["./life-plan.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class LibrariesFormComponent implements OnInit, OnDestroy {
-	@Input() searchURI!: string;
-	@Input() saveURI!: string;
-	@Input() editURI!: string;
-	@Input() deleteURI!: string;
-	@ViewChild("editDialoge") EditItemDialoge!: TemplateRef<any>;
-	formGroup!: FormGroup<ILibrariesForm>;
-	editFormGroup!: FormGroup<ILibrariesForm>;
+export class LifePlanComponent implements OnInit, OnDestroy {
+	@ViewChild("formDialoge") formDialoge!: TemplateRef<any>;
+	formGroup!: FormGroup<ILifePlanForm>;
 	submitted: boolean = false;
 	lookupData!: Observable<IBaseMasterTable>;
 
@@ -39,10 +33,10 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		submitted: false as Boolean,
 		gridReady: false as Boolean,
 		lists: {
-			itemsList: [] as ILibrariesFilter[],
+			itemsList: [] as ILifePlanFilter[],
 			linesOfBusiness: [] as IGenericResponseType[],
 		},
-		editItemData: {} as ILibrariesReq,
+		editItemData: {} as ILifePlanReq,
 		editMode: false as Boolean,
 	};
 	gridApi: GridApi = <GridApi>{};
@@ -50,7 +44,7 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: masterTableLibrariesCols,
+		columnDefs: masterTableLifePlanCols,
 		suppressCsvExport: true,
 		context: { comp: this },
 		defaultColDef: {
@@ -67,15 +61,9 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			const data: {
-				insurClass: string;
-				lineOfBusiness: string;
-			} = {
-				insurClass: this.f.class?.value!,
-				lineOfBusiness: this.f.lineOfBusiness?.value!,
-			};
-			let sub = this.productionService.getAllItems(this.searchURI, data).subscribe(
-				(res: HttpResponse<IBaseResponse<ILibrariesFilter[]>>) => {
+
+			let sub = this.productionService.getLifePlans(this.f.insuranceCompany?.value!).subscribe(
+				(res: HttpResponse<IBaseResponse<ILifePlanFilter[]>>) => {
 					if (res.body?.status) {
 						this.uiState.lists.itemsList = res.body?.data!;
 						params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
@@ -119,7 +107,6 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	constructor(
 		private modalService: NgbModal,
 		private message: MessagesService,
-		private methods: MasterMethodsService,
 		private productionService: MasterTableProductionService,
 		private table: MasterTableService,
 		private eventService: EventService
@@ -127,29 +114,15 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.initFilterForm();
-		this.initEditForm();
 		this.lookupData = this.table.getBaseData(MODULES.MasterTableProductionLibraries);
 	}
 
 	initFilterForm() {
-		this.formGroup = new FormGroup<ILibrariesForm>({
+		this.formGroup = new FormGroup<ILifePlanForm>({
 			sNo: new FormControl(0),
-			defaultTick: new FormControl(false),
-			class: new FormControl(null),
-			lineOfBusiness: new FormControl(null),
-			item: new FormControl(null, Validators.required),
-			itemArabic: new FormControl(null, Validators.required),
-			description: new FormControl(null),
-			descriptionArabic: new FormControl(null),
+			insuranceCompany: new FormControl("", Validators.required),
+			planName: new FormControl("", Validators.required),
 		});
-	}
-
-	getLineOfBusiness(cls: string): void {
-		let sub = this.methods.getLineOfBusiness(cls).subscribe((res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
-			this.f.lineOfBusiness?.reset();
-			this.uiState.lists.linesOfBusiness = res.body?.data?.content!;
-		});
-		this.subscribes.push(sub);
 	}
 
 	get f() {
@@ -157,18 +130,19 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	}
 
 	getEditItemData(id: string) {
-		let sub = this.productionService.editItem(this.editURI, id).subscribe(
-			(res: IBaseResponse<ILibrariesReq>) => {
+		let sub = this.productionService.editLifePlan(id).subscribe(
+			(res: IBaseResponse<ILifePlanReq>) => {
 				if (res?.status) {
 					this.uiState.editMode = true;
 					this.uiState.editItemData = res.data!;
-					this.editFormGroup.patchValue({
-						...this.uiState.editItemData,
-						defaultTick: this.uiState.editItemData.defaultTick === 1 ? true : false,
+					this.formGroup.patchValue({
+						sNo: this.uiState.editItemData.sNo!,
+						planName: this.uiState.editItemData.planName!,
+						insuranceCompany: this.uiState.editItemData.insuranceCompany!,
 					});
 
-					console.log(this.editFormGroup.getRawValue());
-					this.openEditItemDialoge();
+					console.log(this.formGroup.getRawValue());
+					this.openformDialoge();
 				} else this.message.toast(res.message!, "error");
 			},
 			(err: HttpErrorResponse) => {
@@ -179,7 +153,7 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	}
 
 	deleteItem(id: string) {
-		let sub = this.productionService.deleteItem(this.deleteURI, id).subscribe(
+		let sub = this.productionService.deleteLifePlan(id).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res?.status) {
 					this.gridApi.setDatasource(this.dataSource);
@@ -193,30 +167,21 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	onSubmit(formGroup: FormGroup<ILibrariesForm>) {
+	onSubmit(formGroup: FormGroup<ILifePlanForm>) {
 		this.uiState.submitted = true;
 		if (this.formGroup?.invalid) {
 			return;
 		}
-
+		console.log(formGroup.getRawValue());
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: ILibrariesReq = {
+		const data: ILifePlanReq = {
 			...formGroup.getRawValue(),
-			defaultTick: formGroup.getRawValue().defaultTick === true ? 1 : 0,
 		};
-		let sub = this.productionService.saveItem(this.saveURI, data).subscribe(
+		let sub = this.productionService.saveLifePlan(data).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res.status) {
-					if (this.uiState.editMode) {
-						this.modalRef.dismiss();
-						this.eventService.broadcast(reserved.isLoading, false);
-					} else {
-						this.f.item?.reset();
-						this.f.itemArabic?.reset();
-						this.f.description?.reset();
-						this.f.descriptionArabic?.reset();
-						this.f.defaultTick?.reset();
-					}
+					this.modalRef.dismiss();
+					this.eventService.broadcast(reserved.isLoading, false);
 					this.message.toast(res.message!, "success");
 					this.gridApi.setDatasource(this.dataSource);
 				} else this.message.popup("Sorry!", res.message!, "warning");
@@ -231,26 +196,8 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	//#region Edit Dialoge
-
-	initEditForm() {
-		this.editFormGroup = new FormGroup<ILibrariesForm>({
-			sNo: new FormControl(null),
-			// type: new FormControl(""),
-			defaultTick: new FormControl(null),
-			class: new FormControl(null),
-			lineOfBusiness: new FormControl(null),
-			// insuranceCopmany: new FormControl(""),
-			item: new FormControl(null, Validators.required),
-			itemArabic: new FormControl(null, Validators.required),
-			description: new FormControl(null),
-			descriptionArabic: new FormControl(null),
-			// identity: new FormControl(""),
-		});
-	}
-
-	openEditItemDialoge() {
-		this.modalRef = this.modalService.open(this.EditItemDialoge, {
+	openformDialoge() {
+		this.modalRef = this.modalService.open(this.formDialoge, {
 			ariaLabelledBy: "modal-basic-title",
 			centered: true,
 			backdrop: "static",
@@ -258,15 +205,11 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 		});
 
 		this.modalRef.hidden.subscribe(() => {
-			this.resetEditForm();
+			this.f.sNo?.patchValue(0);
+			this.f.planName?.patchValue("");
+			this.uiState.editMode = false;
 		});
 	}
-
-	resetEditForm() {
-		this.editFormGroup.reset();
-	}
-
-	//#endregion
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
@@ -274,6 +217,6 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.formGroup.reset();
-		this.uiState.submitted = false;
+		this.submitted = false;
 	}
 }
