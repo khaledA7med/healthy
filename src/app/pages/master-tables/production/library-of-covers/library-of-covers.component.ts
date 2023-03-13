@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 
 @Component({

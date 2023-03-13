@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 export interface ILibrariesForm {
 	sNo?: FormControl<number | null>;
 	type?: FormControl<string | null>;
-	defaultTick?: FormControl<number | null>;
+	defaultTick?: FormControl<boolean | null>;
 	class?: FormControl<string | null>;
 	lineOfBusiness?: FormControl<string | null>;
 	insuranceCopmany?: FormControl<string | null>;

@@ -44,7 +44,13 @@
         },
         "PRODUCTION": {
           "TEXT": "Production",
-          "LIBRARYOFCOVERS": "Library Of Covers"
+          "LIBRARYOFCOVERS": "Library Of Covers",
+          "LIBRARYOFINTERESTSINSURED": "Library Of Interests Insured",
+          "LIBRARYOFTERMS": "Library Of Terms & Conditions",
+          "LIBRARYOFDEDUCTIBLES": "Library Of Deductibles",
+          "LIBRARYOFEXCLUSIONS": "Library Of Exclusions",
+          "LIBRARYOFWARRANTIES": "Library Of Warranties",
+          "LIFEPLAN": "LiFe Plan"
         },
         "CLAIMS": {
           "TEXT": "Claims",

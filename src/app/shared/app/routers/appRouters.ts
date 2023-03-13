@@ -58,6 +58,12 @@ export const AppRoutes = {
     bankSettings: "bank-settings",
     production: {
       libraryOfCovers: "library-of-covers",
+      libraryOfInterestsInsured: "library-of-interests-insured",
+      libraryOfTerms: "library-of-terms",
+      libraryOfDeductibles: "library-of-deductibles",
+      libraryOfExclusions: "library-of-exclusions",
+      libraryOfWarranties: "library-of-warranties",
+      lifePlan: "life-plan",
     },
   },
   Client: {

@@ -1,11 +1,11 @@
 import { ColDef } from "ag-grid-community";
-import { PolicyIssuanceRequirementsFormsComponent } from "src/app/pages/master-tables/business-development/sales/policy-issuance-requirements/policy-issuance-requirements/policy-issuance-requirements-forms.component";
+import { LibrariesFormsListControlsComponent } from "src/app/pages/master-tables/production/libraries-form/libraries-form-list-controls.component";
 import GlobalCellRender from "./globalCellRender";
 
-export const masterTableProductionCols: ColDef[] = [
+export const masterTableLibrariesCols: ColDef[] = [
 	{
 		colId: "action",
-		cellRenderer: PolicyIssuanceRequirementsFormsComponent,
+		cellRenderer: LibrariesFormsListControlsComponent,
 		pinned: "left",
 		maxWidth: 80,
 		sortable: false,
