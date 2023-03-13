@@ -3,6 +3,5 @@ export enum reserved {
   lightMode = "light",
   darkMode = "dark",
   isLoading = "isLoading",
-
   DefaultVATPerc = "15",
 }

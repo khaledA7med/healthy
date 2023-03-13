@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { map, take, tap } from "rxjs/operators";
+import { BehaviorSubject, of } from "rxjs";
+import { catchError, defaultIfEmpty, map, take, tap } from "rxjs/operators";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
@@ -13,9 +13,7 @@ import { Privigles } from "../models/iuser";
 export class PermissionsService {
   private readonly env: string = environment.baseURL;
 
-  permissions: BehaviorSubject<Privigles> = new BehaviorSubject<Privigles>(
-    null!
-  );
+  permissions: BehaviorSubject<Privigles> = new BehaviorSubject<Privigles>({});
 
   constructor(private http: HttpClient) {}
 
@@ -28,7 +26,10 @@ export class PermissionsService {
         this.env + ApiRoutes.SystemAdmin.privigles,
         {}
       )
-      .pipe(tap((perm) => this.permissions.next(perm.data!)));
+      .pipe(
+        tap((perm) => this.permissions.next(perm.data!)),
+        defaultIfEmpty({})
+      );
     // }
   }
 
