@@ -324,6 +324,8 @@ export const ApiRoutes = {
     productionReport: "/Production/Policy/StatisticsReport",
     renewalReport: "/Production/Policy/RenewalsReports",
     renewalNoticeReports: "/Production/Policy/RenewalNoticeReports",
+    archiveReport: "/Production/Policy/ArchivesReports",
+    debitcreditNoteReport: "/Production/Policy/GenerateArchivesReportsURL",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",

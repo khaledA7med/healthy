@@ -320,7 +320,7 @@
     <!--offcanvas-footer -->
     <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp(followUpForm.value)">
       <div class="offcanvas-footer border-top row mb-3 mx-1">
-        <div class="col-12 my-2">
+        <div class="col-12  my-2">
           <label class="form-label">Users:</label>
           <ng-select [items]="(formData | async)?.AllUsers?.content!" [loading]="formData ? false : true"
             [clearable]="true" class="form-control-sm px-0 w-100" [ngClass]="{

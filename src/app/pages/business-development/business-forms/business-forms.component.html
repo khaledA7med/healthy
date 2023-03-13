@@ -10,7 +10,7 @@
                 <div class="ribbon ribbon-info round-shape">Lead Details</div>
                 <div class="ribbon-content mt-4 text-muted">
                   <!-- Lead Type Row -->
-                  <div class="row my-2">
+                  <div class="row  my-2">
                     <div class="col-sm-2 col-md-2 col-lg-2">Lead Type:</div>
                     <div class="col-sm-10 col-md-10 col-lg-10 d-flex">
                       <div class="form-check me-5">
@@ -27,9 +27,9 @@
                   </div>
                   <!-- /row -->
                   <!-- Client | Group & Producer row  -->
-                  <div class="row my-2">
+                  <div class="row  my-2">
                     <!-- col client id -->
-                    <div class="col-sm-12 col-md-6 col-lg-3 my-2 d-flex flex-column" *ngIf="uiState.editMode">
+                    <div class="col-sm-12 col-md-6 col-lg-3  my-2 d-flex flex-column" *ngIf="uiState.editMode">
                       <label for="clientId">Client ID</label>
                       <input type="text" id="clientId" class="form-control form-control-sm" formControlName="clientID"
                         readonly />
@@ -37,7 +37,7 @@
                     <!-- /col -->
 
                     <!-- col check client | group -->
-                    <div class="col-sm-2 my-2 d-flex flex-column" *ngIf="!uiState.editMode">
+                    <div class="col-sm-2  my-2 d-flex flex-column" *ngIf="!uiState.editMode">
                       <div class="form-check mb-2">
                         <input name="check" class="form-check-input" type="radio" id="client"
                           (change)="changeToClient()" checked />
@@ -51,7 +51,7 @@
                     </div>
                     <!-- /col -->
                     <!-- col select client | group -->
-                    <div class="my-2 d-flex flex-column" [ngClass]="{
+                    <div class=" my-2 d-flex flex-column" [ngClass]="{
                         'col-sm-12 col-md-6 col-lg-3': uiState.editMode,
                         'col-sm-5': !uiState.editMode
                       }">
@@ -96,7 +96,7 @@
                     <!-- /col -->
 
                     <!-- col lead No -->
-                    <div class="col-sm-12 col-md-6 col-lg-3 my-2 d-flex flex-column" *ngIf="uiState.editMode">
+                    <div class="col-sm-12 col-md-6 col-lg-3  my-2 d-flex flex-column" *ngIf="uiState.editMode">
                       <label for="clientId">Lead No</label>
                       <input type="text" id="clientId" class="form-control form-control-sm" formControlName="leadNo"
                         readonly />
@@ -104,7 +104,7 @@
                     <!-- /col -->
 
                     <!-- col producer -->
-                    <div class="my-2 d-flex flex-column" [ngClass]="{
+                    <div class=" my-2 d-flex flex-column" [ngClass]="{
                         'col-sm-12 col-md-6 col-lg-3': uiState.editMode,
                         'col-sm-5': !uiState.editMode
                       }">
@@ -130,8 +130,8 @@
               </div>
             </div>
             <!-- insurance Details & Currently Insured row  -->
-            <div class="row my-2">
-              <div class="col-lg-6 my-2">
+            <div class="row  my-2">
+              <div class="col-lg-6  my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
                   <div class="card-body">
                     <div class="ribbon ribbon-info round-shape">
@@ -140,7 +140,7 @@
                     <div class="ribbon-content mt-4 text-muted">
                       <div class="row">
                         <!-- col Class of insurance -->
-                        <div class="col-md-6 my-2 d-flex flex-column">
+                        <div class="col-md-6  my-2 d-flex flex-column">
                           <label for="classOfInc" [ngClass]="{ 'asterisk-input': !uiState.editMode }">
                             Class of Insurance</label>
                           <ng-select [readonly]="uiState.editMode" id="classOfInc" class="form-control-sm is-invalid"
@@ -160,7 +160,7 @@
                         </div>
                         <!-- /col -->
                         <!-- line of business -->
-                        <div class="col-md-6 my-2 d-flex flex-column">
+                        <div class="col-md-6  my-2 d-flex flex-column">
                           <label for="lineOfBus" class="asterisk-input">
                             Line of Business</label>
                           <ng-select id="lineOfBus" class="form-control-sm is-invalid"
@@ -179,7 +179,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col estimated pre -->
-                        <div class="col-md-6 my-2 d-flex flex-column">
+                        <div class="col-md-6  my-2 d-flex flex-column">
                           <label for="estPremium">Estimated Premium</label>
                           <div class="input-group input-group-sm">
                             <input type="text" class="form-control form-control-sm input-right"
@@ -190,7 +190,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col Deadline -->
-                        <div class="col-md-6 my-2 d-flex flex-column">
+                        <div class="col-md-6  my-2 d-flex flex-column">
                           <label for="deadline" [ngClass]="{
                               'asterisk-input': f.chDeadlinebool?.value
                             }">Deadline</label>
@@ -219,7 +219,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col Preferred Insurance Companies -->
-                        <div class="col-12 my-2 d-flex flex-column">
+                        <div class="col-12  my-2 d-flex flex-column">
                           <label for="PrefInCompnies">Preferred Insurance Companies</label>
                           <ng-select id="PrefInCompnies" class="form-control-sm" placeholder="Choose Companies"
                             formControlName="preferedInsurComapnies" bindLabel="name" bindValue="name" [multiple]="true"
@@ -230,7 +230,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col Acc Details -->
-                        <div class="col-12 my-2 d-flex flex-column">
+                        <div class="col-12  my-2 d-flex flex-column">
                           <label for="accDetails" class="asterisk-input">Account Details (Business size ...etc)</label>
                           <textarea id="accDetails" class="form-control form-control-sm" rows="3"
                             formControlName="policyDetails" [ngClass]="{
@@ -252,7 +252,7 @@
                 </div>
               </div>
               <!-- Currently Insured Section -->
-              <div class="col-lg-6 my-2">
+              <div class="col-lg-6  my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
                   <div class="card-body">
                     <div class="ribbon ribbon-info round-shape d-flex">
@@ -310,7 +310,7 @@
 
                         <!-- /col -->
                         <!-- col current insurance broker -->
-                        <div class="col-sm-12 my-2">
+                        <div class="col-sm-12  my-2">
                           <label for="curIncBroker" [ngClass]="{
                               'asterisk-input': f.chCurrentInsurer?.value
                             }">Current Insurance Broker
@@ -334,7 +334,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col current insurance company -->
-                        <div class="col-sm-12 my-2">
+                        <div class="col-sm-12  my-2">
                           <label for="curIncCompany " [ngClass]="{
                               'asterisk-input': f.chCurrentInsurer?.value
                             }">Current Insurance Company
@@ -358,7 +358,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col  existing policy details -->
-                        <div class="col-sm-12 my-2 d-flex flex-column">
+                        <div class="col-sm-12  my-2 d-flex flex-column">
                           <label for="polDetails" [ngClass]="{
                               'asterisk-input': f.chCurrentInsurer?.value
                             }">Existing Policy Details (Business
@@ -394,13 +394,13 @@
       <ng-template ngbPanelContent>
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
           <div class="container-fluid mb-3">
-            <div class="row my-2">
+            <div class="row  my-2">
               <div class="col-lg-6">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
                   <div class="card-body">
                     <div class="ribbon ribbon-info round-shape">Quoting</div>
                     <div class="ribbon-content mt-4 text-muted">
-                      <div class="row my-2">
+                      <div class="row  my-2">
                         <!-- col select company  -->
                         <div class="col-12 mt-2">
                           <div class="input-group input-group-sm">
@@ -417,7 +417,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col start table -->
-                        <div class="col-12 table-responsive my-2">
+                        <div class="col-12 table-responsive  my-2">
                           <table class="table table-nowrap">
                             <thead class="table-light">
                               <tr>
@@ -475,7 +475,7 @@
                       Policy Issuance
                     </div>
                     <div class="ribbon-content mt-4 text-muted">
-                      <div class="row my-2">
+                      <div class="row  my-2">
                         <!-- col select company  -->
                         <div class="col-12 mt-2">
                           <div class="input-group input-group-sm">
@@ -492,7 +492,7 @@
                         </div>
                         <!-- /col -->
                         <!-- col start table -->
-                        <div class="col-12 table-responsive my-2">
+                        <div class="col-12 table-responsive  my-2">
                           <table class="table table-nowrap">
                             <thead class="table-light">
                               <tr>
@@ -553,9 +553,9 @@
       <ng-template ngbPanelContent>
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingThree">
           <div class="container-fluid mb-3">
-            <div class="row my-2">
+            <div class="row  my-2">
               <!-- col activity log -->
-              <div class="col-lg-6 my-2">
+              <div class="col-lg-6  my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
                   <div class="card-body">
                     <div class="ribbon ribbon-info round-shape">
@@ -683,7 +683,7 @@
               </div>
               <!-- /col -->
               <!-- col competitors -->
-              <div class="col-lg-6 my-2">
+              <div class="col-lg-6  my-2">
                 <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
                   <div class="card-body">
                     <div class="ribbon ribbon-info round-shape">
@@ -783,7 +783,7 @@
                 <div class="ribbon ribbon-info round-shape">Tasks</div>
                 <div class="ribbon-content mt-4 text-muted">
 
-                  <div class="row my-2">
+                  <div class="row  my-2">
                     <!-- col type  -->
                     <div class="col-md-6 col-lg-3 d-flex flex-column">
                       <label for="taskType" class="asterisk-input">Task Type</label>
@@ -816,7 +816,7 @@
                     </div>
                     <!-- /col -->
                   </div>
-                  <div class="row my-2 align-items-center">
+                  <div class="row  my-2 align-items-center">
                     <!-- col description  -->
                     <div class="col-md-6 col-lg-8 d-flex flex-column">
                       <label>Task Description</label>
@@ -847,7 +847,7 @@
                     </div>
                     <!-- /col -->
                     <!-- col task btn -->
-                    <div class="col-12 my-2 d-flex justify-content-end">
+                    <div class="col-12  my-2 d-flex justify-content-end">
                       <button type="button" class="btn btn-sm btn-success" (click)="addTask()">
                         Add Task
                       </button>
@@ -916,14 +916,14 @@
     <div class="container-fluid">
       <div class="card-body px-1 py-3">
         <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-12 my-2 d-flex align-items-center">
+          <div class="col-lg-4 col-md-6 col-sm-12  my-2 d-flex align-items-center">
             <div class="form-check">
               <input type="checkbox" formControlName="sendToUW" id="sentTo" class="form-check-input" />
               <label for="sentTo" class="m-0">Send to U / W</label>
             </div>
           </div>
           <!-- branch -->
-          <div class="col-lg-4 col-md-6 col-sm-12 my-2" *ngIf="!uiState.editMode">
+          <div class="col-lg-4 col-md-6 col-sm-12  my-2" *ngIf="!uiState.editMode">
             <ng-select placeholder="Choose Branch" class="form-control form-control-sm" formControlName="branch"
               bindLabel="name" bindValue="name" [ngClass]="{
                                   'is-submitted': submitted && f.branch?.invalid
@@ -934,7 +934,7 @@
               Required
             </div>
           </div>
-          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-end my-2">
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-end  my-2">
             <button type="submit" class="btn btn-sm btn-success me-2">
               <i class="ri-save-2-fill"></i>
               Save

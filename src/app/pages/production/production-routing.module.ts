@@ -65,6 +65,13 @@ const routes: Routes = [
 		loadChildren: () =>
 			import("./production-renewal-notice-report/production-renewal-notice-report.module").then((m) => m.ProductionRenewalNoticeReportModule),
 	},
+	{
+		path: AppRoutes.Production.archive.dcNote,
+		data: {
+			title: "Debite / Credit Notes (Clients Premium)",
+		},
+		loadChildren: () => import("./debit-credit-note-report/debit-credit-note-report.module").then((m) => m.DebitCreditNoteReportModule),
+	},
 ];
 
 @NgModule({

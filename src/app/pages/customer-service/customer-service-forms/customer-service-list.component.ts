@@ -4,11 +4,9 @@ import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowC
 import PerfectScrollbar from "perfect-scrollbar";
 import { Subscription } from "rxjs";
 import { CSPoicySearchCols } from "src/app/shared/app/grid/csPolicySearchCols";
-import { searchByClientCols, searchByRequestCols, searchPolicy } from "src/app/shared/app/grid/policyFormCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { CSPolicyData } from "src/app/shared/app/models/CustomerService/icustomer-service-policy";
 import { CSPolicySearchRequest } from "src/app/shared/app/models/CustomerService/icustomer-service-policy-search-req";
-import { IPoliciesRef, IPolicyClient, IPolicyRequests } from "src/app/shared/app/models/Production/production-util";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 

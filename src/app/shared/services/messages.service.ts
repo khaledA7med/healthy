@@ -79,4 +79,19 @@ export class MessagesService {
       title: message,
     });
   }
+
+  timerPopup(title: string, body: string, icon: SweetAlertIcon = "warning") {
+    return Swal.fire({
+      title: title,
+      html: body,
+      timer: 3000,
+      background: "var(--vz-modal-bg)",
+      timerProgressBar: true,
+      icon: icon,
+      allowOutsideClick: false,
+      customClass: {
+        confirmButton: `btn btn-outline-primary btn-sm`,
+      },
+    });
+  }
 }
