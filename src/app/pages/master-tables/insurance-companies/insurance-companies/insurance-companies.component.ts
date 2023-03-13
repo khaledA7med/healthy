@@ -17,7 +17,7 @@ import { reserved } from 'src/app/core/models/reservedWord';
 import { IContactList } from 'src/app/shared/app/models/MasterTables/insurance-companies/i-contact-list';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
-InsuranceCompaniesService
+
 @Component({
   selector: 'app-insurance-companies',
   templateUrl: './insurance-companies.component.html',

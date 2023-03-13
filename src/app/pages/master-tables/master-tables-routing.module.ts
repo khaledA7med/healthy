@@ -215,7 +215,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: AppRoutes.MasterTable.customerService.cancellationReason,
+    path: AppRoutes.MasterTable.customerService.customerServiceCancellationReason,
     data: {
       title: "Cancellation Reasons",
     },

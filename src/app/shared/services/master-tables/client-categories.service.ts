@@ -31,7 +31,7 @@ export class ClientCategoriesService
 
   getEditClientCategories (id: string): Observable<HttpResponse<IBaseResponse<IClientCategoriesData>>>
   {
-    return this.http.post<IBaseResponse<IClientCategoriesData>>(this.env + ApiRoutes.masterTables.clientCategories.edit, {}, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IClientCategoriesData>>(this.env + ApiRoutes.masterTables.clientCategories.edit, { params: { id }, observe: "response" });
   }
 
   DeleteClientCategories (id: string): Observable<HttpResponse<IBaseResponse<number>>>

@@ -161,8 +161,8 @@ export const MENU: MenuItem[] = [
           },
           {
             id: 1017,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CANCELLATIONREASONS",
-            link: AppRoutes.MasterTable.customerService.cancellationReason,
+            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICERECANCELLATIONREASONS",
+            link: AppRoutes.MasterTable.customerService.customerServiceCancellationReason,
             parentId: 112,
           },
         ]

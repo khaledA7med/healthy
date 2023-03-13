@@ -14,6 +14,7 @@ export const ApiRoutes = {
       contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
       contactDepartment: LookUpTables + BaseData.ContactDepartment,
       TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
+      policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -245,14 +246,32 @@ export const ApiRoutes = {
         upload: "/MasterTables/CustomerService/UploadCompanyDocuments"
       },
       customerServiceRequirements: {
+        search: "/MasterTables/CustomerService/CompanyRequirements",
+        save: "/MasterTables/CustomerService/Save",
+        // edit: "/MasterTables/CustomerService/EditRequirements",
+        delete: "/MasterTables/CustomerService/DeleteCompanyRequirements",
       },
       complaintsTypes: {
+        search: "/MasterTables/CustomerService/ComplaintsTypes",
+        save: "/MasterTables/CustomerService/CreateComplaintsTypes",
+        edit: "/MasterTables/CustomerService/EditComplaintsTypes",
+        delete: "/MasterTables/CustomerService/DeleteComplaintsTypes",
       },
       complaintsSettings: {
+        search: "/MasterTables/CustomerService/ComplaintsSettings",
+        save: "/MasterTables/CustomerService/CreateComplaintsSettings",
       },
       complaintsSuspectiveCauses: {
+        search: "/MasterTables/CustomerService/ComplaintsSuspectiveCauses",
+        save: "/MasterTables/CustomerService/CreateComplaintsSuspectiveCauses",
+        edit: "/MasterTables/CustomerService/EditComplaintsSuspectiveCauses",
+        delete: "/MasterTables/CustomerService/DeleteComplaintsSuspectiveCauses"
       },
-      cancellationReasons: {
+      customerServiceCancellationReasons: {
+        search: "/MasterTables/CustomerService/CancellationReasons",
+        save: "/MasterTables/CustomerService/CreateCancellationReasons",
+        edit: "/MasterTables/CustomerService/EditCancellationReasons",
+        delete: "/MasterTables/CustomerService/DeleteCancellationReasons"
       },
     },
   },

@@ -12,6 +12,6 @@ export const CustomerServiceRequirementsCols: ColDef[] = [
     },
     {
         headerName: "item",
-        field: "name",
+        field: "item",
     }
 ];

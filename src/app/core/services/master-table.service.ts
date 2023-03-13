@@ -33,11 +33,11 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.Client.contactLineOfBusiness,
+          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
           name: BaseData.ContactLineOfBusiness,
         },
         {
-          route: ApiRoutes.MasterTable.Client.contactDepartment,
+          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
           name: BaseData.ContactDepartment,
         },
       ],
@@ -74,6 +74,24 @@ export class MasterTableService
           route: ApiRoutes.MasterTable.MasterTables.TypeOfCustomerServices,
           name: BaseData.TypeOfCustomerServices,
         },
+      ],
+      CustomerServiceCompanyRequiremenrs: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
+          name: BaseData.ContactLineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
+          name: BaseData.ContactDepartment,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.policyEndorsTypes,
+          name: BaseData.PolicyEndorsTypes,
+        }
       ],
       Client: [
         {
@@ -594,6 +612,9 @@ export class MasterTableService
         break;
       case MODULES.InsuranceCompaniesDocuments:
         this.dataSrc = data.InsuranceCompaniesDocuments;
+        break;
+      case MODULES.CustomerServiceCompanyRequirements:
+        this.dataSrc = data.CustomerServiceCompanyRequiremenrs;
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;

@@ -1,1 +1,51 @@
-<p>cancellation-reasons works!</p>
+<div class="row justify-content-between align-items-center mb-3">
+    <div class="col-12 d-flex justify-content-end">
+
+        <a type="button" class="btn btn-sm btn-info mx-2  d-flex align-items-center"
+            (click)="openCancellationReasonsDialoge()">
+            <i class="ri-add-line align-bottom me-1"></i> Add Cancellation Reason
+        </a>
+
+    </div>
+</div>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>
+
+<ng-template #CancellationReasonsContent let-modal>
+    <div class="modal-header mb-0">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editCancellationReasonsMode">Add Cancellation
+            Reason</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editCancellationReasonsMode">Edit Cancellation
+            Reason</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <form [formGroup]="CancellationReasonsForm" (ngSubmit)="submitCancellationReasonsData(CancellationReasonsForm)">
+        <div class="modal-body p-1" style="overflow-y: unset !important;">
+            <div class="row p-3">
+                <div class="col-12 row">
+
+                    <div class="col-12 mb-2">
+                        <label for="cancelReason" class="asterisk-input">Cancellation Reason</label>
+                        <input id="cancelReason" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f.cancelReason?.touched || uiState.submitted) && f.cancelReason?.invalid}"
+                            formControlName="cancelReason" />
+                        <span *ngIf="(f.cancelReason?.touched || uiState.submitted) && f.cancelReason?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="!uiState.editCancellationReasonsMode"><i class="ri-add-line"></i>Add</button>
+            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+                *ngIf="uiState.editCancellationReasonsMode"><i class="ri-edit-line mx-1"></i>Edit</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>

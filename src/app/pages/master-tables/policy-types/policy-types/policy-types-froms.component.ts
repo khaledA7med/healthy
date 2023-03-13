@@ -69,7 +69,7 @@ export class PolicyTypesFromsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity);
+        this.comp.DeletePolicyTypes(this.params.data.identity);
       } else
       {
         return;

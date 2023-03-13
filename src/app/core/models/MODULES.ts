@@ -23,5 +23,6 @@ export enum MODULES
   QuotingRequirements = "QuotingRequirements",
   PolicyIssuanceRequirements = "PolicyIssuanceRequirements",
   InsuranceCompaniesDocuments = "InsuranceCompaniesDocuments",
+  CustomerServiceCompanyRequirements = "CustomerServiceCompanyRequirements",
   Reports = "Reports",
 }

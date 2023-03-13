@@ -39,7 +39,7 @@ export const AppRoutes = {
       complaintsTypes: "complaints-types",
       complaintsSettings: "complaints-settings",
       complaintsSuspectiveCauses: "complaints-suspective-causes",
-      cancellationReason: "cancellation-reasons",
+      customerServiceCancellationReason: "Cs-cancellation-reasons",
     }
   },
   Client: {

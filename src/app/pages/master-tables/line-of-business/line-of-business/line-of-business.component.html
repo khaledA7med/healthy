@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="row my-4">
                                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                        <label for="className" class="asterisk-input">Line Of Insurance</label>
+                                        <label for="className" class="asterisk-input">Class Of Insurance</label>
                                         <ng-select id="className" class="is-invalid"
                                             placeholder="Select Class Of Insurance"
                                             [items]="(lookupData | async)?.InsurClasses?.content!"
@@ -28,7 +28,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                        <label for="lineofBusiness" class="asterisk-input">Class Of Business</label>
+                                        <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
                                         <input id="lineofBusiness" class="form-control form-control-sm"
                                             [ngClass]="{'is-invalid': (f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid}"
                                             formControlName="lineofBusiness" />

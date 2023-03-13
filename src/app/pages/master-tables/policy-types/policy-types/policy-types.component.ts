@@ -216,7 +216,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy
     this.PolicyTypesForm.reset();
   }
 
-  DeleteInsurance (id: string)
+  DeletePolicyTypes (id: string)
   {
     let sub = this.PolicyTypesService.DeletePolicyTypes(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
