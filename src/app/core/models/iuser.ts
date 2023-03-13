@@ -26,7 +26,7 @@ export interface UserAccess {
   Role?: string[];
 }
 
-export interface Privigles {
+export interface IPrivileges {
   Clients?: string[];
   Production?: string[];
   CustomerService?: string[];

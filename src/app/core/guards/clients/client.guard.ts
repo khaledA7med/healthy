@@ -30,7 +30,8 @@ export class ClientGuard implements CanActivate {
     | boolean
     | UrlTree {
     return this.permission
-      .getClientPrivilege([
+      .hasClientPrivilege([
+        ClientsPermissions.ChClientsRegistry,
         ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
       ])
       .pipe(

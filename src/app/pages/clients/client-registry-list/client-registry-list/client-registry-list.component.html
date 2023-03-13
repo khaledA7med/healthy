@@ -16,7 +16,8 @@
     <button class="btn btn-sm btn-info mx-2" (click)="openFilterOffcanvas()">
       <i class="ri-filter-3-line me-1"></i> Filters
     </button>
-    <a [routerLink]="'/' + uiState.routerLink.forms" class="btn btn-sm btn-success">
+    <a [routerLink]="'/' + uiState.routerLink.forms" class="btn btn-sm btn-success"
+      *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChClientsRegistry || !uiState.privileges.ChClientsRegistryAdministratorReadOnly)">
       <i class="ri-add-line me-1"></i> Add Client</a>
   </div>
 </div>
