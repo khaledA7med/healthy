@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
-import { Observable, Subscription } from "rxjs";
+import { Observable, of, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
 import { clientManageCols } from "src/app/shared/app/grid/clientCols";
@@ -16,6 +16,9 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
+import { Roles } from "src/app/core/roles/Roles";
 
 @Component({
 	selector: "app-client-registry-list",
@@ -39,7 +42,11 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 			list: [] as IClient[],
 			totalPages: 0,
 		},
+		privileges: ClientsPermissions,
 	};
+
+	permissions$!: Observable<string[]>;
+
 	// filter form
 	filterForm!: FormGroup;
 	lookupData!: Observable<IBaseMasterTable>;
@@ -74,10 +81,12 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
-		private router: Router
+		private router: Router,
+		private permission: PermissionsService
 	) {}
 
 	ngOnInit(): void {
+		this.permissions$ = this.permission.getPrivileges(Roles.Clients);
 		this.initFilterForm();
 		this.getLookupData();
 		let sub = this.router.events.subscribe((evt) => {
@@ -90,7 +99,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	// Table Section
 	// Table Section
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {

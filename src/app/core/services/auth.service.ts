@@ -53,21 +53,4 @@ export class AuthenticationService {
   getUser(): UserAccess {
     return this.decodeToken;
   }
-
-  refreshToken(token: string, refresh: string) {
-    return this.http
-      .post(this.env + ApiRoutes.Users.refesh, {
-        accessToken: token,
-        refreshToken: refresh,
-      })
-      .pipe(
-        tap((res: IBaseResponse<LoginResponse>) => {
-          localStorage.setItem(localStorageKeys.JWT, res.data?.accessToken!);
-          localStorage.setItem(
-            localStorageKeys.Refresh,
-            res.data?.refreshToken!
-          );
-        })
-      );
-  }
 }

@@ -1,8 +1,10 @@
 export enum Errors {
   TokenExpired = 701,
   ForbiddenError = 703,
-  InvalidRefresh = 705,
-  RefreshRevoked = 706,
-  RefreshExpired = 707,
-  AccessTokenDonstMatch = 708,
+  InvalidRefresh = 805,
+  RefreshRevoked = 806,
+  RefreshExpired = 807,
+  RefeshTokenDonstMatch = 808,
+  InvalidAccessToken = 705,
+  AccessTokenNotExpired = 704,
 }
