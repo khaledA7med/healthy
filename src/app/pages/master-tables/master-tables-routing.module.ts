@@ -224,6 +224,76 @@ const routes: Routes = [
         (m) => m.CancellationReasonsModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.claims.carsMake,
+    data: {
+      title: "Cars Make",
+    },
+    loadChildren: () =>
+      import("./claims/cars-make/cars-make.module").then(
+        (m) => m.CarsMakeModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.hospitals,
+    data: {
+      title: "Hospitals",
+    },
+    loadChildren: () =>
+      import("./claims/hospitals/hospitals.module").then(
+        (m) => m.HospitalsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.insuranceWorkShopDetails,
+    data: {
+      title: "Insurance Workshop Details",
+    },
+    loadChildren: () =>
+      import("./claims/insurance-work-shop-details/insurance-work-shop-details.module").then(
+        (m) => m.InsuranceWorkShopDetailsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.tpaList,
+    data: {
+      title: "TPA List",
+    },
+    loadChildren: () =>
+      import("./claims/tpa-list/tpa-list.module").then(
+        (m) => m.TpaListModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.claimsGeneralItems,
+    data: {
+      title: "Claims General Items",
+    },
+    loadChildren: () =>
+      import("./claims/claims-general-items/claims-general-items.module").then(
+        (m) => m.ClaimsGeneralItemsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.claimsStatus,
+    data: {
+      title: "Claims Status",
+    },
+    loadChildren: () =>
+      import("./claims/claims-status/claims-status.module").then(
+        (m) => m.ClaimsStatusModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.claims.claimsRejectionReasons,
+    data: {
+      title: "Claims Rejection Reasons",
+    },
+    loadChildren: () =>
+      import("./claims/claims-rejection-reasons/claims-rejection-reasons.module").then(
+        (m) => m.ClaimsRejectionReasonsModule
+      ),
+  },
 ];
 
 @NgModule({

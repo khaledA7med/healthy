@@ -1,11 +1,11 @@
-import { InsuranceCompaniesComponent } from './insurance-companies.component';
 import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
+import { ClaimsGeneralItemsComponent } from './claims-general-items.component';
 
 @Component({
-  selector: 'app-insurance-companies-forms',
+  selector: 'app-claims-general-items-forms',
   template: `
     <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -43,12 +43,11 @@ import { SweetAlertResult } from 'sweetalert2';
 		`,
   ]
 })
-export class InsuranceCompaniesFormsComponent
+export class ClaimsGeneralItemsFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceCompaniesComponent;
-
+  private comp!: ClaimsGeneralItemsComponent;
   constructor (private message: MessagesService) { }
 
   agInit (params: ICellRendererParams)
@@ -59,7 +58,7 @@ export class InsuranceCompaniesFormsComponent
 
   Edit ()
   {
-    this.comp.openInsuranceDialoge(this.params.data.identity);
+    this.comp.openClaimsGeneralItemsDialoge(this.params.data.sNo);
   }
 
   Delete ()
@@ -68,7 +67,7 @@ export class InsuranceCompaniesFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity);
+        this.comp.DeleteClaimsGeneralItems(this.params.data.sNo);
       } else
       {
         return;

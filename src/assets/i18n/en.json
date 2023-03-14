@@ -41,6 +41,16 @@
           "COMPLAINTSSETTINGS": "Complaints Settings",
           "COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
           "CUSTOMERSERVICERECANCELLATIONREASONS": "Cancellation Reasons"
+        },
+        "CLAIMS": {
+          "TEXT": "Claims",
+          "CARSMAKE": "Cars Make",
+          "HOSPITALS": "Hospitals",
+          "INSURANCEWORKSHOPDETAILS": "Insurance Workshop Details",
+          "TPALIST": "TPA List",
+          "CLAIMSGENERALITEMS": "Claims General Items",
+          "CLAIMSSTATUS": "Claims Status",
+          "CLAIMSREJECTIONREASONS": "Claims Rejection Reasons"
         }
       }
     },

@@ -15,6 +15,10 @@ export const ApiRoutes = {
       contactDepartment: LookUpTables + BaseData.ContactDepartment,
       TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
       policyEndorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
+      regions: LookUpTables + BaseData.Regions,
+      cities: LookUpTables + BaseData.Cities,
+      claimStatus: LookUpTables + BaseData.ClaimStatus,
+      TypeClaimsRejectionReason: LookUpTables + BaseData.TypeClaimsRejectionReason,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -274,6 +278,49 @@ export const ApiRoutes = {
         delete: "/MasterTables/CustomerService/DeleteCancellationReasons"
       },
     },
+    Claims: {
+      carsMake: {
+        search: "/MasterTables/Claims/CarsMake",
+        save: "/MasterTables/Claims/CreateCarsMake",
+        edit: "/MasterTables/Claims/EditCarsMake",
+        delete: "/MasterTables/Claims/DeleteCarsMake"
+      },
+      hospitals: {
+        search: "/MasterTables/Claims/Hospital",
+        save: "/MasterTables/Claims/CreateHospital",
+        edit: "/MasterTables/Claims/EditHospital",
+        delete: "/MasterTables/Claims/DeleteHospital"
+      },
+      insuranceWorkshopDetails: {
+        search: "/MasterTables/Claims/WorkshopDetails",
+        save: "/MasterTables/Claims/CreateWorkshopDetails",
+        edit: "/MasterTables/Claims/EditWorkshopDetails",
+        delete: "/MasterTables/Claims/DeleteWorkshopDetails"
+      },
+      tpaList: {
+        search: "/MasterTables/Claims/TPAList",
+        save: "/MasterTables/Claims/CreateNTPAList",
+        delete: "/MasterTables/Claims/DeleteTPAList"
+      },
+      claimsGeneralItems: {
+        search: "/MasterTables/Claims/ClaimsGeneralItems",
+        save: "/MasterTables/Claims/CreateClaimsGeneralItems",
+        edit: "/MasterTables/Claims/EditClaimsGeneralItems",
+        delete: "/MasterTables/Claims/DeleteClaimsGeneralItems"
+      },
+      claimsStatus: {
+        search: "/MasterTables/Claims/ClaimStatusByStatus",
+        save: "/MasterTables/Claims/CreateClaimStatus",
+        edit: "/MasterTables/Claims/EditClaimStatus",
+        delete: "/MasterTables/Claims/DeleteClaimStatus"
+      },
+      claimsRejectionReasons: {
+        search: "/MasterTables/Claims/ClaimsRejectionReasons",
+        save: "/MasterTables/Claims/CreateClaimsRejectionReasons",
+        edit: "/MasterTables/Claims/EditClaimsRejectionReasons",
+        delete: "/MasterTables/Claims/DeleteClaimsRejectionReasons"
+      },
+    }
   },
   Clients: {
     search: "/ClientRegistry/Clients/Search",

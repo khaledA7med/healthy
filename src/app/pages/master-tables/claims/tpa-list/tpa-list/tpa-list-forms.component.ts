@@ -1,11 +1,11 @@
-import { InsuranceCompaniesComponent } from './insurance-companies.component';
+import { TpaListComponent } from './tpa-list.component';
 import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
 
 @Component({
-  selector: 'app-insurance-companies-forms',
+  selector: 'app-tpa-list-forms',
   template: `
     <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -13,7 +13,6 @@ import { SweetAlertResult } from 'sweetalert2';
       <i class="ri-more-2-fill"></i>
     </button>
     <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-      <button ngbDropdownItem  class="btn btn-sm" (click)="Edit()"><i class="ri-edit-line align-bottom me-2 text-muted"></i> Edit</button>
       <button ngbDropdownItem  class="btn btn-sm" (click)="Delete()"><i class="ri-delete-bin-line align-bottom me-2 text-muted"></i> Delete</button>
     </div>
   </div>
@@ -43,13 +42,14 @@ import { SweetAlertResult } from 'sweetalert2';
 		`,
   ]
 })
-export class InsuranceCompaniesFormsComponent
+export class TpaListFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceCompaniesComponent;
+  private comp!: TpaListComponent;
 
   constructor (private message: MessagesService) { }
+
 
   agInit (params: ICellRendererParams)
   {
@@ -57,10 +57,6 @@ export class InsuranceCompaniesFormsComponent
     this.comp = this.params.context.comp;
   }
 
-  Edit ()
-  {
-    this.comp.openInsuranceDialoge(this.params.data.identity);
-  }
 
   Delete ()
   {
@@ -68,7 +64,7 @@ export class InsuranceCompaniesFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity);
+        this.comp.DeleteTpaList(this.params.data.sNo);
       } else
       {
         return;

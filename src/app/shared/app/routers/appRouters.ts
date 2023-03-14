@@ -40,6 +40,15 @@ export const AppRoutes = {
       complaintsSettings: "complaints-settings",
       complaintsSuspectiveCauses: "complaints-suspective-causes",
       customerServiceCancellationReason: "Cs-cancellation-reasons",
+    },
+    claims: {
+      carsMake: "cars-make",
+      hospitals: "hospitals",
+      insuranceWorkShopDetails: "insurance-work-shop-details",
+      tpaList: "tpa-list",
+      claimsGeneralItems: "claims-general-items",
+      claimsStatus: "claims-status",
+      claimsRejectionReasons: "claims-rejection-reasons"
     }
   },
   Client: {

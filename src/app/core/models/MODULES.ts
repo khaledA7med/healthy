@@ -24,5 +24,10 @@ export enum MODULES
   PolicyIssuanceRequirements = "PolicyIssuanceRequirements",
   InsuranceCompaniesDocuments = "InsuranceCompaniesDocuments",
   CustomerServiceCompanyRequirements = "CustomerServiceCompanyRequirements",
+  Hospitals = "Hospitals",
+  InsuranceWorkshopDetails = "InsuranceWorkshopDetails",
+  ClaimsGeneralItems = "ClaimsGeneralItems",
+  ClaimsStatus = "ClaimsStatus",
+  ClaimsRejectionReasons = "ClaimsRejectionReasons",
   Reports = "Reports",
 }

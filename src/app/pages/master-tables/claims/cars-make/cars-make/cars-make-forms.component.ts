@@ -1,11 +1,11 @@
-import { InsuranceCompaniesComponent } from './insurance-companies.component';
+import { CarsMakeComponent } from './cars-make.component';
 import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
 
 @Component({
-  selector: 'app-insurance-companies-forms',
+  selector: 'app-cars-make-forms',
   template: `
     <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -43,13 +43,14 @@ import { SweetAlertResult } from 'sweetalert2';
 		`,
   ]
 })
-export class InsuranceCompaniesFormsComponent
+export class CarsMakeFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: InsuranceCompaniesComponent;
+  private comp!: CarsMakeComponent;
 
   constructor (private message: MessagesService) { }
+
 
   agInit (params: ICellRendererParams)
   {
@@ -59,7 +60,7 @@ export class InsuranceCompaniesFormsComponent
 
   Edit ()
   {
-    this.comp.openInsuranceDialoge(this.params.data.identity);
+    this.comp.openCarsMakeDialoge(this.params.data.sNo);
   }
 
   Delete ()
@@ -68,12 +69,11 @@ export class InsuranceCompaniesFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsurance(this.params.data.identity);
+        this.comp.DeleteCarsMake(this.params.data.sNo);
       } else
       {
         return;
       }
     });
   }
-
 }

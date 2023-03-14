@@ -8,38 +8,38 @@ import { MessagesService } from 'src/app/shared/services/messages.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ILineOfBusiness, ILineOfBusinessData } from 'src/app/shared/app/models/MasterTables/i-line-of-business';
-import { LineOfBusinessService } from 'src/app/shared/services/master-tables/line-of-business.service';
-import { lineOfBusinessCols } from 'src/app/shared/app/grid/lineOfBusinessCols';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
-import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
+import { IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
 import { MODULES } from 'src/app/core/models/MODULES';
-
+import { ClaimsStatusService } from 'src/app/shared/services/master-tables/claims/claims-status.service';
+import { claimsStatusCols } from 'src/app/shared/app/grid/claimsStatusCols';
+import { IClaimsStatus, IClaimsStatusData } from 'src/app/shared/app/models/MasterTables/claims/i-claims-status';
 
 @Component({
-  selector: 'app-line-of-business',
-  templateUrl: './line-of-business.component.html',
-  styleUrls: [ './line-of-business.component.scss' ],
+  selector: 'app-claims-status',
+  templateUrl: './claims-status.component.html',
+  styleUrls: [ './claims-status.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class LineOfBusinessComponent implements OnInit, OnDestroy
+export class ClaimsStatusComponent implements OnInit, OnDestroy
 {
 
   lookupData!: Observable<IBaseMasterTable>;
-  LineOfBussinessFormSubmitted = false as boolean;
-  LineOfBussinessModal!: NgbModalRef;
-  LineOfBussinessForm!: FormGroup<ILineOfBusiness>;
+  ClaimsStatusFormSubmitted = false as boolean;
+  ClaimsStatusModal!: NgbModalRef;
+  ClaimsStatusForm!: FormGroup<IClaimsStatus>;
+  lineOfBussArr: IGenericResponseType[] = [];
 
-  @ViewChild("LineOfBussinessContent") LineOfBussinessContent!: TemplateRef<any>;
+  @ViewChild("ClaimsStatusContent") ClaimsStatusContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as ILineOfBusiness[],
+    list: [] as IClaimsStatus[],
     totalPages: 0,
-    editLineOfBusinessMode: false as Boolean,
-    editLineOfBusinessData: {} as ILineOfBusinessData,
-    className: "Accident"
+    editClaimsStatusMode: false as Boolean,
+    editClaimsStatusData: {} as IClaimsStatusData,
+    status: "Active"
 
   };
 
@@ -50,7 +50,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: lineOfBusinessCols,
+    columnDefs: claimsStatusCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -67,8 +67,8 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.LineOfBusinessService.getLineOfBusiness(this.uiState.className).subscribe(
-        (res: HttpResponse<IBaseResponse<ILineOfBusiness[]>>) =>
+      let sub = this.ClaimsStatusService.getClaimsStatus(this.uiState.status).subscribe(
+        (res: HttpResponse<IBaseResponse<IClaimsStatus[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
@@ -110,7 +110,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
   }
 
   constructor (
-    private LineOfBusinessService: LineOfBusinessService,
+    private ClaimsStatusService: ClaimsStatusService,
     private message: MessagesService,
     private table: MasterTableService,
     private eventService: EventService,
@@ -119,18 +119,18 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initLineOfBusinessForm();
+    this.initClaimsStatusForm();
     this.getLookupData();
   }
 
   getLookupData ()
   {
-    this.lookupData = this.table.getBaseData(MODULES.LineOfBusiness);
+    this.lookupData = this.table.getBaseData(MODULES.ClaimsStatus);
   }
 
-  DeleteLineOfBusiness (id: string)
+  DeleteClaimsStatus (sNo: number)
   {
-    let sub = this.LineOfBusinessService.DeleteLineOfBusiness(id).subscribe(
+    let sub = this.ClaimsStatusService.DeleteClaimsStatus(sNo).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -145,15 +145,15 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  getLineOfBusinessData (id: string)
+  getClaimsStatusData (sNo: number)
   {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.LineOfBusinessService.getEditLineOfBusinessData(id).subscribe(
-      (res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) =>
+    let sub = this.ClaimsStatusService.getEditClaimsStatusData(sNo).subscribe(
+      (res: HttpResponse<IBaseResponse<IClaimsStatusData>>) =>
       {
-        this.uiState.editLineOfBusinessMode = true;
-        this.uiState.editLineOfBusinessData = res.body?.data!;
-        this.fillEditLineOfBusinessForm(res.body?.data!);
+        this.uiState.editClaimsStatusMode = true;
+        this.uiState.editClaimsStatusData = res.body?.data!;
+        this.fillEditClaimsStatusForm(res.body?.data!);
         this.eventService.broadcast(reserved.isLoading, false);
       },
       (err: HttpErrorResponse) =>
@@ -165,62 +165,54 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openLineOfBusinessDialoge (id: string)
+  openClaimsStatusDialoge (sNo: number)
   {
-    this.resetLineOfBusinessForm();
-    this.LineOfBussinessModal = this.modalService.open(this.LineOfBussinessContent, {
+    this.resetClaimsStatusForm();
+    this.ClaimsStatusModal = this.modalService.open(this.ClaimsStatusContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
       size: "md",
     });
 
-    this.getLineOfBusinessData(id);
+    this.getClaimsStatusData(sNo);
 
-    this.LineOfBussinessModal.hidden.subscribe(() =>
+    this.ClaimsStatusModal.hidden.subscribe(() =>
     {
-      this.resetLineOfBusinessForm();
-      this.LineOfBussinessFormSubmitted = false;
-      this.uiState.editLineOfBusinessMode = false;
+      this.resetClaimsStatusForm();
+      this.ClaimsStatusFormSubmitted = false;
+      this.uiState.editClaimsStatusMode = false;
     });
   }
 
-  initLineOfBusinessForm ()
+  initClaimsStatusForm ()
   {
-    this.LineOfBussinessForm = new FormGroup<ILineOfBusiness>({
+    this.ClaimsStatusForm = new FormGroup<IClaimsStatus>({
       sNo: new FormControl(null),
-      className: new FormControl("", Validators.required),
-      lineofBusiness: new FormControl("", Validators.required),
-      lineofBusinessAr: new FormControl(""),
-      abbreviation: new FormControl("", Validators.required),
+      status: new FormControl("", Validators.required),
+      claimNotes: new FormControl("", Validators.required),
     })
   }
 
   get f ()
   {
-    return this.LineOfBussinessForm.controls;
+    return this.ClaimsStatusForm.controls;
   }
 
-  fillAddLineOfBusinessForm (data: ILineOfBusinessData)
+  fillAddClaimsStatusForm (data: IClaimsStatusData)
   {
-    this.f.className?.patchValue(data.className!);
-    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
-    this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.status?.patchValue(data.status!);
+    this.f.claimNotes?.patchValue(data.claimNotes!);
   }
 
-  fillEditLineOfBusinessForm (data: ILineOfBusinessData)
+  fillEditClaimsStatusForm (data: IClaimsStatusData)
   {
-    this.f.className?.patchValue(data.className!);
-    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
-    this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-    this.f.className?.disable();
+    this.f.claimNotes?.patchValue(data.claimNotes!);
   }
 
   validationChecker (): boolean
   {
-    if (this.LineOfBussinessForm.invalid)
+    if (this.ClaimsStatusForm.invalid)
     {
       this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
       return false;
@@ -230,30 +222,28 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
 
   filter (e: any)
   {
-    this.uiState.className = e?.name
+    this.uiState.status = e?.name
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  submitLineOfBusinessData (form: FormGroup)
+  submitClaimsStatusData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: ILineOfBusinessData = {
-      sNo: this.uiState.editLineOfBusinessMode ? this.uiState.editLineOfBusinessData.sNo : 0,
-      className: formData.className,
-      lineofBusiness: formData.lineofBusiness,
-      lineofBusinessAr: formData.lineofBusinessAr,
-      abbreviation: formData.abbreviation,
+    const data: IClaimsStatusData = {
+      sNo: this.uiState.editClaimsStatusMode ? this.uiState.editClaimsStatusData.sNo : 0,
+      status: formData.status,
+      claimNotes: formData.claimNotes,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
+    let sub = this.ClaimsStatusService.saveClaimsStatus(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.LineOfBussinessModal?.dismiss();
+        this.ClaimsStatusModal?.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetLineOfBusinessForm();
+        this.resetClaimsStatusForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -266,10 +256,9 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetLineOfBusinessForm ()
+  resetClaimsStatusForm ()
   {
-    this.LineOfBussinessForm.reset();
-    this.f.className?.enable();
+    this.ClaimsStatusForm.reset();
   }
 
   ngOnDestroy (): void

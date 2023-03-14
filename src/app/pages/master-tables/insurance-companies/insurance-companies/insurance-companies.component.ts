@@ -1,4 +1,3 @@
-import { IProductsList } from './../../../../shared/app/models/MasterTables/insurance-companies/i-products-list';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -17,6 +16,7 @@ import { reserved } from 'src/app/core/models/reservedWord';
 import { IContactList } from 'src/app/shared/app/models/MasterTables/insurance-companies/i-contact-list';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
+import { IProductsList } from 'src/app/shared/app/models/MasterTables/insurance-companies/i-products-list';
 
 @Component({
   selector: 'app-insurance-companies',
@@ -377,6 +377,8 @@ export class InsuranceCompaniesComponent implements OnInit
   resetInsuranceForm ()
   {
     this.InsuranceForm.reset();
+    this.contactListArray.clear();
+    this.productsListArray.clear();
   }
 
   DeleteInsurance (id: string)

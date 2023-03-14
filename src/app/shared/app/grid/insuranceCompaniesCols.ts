@@ -1,6 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { InsuranceCompaniesFormsComponent } from "src/app/pages/master-tables/insurance-companies/insurance-companies/insurance-companies-forms.component";
-InsuranceCompaniesFormsComponent
+
 export const insuranceCompaniesCols: ColDef[] = [
     {
         colId: "action",

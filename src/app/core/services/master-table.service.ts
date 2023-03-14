@@ -93,6 +93,44 @@ export class MasterTableService
           name: BaseData.PolicyEndorsTypes,
         }
       ],
+      ClaimsHospitals: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.regions,
+          name: BaseData.Regions,
+        }
+      ],
+      insuranceWorkshopDetails: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.cities,
+          name: BaseData.Cities,
+        }
+      ],
+      ClaimsGeneralItems: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
+          name: BaseData.ContactLineOfBusiness,
+        },
+      ],
+      ClaimsStatus: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.claimStatus,
+          name: BaseData.ClaimStatus,
+        },
+      ],
+      ClaimsRejectionReasons: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.TypeClaimsRejectionReason,
+          name: BaseData.TypeClaimsRejectionReason,
+        },
+      ],
       Client: [
         {
           route: ApiRoutes.MasterTable.Client.clientType,
@@ -615,6 +653,21 @@ export class MasterTableService
         break;
       case MODULES.CustomerServiceCompanyRequirements:
         this.dataSrc = data.CustomerServiceCompanyRequiremenrs;
+        break;
+      case MODULES.Hospitals:
+        this.dataSrc = data.ClaimsHospitals;
+        break;
+      case MODULES.InsuranceWorkshopDetails:
+        this.dataSrc = data.insuranceWorkshopDetails;
+        break;
+      case MODULES.ClaimsGeneralItems:
+        this.dataSrc = data.ClaimsGeneralItems;
+        break;
+      case MODULES.ClaimsStatus:
+        this.dataSrc = data.ClaimsStatus;
+        break;
+      case MODULES.ClaimsRejectionReasons:
+        this.dataSrc = data.ClaimsRejectionReasons;
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;
