@@ -234,6 +234,31 @@ export const MENU: MenuItem[] = [
 					},
 				],
 			},
+			{
+				id: 114,
+				label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.TEXT",
+				parentId: 1,
+				subItems: [
+					{
+						id: 1014,
+						label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLIENTS",
+						link: AppRoutes.MasterTable.listOfDocuments.clients,
+						parentId: 114,
+					},
+					{
+						id: 1015,
+						label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLAIMS",
+						link: AppRoutes.MasterTable.listOfDocuments.claims,
+						parentId: 114,
+					},
+					{
+						id: 1016,
+						label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.PRODUCTION",
+						link: AppRoutes.MasterTable.listOfDocuments.production,
+						parentId: 114,
+					},
+				],
+			},
 		],
 	},
 	{

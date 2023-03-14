@@ -15,6 +15,7 @@ export const ApiRoutes = {
 			contactDepartment: LookUpTables + BaseData.ContactDepartment,
 			TypeOfCustomerServices: LookUpTables + BaseData.TypeOfCustomerServices,
 			vehicleCarsMake: LookUpTables + BaseData.VehicleCarsMake,
+			getPolicyTypeIssue: LookUpTables + BaseData.GetPolicyTypeIssue,
 		},
 		Client: {
 			clientType: LookUpTables + BaseData.ClientType,
@@ -307,6 +308,26 @@ export const ApiRoutes = {
 				save: "/MasterTables/VehicleColors/Save",
 				edit: "/MasterTables/VehicleColors/Edit",
 				delete: "/MasterTables/VehicleColors/Delete",
+			},
+		},
+		listOfDocuments: {
+			clients: {
+				search: "/MasterTables/DocumentsClients/Search",
+				save: "/MasterTables/DocumentsClients/Save",
+				edit: "/MasterTables/DocumentsClients/Edit",
+				delete: "/MasterTables/DocumentsClients/Delete",
+			},
+			claims: {
+				search: "/MasterTables/DocumentsClaims/Search",
+				save: "/MasterTables/DocumentsClaims/Save",
+				edit: "/MasterTables/DocumentsClaims/Edit",
+				delete: "/MasterTables/DocumentsClaims/Delete",
+			},
+			production: {
+				search: "/MasterTables/DocumentsPolicies/Search",
+				save: "/MasterTables/DocumentsPolicies/Save",
+				edit: "/MasterTables/DocumentsPolicies/Edit",
+				delete: "/MasterTables/DocumentsPolicies/Delete",
 			},
 		},
 	},

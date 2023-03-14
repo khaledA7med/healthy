@@ -53,6 +53,11 @@ export const AppRoutes = {
 			vehiclesType: "Vehicles-type",
 			vehiclesColor: "Vehicles-color",
 		},
+		listOfDocuments: {
+			clients: "list-of-required-documents-clients",
+			claims: "list-of-required-documents-claims",
+			production: "list-of-required-documents-production",
+		},
 	},
 	Client: {
 		base: "clients",

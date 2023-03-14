@@ -183,6 +183,10 @@ const routes: Routes = [
 		path: "",
 		loadChildren: () => import("./production/production.module").then((m) => m.ProductionModule),
 	},
+	{
+		path: "",
+		loadChildren: () => import("./list-of-required-documents/list-of-required-documents.module").then((m) => m.ListOfRequiredDocumentsModule),
+	},
 ];
 
 @NgModule({

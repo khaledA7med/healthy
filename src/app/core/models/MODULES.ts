@@ -20,5 +20,6 @@ export enum MODULES {
 	QuotingRequirements = "QuotingRequirements",
 	PolicyIssuanceRequirements = "PolicyIssuanceRequirements",
 	MasterTableProductionLibraries = "MasterTableProductionLibraries",
+	MasterTableListOfRequiredDocuments = "MasterTableListOfRequiredDocuments",
 	Reports = "Reports",
 }
