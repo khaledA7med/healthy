@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { EventService } from "../core/services/event.service";
@@ -21,9 +22,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.layoutType = LAYOUT_VERTICAL;
 
     // listen to event and change the layout, theme, etc
-    const sub = this.eventService.subscribe("changeLayout", (layout) => {
-      this.layoutType = layout;
-    });
+    const sub = this.eventService.subscribe(
+      "changeLayout",
+      (layout) => (this.layoutType = layout)
+    );
 
     this.subscribe.push(sub);
   }

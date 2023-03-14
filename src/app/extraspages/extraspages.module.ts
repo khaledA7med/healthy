@@ -6,12 +6,14 @@ import { ExtrapagesRoutingModule } from './extraspages-routing.module';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { Error401Component } from './error401/error401.component';
 
 @NgModule({
   declarations: [
     MaintenanceComponent,
     ComingSoonComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    Error401Component
   ],
   imports: [
     CommonModule,

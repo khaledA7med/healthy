@@ -1,6 +1,7 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
+import { inject, NgModule, Type } from "@angular/core";
+import { CanMatchFn, RouterModule, Routes } from "@angular/router";
 import { ClientGuard } from "src/app/core/guards/clients/client.guard";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
 const routes: Routes = [
@@ -13,7 +14,13 @@ const routes: Routes = [
       import("./client-registry-list/client-registry-list.module").then(
         (m) => m.ClientRegistryListModule
       ),
-    canActivate: [ClientGuard],
+    canActivate: [
+      () =>
+        ClientGuard([
+          // ClientsPermissions.ChClientsRegistry,
+          ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
+        ]),
+    ],
   },
   {
     path: AppRoutes.Client.clientRegistry + "/:id",
@@ -62,6 +69,11 @@ const routes: Routes = [
       import("./client-reports/client-reports.module").then(
         (m) => m.ClientReportsModule
       ),
+  },
+  {
+    path: "",
+    redirectTo: "/",
+    pathMatch: "full",
   },
 ];
 

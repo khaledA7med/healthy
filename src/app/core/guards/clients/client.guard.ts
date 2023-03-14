@@ -1,51 +1,19 @@
-import { Injectable } from "@angular/core";
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from "@angular/router";
+import { inject } from "@angular/core";
+import { Router, UrlTree } from "@angular/router";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { MessagesService } from "src/app/shared/services/messages.service";
-import { ClientsPermissions } from "../../roles/clients-permissions";
+import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { PermissionsService } from "../../services/permissions.service";
 
-@Injectable({
-  providedIn: "root",
-})
-export class ClientGuard implements CanActivate {
-  constructor(
-    private permission: PermissionsService,
-    private message: MessagesService,
-    private router: Router
-  ) {}
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    return this.permission
-      .getClientPrivilege([
-        ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
-      ])
-      .pipe(
-        map((hasAccess: boolean) => {
-          if (!hasAccess) {
-            this.message.popup(
-              "Attention!",
-              "You Are Not Authorized To Access",
-              "warning"
-            );
-            this.router.navigate(["/"]);
-          }
-
-          return hasAccess;
-        })
-      );
-  }
-}
+export const ClientGuard = (
+  permissions: string[]
+): Observable<boolean | UrlTree> => {
+  const permission = inject(PermissionsService);
+  const router = inject(Router);
+  return permission.hasClientPrivilege(permissions).pipe(
+    map((hasAccess: boolean) => {
+      if (!hasAccess) router.navigate([AppRoutes.Error.notAuth]);
+      return hasAccess;
+    })
+  );
+};

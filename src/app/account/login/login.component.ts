@@ -75,9 +75,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       userName: this.loginForm.controls["userName"].value,
       password: this.loginForm.controls["password"].value,
     };
-    if (!this.loginForm.valid) {
-      return;
-    } else {
+    if (!this.loginForm.valid) return;
+    else {
       let sub = this.auth.login(data).subscribe(
         (res: IBaseResponse<LoginResponse>) => {
           if (res.status) {
