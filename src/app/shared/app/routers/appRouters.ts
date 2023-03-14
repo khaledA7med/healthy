@@ -49,6 +49,9 @@ export const AppRoutes = {
 			libraryOfExclusions: "library-of-exclusions",
 			libraryOfWarranties: "library-of-warranties",
 			lifePlan: "life-plan",
+			vehiclesMake: "Vehicles-make",
+			vehiclesType: "Vehicles-type",
+			vehiclesColor: "Vehicles-color",
 		},
 	},
 	Client: {
