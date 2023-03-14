@@ -1,5 +1,5 @@
-import { inject, NgModule, Type } from "@angular/core";
-import { CanMatchFn, RouterModule, Routes } from "@angular/router";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 import { ClientGuard } from "src/app/core/guards/clients/client.guard";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -17,7 +17,8 @@ const routes: Routes = [
     canActivate: [
       () =>
         ClientGuard([
-          // ClientsPermissions.ChClientsRegistry,
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsRegistry,
           ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
         ]),
     ],

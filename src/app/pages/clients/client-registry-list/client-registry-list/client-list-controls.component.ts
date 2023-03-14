@@ -2,6 +2,10 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { ICellRendererParams } from "ag-grid-community";
+import { Observable } from "rxjs";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
+import { Roles } from "src/app/core/roles/Roles";
+import { PermissionsService } from "src/app/core/services/permissions.service";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 @Component({
   selector: "app-client-list-controls",
@@ -17,7 +21,16 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
           <i class="ri-more-2-fill"></i>
         </button>
         <div ngbDropdownMenu aria-labelledby="actionDropdown">
-          <button ngbDropdownItem (click)="Edit()" class="btn btn-sm">
+          <button
+            ngbDropdownItem
+            (click)="Edit()"
+            class="btn btn-sm"
+            *ngIf="
+              !(permissions$ | async)?.includes(
+                privileges.ChClientsRegistryAdministratorReadOnly
+              )
+            "
+          >
             Edit
           </button>
           <button ngbDropdownItem (click)="view()" class="btn btn-sm">
@@ -32,11 +45,16 @@ import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 export class ClientListControlsComponent {
   private params!: ICellRendererParams;
   route: string = AppRoutes.Client.clientRegistry;
-
-  constructor(private _Router: Router) {}
+  permissions$!: Observable<string[]>;
+  privileges = ClientsPermissions;
+  constructor(
+    private _Router: Router,
+    private permission: PermissionsService
+  ) {}
 
   agInit(params: ICellRendererParams) {
     this.params = params;
+    this.permissions$ = this.permission.getPrivileges(Roles.Clients);
   }
 
   Edit() {

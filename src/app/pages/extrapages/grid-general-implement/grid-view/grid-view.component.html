@@ -1,8 +1,0 @@
-<div class="gridTableView ag-theme-alpine" appTableView>
-    <ag-grid-angular style="width: 100%; height: 350px;" (sortChanged)="testSort($event)" [rowData]="rowData"
-        [columnDefs]="columnDef" [editType]="'fullRow'" [animateRows]="true" (gridReady)="gridReady($event)"
-        [defaultColDef]="defaultColDef" [pagination]="true" (cellClicked)="onCellClicked($event)"
-        (paginationChanged)="onPageChange($event)" [paginationPageSize]="6">
-    </ag-grid-angular>
-</div>
-<!-- [ngClass]="{'ag-theme-alpine': false, 'ag-theme-alpine-dark': true}" -->
