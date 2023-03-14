@@ -2,41 +2,36 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
-import { MODULES } from "src/app/core/models/MODULES";
+import { Subscription } from "rxjs";
+import { IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
-import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { MasterTableProductionService } from "src/app/shared/services/master-tables/production/production.service";
-import { ILifePlanFilter } from "src/app/shared/app/models/MasterTables/production/i-life-plan-filter";
-import { ILifePlanForm, ILifePlanReq } from "src/app/shared/app/models/MasterTables/production/i-life-plan-form";
-import { masterTableLifePlanCols } from "src/app/shared/app/grid/MasterTableLifePlanCols";
-
+import { IVehicleMakeFilter, IVehicleMakeForm, IVehicleMakeReq } from "src/app/shared/app/models/MasterTables/production/i-vehicle-make";
+import { VehicleMakeCols } from "src/app/shared/app/grid/MasterTableVehicleMakeCols";
 @Component({
-	selector: "app-life-plan",
-	templateUrl: "./life-plan.component.html",
-	styleUrls: ["./life-plan.component.scss"],
+	selector: "app-vehicles-make",
+	templateUrl: "./vehicles-make.component.html",
+	styleUrls: ["./vehicles-make.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class LifePlanComponent implements OnInit, OnDestroy {
+export class VehiclesMakeComponent implements OnInit, OnDestroy {
 	@ViewChild("formDialoge") formDialoge!: TemplateRef<any>;
-	formGroup!: FormGroup<ILifePlanForm>;
+	formGroup!: FormGroup<IVehicleMakeForm>;
 	submitted: boolean = false;
-	lookupData!: Observable<IBaseMasterTable>;
 
 	subscribes: Subscription[] = [];
 	uiState = {
 		submitted: false as Boolean,
 		gridReady: false as Boolean,
 		lists: {
-			itemsList: [] as ILifePlanFilter[],
+			itemsList: [] as IVehicleMakeFilter[],
 			linesOfBusiness: [] as IGenericResponseType[],
 		},
-		editItemData: {} as ILifePlanReq,
+		editItemData: {} as IVehicleMakeReq,
 		editMode: false as Boolean,
 	};
 	gridApi: GridApi = <GridApi>{};
@@ -44,7 +39,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: masterTableLifePlanCols,
+		columnDefs: VehicleMakeCols,
 		suppressCsvExport: true,
 		context: { comp: this },
 		defaultColDef: {
@@ -62,8 +57,8 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.productionService.getLifePlans(this.f.insuranceCompany?.value!).subscribe(
-				(res: HttpResponse<IBaseResponse<ILifePlanFilter[]>>) => {
+			let sub = this.productionService.getVehicleMake().subscribe(
+				(res: HttpResponse<IBaseResponse<IVehicleMakeFilter[]>>) => {
 					if (res.body?.status) {
 						this.uiState.lists.itemsList = res.body?.data!;
 						params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
@@ -108,20 +103,17 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		private modalService: NgbModal,
 		private message: MessagesService,
 		private productionService: MasterTableProductionService,
-		private table: MasterTableService,
 		private eventService: EventService
 	) {}
 
 	ngOnInit(): void {
-		this.initFilterForm();
-		this.lookupData = this.table.getBaseData(MODULES.MasterTableProductionLibraries);
+		this.initForm();
 	}
 
-	initFilterForm() {
-		this.formGroup = new FormGroup<ILifePlanForm>({
+	initForm() {
+		this.formGroup = new FormGroup<IVehicleMakeForm>({
 			sNo: new FormControl(0),
-			insuranceCompany: new FormControl("", Validators.required),
-			planName: new FormControl("", Validators.required),
+			make: new FormControl("", Validators.required),
 		});
 	}
 
@@ -130,15 +122,14 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	getEditItemData(id: string) {
-		let sub = this.productionService.editLifePlan(id).subscribe(
-			(res: IBaseResponse<ILifePlanReq>) => {
+		let sub = this.productionService.editVehicleMake(id).subscribe(
+			(res: IBaseResponse<IVehicleMakeReq>) => {
 				if (res?.status) {
 					this.uiState.editMode = true;
 					this.uiState.editItemData = res.data!;
 					this.formGroup.patchValue({
 						sNo: this.uiState.editItemData.sNo!,
-						planName: this.uiState.editItemData.planName!,
-						insuranceCompany: this.uiState.editItemData.insuranceCompany!,
+						make: this.uiState.editItemData.make!,
 					});
 
 					console.log(this.formGroup.getRawValue());
@@ -153,7 +144,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	deleteItem(id: string) {
-		let sub = this.productionService.deleteLifePlan(id).subscribe(
+		let sub = this.productionService.deleteVehicleMake(id).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res?.status) {
 					this.gridApi.setDatasource(this.dataSource);
@@ -167,17 +158,16 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	onSubmit(formGroup: FormGroup<ILifePlanForm>) {
+	onSubmit(formGroup: FormGroup<IVehicleMakeForm>) {
 		this.uiState.submitted = true;
 		if (this.formGroup?.invalid) {
 			return;
 		}
-		console.log(formGroup.getRawValue());
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: ILifePlanReq = {
+		const data: IVehicleMakeReq = {
 			...formGroup.getRawValue(),
 		};
-		let sub = this.productionService.saveLifePlan(data).subscribe(
+		let sub = this.productionService.saveVehicleMake(data).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res.status) {
 					this.modalRef.dismiss();
@@ -197,23 +187,16 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	openformDialoge() {
-		if (this.f.insuranceCompany?.valid) {
-			this.uiState.submitted = false;
-			this.modalRef = this.modalService.open(this.formDialoge, {
-				ariaLabelledBy: "modal-basic-title",
-				centered: true,
-				backdrop: "static",
-				size: "lg",
-			});
+		this.modalRef = this.modalService.open(this.formDialoge, {
+			ariaLabelledBy: "modal-basic-title",
+			centered: true,
+			backdrop: "static",
+			size: "lg",
+		});
 
-			this.modalRef.hidden.subscribe(() => {
-				this.f.sNo?.patchValue(0);
-				this.f.planName?.patchValue("");
-				this.uiState.editMode = false;
-			});
-		} else {
-			this.uiState.submitted = true;
-		}
+		this.modalRef.hidden.subscribe(() => {
+			this.resetForm();
+		});
 	}
 
 	ngOnDestroy(): void {
@@ -222,6 +205,8 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.formGroup.reset();
-		this.submitted = false;
+		this.f.sNo?.patchValue(0);
+		this.uiState.editMode = false;
+		this.uiState.submitted = false;
 	}
 }

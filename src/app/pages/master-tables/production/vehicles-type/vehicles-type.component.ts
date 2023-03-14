@@ -12,19 +12,18 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { MasterTableProductionService } from "src/app/shared/services/master-tables/production/production.service";
-import { ILifePlanFilter } from "src/app/shared/app/models/MasterTables/production/i-life-plan-filter";
-import { ILifePlanForm, ILifePlanReq } from "src/app/shared/app/models/MasterTables/production/i-life-plan-form";
-import { masterTableLifePlanCols } from "src/app/shared/app/grid/MasterTableLifePlanCols";
+import { IVehicleTypeFilter, IVehicleTypeForm, IVehicleTypeReq } from "src/app/shared/app/models/MasterTables/production/i-vehicle-type";
+import { VehicleTypeCols } from "src/app/shared/app/grid/MasterTableVehicleTypeCols";
 
 @Component({
-	selector: "app-life-plan",
-	templateUrl: "./life-plan.component.html",
-	styleUrls: ["./life-plan.component.scss"],
+	selector: "app-vehicles-type",
+	templateUrl: "./vehicles-type.component.html",
+	styleUrls: ["./vehicles-type.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class LifePlanComponent implements OnInit, OnDestroy {
+export class VehiclesTypeComponent implements OnInit, OnDestroy {
 	@ViewChild("formDialoge") formDialoge!: TemplateRef<any>;
-	formGroup!: FormGroup<ILifePlanForm>;
+	formGroup!: FormGroup<IVehicleTypeForm>;
 	submitted: boolean = false;
 	lookupData!: Observable<IBaseMasterTable>;
 
@@ -33,10 +32,10 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		submitted: false as Boolean,
 		gridReady: false as Boolean,
 		lists: {
-			itemsList: [] as ILifePlanFilter[],
+			itemsList: [] as IVehicleTypeFilter[],
 			linesOfBusiness: [] as IGenericResponseType[],
 		},
-		editItemData: {} as ILifePlanReq,
+		editItemData: {} as IVehicleTypeReq,
 		editMode: false as Boolean,
 	};
 	gridApi: GridApi = <GridApi>{};
@@ -44,7 +43,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: masterTableLifePlanCols,
+		columnDefs: VehicleTypeCols,
 		suppressCsvExport: true,
 		context: { comp: this },
 		defaultColDef: {
@@ -61,24 +60,28 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-
-			let sub = this.productionService.getLifePlans(this.f.insuranceCompany?.value!).subscribe(
-				(res: HttpResponse<IBaseResponse<ILifePlanFilter[]>>) => {
-					if (res.body?.status) {
-						this.uiState.lists.itemsList = res.body?.data!;
-						params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
-						if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
+			if (this.f.make?.valid!) {
+				let sub = this.productionService.getVehicleType(this.f.make?.value!).subscribe(
+					(res: HttpResponse<IBaseResponse<IVehicleTypeFilter[]>>) => {
+						if (res.body?.status) {
+							this.uiState.lists.itemsList = res.body?.data!;
+							params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
+							if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
+							else this.gridApi.hideOverlay();
+						} else {
+							this.uiState.gridReady = true;
+							this.gridApi.hideOverlay();
+						}
+					},
+					(err: HttpErrorResponse) => {
+						this.message.popup("Oops!", err.message, "error");
 					}
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
-			this.subscribes.push(sub);
+				);
+				this.subscribes.push(sub);
+			} else {
+				params.successCallback([], 0);
+				if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
+			}
 		},
 	};
 
@@ -118,10 +121,10 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	initFilterForm() {
-		this.formGroup = new FormGroup<ILifePlanForm>({
+		this.formGroup = new FormGroup<IVehicleTypeForm>({
 			sNo: new FormControl(0),
-			insuranceCompany: new FormControl("", Validators.required),
-			planName: new FormControl("", Validators.required),
+			make: new FormControl(null, Validators.required),
+			type: new FormControl("", Validators.required),
 		});
 	}
 
@@ -130,15 +133,15 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	getEditItemData(id: string) {
-		let sub = this.productionService.editLifePlan(id).subscribe(
-			(res: IBaseResponse<ILifePlanReq>) => {
+		let sub = this.productionService.editVehicleType(id).subscribe(
+			(res: IBaseResponse<IVehicleTypeReq>) => {
 				if (res?.status) {
 					this.uiState.editMode = true;
 					this.uiState.editItemData = res.data!;
 					this.formGroup.patchValue({
 						sNo: this.uiState.editItemData.sNo!,
-						planName: this.uiState.editItemData.planName!,
-						insuranceCompany: this.uiState.editItemData.insuranceCompany!,
+						make: this.uiState.editItemData.make!,
+						type: this.uiState.editItemData.type!,
 					});
 
 					console.log(this.formGroup.getRawValue());
@@ -153,7 +156,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	deleteItem(id: string) {
-		let sub = this.productionService.deleteLifePlan(id).subscribe(
+		let sub = this.productionService.deleteVehicleType(id).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res?.status) {
 					this.gridApi.setDatasource(this.dataSource);
@@ -167,17 +170,17 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub);
 	}
 
-	onSubmit(formGroup: FormGroup<ILifePlanForm>) {
+	onSubmit(formGroup: FormGroup<IVehicleTypeForm>) {
 		this.uiState.submitted = true;
 		if (this.formGroup?.invalid) {
 			return;
 		}
 		console.log(formGroup.getRawValue());
 		this.eventService.broadcast(reserved.isLoading, true);
-		const data: ILifePlanReq = {
+		const data: IVehicleTypeReq = {
 			...formGroup.getRawValue(),
 		};
-		let sub = this.productionService.saveLifePlan(data).subscribe(
+		let sub = this.productionService.saveVehicleType(data).subscribe(
 			(res: IBaseResponse<any>) => {
 				if (res.status) {
 					this.modalRef.dismiss();
@@ -197,7 +200,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 	}
 
 	openformDialoge() {
-		if (this.f.insuranceCompany?.valid) {
+		if (this.f.make?.valid) {
 			this.uiState.submitted = false;
 			this.modalRef = this.modalService.open(this.formDialoge, {
 				ariaLabelledBy: "modal-basic-title",
@@ -208,7 +211,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 
 			this.modalRef.hidden.subscribe(() => {
 				this.f.sNo?.patchValue(0);
-				this.f.planName?.patchValue("");
+				this.f.type?.patchValue("");
 				this.uiState.editMode = false;
 			});
 		} else {

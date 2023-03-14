@@ -1,4 +1,4 @@
-import { ColDef } from "ag-grid-community";
+import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import { LifePlanListControlsComponent } from "src/app/pages/master-tables/production/life-plan/life-plan-list-controls.component";
 import GlobalCellRender from "./globalCellRender";
 
@@ -9,6 +9,14 @@ export const masterTableLifePlanCols: ColDef[] = [
 		pinned: "left",
 		maxWidth: 80,
 		sortable: false,
+	},
+	{
+		headerName: "No.",
+		field: "sNo",
+		valueFormatter: (e: ValueFormatterParams) => {
+			return (e.node?.rowIndex! + 1).toString();
+		},
+		minWidth: 100,
 	},
 	{
 		headerName: "Insurance Company",

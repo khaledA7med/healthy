@@ -20,6 +20,7 @@ export const ApiRoutes = {
       claimStatus: LookUpTables + BaseData.ClaimStatus,
       TypeClaimsRejectionReason:
         LookUpTables + BaseData.TypeClaimsRejectionReason,
+      vehicleCarsMake: LookUpTables + BaseData.VehicleCarsMake,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -392,6 +393,24 @@ export const ApiRoutes = {
         save: "/MasterTables/LifePlan/Save",
         edit: "/MasterTables/LifePlan/Edit",
         delete: "/MasterTables/LifePlan/Delete",
+      },
+      vehicleMake: {
+        search: "/MasterTables/VehicleCarMake/Search",
+        save: "/MasterTables/VehicleCarMake/Save",
+        edit: "/MasterTables/VehicleCarMake/Edit",
+        delete: "/MasterTables/VehicleCarMake/Delete",
+      },
+      vehicleType: {
+        search: "/MasterTables/VehicleTypes/Search",
+        save: "/MasterTables/VehicleTypes/Save",
+        edit: "/MasterTables/VehicleTypes/Edit",
+        delete: "/MasterTables/VehicleTypes/Delete",
+      },
+      vehicleColor: {
+        search: "/MasterTables/VehicleColors/Search",
+        save: "/MasterTables/VehicleColors/Save",
+        edit: "/MasterTables/VehicleColors/Edit",
+        delete: "/MasterTables/VehicleColors/Delete",
       },
     },
   },

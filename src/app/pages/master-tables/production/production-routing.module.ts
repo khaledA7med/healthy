@@ -52,6 +52,27 @@ const routes: Routes = [
 		},
 		loadChildren: () => import("./life-plan/life-plan.module").then((m) => m.LifePlanModule),
 	},
+	{
+		path: AppRoutes.MasterTable.production.vehiclesMake,
+		data: {
+			title: "Vehicle Car Make",
+		},
+		loadChildren: () => import("./vehicles-make/vehicles-make.module").then((m) => m.VehiclesMakeModule),
+	},
+	{
+		path: AppRoutes.MasterTable.production.vehiclesType,
+		data: {
+			title: "Vehicle Types",
+		},
+		loadChildren: () => import("./vehicles-type/vehicles-type.module").then((m) => m.VehiclesTypeModule),
+	},
+	{
+		path: AppRoutes.MasterTable.production.vehiclesColor,
+		data: {
+			title: "Vehicle Colors",
+		},
+		loadChildren: () => import("./vehicles-colors/vehicles-colors.module").then((m) => m.VehiclesColorsModule),
+	},
 ];
 
 @NgModule({

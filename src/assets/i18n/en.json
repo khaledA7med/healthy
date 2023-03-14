@@ -50,7 +50,10 @@
           "LIBRARYOFDEDUCTIBLES": "Library Of Deductibles",
           "LIBRARYOFEXCLUSIONS": "Library Of Exclusions",
           "LIBRARYOFWARRANTIES": "Library Of Warranties",
-          "LIFEPLAN": "LiFe Plan"
+          "LIFEPLAN": "LiFe Plan",
+          "VEHICLESMAKE": "Vehicles (Make)",
+          "VEHICLESTYPE": "Vehicles (Type)",
+          "VEHICLESCOLOR": "Vehicles (Color)"
         },
         "CLAIMS": {
           "TEXT": "Claims",

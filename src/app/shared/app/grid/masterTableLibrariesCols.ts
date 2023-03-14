@@ -1,4 +1,4 @@
-import { ColDef } from "ag-grid-community";
+import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import { LibrariesFormsListControlsComponent } from "src/app/pages/master-tables/production/libraries-form/libraries-form-list-controls.component";
 import GlobalCellRender from "./globalCellRender";
 
@@ -13,6 +13,9 @@ export const masterTableLibrariesCols: ColDef[] = [
 	{
 		headerName: "No.",
 		field: "sNo",
+		valueFormatter: (e: ValueFormatterParams) => {
+			return (e.node?.rowIndex! + 1).toString();
+		},
 		minWidth: 100,
 	},
 	{
