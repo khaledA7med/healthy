@@ -47,6 +47,16 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
         },
+      ],
+      MasterTableListOfRequiredDocuments: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.getPolicyTypeIssue,
+          name: BaseData.GetPolicyTypeIssue,
+        },
         {
           route: ApiRoutes.MasterTable.MasterTables.vehicleCarsMake,
           name: BaseData.VehicleCarsMake,
@@ -680,6 +690,9 @@ export class MasterTableService {
         break;
       case MODULES.ClaimsRejectionReasons:
         this.dataSrc = data.ClaimsRejectionReasons;
+        break;
+      case MODULES.MasterTableListOfRequiredDocuments:
+        this.dataSrc = data.MasterTableListOfRequiredDocuments;
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;

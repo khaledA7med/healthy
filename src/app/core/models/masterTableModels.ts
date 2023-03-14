@@ -63,6 +63,7 @@ export enum BaseData {
   VehicleCarsMake = "VehicleCarsMake",
   Regions = "Regions",
   TypeClaimsRejectionReason = "TypeClaimsRejectionReason",
+  GetPolicyTypeIssue = "GetPolicyTypeIssue",
 }
 
 export interface IBaseMasterTable {
@@ -130,6 +131,7 @@ export interface IBaseMasterTable {
   VehicleCarsMake?: Caching<IGenericResponseType[]>;
   Regions?: Caching<IGenericResponseType[]>;
   TypeClaimsRejectionReason?: Caching<IGenericResponseType[]>;
+  GetPolicyTypeIssue?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

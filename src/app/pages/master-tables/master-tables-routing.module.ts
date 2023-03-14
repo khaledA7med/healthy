@@ -343,6 +343,13 @@ const routes: Routes = [
         (m) => m.BankSettingsModule
       ),
   },
+  {
+    path: "",
+    loadChildren: () =>
+      import(
+        "./list-of-required-documents/list-of-required-documents.module"
+      ).then((m) => m.ListOfRequiredDocumentsModule),
+  },
 ];
 
 @NgModule({

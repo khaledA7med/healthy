@@ -29,5 +29,6 @@ export enum MODULES {
   ClaimsGeneralItems = "ClaimsGeneralItems",
   ClaimsStatus = "ClaimsStatus",
   ClaimsRejectionReasons = "ClaimsRejectionReasons",
+  MasterTableListOfRequiredDocuments = "MasterTableListOfRequiredDocuments",
   Reports = "Reports",
 }

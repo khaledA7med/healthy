@@ -21,3 +21,9 @@
 .ps__rail-y {
 	opacity: 0.6;
 }
+
+.ng-select .ng-select-container {
+	min-height: 28px !important;
+	height: fit-content !important;
+	max-height: fit-content !important;
+}
