@@ -1,22 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, of, timer } from "rxjs";
-import {
-  defaultIfEmpty,
-  delayWhen,
-  map,
-  mergeMap,
-  retryWhen,
-  take,
-  tap,
-} from "rxjs/operators";
+import { BehaviorSubject, Observable } from "rxjs";
+import { defaultIfEmpty, map, take, tap } from "rxjs/operators";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { environment } from "src/environments/environment";
 import { IPrivileges, LoginResponse } from "../models/iuser";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { Roles } from "../roles/Roles";
-import { AuthenticationService } from "./auth.service";
 
 @Injectable({
   providedIn: "root",
@@ -61,12 +52,6 @@ export class PermissionsService {
             this.permissions$.next(perms);
             return perms!;
           }),
-          retryWhen((errors) =>
-            errors.pipe(
-              mergeMap(() => this.refreshToken()),
-              take(1)
-            )
-          ),
           defaultIfEmpty({})
         );
   }

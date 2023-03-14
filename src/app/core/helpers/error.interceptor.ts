@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from "@angular/common/http";
 import { Observable, of, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { catchError, mergeMap, retryWhen, take } from "rxjs/operators";
 import { AuthenticationService } from "../services/auth.service";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { Router } from "@angular/router";
@@ -30,10 +30,23 @@ export class ErrorInterceptor implements HttpInterceptor {
     private eventService: EventService
   ) {}
 
+  private maxRetryAttempts = 3;
+  private retryDelay = 1000;
+
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    let currentUser = this.auth.currentToken;
+
+    if (currentUser) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${currentUser}`,
+        },
+      });
+    }
+    console.log(currentUser);
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
         let errors = [
@@ -45,13 +58,31 @@ export class ErrorInterceptor implements HttpInterceptor {
           Errors.ForbiddenError,
         ];
         if (err.status === Errors.TokenExpired) {
-          // this.perm.refreshToken();
         } else if (errors.includes(err.status)) this.reusableMessage();
         else if (err.status === 400)
           this.eventService.broadcast(reserved.isLoading, false);
 
         return throwError(err);
-      })
+      }),
+      retryWhen((errors) =>
+        errors.pipe(
+          mergeMap((error, i) => {
+            if (i >= this.maxRetryAttempts - 1) {
+              return throwError(error);
+            }
+            if (error.status === Errors.TokenExpired)
+              return this.perm.refreshToken().pipe(
+                take(1),
+                catchError((refreshError) => {
+                  this.reusableMessage();
+                  return throwError(refreshError);
+                })
+              );
+            return throwError(error);
+          }),
+          take(this.maxRetryAttempts)
+        )
+      )
     );
   }
 

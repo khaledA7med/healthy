@@ -29,7 +29,7 @@ const routes: Routes = [
     canActivate: [UnAuthGuard],
   },
   {
-    path: "pages",
+    path: "",
     loadChildren: () =>
       import("./extraspages/extraspages.module").then(
         (m) => m.ExtraspagesModule
@@ -37,13 +37,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: "**",
-    component: NotFoundComponent,
-  },
-  {
     path: "",
     redirectTo: "/",
     pathMatch: "full",
+  },
+  {
+    path: "**",
+    component: NotFoundComponent,
   },
 ];
 
