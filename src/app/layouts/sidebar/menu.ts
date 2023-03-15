@@ -1,3 +1,4 @@
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { MenuItem } from "./menu.model";
 

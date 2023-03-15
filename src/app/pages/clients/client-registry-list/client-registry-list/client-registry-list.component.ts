@@ -91,7 +91,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 
   constructor(
     private clientService: ClientsService,
-    private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,

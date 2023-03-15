@@ -34,7 +34,7 @@ export class PermissionsService {
     );
   }
 
-  private getAccessRoles(): BehaviorSubject<IPrivileges> | any {
+  getAccessRoles(): BehaviorSubject<IPrivileges> | any {
     if (
       this.permissions$.value &&
       Object.keys(this.permissions$.value).length > 0
