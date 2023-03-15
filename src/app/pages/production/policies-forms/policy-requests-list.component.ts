@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from "@angular/common/http";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 import { Subscription } from "rxjs";
@@ -67,23 +66,17 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
 	requestDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.searchClientByRequest(this.filter).subscribe(
-				(res: IBaseResponse<IPolicyRequests[]>) => {
-					if (res.status) {
-						this.uiState.requests = res.data!;
-						params.successCallback(this.uiState.requests, this.uiState.requests.length);
-						if (this.uiState.requests.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.productionService.searchClientByRequest(this.filter).subscribe((res: IBaseResponse<IPolicyRequests[]>) => {
+				if (res.status) {
+					this.uiState.requests = res.data!;
+					params.successCallback(this.uiState.requests, this.uiState.requests.length);
+					if (this.uiState.requests.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -92,23 +85,17 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
 	clientDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.searchForClient(this.filter).subscribe(
-				(res: IBaseResponse<IPolicyClient[]>) => {
-					if (res.status) {
-						this.uiState.clients = res.data!;
-						params.successCallback(this.uiState.clients, this.uiState.clients.length);
-						if (this.uiState.clients.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.productionService.searchForClient(this.filter).subscribe((res: IBaseResponse<IPolicyClient[]>) => {
+				if (res.status) {
+					this.uiState.clients = res.data!;
+					params.successCallback(this.uiState.clients, this.uiState.clients.length);
+					if (this.uiState.clients.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -117,24 +104,18 @@ export class PolicyRequestsListComponent implements OnDestroy, OnInit {
 	policyDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.searchForPolicy(this.filter).subscribe(
-				(res: IBaseResponse<IPoliciesRef[]>) => {
-					if (res.status) {
-						this.uiState.policies = res.data!;
-						params.successCallback(this.uiState.policies, this.uiState.policies.length);
+			let sub = this.productionService.searchForPolicy(this.filter).subscribe((res: IBaseResponse<IPoliciesRef[]>) => {
+				if (res.status) {
+					this.uiState.policies = res.data!;
+					params.successCallback(this.uiState.policies, this.uiState.policies.length);
 
-						if (this.uiState.policies.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+					if (this.uiState.policies.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};

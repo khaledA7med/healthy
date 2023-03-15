@@ -9,7 +9,7 @@ import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsP
 import { productionEditCommissionCols } from "src/app/shared/app/grid/productionEditCommissionsCols";
 import AppUtils from "src/app/shared/app/util";
 import { IEditCommissions } from "src/app/shared/app/models/Production/i-edit-commissions";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -114,21 +114,15 @@ export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.productionService.getEditCommission(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<IEditCommissions[]>>) => {
-					this.uiState.editCommissions.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.productionService.getEditCommission(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IEditCommissions[]>>) => {
+				this.uiState.editCommissions.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
-					this.uiState.editCommissions.list = res.body?.data!;
+				this.uiState.editCommissions.list = res.body?.data!;
 
-					params.successCallback(this.uiState.editCommissions.list, this.uiState.editCommissions.totalPages);
-					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-					this.gridApi.hideOverlay();
-				}
-			);
+				params.successCallback(this.uiState.editCommissions.list, this.uiState.editCommissions.totalPages);
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -219,27 +213,21 @@ export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
 	//get user Data
 	getUserData(id: string) {
 		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.productionService.getUserData(id).subscribe(
-			(res: HttpResponse<IBaseResponse<IEditCommissionsFormData>>) => {
-				this.fillEditForm(res.body?.data!);
-				if (res.body?.data?.producer?.startsWith("Direct Business")) {
-					this.ff.prodCommProduser?.disable();
-					this.ff.prodCommPercentage?.disable();
-					this.ff.producerCommPerc?.disable();
-					this.subBtn = true;
-				} else {
-					this.ff.prodCommProduser?.enable();
-					this.ff.prodCommPercentage?.enable();
-					this.ff.producerCommPerc?.enable();
-					this.subBtn = false;
-				}
-				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
+		let sub = this.productionService.getUserData(id).subscribe((res: HttpResponse<IBaseResponse<IEditCommissionsFormData>>) => {
+			this.fillEditForm(res.body?.data!);
+			if (res.body?.data?.producer?.startsWith("Direct Business")) {
+				this.ff.prodCommProduser?.disable();
+				this.ff.prodCommPercentage?.disable();
+				this.ff.producerCommPerc?.disable();
+				this.subBtn = true;
+			} else {
+				this.ff.prodCommProduser?.enable();
+				this.ff.prodCommPercentage?.enable();
+				this.ff.producerCommPerc?.enable();
+				this.subBtn = false;
 			}
-		);
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -449,20 +437,14 @@ export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
 		}
 		if (!this.validationChecker()) return;
 		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.productionService.UpdatePolicyComissions(formData).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.editUserModal.dismiss();
-				this.eventService.broadcast(reserved.isLoading, false);
-				this.uiState.submitted = false;
-				this.resetEditForm();
-				this.gridApi.setDatasource(this.dataSource);
-				this.message.toast(res.body?.message!, "success");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.error.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
-			}
-		);
+		let sub = this.productionService.UpdatePolicyComissions(formData).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.editUserModal.dismiss();
+			this.eventService.broadcast(reserved.isLoading, false);
+			this.uiState.submitted = false;
+			this.resetEditForm();
+			this.gridApi.setDatasource(this.dataSource);
+			this.message.toast(res.body?.message!, "success");
+		});
 		this.subscribes.push(sub);
 	}
 

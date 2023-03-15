@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
@@ -91,23 +91,17 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllArchiveNotes(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<IDebitCreditNote[]>>) => {
-					if (res.status) {
-						this.uiState.notes.list = res.body?.data!;
-						params.successCallback(this.uiState.notes.list, this.uiState.notes.list.length);
-						if (this.uiState.notes.list.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.productionService.getAllArchiveNotes(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IDebitCreditNote[]>>) => {
+				if (res.status) {
+					this.uiState.notes.list = res.body?.data!;
+					params.successCallback(this.uiState.notes.list, this.uiState.notes.list.length);
+					if (this.uiState.notes.list.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -129,20 +123,14 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			pram: e.data.pram,
 			reportType: e.data.reportType,
 		};
-		let sub = this.productionService.viewDebitCreditNoteReport(newData).subscribe(
-			(res: HttpResponse<IBaseResponse<string>>) => {
-				if (res.ok) {
-					this.openReportsViewer(res?.body?.data!);
-				} else {
-					this.message.popup("Oops!", res.body?.message!, "error");
-				}
-				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.eventService.broadcast(reserved.isLoading, false);
-				this.message.popup("Oops!", err.message, "error");
+		let sub = this.productionService.viewDebitCreditNoteReport(newData).subscribe((res: HttpResponse<IBaseResponse<string>>) => {
+			if (res.ok) {
+				this.openReportsViewer(res?.body?.data!);
+			} else {
+				this.message.popup("Oops!", res.body?.message!, "error");
 			}
-		);
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 
 		this.searchNotesModal.dismiss();
