@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { NavigationEnd, Router } from "@angular/router";
@@ -104,25 +104,19 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
-					if (res.status) {
-						this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
-						this.uiState.policies.list = res.body?.data!;
-						params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
-						if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
-						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
+				if (res.status) {
+					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+					this.uiState.policies.list = res.body?.data!;
+					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
+					if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
+					this.uiState.gridReady = true;
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "warning");
+					this.gridApi.hideOverlay();
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -211,14 +205,9 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	getLineOfBusiness(e: IGenericResponseType) {
-		let sub = this.masterService.getLineOfBusiness(e.name).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.uiState.lineOfBusinessList = res.body?.data!.content;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.masterService.getLineOfBusiness(e.name).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.uiState.lineOfBusinessList = res.body?.data!.content;
+		});
 		this.subscribes.push(sub);
 	}
 

@@ -110,10 +110,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 					params.successCallback(this.uiState.claims.list, this.uiState.claims.totalPages);
 					this.uiState.gridReady = true;
 					this.gridApi.hideOverlay();
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
 				}
+				// (err: HttpErrorResponse) => {
+				// 	this.message.popup("Oops!", err.message, "error");
+				// }
 			);
 			this.subscribes.push(sub);
 		},
@@ -211,10 +211,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 		let sub = this.claimService.getSubStatus(this.filterF.status?.value!).subscribe(
 			(res: HttpResponse<IBaseResponse<string[]>>) => {
 				this.uiState.claims.subStatus = res.body?.data!;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -282,10 +282,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 		let sub = this.claimService.getFollowUp(sNo).subscribe(
 			(res: HttpResponse<IBaseResponse<IClaimsFollowUp[]>>) => {
 				this.uiState.claims.followUpData = res.body?.data!;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -301,10 +301,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 					this.getFollowUp(form.no);
 					this.message.toast(res.body?.message!, "success");
 				} else this.message.popup("Sorry!", res.body?.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -334,10 +334,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 				} else {
 					this.message.popup("Sorry!", res.body?.message!, "error");
 				}
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -350,10 +350,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 				} else {
 					this.message.popup("Sorry!", res.body?.message!, "error");
 				}
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}

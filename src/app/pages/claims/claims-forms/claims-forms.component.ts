@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -289,123 +289,117 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
 	getClaim(id: string): void {
 		this.uiState.editMode = true;
-		let sub = this.claimService.getClaimById(id).subscribe(
-			(res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
-				if (res.body?.status) {
-					let data = res.body?.data;
-					this.formGroup.patchValue({
-						sNo: data?.sNo,
-						claimType: data?.claimType,
-						clientID: data?.clientID?.toString()!,
-						clientName: data?.clientName,
-						clientInfo: `${data?.clientID} | ${data?.clientName}`,
-						policyNo: data?.policyNo,
-						className: data?.className,
-						insuranceCompany: data?.insuranceCompany,
-						claimNo: data?.claimNo,
-						insurCompClaimNo: data?.insurCompClaimNo,
-						insuredClaimNo: data?.insuredClaimNo,
-						membName: data?.membName,
-						bLAWBNo: data?.blawbNo,
-						lostadjuster: data?.lostadjuster,
-						lostadjusterEmail: data?.lostadjusterEmail,
-						lostadjusterTele: data?.lostadjusterTele,
-						claimAmounts: {
-							claimAmount: data?.claimAmount,
-							estimatedValue: data?.estimatedValue,
-							salvage: data?.salvage,
-						},
-						contactName: data?.contactName,
-						contactEmail: data?.contactEmail,
-						contactTele: data?.contactTele,
-						notes: data?.notes,
+		let sub = this.claimService.getClaimById(id).subscribe((res: HttpResponse<IBaseResponse<IClaimDataForm>>) => {
+			if (res.body?.status) {
+				let data = res.body?.data;
+				this.formGroup.patchValue({
+					sNo: data?.sNo,
+					claimType: data?.claimType,
+					clientID: data?.clientID?.toString()!,
+					clientName: data?.clientName,
+					clientInfo: `${data?.clientID} | ${data?.clientName}`,
+					policyNo: data?.policyNo,
+					className: data?.className,
+					insuranceCompany: data?.insuranceCompany,
+					claimNo: data?.claimNo,
+					insurCompClaimNo: data?.insurCompClaimNo,
+					insuredClaimNo: data?.insuredClaimNo,
+					membName: data?.membName,
+					bLAWBNo: data?.blawbNo,
+					lostadjuster: data?.lostadjuster,
+					lostadjusterEmail: data?.lostadjusterEmail,
+					lostadjusterTele: data?.lostadjusterTele,
+					claimAmounts: {
+						claimAmount: data?.claimAmount,
+						estimatedValue: data?.estimatedValue,
+						salvage: data?.salvage,
+					},
+					contactName: data?.contactName,
+					contactEmail: data?.contactEmail,
+					contactTele: data?.contactTele,
+					notes: data?.notes,
 
-						chIntimationDate: data?.chIntimationDate,
-						intimationDate: this.util.dateStructFormat(data?.intimationDate!) as any,
-						chDateOfLoss: data?.chDateOfLoss,
-						dateOfLoss: this.util.dateStructFormat(data?.dateOfLoss!) as any,
-						chDateOfReceive: data?.chDateOfDeadline,
-						dateOfReceive: this.util.dateStructFormat(data?.dateOfReceive!) as any,
-						chDateOfDeadline: data?.chDateOfDeadline,
-						dateOfDeadline: this.util.dateStructFormat(data?.dateOfDeadline!) as any,
+					chIntimationDate: data?.chIntimationDate,
+					intimationDate: this.util.dateStructFormat(data?.intimationDate!) as any,
+					chDateOfLoss: data?.chDateOfLoss,
+					dateOfLoss: this.util.dateStructFormat(data?.dateOfLoss!) as any,
+					chDateOfReceive: data?.chDateOfDeadline,
+					dateOfReceive: this.util.dateStructFormat(data?.dateOfReceive!) as any,
+					chDateOfDeadline: data?.chDateOfDeadline,
+					dateOfDeadline: this.util.dateStructFormat(data?.dateOfDeadline!) as any,
 
-						status: data?.status,
-						claimStatusNotes: data?.claimStatusNotes,
+					status: data?.status,
+					claimStatusNotes: data?.claimStatusNotes,
 
-						claimantMobile: data?.claimantMobile,
-						claimantEmail: data?.claimantEmail,
-						claimantIBAN: data?.claimantIBAN,
-						bankName: data?.bankName,
-						bankBranch: data?.bankBranch,
-						bankCity: data?.bankCity,
+					claimantMobile: data?.claimantMobile,
+					claimantEmail: data?.claimantEmail,
+					claimantIBAN: data?.claimantIBAN,
+					bankName: data?.bankName,
+					bankBranch: data?.bankBranch,
+					bankCity: data?.bankCity,
 
-						medical: {
-							medID: data?.medID,
-							medClass: data?.medClass,
-							hospital: data?.hospital,
-							medCaseType: data?.medCaseType,
-						},
-						motor: {
-							accidentNumber: data?.accidentNumber,
-							carPaletNo: data?.carPaletNo,
-							carsMake: data?.carsMake,
-							city: data?.city,
-							excess: data?.excess,
-							mistakePercentage: data?.mistakePercentage,
-							model: data?.model,
-							motorChassisNo: data?.motorChassisNo,
-							policyCertificateNo: data?.policyCertificateNo,
-							policyExcess: data?.policyExcess,
-							TPL: data?.tpl,
-							type: data?.type,
-							typeOfrepair: data?.typeOfrepair,
-							workshopAgency: data?.workshopAgency,
-						},
-						general: {
-							claimCertificateNo: data?.claimCertificateNo,
-							claimExcess: +data?.claimExcess?.toString()! ?? "0",
-							declarationNo: data?.declarationNo,
-							generalChassisNo: data?.generalChassisNo,
-							interimPayment: data?.interimPayment,
-							liability: data?.liability,
-							lossLocation: data?.lossLocation,
-							nameofInjured: data?.nameofInjured,
-							natureofLoss: data?.natureofLoss,
-							recovery: data?.recovery,
-							shipmentName: data?.shipmentName,
-						},
-					});
+					medical: {
+						medID: data?.medID,
+						medClass: data?.medClass,
+						hospital: data?.hospital,
+						medCaseType: data?.medCaseType,
+					},
+					motor: {
+						accidentNumber: data?.accidentNumber,
+						carPaletNo: data?.carPaletNo,
+						carsMake: data?.carsMake,
+						city: data?.city,
+						excess: data?.excess,
+						mistakePercentage: data?.mistakePercentage,
+						model: data?.model,
+						motorChassisNo: data?.motorChassisNo,
+						policyCertificateNo: data?.policyCertificateNo,
+						policyExcess: data?.policyExcess,
+						TPL: data?.tpl,
+						type: data?.type,
+						typeOfrepair: data?.typeOfrepair,
+						workshopAgency: data?.workshopAgency,
+					},
+					general: {
+						claimCertificateNo: data?.claimCertificateNo,
+						claimExcess: +data?.claimExcess?.toString()! ?? "0",
+						declarationNo: data?.declarationNo,
+						generalChassisNo: data?.generalChassisNo,
+						interimPayment: data?.interimPayment,
+						liability: data?.liability,
+						lossLocation: data?.lossLocation,
+						nameofInjured: data?.nameofInjured,
+						natureofLoss: data?.natureofLoss,
+						recovery: data?.recovery,
+						shipmentName: data?.shipmentName,
+					},
+				});
 
-					data?.claimsGeneral.forEach((el) => this.addGeneralItems(el));
+				data?.claimsGeneral.forEach((el) => this.addGeneralItems(el));
 
-					this.claimTypeTogglerEvt();
+				this.claimTypeTogglerEvt();
 
-					this.setRequiredDocuments(data?.requiredDocumentList!, data?.requiredDocuments!);
+				this.setRequiredDocuments(data?.requiredDocumentList!, data?.requiredDocuments!);
 
-					this.uiState.claimLists.payments = data?.paymentsList!;
-					this.totalPaymentsAmount();
+				this.uiState.claimLists.payments = data?.paymentsList!;
+				this.totalPaymentsAmount();
 
-					this.uiState.claimLists.approvals = data?.claimApprovals!;
-					this.totalApprovalsAmount();
+				this.uiState.claimLists.approvals = data?.claimApprovals!;
+				this.totalApprovalsAmount();
 
-					this.uiState.claimLists.invoices = data?.claimInvoices!;
-					this.totalInvoicesAmount();
+				this.uiState.claimLists.invoices = data?.claimInvoices!;
+				this.totalInvoicesAmount();
 
-					this.uiState.claimLists.rejectDeduct = data?.claimsRejections!;
-					this.totalRejectDeductAmount();
-					this.totalUnderProcessing();
+				this.uiState.claimLists.rejectDeduct = data?.claimsRejections!;
+				this.totalRejectDeductAmount();
+				this.totalUnderProcessing();
 
-					this.uiState.claimLists.emailLogs = data?.emailsLog!;
+				this.uiState.claimLists.emailLogs = data?.emailsLog!;
 
-					this.docs = data?.documentList!;
-				}
-				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
+				this.docs = data?.documentList!;
 			}
-		);
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -413,10 +407,10 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 		let sub = this.claimService.getInsurerWorkshops(this.f.insuranceCompany?.value!, city).subscribe(
 			(res) => {
 				console.log(res);
-			},
-			(err) => {
-				this.message.popup("Look Up!", "Under Testing Call Customer Service, No data At All", "error");
 			}
+			// (err) => {
+			// 	this.message.popup("Look Up!", "Under Testing Call Customer Service, No data At All", "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -507,8 +501,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 				res.data?.requiredDocumentList?.forEach((el) => this.addRequiredDocs(el));
 				this.modalRef.close();
 				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => this.message.popup("Oops!", err.message, "error")
+			}
+			// (err: HttpErrorResponse) => this.message.popup("Oops!", err.message, "error")
 		);
 		this.subscribes.push(sub);
 	}
@@ -590,8 +584,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 	getStatusNotes(status: string) {
 		this.f.claimStatusNotes?.reset();
 		let sub = this.claimService.getClaimStatusNotes([status]).subscribe(
-			(res: IBaseResponse<IGenericResponseType[]>) => (this.uiState.claimLists.statusNotes = res.data!),
-			(err: HttpErrorResponse) => this.message.popup("Oops!", err.message, "error")
+			(res: IBaseResponse<IGenericResponseType[]>) => (this.uiState.claimLists.statusNotes = res.data!)
+			// (err: HttpErrorResponse) => this.message.popup("Oops!", err.message, "error")
 		);
 		this.subscribes.push(sub);
 	}
@@ -685,11 +679,11 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 				} else this.message.popup("Sorry!", res.body?.message!, "warning");
 				// Hide Loader
 				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err) => {
-				this.eventService.broadcast(reserved.isLoading, false);
-				this.message.popup("Sorry!", err.message!, "error");
 			}
+			// (err) => {
+			// 	this.eventService.broadcast(reserved.isLoading, false);
+			// 	this.message.popup("Sorry!", err.message!, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -720,8 +714,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 					this.message.toast(res.message!, "success");
 					this.totalPaymentsAmount();
 				} else this.message.popup("Oops!", res.message!, "warning");
-			},
-			(err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
+			}
+			// (err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
 		);
 		this.subscribes.push(sub);
 	}
@@ -731,8 +725,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 			(res: IBaseResponse<any>) => {
 				if (res.status) this.message.toast(res.message!, "success");
 				else this.message.popup("Oops!", res.message!, "warning");
-			},
-			(err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
+			}
+			// (err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
 		);
 		this.subscribes.push(sub);
 	}
@@ -841,8 +835,8 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 								this.uiState.claimLists.rejectDeduct = this.uiState.claimLists.rejectDeduct.filter((el) => el.sNo !== i);
 								this.totalUnderProcessing();
 							} else this.message.popup("Oops!", res.message!, "warning");
-						},
-						(err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
+						}
+						// (err: HttpErrorResponse) => this.message.popup("Oops!", err.message!, "error")
 					);
 			});
 		} else this.uiState.claimLists.rejectDeduct.splice(i, 1);
@@ -1032,11 +1026,11 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 					this.resetForm();
 				} else this.message.popup("Sorry!", res?.message!, "warning");
 				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Sorry!", err?.message!, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Sorry!", err?.message!, "error");
+			// 	this.eventService.broadcast(reserved.isLoading, false);
+			// }
 		);
 
 		this.subscribes.push(sub);

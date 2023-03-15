@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 import { Subscription } from "rxjs";
@@ -65,26 +65,20 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	requestDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.claimService.searchPolicy(this.filter).subscribe(
-				(res: HttpResponse<IBaseResponse<IClaimPolicies[]>>) => {
-					if (res.body?.status) {
-						this.policies = res.body?.data!;
-						this.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.claimService.searchPolicy(this.filter).subscribe((res: HttpResponse<IBaseResponse<IClaimPolicies[]>>) => {
+				if (res.body?.status) {
+					this.policies = res.body?.data!;
+					this.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
-						params.successCallback(this.policies, this.totalPages);
-						if (this.policies.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-					this.gridReady = true;
-				},
-				(err: HttpErrorResponse) => {
+					params.successCallback(this.policies, this.totalPages);
+					if (this.policies.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+				this.gridReady = true;
+			});
 			this.subscribes.push(sub);
 		},
 	};
