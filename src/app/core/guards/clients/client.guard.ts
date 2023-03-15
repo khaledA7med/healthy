@@ -7,13 +7,26 @@ import { PermissionsService } from "../../services/permissions.service";
 
 export const ClientGuard = (
   permissions: string[]
-): Observable<boolean | UrlTree> => {
+): Observable<boolean | UrlTree> | boolean => {
   const permission = inject(PermissionsService);
   const router = inject(Router);
   return permission.hasClientPrivilege(permissions).pipe(
     map((hasAccess: boolean) => {
       if (!hasAccess) router.navigate([AppRoutes.Error.notAuth]);
       return hasAccess;
+    })
+  );
+};
+
+export const ClientFormGuard = (
+  permissions: string[]
+): Observable<boolean | UrlTree> | boolean => {
+  const permission = inject(PermissionsService);
+  const router = inject(Router);
+  return permission.hasClientPrivilege(permissions).pipe(
+    map((hasAccess: boolean) => {
+      if (hasAccess) router.navigate([AppRoutes.Error.notAuth]);
+      return !hasAccess;
     })
   );
 };
