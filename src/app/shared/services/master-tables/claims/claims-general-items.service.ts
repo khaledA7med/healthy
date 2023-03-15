@@ -16,9 +16,9 @@ export class ClaimsGeneralItemsService
 
   constructor (private http: HttpClient) { }
 
-  getClaimsGeneralItems (lineofBusiness: string): Observable<HttpResponse<IBaseResponse<IClaimsGeneralItems[]>>>
+  getClaimsGeneralItems (data: IClaimsGeneralItemsData): Observable<HttpResponse<IBaseResponse<IClaimsGeneralItems[]>>>
   {
-    return this.http.get<IBaseResponse<IClaimsGeneralItems[]>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.search, { params: { lineofBusiness }, observe: "response" });
+    return this.http.post<IBaseResponse<IClaimsGeneralItems[]>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.search, data, { observe: "response" });
   }
 
   saveClaimsGeneralItems (data: IClaimsGeneralItemsData): Observable<HttpResponse<IBaseResponse<number>>>
@@ -27,13 +27,13 @@ export class ClaimsGeneralItemsService
   }
 
 
-  getEditClaimsGeneralItemsData (sNo: number): Observable<HttpResponse<IBaseResponse<IClaimsGeneralItemsData>>>
+  getEditClaimsGeneralItemsData (sno: number): Observable<HttpResponse<IBaseResponse<IClaimsGeneralItemsData>>>
   {
-    return this.http.get<IBaseResponse<IClaimsGeneralItemsData>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.edit, { params: { sNo }, observe: "response" });
+    return this.http.post<IBaseResponse<IClaimsGeneralItemsData>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.edit, {}, { params: { sno }, observe: "response" });
   }
 
-  DeleteClaimsGeneralItems (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteClaimsGeneralItems (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.delete, {}, { params: { sNo }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.claimsGeneralItems.delete, {}, { params: { sno }, observe: "response" })
   }
 }

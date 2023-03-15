@@ -112,7 +112,7 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy
     // this.gridApi.sizeColumnsToFit();
   }
 
-  openComplaintsSuspectiveCausesDialoge (id?: string)
+  openComplaintsSuspectiveCausesDialoge (sno?: number)
   {
     this.resetComplaintsSuspectiveCausesForm();
     this.ComplaintsSuspectiveCausesModal = this.modalService.open(this.ComplaintsSuspectiveCausesContent, {
@@ -121,10 +121,10 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "md",
     });
-    if (id)
+    if (sno)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.ComplaintSuspectiveCausesService.getEditComplaintSuspectiveCauses(id).subscribe(
+      let sub = this.ComplaintSuspectiveCausesService.getEditComplaintSuspectiveCauses(sno).subscribe(
         (res: HttpResponse<IBaseResponse<IComplaintSuspectiveCausesData>>) =>
         {
           this.uiState.editComplaintsSuspectiveCausesMode = true;

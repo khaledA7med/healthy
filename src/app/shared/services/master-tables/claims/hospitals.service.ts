@@ -29,7 +29,7 @@ export class HospitalsService
 
   getEditHospitalsData (sno: number): Observable<HttpResponse<IBaseResponse<IHospitalsData>>>
   {
-    return this.http.post<IBaseResponse<IHospitalsData>>(this.env + ApiRoutes.masterTables.Claims.hospitals.edit, {}, { params: { sno }, observe: "response" });
+    return this.http.get<IBaseResponse<IHospitalsData>>(this.env + ApiRoutes.masterTables.Claims.hospitals.edit, { params: { sno }, observe: "response" });
   }
 
   DeleteHospitals (sno: number): Observable<HttpResponse<IBaseResponse<number>>>

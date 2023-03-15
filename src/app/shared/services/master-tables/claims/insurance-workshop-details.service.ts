@@ -28,13 +28,13 @@ export class InsuranceWorkshopDetailsService
   }
 
 
-  getEditInsuranceWorkshopDetailsData (sNo: number): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>>
+  getEditInsuranceWorkshopDetailsData (sno: number): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>>
   {
-    return this.http.get<IBaseResponse<IInsuranceWorkshopDetailsData>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.edit, { params: { sNo }, observe: "response" });
+    return this.http.get<IBaseResponse<IInsuranceWorkshopDetailsData>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.edit, { params: { sno }, observe: "response" });
   }
 
-  DeleteInsuranceWorkshopDetails (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteInsuranceWorkshopDetails (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.delete, {}, { params: { sNo }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.delete, {}, { params: { sno }, observe: "response" })
   }
 }

@@ -60,7 +60,7 @@ export class CarsMakeFormsComponent
 
   Edit ()
   {
-    this.comp.openCarsMakeDialoge(this.params.data.sNo);
+    this.comp.openCarsMakeDialoge(this.params.data.sno);
   }
 
   Delete ()
@@ -69,7 +69,7 @@ export class CarsMakeFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteCarsMake(this.params.data.sNo);
+        this.comp.DeleteCarsMake(this.params.data.sno);
       } else
       {
         return;

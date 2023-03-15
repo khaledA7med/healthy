@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms"
 
 export interface IInsuranceWorkshopDetails
 {
-    sNo?: FormControl<number | null>;
+    sno?: FormControl<number | null>;
     insuranceCompany?: FormControl<string | null>;
     workshopName?: FormControl<string | null>;
     city?: FormControl<string | null>;
@@ -12,7 +12,7 @@ export interface IInsuranceWorkshopDetails
 }
 export interface IInsuranceWorkshopDetailsData
 {
-    sNo?: number,
+    sno?: number,
     insuranceCompany?: string,
     workshopName?: string,
     city?: string,

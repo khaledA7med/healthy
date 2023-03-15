@@ -42,7 +42,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     editClaimsGeneralItemsMode: false as Boolean,
     editClaimsGeneralItemsData: {} as IClaimsGeneralItemsData,
     classOfInsurance: "Accident",
-    lineofBusiness: " Defense Base Act Workers Compensation"
+    lineofBusiness: "Group Personal Accident"
 
   };
 
@@ -70,7 +70,11 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.ClaimsGeneralItemsService.getClaimsGeneralItems(this.uiState.lineofBusiness).subscribe(
+      const data: IClaimsGeneralItemsData = {
+        classOfInsurance: this.uiState.classOfInsurance,
+        lineofBusiness: this.uiState.lineofBusiness
+      };
+      let sub = this.ClaimsGeneralItemsService.getClaimsGeneralItems(data).subscribe(
         (res: HttpResponse<IBaseResponse<IClaimsGeneralItems[]>>) =>
         {
           this.uiState.list = res.body?.data!;
@@ -147,9 +151,9 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  DeleteClaimsGeneralItems (sNo: number)
+  DeleteClaimsGeneralItems (sno: number)
   {
-    let sub = this.ClaimsGeneralItemsService.DeleteClaimsGeneralItems(sNo).subscribe(
+    let sub = this.ClaimsGeneralItemsService.DeleteClaimsGeneralItems(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -164,10 +168,10 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  getClaimsGeneralItemsData (sNo: number)
+  getClaimsGeneralItemsData (sno: number)
   {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.ClaimsGeneralItemsService.getEditClaimsGeneralItemsData(sNo).subscribe(
+    let sub = this.ClaimsGeneralItemsService.getEditClaimsGeneralItemsData(sno).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimsGeneralItemsData>>) =>
       {
         this.uiState.editClaimsGeneralItemsMode = true;
@@ -184,7 +188,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openClaimsGeneralItemsDialoge (sNo: number)
+  openClaimsGeneralItemsDialoge (sno: number)
   {
     this.resetClaimsGeneralItemsForm();
     this.ClaimsGeneralItemsModal = this.modalService.open(this.ClaimsGeneralItemsContent, {
@@ -194,7 +198,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
       size: "md",
     });
 
-    this.getClaimsGeneralItemsData(sNo);
+    this.getClaimsGeneralItemsData(sno);
 
     this.ClaimsGeneralItemsModal.hidden.subscribe(() =>
     {
@@ -207,7 +211,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
   initClaimsGeneralItemsForm ()
   {
     this.ClaimsGeneralItemsForm = new FormGroup<IClaimsGeneralItems>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       item: new FormControl("", Validators.required),
       classOfInsurance: new FormControl("", Validators.required),
       lineofBusiness: new FormControl("", Validators.required),
@@ -230,8 +234,12 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
 
   fillEditClaimsGeneralItemsForm (data: IClaimsGeneralItemsData)
   {
+    this.f.classOfInsurance?.patchValue(data.classOfInsurance!);
+    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
     this.f.item?.patchValue(data.item!);
     this.f.mandatory?.patchValue(data.mandatory!);
+    this.f.classOfInsurance?.disable();
+    this.f.lineofBusiness?.disable();
   }
 
   validationChecker (): boolean
@@ -260,7 +268,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IClaimsGeneralItemsData = {
-      sNo: this.uiState.editClaimsGeneralItemsMode ? this.uiState.editClaimsGeneralItemsData.sNo : 0,
+      sno: this.uiState.editClaimsGeneralItemsMode ? this.uiState.editClaimsGeneralItemsData.sno : 0,
       item: formData.item,
       classOfInsurance: formData.classOfInsurance,
       lineofBusiness: formData.lineofBusiness,
@@ -290,6 +298,8 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
   resetClaimsGeneralItemsForm ()
   {
     this.ClaimsGeneralItemsForm.reset();
+    this.f.classOfInsurance?.enable();
+    this.f.lineofBusiness?.enable();
   }
 
   ngOnDestroy (): void

@@ -11,7 +11,7 @@ export const insuranceWorkshopDetailsCols: ColDef[] = [
     },
     {
         headerName: "No.",
-        field: "SNo",
+        field: "sno",
         minWidth: 70,
     },
     {

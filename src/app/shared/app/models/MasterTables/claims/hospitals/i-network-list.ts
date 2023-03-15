@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms";
 
 export interface INetworkList
 {
-    SNo?: FormControl<number | null>;
+    sNo?: FormControl<number | null>;
     HospitalId?: FormControl<number | null>;
     HospitalName?: FormControl<string | null>;
     InsurCompany?: FormControl<string | null>;

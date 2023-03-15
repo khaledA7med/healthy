@@ -12,7 +12,7 @@
                                     Insurance Workshop Details
                                 </div>
                                 <div class="row my-4">
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
                                         <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
                                             placeholder="Select Insurance Company" formControlName="insuranceCompany"
@@ -26,7 +26,7 @@
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="city" class="asterisk-input">City</label>
                                         <ng-select id="city" class="form-control-sm is-invalid"
                                             placeholder="Select Insurance Company" formControlName="city"
@@ -38,7 +38,7 @@
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
                                         <label for="workshopName">Workshop Name</label>
                                         <input id="workshopName" class="form-control form-control-sm"
                                             [ngClass]="{'is-invalid': (f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid}"
@@ -48,17 +48,17 @@
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="telephone">Tele</label>
                                         <input id="telephone" class="form-control form-control-sm"
                                             formControlName="telephone" />
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="email">Email</label>
                                         <input id="email" class="form-control form-control-sm"
                                             formControlName="email" />
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="address">Address</label>
                                         <input id="address" class="form-control form-control-sm"
                                             formControlName="address" />
@@ -92,13 +92,13 @@
 </form>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 
-<ng-template #LineOfBussinessContent let-modal>
+<ng-template #InsuranceWorkshopDetailsContent let-modal>
     <div class="modal-header mb-0">
-        <h4 class="modal-title" id="modal-basic-title">Edit Line Of Business</h4>
+        <h4 class="modal-title" id="modal-basic-title">Edit Insurance Workshop Details</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
 
@@ -107,6 +107,30 @@
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
                 <div class="col-12 row">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                        <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
+                        <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
+                            placeholder="Select Insurance Company" formControlName="insuranceCompany" bindValue="name"
+                            bindLabel="name" [loading]="lookupData ? false : true"
+                            [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
+                            (change)="filter($event)" [items]="(lookupData | async)?.InsuranceCompanies?.content!">
+                        </ng-select>
+                        <span *ngIf="(f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                        <label for="city" class="asterisk-input">City</label>
+                        <ng-select id="city" class="form-control-sm is-invalid" placeholder="Select Insurance Company"
+                            formControlName="city" bindValue="name" bindLabel="name"
+                            [loading]="lookupData ? false : true"
+                            [ngClass]="{'is-submitted': (f.city?.touched || uiState.submitted) && f.city?.invalid}"
+                            [items]="(lookupData | async)?.Cities?.content!">
+                        </ng-select>
+                        <span *ngIf="(f.city?.touched || uiState.submitted) && f.city?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                         <label for="workshopName">Workshop Name</label>

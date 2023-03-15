@@ -29,8 +29,8 @@ export class TpaListService
   }
 
 
-  DeleteTpaList (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteTpaList (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.tpaList.delete, {}, { params: { sNo }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.tpaList.delete, {}, { params: { sno }, observe: "response" })
   }
 }

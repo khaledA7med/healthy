@@ -29,9 +29,9 @@ export class ComplaintSuspectiveCausesService
   }
 
 
-  getEditComplaintSuspectiveCauses (id: string): Observable<HttpResponse<IBaseResponse<IComplaintSuspectiveCausesData>>>
+  getEditComplaintSuspectiveCauses (sno: number): Observable<HttpResponse<IBaseResponse<IComplaintSuspectiveCausesData>>>
   {
-    return this.http.get<IBaseResponse<IComplaintSuspectiveCausesData>>(this.env + ApiRoutes.masterTables.customerService.complaintsSuspectiveCauses.edit, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IComplaintSuspectiveCausesData>>(this.env + ApiRoutes.masterTables.customerService.complaintsSuspectiveCauses.edit, { params: { sno }, observe: "response" });
   }
 
   DeleteComplaintSuspectiveCauses (sno: number): Observable<HttpResponse<IBaseResponse<number>>>

@@ -12,7 +12,7 @@ export const tpaListCols: ColDef[] = [
     },
     {
         headerName: "No.",
-        field: "sNo",
+        field: "sno",
         minWidth: 100,
     },
     {

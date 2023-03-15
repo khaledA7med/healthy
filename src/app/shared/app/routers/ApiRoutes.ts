@@ -246,79 +246,78 @@ export const ApiRoutes = {
     },
     customerService: {
       InsuranceCompaniesDocuments: {
-        search: "/MasterTables/CustomerService/CompanyDocuments",
-        upload: "/MasterTables/CustomerService/UploadCompanyDocuments"
+        search: "/MasterTables/CustomerService/CompanyDocuments/Search",
+        upload: "/MasterTables/CustomerService/CompanyDocuments/Upload"
       },
       customerServiceRequirements: {
-        search: "/MasterTables/CustomerService/CompanyRequirements",
-        save: "/MasterTables/CustomerService/Save",
-        // edit: "/MasterTables/CustomerService/EditRequirements",
-        delete: "/MasterTables/CustomerService/DeleteCompanyRequirements",
+        search: "/MasterTables/CustomerService/CompanyRequirments/Search",
+        save: "/MasterTables/CustomerService/CompanyRequirments/Save",
+        delete: "/MasterTables/CustomerService/CompanyRequirments/Delete",
       },
       complaintsTypes: {
-        search: "/MasterTables/CustomerService/ComplaintsTypes",
-        save: "/MasterTables/CustomerService/CreateComplaintsTypes",
-        edit: "/MasterTables/CustomerService/EditComplaintsTypes",
-        delete: "/MasterTables/CustomerService/DeleteComplaintsTypes",
+        search: "/MasterTables/CustomerService/ComplaintsTypes/Index",
+        save: "/MasterTables/CustomerService/ComplaintsTypes/Save",
+        edit: "/MasterTables/CustomerService/ComplaintsTypes/Edit",
+        delete: "/MasterTables/CustomerService/ComplaintsTypes/Delete",
       },
       complaintsSettings: {
-        search: "/MasterTables/CustomerService/ComplaintsSettings",
-        save: "/MasterTables/CustomerService/CreateComplaintsSettings",
+        search: "/MasterTables/CustomerService/ComplaintsSettings/Index",
+        save: "/MasterTables/CustomerService/ComplaintsSettings/Edit",
       },
       complaintsSuspectiveCauses: {
-        search: "/MasterTables/CustomerService/ComplaintsSuspectiveCauses",
-        save: "/MasterTables/CustomerService/CreateComplaintsSuspectiveCauses",
-        edit: "/MasterTables/CustomerService/EditComplaintsSuspectiveCauses",
-        delete: "/MasterTables/CustomerService/DeleteComplaintsSuspectiveCauses"
+        search: "/MasterTables/CustomerService/SuspectiveCauses/Index",
+        save: "/MasterTables/CustomerService/SuspectiveCauses/Save",
+        edit: "/MasterTables/CustomerService/SuspectiveCauses/Edit",
+        delete: "/MasterTables/CustomerService/SuspectiveCauses/Delete"
       },
       customerServiceCancellationReasons: {
-        search: "/MasterTables/CustomerService/CancellationReasons",
-        save: "/MasterTables/CustomerService/CreateCancellationReasons",
-        edit: "/MasterTables/CustomerService/EditCancellationReasons",
-        delete: "/MasterTables/CustomerService/DeleteCancellationReasons"
+        search: "/MasterTables/CustomerService/CancellationReasons/Index",
+        save: "/MasterTables/CustomerService/CancellationReasons/Save",
+        edit: "/MasterTables/CustomerService/CancellationReasons/Edit",
+        delete: "/MasterTables/CustomerService/CancellationReasonsDelete"
       },
     },
     Claims: {
       carsMake: {
-        search: "/MasterTables/Claims/CarsMake",
-        save: "/MasterTables/Claims/CreateCarsMake",
-        edit: "/MasterTables/Claims/EditCarsMake",
-        delete: "/MasterTables/Claims/DeleteCarsMake"
+        search: "/MasterTables/Claims/CarsMake/Index",
+        save: "/MasterTables/Claims/CarsMake/Save",
+        edit: "/MasterTables/Claims/CarsMake/Edit",
+        delete: "/MasterTables/Claims/CarsMake/Delete"
       },
       hospitals: {
-        search: "/MasterTables/Claims/Hospital",
-        save: "/MasterTables/Claims/CreateHospital",
-        edit: "/MasterTables/Claims/EditHospital",
-        delete: "/MasterTables/Claims/DeleteHospital"
+        search: "/MasterTables/Claims/Hospital/Index",
+        save: "/MasterTables/Claims/Hospital/Save",
+        edit: "/MasterTables/Claims/Hospital/Edit",
+        delete: "/MasterTables/Claims/Hospital/Delete"
       },
       insuranceWorkshopDetails: {
-        search: "/MasterTables/Claims/WorkshopDetails",
-        save: "/MasterTables/Claims/CreateWorkshopDetails",
-        edit: "/MasterTables/Claims/EditWorkshopDetails",
-        delete: "/MasterTables/Claims/DeleteWorkshopDetails"
+        search: "/MasterTables/Claims/WorkshopDetails/Search",
+        save: "/MasterTables/Claims/WorkshopDetails/Save",
+        edit: "/MasterTables/Claims/WorkshopDetails/Edit",
+        delete: "/MasterTables/Claims/WorkshopDetails/Delete"
       },
       tpaList: {
-        search: "/MasterTables/Claims/TPAList",
-        save: "/MasterTables/Claims/CreateNTPAList",
-        delete: "/MasterTables/Claims/DeleteTPAList"
+        search: "/MasterTables/Claims/TPAList/Index",
+        save: "/MasterTables/Claims/TPAList/Save",
+        delete: "/MasterTables/Claims/TPAList/Delete"
       },
       claimsGeneralItems: {
-        search: "/MasterTables/Claims/ClaimsGeneralItems",
-        save: "/MasterTables/Claims/CreateClaimsGeneralItems",
-        edit: "/MasterTables/Claims/EditClaimsGeneralItems",
-        delete: "/MasterTables/Claims/DeleteClaimsGeneralItems"
+        search: "/MasterTables/Claims/GeneralItems/Search",
+        save: "/MasterTables/Claims/GeneralItems/Save",
+        edit: "/MasterTables/Claims/GeneralItems/Edit",
+        delete: "/MasterTables/Claims/GeneralItems/Delete"
       },
       claimsStatus: {
-        search: "/MasterTables/Claims/ClaimStatusByStatus",
-        save: "/MasterTables/Claims/CreateClaimStatus",
-        edit: "/MasterTables/Claims/EditClaimStatus",
-        delete: "/MasterTables/Claims/DeleteClaimStatus"
+        search: "/MasterTables/Claims/Status/Search",
+        save: "/MasterTables/Claims/Status/Save",
+        edit: "/MasterTables/Claims/Status/Edit",
+        delete: "/MasterTables/Claims/Status/Delete"
       },
       claimsRejectionReasons: {
-        search: "/MasterTables/Claims/ClaimsRejectionReasons",
-        save: "/MasterTables/Claims/CreateClaimsRejectionReasons",
-        edit: "/MasterTables/Claims/EditClaimsRejectionReasons",
-        delete: "/MasterTables/Claims/DeleteClaimsRejectionReasons"
+        search: "/MasterTables/Claims/RejectionReasons/Search",
+        save: "/MasterTables/Claims/RejectionReasons/Save",
+        edit: "/MasterTables/Claims/RejectionReasons/Edit",
+        delete: "/MasterTables/Claims/RejectionReasons/Delete"
       },
     }
   },

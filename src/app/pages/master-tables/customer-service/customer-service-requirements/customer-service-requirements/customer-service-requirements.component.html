@@ -32,7 +32,6 @@
             <div class="row p-3">
                 <div class="col-12 row">
 
-                    <!-- Insurance  company -->
                     <div class="col-12 mb-2">
                         <label for="insuranceCopmany" class="asterisk-input">Insurance Company</label>
                         <ng-select id="insuranceCompanyID" class="form-control-sm is-invalid"
@@ -46,11 +45,11 @@
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
-                    <!-- Class Of Insurance (Ar) -->
                     <div class="col-12 mb-2">
                         <label for="endorsType" class="form-label">Endors Type:</label>
                         <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+                            [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
                             bindLabel="name" bindValue="name" id="endorsType" formControlName="endorsType">
                         </ng-select>
                         <span *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid"
@@ -130,9 +129,10 @@
 
                 <!-- Class Of Insurance (Ar) -->
                 <div class="col-12 mb-2">
-                    <label for="endorsType" class="form-label">Endors Type:</label>
+                    <label for="endorsType" class="asterisk-input">Endors Type</label>
                     <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
                         bindValue="name" id="endorsType" formControlName="endorsType">
                     </ng-select>
                     <span *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid"

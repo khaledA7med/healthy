@@ -12,7 +12,7 @@ export const carsMakeCols: ColDef[] = [
     },
     {
         headerName: "No.",
-        field: "sNo",
+        field: "sno",
         minWidth: 100,
     },
     {

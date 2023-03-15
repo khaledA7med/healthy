@@ -31,7 +31,7 @@ export class CancellationReasonsService
 
   getEditCancellationReasons (sno: number): Observable<HttpResponse<IBaseResponse<ICancellationReasonsData>>>
   {
-    return this.http.get<IBaseResponse<ICancellationReasonsData>>(this.env + ApiRoutes.masterTables.customerService.customerServiceCancellationReasons.edit, { params: { sno }, observe: "response" });
+    return this.http.post<IBaseResponse<ICancellationReasonsData>>(this.env + ApiRoutes.masterTables.customerService.customerServiceCancellationReasons.edit, {}, { params: { sno }, observe: "response" });
   }
 
   DeleteCancellationReasons (sno: number): Observable<HttpResponse<IBaseResponse<number>>>

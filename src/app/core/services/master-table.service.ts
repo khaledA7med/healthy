@@ -91,13 +91,21 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.policyEndorsTypes,
           name: BaseData.PolicyEndorsTypes,
-        }
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
       ],
       ClaimsHospitals: [
         {
           route: ApiRoutes.MasterTable.MasterTables.regions,
           name: BaseData.Regions,
-        }
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
       ],
       insuranceWorkshopDetails: [
         {

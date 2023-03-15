@@ -29,9 +29,9 @@ export class CarsMakeService
   }
 
 
-  getEditCarsMake (sNo: number): Observable<HttpResponse<IBaseResponse<ICarsMakeData>>>
+  getEditCarsMake (sno: number): Observable<HttpResponse<IBaseResponse<ICarsMakeData>>>
   {
-    return this.http.post<IBaseResponse<ICarsMakeData>>(this.env + ApiRoutes.masterTables.Claims.carsMake.edit, {}, { params: { sNo }, observe: "response" });
+    return this.http.get<IBaseResponse<ICarsMakeData>>(this.env + ApiRoutes.masterTables.Claims.carsMake.edit, { params: { sno }, observe: "response" });
   }
 
   DeleteCarsMake (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>

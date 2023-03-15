@@ -170,7 +170,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
 
   checkValue (event: any)
   {
-    console.log(event);
     this.uiState.defaultTick = event;
   }
 

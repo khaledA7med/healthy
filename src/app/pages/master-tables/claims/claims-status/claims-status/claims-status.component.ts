@@ -128,9 +128,9 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
     this.lookupData = this.table.getBaseData(MODULES.ClaimsStatus);
   }
 
-  DeleteClaimsStatus (sNo: number)
+  DeleteClaimsStatus (sno: number)
   {
-    let sub = this.ClaimsStatusService.DeleteClaimsStatus(sNo).subscribe(
+    let sub = this.ClaimsStatusService.DeleteClaimsStatus(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -145,10 +145,10 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  getClaimsStatusData (sNo: number)
+  getClaimsStatusData (sno: number)
   {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.ClaimsStatusService.getEditClaimsStatusData(sNo).subscribe(
+    let sub = this.ClaimsStatusService.getEditClaimsStatusData(sno).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimsStatusData>>) =>
       {
         this.uiState.editClaimsStatusMode = true;
@@ -165,7 +165,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openClaimsStatusDialoge (sNo: number)
+  openClaimsStatusDialoge (sno: number)
   {
     this.resetClaimsStatusForm();
     this.ClaimsStatusModal = this.modalService.open(this.ClaimsStatusContent, {
@@ -175,7 +175,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
       size: "md",
     });
 
-    this.getClaimsStatusData(sNo);
+    this.getClaimsStatusData(sno);
 
     this.ClaimsStatusModal.hidden.subscribe(() =>
     {
@@ -188,7 +188,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
   initClaimsStatusForm ()
   {
     this.ClaimsStatusForm = new FormGroup<IClaimsStatus>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       status: new FormControl("", Validators.required),
       claimNotes: new FormControl("", Validators.required),
     })
@@ -207,7 +207,9 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
 
   fillEditClaimsStatusForm (data: IClaimsStatusData)
   {
+    this.f.status?.patchValue(data.status!);
     this.f.claimNotes?.patchValue(data.claimNotes!);
+    this.f.status?.disable();
   }
 
   validationChecker (): boolean
@@ -231,7 +233,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IClaimsStatusData = {
-      sNo: this.uiState.editClaimsStatusMode ? this.uiState.editClaimsStatusData.sNo : 0,
+      sno: this.uiState.editClaimsStatusMode ? this.uiState.editClaimsStatusData.sno : 0,
       status: formData.status,
       claimNotes: formData.claimNotes,
     };
@@ -259,6 +261,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
   resetClaimsStatusForm ()
   {
     this.ClaimsStatusForm.reset();
+    this.f.status?.enable();
   }
 
   ngOnDestroy (): void

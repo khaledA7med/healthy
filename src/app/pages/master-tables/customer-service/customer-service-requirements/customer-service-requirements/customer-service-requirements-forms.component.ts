@@ -13,7 +13,6 @@ import { CustomerServiceRequirementsComponent } from './customer-service-require
       <i class="ri-more-2-fill"></i>
     </button>
     <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-      <button ngbDropdownItem  class="btn btn-sm" (click)="Edit()"><i class="ri-edit-line align-bottom me-2 text-muted"></i> Edit</button>
       <button ngbDropdownItem  class="btn btn-sm" (click)="Delete()"><i class="ri-delete-bin-line align-bottom me-2 text-muted"></i> Delete</button>
     </div>
   </div>
@@ -56,10 +55,6 @@ export class CustomerServiceRequirementsFormsComponent
     this.comp = this.params.context.comp;
   }
 
-  Edit ()
-  {
-    this.comp.openCompanyRequirementsDialoge(this.params.data.identity);
-  }
 
   Delete ()
   {

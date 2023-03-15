@@ -58,7 +58,7 @@ export class ClaimsRejectionReasonsFormsComponent
 
   Edit ()
   {
-    this.comp.openClaimsRejectionReasonsDialoge(this.params.data.sNo);
+    this.comp.openClaimsRejectionReasonsDialoge(this.params.data.sno);
   }
 
   Delete ()
@@ -67,7 +67,7 @@ export class ClaimsRejectionReasonsFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteClaimsRejectionReasons(this.params.data.sNo);
+        this.comp.DeleteClaimsRejectionReasons(this.params.data.sno);
       } else
       {
         return;

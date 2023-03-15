@@ -112,7 +112,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy
     // this.gridApi.sizeColumnsToFit();
   }
 
-  openCarsMakeDialoge (sNo?: number)
+  openCarsMakeDialoge (sno?: number)
   {
     this.resetCarsMakeForm();
     this.CarsMakeModal = this.modalService.open(this.CarsMakeContent, {
@@ -121,10 +121,10 @@ export class CarsMakeComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "md",
     });
-    if (sNo)
+    if (sno)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.CarsMakeService.getEditCarsMake(sNo).subscribe(
+      let sub = this.CarsMakeService.getEditCarsMake(sno).subscribe(
         (res: HttpResponse<IBaseResponse<ICarsMakeData>>) =>
         {
           this.uiState.editCarsMakeMode = true;
@@ -152,7 +152,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy
   initCarsMakeForm ()
   {
     this.CarsMakeForm = new FormGroup<ICarsMake>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       carsMake: new FormControl(null, Validators.required),
     })
   }
@@ -187,7 +187,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: ICarsMakeData = {
-      sNo: this.uiState.editCarsMakeMode ? this.uiState.editCarsMakeData.sNo : 0,
+      sno: this.uiState.editCarsMakeMode ? this.uiState.editCarsMakeData.sno : 0,
       carsMake: formData.carsMake,
     };
     if (!this.validationChecker()) return;
@@ -216,9 +216,9 @@ export class CarsMakeComponent implements OnInit, OnDestroy
     this.CarsMakeForm.reset();
   }
 
-  DeleteCarsMake (sNo: number)
+  DeleteCarsMake (sno: number)
   {
-    let sub = this.CarsMakeService.DeleteCarsMake(sNo).subscribe(
+    let sub = this.CarsMakeService.DeleteCarsMake(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);

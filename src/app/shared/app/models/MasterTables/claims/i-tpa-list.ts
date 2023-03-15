@@ -2,13 +2,13 @@ import { FormControl } from "@angular/forms"
 
 export interface ITpaList
 {
-    sNo?: FormControl<number | null>,
+    sno?: FormControl<number | null>,
     tpaName?: FormControl<string | null>
 
 }
 export interface ITpaListData
 {
-    sNo?: number,
+    sno?: number,
     tpaName?: string,
 
 }

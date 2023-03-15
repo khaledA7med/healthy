@@ -2,13 +2,13 @@ import { FormControl } from "@angular/forms"
 
 export interface ICarsMake
 {
-    sNo?: FormControl<number | null>,
+    sno?: FormControl<number | null>,
     carsMake?: FormControl<string | null>
 
 }
 export interface ICarsMakeData
 {
-    sNo?: number,
+    sno?: number,
     carsMake?: string,
 
 }

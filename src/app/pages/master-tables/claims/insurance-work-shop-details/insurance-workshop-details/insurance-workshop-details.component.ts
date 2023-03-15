@@ -128,9 +128,9 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
     this.lookupData = this.table.getBaseData(MODULES.InsuranceWorkshopDetails);
   }
 
-  DeleteInsuranceWorkshopDetails (sNo: number)
+  DeleteInsuranceWorkshopDetails (sno: number)
   {
-    let sub = this.InsuranceWorkshopDetailsService.DeleteInsuranceWorkshopDetails(sNo).subscribe(
+    let sub = this.InsuranceWorkshopDetailsService.DeleteInsuranceWorkshopDetails(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -145,10 +145,10 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  getInsuranceWorkshopDetailsData (sNo: number)
+  getInsuranceWorkshopDetailsData (sno: number)
   {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.InsuranceWorkshopDetailsService.getEditInsuranceWorkshopDetailsData(sNo).subscribe(
+    let sub = this.InsuranceWorkshopDetailsService.getEditInsuranceWorkshopDetailsData(sno).subscribe(
       (res: HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>) =>
       {
         this.uiState.editInsuranceWorkshopDetailsMode = true;
@@ -165,17 +165,17 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openInsuranceWorkshopDetailsDialoge (sNo: number)
+  openInsuranceWorkshopDetailsDialoge (sno: number)
   {
     this.resetInsuranceWorkshopDetailsForm();
     this.InsuranceWorkshopDetailsModal = this.modalService.open(this.InsuranceWorkshopDetailsContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
-      size: "md",
+      size: "lg",
     });
 
-    this.getInsuranceWorkshopDetailsData(sNo);
+    this.getInsuranceWorkshopDetailsData(sno);
 
     this.InsuranceWorkshopDetailsModal.hidden.subscribe(() =>
     {
@@ -188,7 +188,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
   initInsuranceWorkshopDetailsForm ()
   {
     this.InsuranceWorkshopDetailsForm = new FormGroup<IInsuranceWorkshopDetails>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       insuranceCompany: new FormControl("", Validators.required),
       workshopName: new FormControl("", Validators.required),
       city: new FormControl("", Validators.required),
@@ -215,10 +215,14 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
 
   fillEditInsuranceWorkshopDetailsForm (data: IInsuranceWorkshopDetailsData)
   {
+    this.f.insuranceCompany?.patchValue(data.insuranceCompany!);
+    this.f.city?.patchValue(data.city!);
     this.f.workshopName?.patchValue(data.workshopName!);
     this.f.address?.patchValue(data.address!);
     this.f.telephone?.patchValue(data.telephone!);
     this.f.email?.patchValue(data.email!);
+    this.f.insuranceCompany?.disable();
+    this.f.city?.disable();
   }
 
   validationChecker (): boolean
@@ -242,7 +246,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IInsuranceWorkshopDetailsData = {
-      sNo: this.uiState.editInsuranceWorkshopDetailsMode ? this.uiState.editInsuranceWorkshopDetailsData.sNo : 0,
+      sno: this.uiState.editInsuranceWorkshopDetailsMode ? this.uiState.editInsuranceWorkshopDetailsData.sno : 0,
       insuranceCompany: formData.insuranceCompany,
       workshopName: formData.workshopName,
       city: formData.city,
@@ -274,6 +278,8 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
   resetInsuranceWorkshopDetailsForm ()
   {
     this.InsuranceWorkshopDetailsForm.reset();
+    this.f.insuranceCompany?.enable();
+    this.f.city?.enable();
   }
 
   ngOnDestroy (): void

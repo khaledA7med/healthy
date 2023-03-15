@@ -58,7 +58,7 @@ export class ClaimsGeneralItemsFormsComponent
 
   Edit ()
   {
-    this.comp.openClaimsGeneralItemsDialoge(this.params.data.sNo);
+    this.comp.openClaimsGeneralItemsDialoge(this.params.data.sno);
   }
 
   Delete ()
@@ -67,7 +67,7 @@ export class ClaimsGeneralItemsFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteClaimsGeneralItems(this.params.data.sNo);
+        this.comp.DeleteClaimsGeneralItems(this.params.data.sno);
       } else
       {
         return;

@@ -58,7 +58,7 @@ export class InsuranceWorkshopDetailsFormsComponent
 
   Edit ()
   {
-    this.comp.openInsuranceWorkshopDetailsDialoge(this.params.data.sNo);
+    this.comp.openInsuranceWorkshopDetailsDialoge(this.params.data.sno);
   }
 
   Delete ()
@@ -67,7 +67,7 @@ export class InsuranceWorkshopDetailsFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteInsuranceWorkshopDetails(this.params.data.sNo);
+        this.comp.DeleteInsuranceWorkshopDetails(this.params.data.sno);
       } else
       {
         return;

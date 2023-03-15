@@ -26,7 +26,7 @@
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                                        <label for="claimNotes">Notes</label>
+                                        <label for="claimNotes" class="asterisk-input">Notes</label>
                                         <input id="claimNotes" class="form-control form-control-sm"
                                             [ngClass]="{'is-invalid': (f.claimNotes?.touched || uiState.submitted) && f.claimNotes?.invalid}"
                                             formControlName="claimNotes" />
@@ -64,7 +64,7 @@
 </form>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 40vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 
@@ -78,6 +78,16 @@
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
                 <div class="col-12 row">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                        <label for="status" class="asterisk-input">Status</label>
+                        <ng-select id="status" class="form-control-sm is-invalid" placeholder="Select Status"
+                            formControlName="status" bindValue="name" bindLabel="name" (change)="filter($event)"
+                            [loading]="lookupData ? false : true" [items]="(lookupData | async)?.ClaimStatus?.content!">
+                        </ng-select>
+                        <span *ngIf="(f.status?.touched || uiState.submitted) && f.status?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
                     <div class="col-lg-12 col-md-12 col-sm-12 my-1">
                         <label for="claimNotes">Status Notes</label>

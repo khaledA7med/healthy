@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms"
 
 export interface IClaimsGeneralItems
 {
-    sNo?: FormControl<number | null>;
+    sno?: FormControl<number | null>;
     item?: FormControl<string | null>;
     classOfInsurance?: FormControl<string | null>;
     lineofBusiness?: FormControl<string | null>;
@@ -10,7 +10,7 @@ export interface IClaimsGeneralItems
 }
 export interface IClaimsGeneralItemsData
 {
-    sNo?: number,
+    sno?: number,
     item?: string,
     classOfInsurance?: string,
     lineofBusiness?: string,

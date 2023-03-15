@@ -64,7 +64,7 @@ export class TpaListFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteTpaList(this.params.data.sNo);
+        this.comp.DeleteTpaList(this.params.data.sno);
       } else
       {
         return;

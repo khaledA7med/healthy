@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
@@ -23,7 +23,7 @@ import { INetworkList } from 'src/app/shared/app/models/MasterTables/claims/hosp
   styleUrls: [ './hospitals.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class HospitalsComponent implements OnInit
+export class HospitalsComponent implements OnInit, OnDestroy
 {
 
   lookupData!: Observable<IBaseMasterTable>;
@@ -213,7 +213,7 @@ export class HospitalsComponent implements OnInit
       return;
     }
     let network = new FormGroup<INetworkList>({
-      SNo: new FormControl(data?.SNo || null),
+      sNo: new FormControl(data?.sNo || null),
       HospitalName: new FormControl(data?.HospitalName || null),
       InsurCompany: new FormControl(data?.InsurCompany || null),
       ClassA: new FormControl(data?.ClassA || null),
@@ -250,7 +250,7 @@ export class HospitalsComponent implements OnInit
       return;
     }
     let contact = new FormGroup<IContactList>({
-      SNo: new FormControl(data?.SNo || null),
+      sNo: new FormControl(data?.sNo || null),
       Name: new FormControl(data?.Name || null),
       Position: new FormControl(data?.Position || null),
       Email: new FormControl(data?.Email || null),

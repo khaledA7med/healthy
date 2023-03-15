@@ -13,8 +13,6 @@ export interface IHospitals
     fax?: FormControl<string | null>;
     specialties?: FormControl<string | null>;
     region?: FormControl<string | null>;
-    contactListSerialze?: FormControl<string | null>;
-    newtworkListSerialze?: FormControl<string | null>;
     contactList?: FormArray<FormGroup<IContactList>>;
     networkList?: FormArray<FormGroup<INetworkList>>;
 }
@@ -29,8 +27,6 @@ export interface IHospitalsData
     fax?: string,
     specialties?: string,
     region?: string,
-    contactListSerialze?: string,
-    newtworkListSerialze?: string,
     contactList?: string[],
     networkList?: string[]
 }

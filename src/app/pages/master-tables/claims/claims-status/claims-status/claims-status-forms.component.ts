@@ -58,7 +58,7 @@ export class ClaimsStatusFormsComponent
 
   Edit ()
   {
-    this.comp.openClaimsStatusDialoge(this.params.data.sNo);
+    this.comp.openClaimsStatusDialoge(this.params.data.sno);
   }
 
   Delete ()
@@ -67,7 +67,7 @@ export class ClaimsStatusFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteClaimsStatus(this.params.data.sNo);
+        this.comp.DeleteClaimsStatus(this.params.data.sno);
       } else
       {
         return;

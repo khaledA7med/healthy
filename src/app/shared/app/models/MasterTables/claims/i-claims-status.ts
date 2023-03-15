@@ -1,15 +1,15 @@
-import { FormControl } from "@angular/forms"
+import { FormArray, FormControl, FormGroup } from "@angular/forms"
 
 export interface IClaimsStatus
 {
-    sNo?: FormControl<number | null>;
+    sno?: FormControl<number | null>;
     status?: FormControl<string | null>;
     claimNotes?: FormControl<string | null>;
     abb?: FormControl<string | null>;
 }
 export interface IClaimsStatusData
 {
-    sNo?: number,
+    sno?: number,
     status?: string,
     claimNotes?: string,
     abb?: string,

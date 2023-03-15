@@ -12,12 +12,11 @@
                                     Claims General Items
                                 </div>
                                 <div class="row my-4">
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
                                         <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
                                             placeholder="Select Class Of Insurance" formControlName="classOfInsurance"
-                                            bindValue="name" appendTo="table" bindLabel="name"
-                                            [loading]="lookupData ? false : true"
+                                            bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                             [items]="(lookupData | async)?.InsurClasses?.content!"
                                             (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
                                         </ng-select>
@@ -26,20 +25,19 @@
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                                         <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
                                         <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
-                                            placeholder="Select Lien Of Business" appendTo="table"
-                                            formControlName="lineofBusiness" bindValue="name" bindLabel="name"
-                                            (change)="filter($event)" [loading]="lookupData ? false : true"
-                                            [items]="lineOfBussArr">
+                                            placeholder="Select Lien Of Business" formControlName="lineofBusiness"
+                                            bindValue="name" bindLabel="name" (change)="filter($event)"
+                                            [loading]="lookupData ? false : true" [items]="lineOfBussArr">
                                         </ng-select>
                                         <span
                                             *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
                                         <label for="item">Item Name</label>
                                         <input id="item" class="form-control form-control-sm"
                                             [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
@@ -48,7 +46,7 @@
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
-                                    <div class="form-check">
+                                    <div class="form-check mx-3">
                                         <label class="form-check-label" for="mandatory">Default</label>
                                         <input class="form-check-input" type="checkbox" formControlName="mandatory">
                                     </div>
@@ -98,6 +96,29 @@
                 <div class="col-12 row">
 
                     <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                        <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
+                        <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
+                            placeholder="Select Class Of Insurance" formControlName="classOfInsurance" bindValue="name"
+                            bindLabel="name" [loading]="lookupData ? false : true"
+                            [items]="(lookupData | async)?.InsurClasses?.content!" (change)="changeClass($event)"
+                            (change)="getLineOfBusiness($event?.name)">
+                        </ng-select>
+                        <span *ngIf="(f.classOfInsurance?.touched || uiState.submitted) && f.classOfInsurance?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                        <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
+                        <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
+                            placeholder="Select Lien Of Business" formControlName="lineofBusiness" bindValue="name"
+                            bindLabel="name" (change)="filter($event)" [loading]="lookupData ? false : true"
+                            [items]="lineOfBussArr">
+                        </ng-select>
+                        <span *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
                         <label for="item">Item Name</label>
                         <input id="item" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
@@ -106,7 +127,7 @@
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
-                    <div class="form-check">
+                    <div class="form-check mx-3">
                         <label class="form-check-label" for="mandatory">Default</label>
                         <input class="form-check-input" type="checkbox" formControlName="mandatory">
                     </div>

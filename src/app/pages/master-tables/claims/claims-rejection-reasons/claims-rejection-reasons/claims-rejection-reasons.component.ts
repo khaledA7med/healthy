@@ -128,9 +128,9 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
     this.lookupData = this.table.getBaseData(MODULES.ClaimsRejectionReasons);
   }
 
-  DeleteClaimsRejectionReasons (sNo: number)
+  DeleteClaimsRejectionReasons (sno: number)
   {
-    let sub = this.ClaimsRejectionReasonsService.DeleteClaimsRejectionReasons(sNo).subscribe(
+    let sub = this.ClaimsRejectionReasonsService.DeleteClaimsRejectionReasons(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -145,10 +145,10 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  getClaimsRejectionReasonsData (sNo: number)
+  getClaimsRejectionReasonsData (sno: number)
   {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.ClaimsRejectionReasonsService.getEditClaimsRejectionReasonsData(sNo).subscribe(
+    let sub = this.ClaimsRejectionReasonsService.getEditClaimsRejectionReasonsData(sno).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimsRejectionReasonsData>>) =>
       {
         this.uiState.editClaimsRejectionReasonsMode = true;
@@ -165,7 +165,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openClaimsRejectionReasonsDialoge (sNo: number)
+  openClaimsRejectionReasonsDialoge (sno: number)
   {
     this.resetClaimsRejectionReasonsForm();
     this.ClaimsRejectionReasonsModal = this.modalService.open(this.ClaimsRejectionReasonsContent, {
@@ -175,7 +175,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
       size: "md",
     });
 
-    this.getClaimsRejectionReasonsData(sNo);
+    this.getClaimsRejectionReasonsData(sno);
 
     this.ClaimsRejectionReasonsModal.hidden.subscribe(() =>
     {
@@ -188,7 +188,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
   initClaimsRejectionReasonsForm ()
   {
     this.ClaimsRejectionReasonsForm = new FormGroup<IClaimsRejectionReasons>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       type: new FormControl("", Validators.required),
       rejectionReason: new FormControl("", Validators.required),
     })
@@ -207,7 +207,9 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
 
   fillEditClaimsRejectionReasonsForm (data: IClaimsRejectionReasonsData)
   {
+    this.f.type?.patchValue(data.type!);
     this.f.rejectionReason?.patchValue(data.rejectionReason!);
+    this.f.type?.disable();
   }
 
   validationChecker (): boolean
@@ -231,7 +233,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IClaimsRejectionReasonsData = {
-      sNo: this.uiState.editClaimsRejectionReasonsMode ? this.uiState.editClaimsRejectionReasonsData.sNo : 0,
+      sno: this.uiState.editClaimsRejectionReasonsMode ? this.uiState.editClaimsRejectionReasonsData.sno : 0,
       type: formData.type,
       rejectionReason: formData.claimNotes,
     };
@@ -259,6 +261,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy
   resetClaimsRejectionReasonsForm ()
   {
     this.ClaimsRejectionReasonsForm.reset();
+    this.f.type?.enable();
   }
 
   ngOnDestroy (): void

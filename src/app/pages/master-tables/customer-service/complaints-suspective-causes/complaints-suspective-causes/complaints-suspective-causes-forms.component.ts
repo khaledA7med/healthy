@@ -60,7 +60,7 @@ export class ComplaintsSuspectiveCausesFormsComponent
 
   Edit ()
   {
-    this.comp.openComplaintsSuspectiveCausesDialoge(this.params.data.identity);
+    this.comp.openComplaintsSuspectiveCausesDialoge(this.params.data.sno);
   }
 
   Delete ()

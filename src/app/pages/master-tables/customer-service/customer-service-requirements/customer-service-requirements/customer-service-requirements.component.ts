@@ -71,7 +71,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     private message: MessagesService,
     private CompanyRequirementsService: CompanyRequirementsService,
     private eventService: EventService,
-    private tableRef: ElementRef,
     private offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
     private table: MasterTableService,
@@ -142,11 +141,10 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   private initFilterForm (): void
   {
     this.CompanyRequirementsFilterForm = new FormGroup({
-      endorsType: new FormControl(""),
-      classofInsurance: new FormControl(""),
-      lineOfBusiness: new FormControl(""),
-      insuranceCompanyName: new FormControl(""),
-      insuranceCompanyID: new FormControl("")
+      endorsType: new FormControl("", Validators.required),
+      classofInsurance: new FormControl("", Validators.required),
+      lineOfBusiness: new FormControl("", Validators.required),
+      insuranceCompanyID: new FormControl("", Validators.required)
     });
   }
 
@@ -183,7 +181,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  openCompanyRequirementsDialoge (id?: string)
+  openCompanyRequirementsDialoge ()
   {
     this.resetCompanyRequirementsForm();
     this.CompanyRequirementsModal = this.modalService.open(this.CompanyRequirementsContent, {
@@ -192,25 +190,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "lg",
     });
-    // if (id)
-    // {
-    //   this.eventService.broadcast(reserved.isLoading, true);
-    //   let sub = this.CompanyRequirementsService.getEditCompanyRequirementsData(id).subscribe(
-    //     (res: HttpResponse<IBaseResponse<IAddCompanyRequirementsData>>) =>
-    //     {
-    //       this.uiState.editCompanyRequirementsMode = true;
-    //       this.uiState.editCompanyRequirementsData = res.body?.data!;
-    //       this.fillEditCompanyRequirementsForm(res.body?.data!);
-    //       this.eventService.broadcast(reserved.isLoading, false);
-    //     },
-    //     (err: HttpErrorResponse) =>
-    //     {
-    //       this.message.popup("Oops!", err.message, "error");
-    //       this.eventService.broadcast(reserved.isLoading, false);
-    //     }
-    //   );
-    //   this.subscribes.push(sub);
-    // }
 
     this.CompanyRequirementsModal.hidden.subscribe(() =>
     {
@@ -273,7 +252,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IAddCompanyRequirementsData = {
-      // sNo: this.uiState.editInsuranceMode ? this.uiState.editInsuranceData.sNo : 0,
       endorsType: formData.endorsType,
       classofInsurance: formData.classofInsurance,
       insuranceCompanyID: formData.insuranceCompanyID,

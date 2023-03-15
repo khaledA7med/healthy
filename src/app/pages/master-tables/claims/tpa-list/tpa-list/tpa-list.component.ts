@@ -129,7 +129,7 @@ export class TpaListComponent implements OnInit, OnDestroy
   initTpaListForm ()
   {
     this.TpaListForm = new FormGroup<ITpaList>({
-      sNo: new FormControl(null),
+      sno: new FormControl(null),
       tpaName: new FormControl(null, Validators.required),
     })
   }
@@ -187,9 +187,9 @@ export class TpaListComponent implements OnInit, OnDestroy
     this.TpaListForm.reset();
   }
 
-  DeleteTpaList (sNo: number)
+  DeleteTpaList (sno: number)
   {
-    let sub = this.TpaListService.DeleteTpaList(sNo).subscribe(
+    let sub = this.TpaListService.DeleteTpaList(sno).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);

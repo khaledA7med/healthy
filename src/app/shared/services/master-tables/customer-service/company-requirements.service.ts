@@ -29,11 +29,6 @@ export class CompanyRequirementsService
     return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.save, data, { observe: "response" });
   }
 
-  // getEditCompanyRequirementsData (id: string): Observable<HttpResponse<IBaseResponse<IAddCompanyRequirementsData>>>
-  // {
-  //   return this.http.get<IBaseResponse<IAddCompanyRequirementsData>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.edit, { params: { id }, observe: "response" });
-  // }
-
   DeleteCompanyRequirements (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
   {
     return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.delete, {}, { params: { sno }, observe: "response" })

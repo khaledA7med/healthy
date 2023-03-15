@@ -27,13 +27,13 @@ export class ClaimsRejectionReasonsService
   }
 
 
-  getEditClaimsRejectionReasonsData (sNo: number): Observable<HttpResponse<IBaseResponse<IClaimsRejectionReasonsData>>>
+  getEditClaimsRejectionReasonsData (sno: number): Observable<HttpResponse<IBaseResponse<IClaimsRejectionReasonsData>>>
   {
-    return this.http.get<IBaseResponse<IClaimsRejectionReasonsData>>(this.env + ApiRoutes.masterTables.Claims.claimsRejectionReasons.edit, { params: { sNo }, observe: "response" });
+    return this.http.get<IBaseResponse<IClaimsRejectionReasonsData>>(this.env + ApiRoutes.masterTables.Claims.claimsRejectionReasons.edit, { params: { sno }, observe: "response" });
   }
 
-  DeleteClaimsRejectionReasons (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteClaimsRejectionReasons (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.claimsRejectionReasons.delete, {}, { params: { sNo }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.claimsRejectionReasons.delete, {}, { params: { sno }, observe: "response" })
   }
 }
