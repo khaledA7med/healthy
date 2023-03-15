@@ -39,9 +39,9 @@ export class PermissionsInterceptor implements HttpInterceptor {
     Errors.RefreshExpired,
     Errors.InvalidRefresh,
     Errors.RefreshRevoked,
-
     Errors.RefeshTokenDonstMatch,
     Errors.ForbiddenError,
+    Errors.RefreshExpired,
   ];
   intercept(
     request: HttpRequest<any>,
@@ -53,10 +53,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error && error.status === Errors.TokenExpired)
           return this.handle701Error(request, next);
-        else if (error.status === Errors.RefreshExpired) {
-          this.reusableMessage();
-          return throwError(error.message);
-        } else if (this.errors.includes(error.status)) {
+        else if (this.errors.includes(error.status)) {
           this.reusableMessage();
           return throwError(error.message);
         } else {
