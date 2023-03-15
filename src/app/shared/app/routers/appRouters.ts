@@ -8,7 +8,8 @@ export const AppRoutes = {
 	Error: {
 		base: "pages",
 		comingSoon: "pages/coming-soon",
-		notFound: "pages/not-found",
+		notFound: "pages/404",
+		notAuth: "pages/401",
 	},
 	MasterTable: {
 		insuranceClasses: "insurance-classes",

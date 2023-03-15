@@ -5,16 +5,16 @@ import { JwtInterceptor } from "./jwt.interceptor";
 import { PermissionsInterceptor } from "./permissions.interceptor";
 
 export const interceptorProviders = [
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: JwtInterceptor,
-    multi: true,
-  },
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: ErrorInterceptor,
-    multi: true,
-  },
+  // {
+  //   provide: HTTP_INTERCEPTORS,
+  //   useClass: JwtInterceptor,
+  //   multi: true,
+  // },
+  // {
+  //   provide: HTTP_INTERCEPTORS,
+  //   useClass: ErrorInterceptor,
+  //   multi: true,
+  // },
   {
     provide: HTTP_INTERCEPTORS,
     useClass: PermissionsInterceptor,

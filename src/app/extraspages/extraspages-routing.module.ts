@@ -6,6 +6,7 @@ import { MaintenanceComponent } from "./maintenance/maintenance.component";
 import { ComingSoonComponent } from "./coming-soon/coming-soon.component";
 import { AppRoutes } from "../shared/app/routers/appRouters";
 import { NotFoundComponent } from "./not-found/not-found.component";
+import { Error401Component } from "./error401/error401.component";
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: AppRoutes.Error.notFound,
     component: NotFoundComponent,
+  },
+  {
+    path: AppRoutes.Error.notAuth,
+    component: Error401Component,
   },
 ];
 
