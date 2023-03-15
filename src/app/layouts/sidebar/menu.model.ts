@@ -3,9 +3,10 @@ export interface MenuItem {
   label?: any;
   icon?: string;
   link?: string;
-  subItems?: any;
+  subItems?: MenuItem[];
   isTitle?: boolean;
   badge?: any;
   parentId?: number;
   isLayout?: boolean;
+  auth?: string;
 }
