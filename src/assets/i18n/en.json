@@ -42,6 +42,10 @@
           "COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
           "CUSTOMERSERVICERECANCELLATIONREASONS": "Cancellation Reasons"
         },
+        "PRODUCTION": {
+          "TEXT": "Production",
+          "LIBRARYOFCOVERS": "Library Of Covers"
+        },
         "CLAIMS": {
           "TEXT": "Claims",
           "CARSMAKE": "Cars Make",

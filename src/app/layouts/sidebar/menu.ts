@@ -181,8 +181,10 @@ export const MENU: MenuItem[] = [
           },
           {
             id: 1017,
-            label: "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICERECANCELLATIONREASONS",
-            link: AppRoutes.MasterTable.customerService.customerServiceCancellationReason,
+            label:
+              "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CUSTOMERSERVICERECANCELLATIONREASONS",
+            link: AppRoutes.MasterTable.customerService
+              .customerServiceCancellationReason,
             parentId: 112,
           },
         ],
@@ -194,17 +196,14 @@ export const MENU: MenuItem[] = [
         subItems: [
           {
             id: 1014,
-            label:
-              "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKE",
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKE",
             link: AppRoutes.MasterTable.claims.carsMake,
             parentId: 114,
           },
           {
             id: 1015,
-            label:
-              "MENUITEMS.MASTERTABLE.LIST.CLAIMS.HOSPITALS",
-            link: AppRoutes.MasterTable.claims
-              .hospitals,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.HOSPITALS",
+            link: AppRoutes.MasterTable.claims.hospitals,
             parentId: 114,
           },
           {
@@ -215,17 +214,14 @@ export const MENU: MenuItem[] = [
           },
           {
             id: 1017,
-            label:
-              "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TPALIST",
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TPALIST",
             link: AppRoutes.MasterTable.claims.tpaList,
             parentId: 114,
           },
           {
             id: 1018,
-            label:
-              "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSGENERALITEMS",
-            link: AppRoutes.MasterTable.claims
-              .claimsGeneralItems,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSGENERALITEMS",
+            link: AppRoutes.MasterTable.claims.claimsGeneralItems,
             parentId: 114,
           },
           {

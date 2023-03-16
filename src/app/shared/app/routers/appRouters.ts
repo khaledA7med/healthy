@@ -49,13 +49,16 @@ export const AppRoutes = {
       tpaList: "tpa-list",
       claimsGeneralItems: "claims-general-items",
       claimsStatus: "claims-status",
-      claimsRejectionReasons: "claims-rejection-reasons"
+      claimsRejectionReasons: "claims-rejection-reasons",
     },
     vehiclesTypes: "vehicles-types",
     contactsListPosition: "contacts-list-position",
     cities: "cities",
     defaultEmails: "default-emails",
     bankSettings: "bank-settings",
+    production: {
+      libraryOfCovers: "library-of-covers",
+    },
   },
   Client: {
     base: "clients",
@@ -87,8 +90,8 @@ export const AppRoutes = {
       production: "production/production-report",
       renewal: "production/renewal-report",
       renewalsNotice: "production/renewal-notice-report",
+      archive: { dcNote: "production/archives/debit-credit-notes" },
     },
-    archive: { dcNote: "production/archives/DebitCreditNotes" },
   },
   CustomerService: {
     base: "customer-service",
