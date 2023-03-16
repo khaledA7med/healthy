@@ -323,35 +323,6 @@ export const ApiRoutes = {
         delete: "/MasterTables/Claims/RejectionReasons/Delete",
       },
     },
-    vehiclesTypes: {
-      search: "/MasterTables/VehiclesTypes/Search",
-      save: "/MasterTables/VehiclesTypes/Save",
-      edit: "/MasterTables/VehiclesTypes/Edit",
-      delete: "/MasterTables/VehiclesTypes/Delete",
-    },
-    contactsListPosition: {
-      search: "/MasterTables/Position/Search",
-      save: "/MasterTables/Position/Save",
-      edit: "/MasterTables/Position/Edit",
-      delete: "/MasterTables/Position/Delete",
-    },
-    cities: {
-      search: "/MasterTables/Cities/Search",
-      save: "/MasterTables/Cities/Save",
-      edit: "/MasterTables/Cities/Edit",
-      delete: "/MasterTables/Cities/Delete",
-    },
-    defaultEmail: {
-      search: "/MasterTables/DefaultEmail/Search",
-      save: "/MasterTables/DefaultEmail/Save",
-      edit: "/MasterTables/DefaultEmail/Edit",
-    },
-    bankSettings: {
-      search: "/MasterTables/BanksSettings/Search",
-      save: "/MasterTables/BanksSettings/Save",
-      edit: "/MasterTables/BanksSettings/Edit",
-      delete: "/MasterTables/BanksSettings/Delete",
-    },
     production: {
       libraryOfCovers: {
         search: "/MasterTables/LibraryofCovers/Search",
@@ -433,6 +404,35 @@ export const ApiRoutes = {
         edit: "/MasterTables/DocumentsPolicies/Edit",
         delete: "/MasterTables/DocumentsPolicies/Delete",
       },
+    },
+    vehiclesTypes: {
+      search: "/MasterTables/VehiclesTypes/Search",
+      save: "/MasterTables/VehiclesTypes/Save",
+      edit: "/MasterTables/VehiclesTypes/Edit",
+      delete: "/MasterTables/VehiclesTypes/Delete",
+    },
+    contactsListPosition: {
+      search: "/MasterTables/Position/Search",
+      save: "/MasterTables/Position/Save",
+      edit: "/MasterTables/Position/Edit",
+      delete: "/MasterTables/Position/Delete",
+    },
+    cities: {
+      search: "/MasterTables/Cities/Search",
+      save: "/MasterTables/Cities/Save",
+      edit: "/MasterTables/Cities/Edit",
+      delete: "/MasterTables/Cities/Delete",
+    },
+    defaultEmail: {
+      search: "/MasterTables/DefaultEmail/Search",
+      save: "/MasterTables/DefaultEmail/Save",
+      edit: "/MasterTables/DefaultEmail/Edit",
+    },
+    bankSettings: {
+      search: "/MasterTables/BanksSettings/Search",
+      save: "/MasterTables/BanksSettings/Save",
+      edit: "/MasterTables/BanksSettings/Edit",
+      delete: "/MasterTables/BanksSettings/Delete",
     },
   },
   Clients: {
