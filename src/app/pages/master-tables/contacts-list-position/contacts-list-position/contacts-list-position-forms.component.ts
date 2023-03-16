@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from 'sweetalert2';
-import { VehiclesTypesComponent } from './vehicles-types.component';
+import { ContactsListPositionComponent } from './contacts-list-position.component';
 
 @Component({
-  selector: 'app-vehicles-types-forms',
+  selector: 'app-contacts-list-position-forms',
   template: `
   <div class="col">
   <div ngbDropdown class="d-inline-block">
@@ -43,11 +43,11 @@ import { VehiclesTypesComponent } from './vehicles-types.component';
 		`,
   ]
 })
-export class VehiclesTypesFormsComponent
+export class ContactsListPositionFormsComponent
 {
 
   private params!: ICellRendererParams;
-  private comp!: VehiclesTypesComponent;
+  private comp!: ContactsListPositionComponent;
 
   constructor (private message: MessagesService) { }
 
@@ -60,7 +60,7 @@ export class VehiclesTypesFormsComponent
 
   Edit ()
   {
-    this.comp.openVehiclesTypeDialoge(this.params.data.identity);
+    this.comp.openContactsListPositionDialoge(this.params.data.identity);
   }
 
   Delete ()
@@ -69,7 +69,7 @@ export class VehiclesTypesFormsComponent
     {
       if (result.isConfirmed)
       {
-        this.comp.DeleteVehiclesTypes(this.params.data.identity);
+        this.comp.DeleteContactsListPosition(this.params.data.identity);
       } else
       {
         return;

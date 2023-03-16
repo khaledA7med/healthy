@@ -24,31 +24,31 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { vehiclesTypesCols } from "src/app/shared/app/grid/vehiclesTypesCols";
-import { VehiclesTypesService } from "src/app/shared/services/master-tables/vehicles-types.service";
-import { IVehiclesTypes, IVehiclesTypesData } from "src/app/shared/app/models/MasterTables/i-vehicles-types";
+import { contactsListPositionCols } from "src/app/shared/app/grid/contactsListPositionCols";
+import { ContactsListPositionService } from "src/app/shared/services/master-tables/contacts-list-position.service";
+import { IContactsListPosition, IContactsListPositionData } from "src/app/shared/app/models/MasterTables/i-contacts-list-position";
 
 @Component({
-  selector: 'app-vehicles-types',
-  templateUrl: './vehicles-types.component.html',
-  styleUrls: [ './vehicles-types.component.scss' ],
+  selector: 'app-contacts-list-position',
+  templateUrl: './contacts-list-position.component.html',
+  styleUrls: [ './contacts-list-position.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class VehiclesTypesComponent implements OnInit, OnDestroy
+export class ContactsListPositionComponent implements OnInit, OnDestroy
 {
 
-  VehiclesTypesFormSubmitted = false as boolean;
-  VehiclesTypesModal!: NgbModalRef;
-  VehiclesTypesForm!: FormGroup<IVehiclesTypes>;
-  @ViewChild("VehiclesTypesContent") VehiclesTypesContent!: TemplateRef<any>;
+  ContactsListPositionFormSubmitted = false as boolean;
+  ContactsListPositionModal!: NgbModalRef;
+  ContactsListPositionForm!: FormGroup<IContactsListPosition>;
+  @ViewChild("ContactsListPositionContent") ContactsListPositionContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IVehiclesTypes[],
+    list: [] as IContactsListPosition[],
     totalPages: 0,
-    editVehiclesTypesMode: false as Boolean,
-    editVehiclesTypesData: {} as IVehiclesTypesData,
+    editContactsListPositionMode: false as Boolean,
+    editContactsListPositionData: {} as IContactsListPositionData,
   };
 
   subscribes: Subscription[] = [];
@@ -58,7 +58,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: vehiclesTypesCols,
+    columnDefs: contactsListPositionCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -72,7 +72,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
   };
 
   constructor (
-    private VehiclesTypesService: VehiclesTypesService,
+    private ContactsListPositionService: ContactsListPositionService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
@@ -80,15 +80,15 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initVehiclesTypesForm();
+    this.initContactsListPositionForm();
   }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.VehiclesTypesService.getVehiclesTypes().subscribe(
-        (res: HttpResponse<IBaseResponse<IVehiclesTypes[]>>) =>
+      let sub = this.ContactsListPositionService.getContactsListPosition().subscribe(
+        (res: HttpResponse<IBaseResponse<IContactsListPosition[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
@@ -128,10 +128,10 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     this.gridApi.sizeColumnsToFit();
   }
 
-  openVehiclesTypeDialoge (id?: string)
+  openContactsListPositionDialoge (id?: string)
   {
-    this.resetVehiclesTypesForm();
-    this.VehiclesTypesModal = this.modalService.open(this.VehiclesTypesContent, {
+    this.resetContactsListPositionForm();
+    this.ContactsListPositionModal = this.modalService.open(this.ContactsListPositionContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -140,12 +140,12 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.VehiclesTypesService.getEditVehiclesTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IVehiclesTypesData>>) =>
+      let sub = this.ContactsListPositionService.getEditContactsListPosition(id).subscribe(
+        (res: HttpResponse<IBaseResponse<IContactsListPositionData>>) =>
         {
-          this.uiState.editVehiclesTypesMode = true;
-          this.uiState.editVehiclesTypesData = res.body?.data!;
-          this.fillAddVehiclesTypesForm(res.body?.data!);
+          this.uiState.editContactsListPositionMode = true;
+          this.uiState.editContactsListPositionData = res.body?.data!;
+          this.fillAddContactsListPositionForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
         (err: HttpErrorResponse) =>
@@ -157,44 +157,41 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.VehiclesTypesModal.hidden.subscribe(() =>
+    this.ContactsListPositionModal.hidden.subscribe(() =>
     {
-      this.resetVehiclesTypesForm();
-      this.VehiclesTypesFormSubmitted = false;
-      this.uiState.editVehiclesTypesMode = false;
+      this.resetContactsListPositionForm();
+      this.ContactsListPositionFormSubmitted = false;
+      this.uiState.editContactsListPositionMode = false;
     });
   }
 
 
-  initVehiclesTypesForm ()
+  initContactsListPositionForm ()
   {
-    this.VehiclesTypesForm = new FormGroup<IVehiclesTypes>({
+    this.ContactsListPositionForm = new FormGroup<IContactsListPosition>({
       sNo: new FormControl(null),
-      vehicleType: new FormControl(null, Validators.required),
-      abbreviation: new FormControl(null, Validators.required),
+      position: new FormControl(null, Validators.required)
     });
   }
 
   get f ()
   {
-    return this.VehiclesTypesForm.controls;
+    return this.ContactsListPositionForm.controls;
   }
 
-  fillAddVehiclesTypesForm (data: IVehiclesTypesData)
+  fillAddContactsListPositionForm (data: IContactsListPositionData)
   {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.position?.patchValue(data.position!);
   }
 
-  fillEditVehiclesTypesForm (data: IVehiclesTypesData)
+  fillEditContactsListPositionForm (data: IContactsListPositionData)
   {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.position?.patchValue(data.position!);
   }
 
   validationChecker (): boolean
   {
-    if (this.VehiclesTypesForm.invalid)
+    if (this.ContactsListPositionForm.invalid)
     {
       this.message.popup(
         "Attention!",
@@ -206,26 +203,25 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitVehiclesTypesData (form: FormGroup)
+  submitContactsListPositionData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IVehiclesTypesData = {
-      sNo: this.uiState.editVehiclesTypesMode
-        ? this.uiState.editVehiclesTypesData.sNo
+    const data: IContactsListPositionData = {
+      sNo: this.uiState.editContactsListPositionMode
+        ? this.uiState.editContactsListPositionData.sNo
         : 0,
-      vehicleType: formData.vehicleType,
-      abbreviation: formData.abbreviation,
+      position: formData.position
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.VehiclesTypesService.saveVehiclesTypes(data).subscribe(
+    let sub = this.ContactsListPositionService.saveContactsListPosition(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.VehiclesTypesModal.dismiss();
+        this.ContactsListPositionModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetVehiclesTypesForm();
+        this.resetContactsListPositionForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -238,14 +234,14 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetVehiclesTypesForm ()
+  resetContactsListPositionForm ()
   {
-    this.VehiclesTypesForm.reset();
+    this.ContactsListPositionForm.reset();
   }
 
-  DeleteVehiclesTypes (id: string)
+  DeleteContactsListPosition (id: string)
   {
-    let sub = this.VehiclesTypesService.DeleteVehiclesTypes(id).subscribe(
+    let sub = this.ContactsListPositionService.DeleteContactsListPosition(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -264,4 +260,5 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
   {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
+
 }

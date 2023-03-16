@@ -29,13 +29,13 @@ export class VehiclesTypesService
   }
 
 
-  getEditVehiclesTypes (sNo: number): Observable<HttpResponse<IBaseResponse<IVehiclesTypesData>>>
+  getEditVehiclesTypes (id: string): Observable<HttpResponse<IBaseResponse<IVehiclesTypesData>>>
   {
-    return this.http.get<IBaseResponse<IVehiclesTypesData>>(this.env + ApiRoutes.masterTables.vehiclesTypes.edit, { params: { sNo }, observe: "response" });
+    return this.http.get<IBaseResponse<IVehiclesTypesData>>(this.env + ApiRoutes.masterTables.vehiclesTypes.edit, { params: { id }, observe: "response" });
   }
 
-  DeleteVehiclesTypes (sNo: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteVehiclesTypes (id: string): Observable<HttpResponse<IBaseResponse<number>>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.vehiclesTypes.delete, {}, { params: { sNo }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.vehiclesTypes.delete, {}, { params: { id }, observe: "response" })
   }
 }
