@@ -31,10 +31,17 @@
                                                             [items]="(lookupData | async)?.ClientStatus?.content!"
                                                             placeholder="select status"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" [multiple]="true"
+                                                            [clearable]="false" [searchable]="true" [multiple]="true"
+                                                            [ngClass]="{'is-invalid': (f.status?.touched || submitted) && f.status?.invalid}"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                            formControlName="status">
+                                                            formControlName="status"
+                                                            (change)="ngSelectChange('status')">
                                                         </ng-select>
+                                                        <div class="invalid-feedback fw-bold"
+                                                            *ngIf="(f.status?.touched || submitted) && f.status?.invalid">
+                                                            Required
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <!-- Name -->
@@ -90,10 +97,7 @@
                                                             [searchable]="true" bindLabel="name" bindValue="name"
                                                             id="producer" formControlName="producer">
                                                         </ng-select>
-                                                        <div class="invalid-feedback fw-bold"
-                                                            *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">
-                                                            Required
-                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <!-- Type -->
@@ -124,7 +128,8 @@
                                                             [loading]="lookupData ? false : true" [clearable]="true"
                                                             [hideSelected]="true" placeholder="select branch"
                                                             [multiple]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" id="branch" formControlName="branchs">
+                                                            bindValue="name" id="branch" formControlName="branchs"
+                                                            (change)="ngSelectChange('branchs')">
                                                         </ng-select>
                                                     </div>
                                                 </div>

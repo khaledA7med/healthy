@@ -72,13 +72,22 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils,
-		private tableRef: ElementRef
+		private utils: AppUtils
 	) {}
 
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	onGridReady(param: GridReadyEvent) {

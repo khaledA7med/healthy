@@ -33,7 +33,7 @@
                                                         <label>Report Type</label>
                                                     </div>
                                                     <ng-select placeholder="Select Report Type" [hideSelected]="true"
-                                                        [searchable]="true" formControlName="reportType" bindValue>
+                                                        [clearable]="false" formControlName="reportType" bindValue>
                                                         <ng-option [value]="1">Debit Note</ng-option>
                                                         <ng-option [value]="2">Credit Note</ng-option>
                                                     </ng-select>
@@ -44,7 +44,7 @@
                                                         <label>Issued For</label>
                                                     </div>
                                                     <ng-select placeholder="Select Criteria" [hideSelected]="true"
-                                                        [searchable]="true" formControlName="pram">
+                                                        [clearable]="false" formControlName="pram">
                                                         <ng-option [value]="1">Show Original Client</ng-option>
                                                         <ng-option [value]="2">Show Other Policyholder</ng-option>
                                                     </ng-select>

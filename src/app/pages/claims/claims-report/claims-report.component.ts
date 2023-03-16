@@ -74,6 +74,17 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.statusList = res.ClaimStatus?.content!;
 		});
 		this.subscribes.push(sub);
+
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm() {
@@ -81,14 +92,14 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			branch: new FormControl("Select All"),
 			clientData: new FormControl(null),
 			clientGroup: new FormControl("Select All"),
-			status: new FormControl(null),
-			subStatus: new FormControl(null),
-			rejectionReason: new FormControl(null),
-			insuranceCompany: new FormControl(null),
-			classOfBusiness: new FormControl(null),
-			lineOfBusiness: new FormControl(null),
-			reportType: new FormControl(null),
-			excludeZeroClaimAmount: new FormControl(null),
+			status: new FormControl([]),
+			subStatus: new FormControl([]),
+			rejectionReason: new FormControl("Service Not Covered"),
+			insuranceCompany: new FormControl([]),
+			classOfBusiness: new FormControl([]),
+			lineOfBusiness: new FormControl([]),
+			reportType: new FormControl(1, Validators.required),
+			excludeZeroClaimAmount: new FormControl(false),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -105,14 +116,9 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			this.f.subStatus?.reset();
 			return;
 		}
-		let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe(
-			(res: HttpResponse<IBaseResponse<string[]>>) => {
-				this.uiState.lists.subStatusList = res.body?.data!;
-			}
-			// (err: HttpErrorResponse) => {
-			// 	this.message.popup("Oops!", err.message, "error");
-			// }
-		);
+		let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+			this.uiState.lists.subStatusList = res.body?.data!;
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -161,6 +167,50 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				break;
 			default:
 				break;
+		}
+	}
+
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "insuranceCompany":
+				this.f.insuranceCompany?.value?.length! < this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(false)
+					: this.f.insuranceCompany?.value?.length! == this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true)
+					: "";
+				break;
+
+			case "status":
+				this.f.status?.value?.length! < this.uiState.lists.statusList.length
+					? this.uiState.checkAllControls.allStatusControl.patchValue(false)
+					: this.f.status?.value?.length! == this.uiState.lists.statusList.length
+					? this.uiState.checkAllControls.allStatusControl.patchValue(true)
+					: "";
+				break;
+
+			case "subStatus":
+				this.f.subStatus?.value?.length! < this.uiState.lists.subStatusList.length
+					? this.uiState.checkAllControls.allSubStatusControl.patchValue(false)
+					: this.f.subStatus?.value?.length! == this.uiState.lists.subStatusList.length
+					? this.uiState.checkAllControls.allSubStatusControl.patchValue(true)
+					: "";
+				break;
+			case "classOfBusiness":
+				this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false)
+					: this.f.classOfBusiness?.value?.length! == this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true)
+					: "";
+				break;
+			case "lineOfBusiness":
+				this.f.lineOfBusiness?.value?.length! < this.uiState.lists.linesOfBusinessLists.length
+					? this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false)
+					: this.f.lineOfBusiness?.value?.length! == this.uiState.lists.linesOfBusinessLists.length
+					? this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(true)
+					: "";
+				break;
+			default:
+				return;
 		}
 	}
 

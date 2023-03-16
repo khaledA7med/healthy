@@ -73,18 +73,29 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select All" }, ...res.GroupsList?.content!]) : "";
 		});
 		this.subscribes.push(sub);
+
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<productionReportForm>({
-			branchs: new FormControl(null),
+			branchs: new FormControl([]),
 			clientData: new FormControl(null),
 			clientGroup: new FormControl("Select All"),
-			transactionType: new FormControl(null),
-			producers: new FormControl(null),
-			insuranceCompany: new FormControl(null),
-			classOfBusiness: new FormControl(null),
-			lineOfBusiness: new FormControl(null),
+			transactionType: new FormControl([]),
+			producers: new FormControl([]),
+			insuranceCompany: new FormControl([]),
+			classOfBusiness: new FormControl([]),
+			lineOfBusiness: new FormControl([]),
 			reportType: new FormControl(1),
 			basedOn: new FormControl(1),
 			status: new FormControl(1),
@@ -129,6 +140,57 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 				break;
 			default:
 				break;
+		}
+	}
+
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "insuranceCompany":
+				this.f.insuranceCompany?.value?.length! < this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(false)
+					: this.f.insuranceCompany?.value?.length! == this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true)
+					: "";
+				break;
+
+			case "producers":
+				this.f.producers?.value?.length! < this.uiState.lists.producersLists.length
+					? this.uiState.checkAllControls.allProducersControl.patchValue(false)
+					: this.f.producers?.value?.length! == this.uiState.lists.producersLists.length
+					? this.uiState.checkAllControls.allProducersControl.patchValue(true)
+					: "";
+				break;
+
+			case "branch":
+				this.f.branchs?.value?.length! < this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(false)
+					: this.f.branchs?.value?.length! == this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(true)
+					: "";
+				break;
+			case "classOfBusiness":
+				this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false)
+					: this.f.classOfBusiness?.value?.length! == this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true)
+					: "";
+				break;
+			case "lineOfBusiness":
+				this.f.lineOfBusiness?.value?.length! < this.uiState.lists.linesOfBusinessLists.length
+					? this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(false)
+					: this.f.lineOfBusiness?.value?.length! == this.uiState.lists.linesOfBusinessLists.length
+					? this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true)
+					: "";
+				break;
+			case "transactionType":
+				this.f.transactionType?.value?.length! < this.uiState.lists.transactionTypesLists.length
+					? this.uiState.checkAllControls.allTransactionTypesControl.patchValue(false)
+					: this.f.transactionType?.value?.length! == this.uiState.lists.transactionTypesLists.length
+					? this.uiState.checkAllControls.allTransactionTypesControl.patchValue(true)
+					: "";
+				break;
+			default:
+				return;
 		}
 	}
 

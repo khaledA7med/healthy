@@ -31,7 +31,7 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="branchs">
+                                                        formControlName="branchs" (change)="ngSelectChange('branch')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Producers -->
@@ -51,7 +51,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="producers">
+                                                        formControlName="producers"
+                                                        (change)="ngSelectChange('producers')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Class Of Business -->
@@ -71,7 +72,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="classofBusiness">
+                                                        formControlName="classofBusiness"
+                                                        (change)="ngSelectChange('classOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Report Type -->
@@ -84,7 +86,7 @@
                                                         placeholder="Select Report Type"
                                                         [ngClass]="{'is-submitted': (f.reportType?.touched || submitted) && f.reportType?.invalid}"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" bindLabel="name"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
                                                         bindValue="id" formControlName="reportType">
                                                     </ng-select>
                                                     <div class="invalid-feedback d-inline-block fw-bold"

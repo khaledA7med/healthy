@@ -65,13 +65,24 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 		});
 		this.subscribes.push(sub);
+
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<IPolicyRenewalReportForm>({
-			branchs: new FormControl(null),
-			insuranceCompany: new FormControl(null),
-			classOfBusiness: new FormControl(null),
+			branchs: new FormControl([]),
+			insuranceCompany: new FormControl([]),
+			classOfBusiness: new FormControl([]),
 			producer: new FormControl("Select All"),
 			clientData: new FormControl(null),
 			minDate: new FormControl(null, Validators.required),
@@ -100,6 +111,36 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 				break;
 			default:
 				break;
+		}
+	}
+
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "insuranceCompany":
+				this.f.insuranceCompany?.value?.length! < this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(false)
+					: this.f.insuranceCompany?.value?.length! == this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true)
+					: "";
+				break;
+
+			case "branch":
+				this.f.branchs?.value?.length! < this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(false)
+					: this.f.branchs?.value?.length! == this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(true)
+					: "";
+				break;
+			case "classOfBusiness":
+				this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false)
+					: this.f.classOfBusiness?.value?.length! == this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true)
+					: "";
+				break;
+
+			default:
+				return;
 		}
 	}
 
