@@ -51,11 +51,6 @@ export const AppRoutes = {
       claimsStatus: "claims-status",
       claimsRejectionReasons: "claims-rejection-reasons",
     },
-    vehiclesTypes: "vehicles-types",
-    contactsListPosition: "contacts-list-position",
-    cities: "cities",
-    defaultEmails: "default-emails",
-    bankSettings: "bank-settings",
     production: {
       libraryOfCovers: "library-of-covers",
       libraryOfInterestsInsured: "library-of-interests-insured",
@@ -73,6 +68,11 @@ export const AppRoutes = {
       claims: "list-of-required-documents-claims",
       production: "list-of-required-documents-production",
     },
+    vehiclesTypes: "vehicles-types",
+    contactsListPosition: "contacts-list-position",
+    cities: "cities",
+    defaultEmails: "default-emails",
+    bankSettings: "bank-settings",
   },
   Client: {
     base: "clients",

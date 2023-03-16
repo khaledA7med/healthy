@@ -7,10 +7,12 @@ import { AppRoutes } from "../app/routers/appRouters";
 @Injectable({
   providedIn: "root",
 })
-export class MenuService {
-  constructor(private permissions: PermissionsService) {}
+export class MenuService
+{
+  constructor (private permissions: PermissionsService) { }
 
-  getMenu(): MenuItem[] {
+  getMenu (): MenuItem[]
+  {
     return [
       {
         id: 1,
@@ -398,15 +400,45 @@ export class MenuService {
                 id: 1016,
                 label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLAIMS",
                 link: AppRoutes.MasterTable.listOfDocuments.claims,
-                parentId: 116,
+                parentId: 115,
               },
               {
                 id: 1017,
                 label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.PRODUCTION",
                 link: AppRoutes.MasterTable.listOfDocuments.production,
-                parentId: 117,
+                parentId: 115,
               },
             ],
+          },
+          {
+            id: 116,
+            label: "MENUITEMS.MASTERTABLE.LIST.VEHICLESTYPES",
+            link: AppRoutes.MasterTable.vehiclesTypes,
+            parentId: 1,
+          },
+          {
+            id: 117,
+            label: "MENUITEMS.MASTERTABLE.LIST.CONTACTSLISTPOSITIONS",
+            link: AppRoutes.MasterTable.contactsListPosition,
+            parentId: 1,
+          },
+          {
+            id: 118,
+            label: "MENUITEMS.MASTERTABLE.LIST.CITIES",
+            link: AppRoutes.MasterTable.cities,
+            parentId: 1,
+          },
+          {
+            id: 119,
+            label: "MENUITEMS.MASTERTABLE.LIST.DEFAULTEMAILS",
+            link: AppRoutes.MasterTable.defaultEmails,
+            parentId: 1,
+          },
+          {
+            id: 120,
+            label: "MENUITEMS.MASTERTABLE.LIST.BANKSETTINGS",
+            link: AppRoutes.MasterTable.bankSettings,
+            parentId: 1,
           },
         ],
       },
