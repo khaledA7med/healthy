@@ -450,40 +450,42 @@
   </div>
   <div class="modal-footer py-2">
 
-    <!-- Change Status Btns -->
-    <button class="btn btn-sm btn-warning" *ngIf="uiState.clientDetails.status == clientStatus.Prospect"
-      (click)="changeStatus(clientStatus.PendingActivation)">
-      Pending Activation
-    </button>
+    <ng-container *ngIf="!(permissions$ | async)?.includes(privileges.ChClientsRegistryAdministratorReadOnly)">
+      <!-- Change Status Btns -->
+      <button class="btn btn-sm btn-warning" *ngIf="uiState.clientDetails.status == clientStatus.Prospect"
+        (click)="changeStatus(clientStatus.PendingActivation)">
+        Pending Activation
+      </button>
 
-    <button class="btn btn-sm btn-success" *ngIf="uiState.clientDetails.status == clientStatus.PendingActivation"
-      (click)="changeStatus(clientStatus.Active)">
-      Approve
-    </button>
-    <button class="btn btn-sm btn-danger" *ngIf="uiState.clientDetails.status == clientStatus.PendingActivation"
-      (click)="changeStatus(clientStatus.Rejected)">
-      Reject
-    </button>
-    <button class="btn btn-sm btn-secondary" *ngIf="uiState.clientDetails.status == clientStatus.Active"
-      (click)="changeStatus(clientStatus.Blocked)">
-      Block
-    </button>
-    <button class="btn btn-sm btn-success" *ngIf="uiState.clientDetails.status == clientStatus.Rejected"
-      (click)="changeStatus(clientStatus.Active)">
-      Approve
-    </button>
-    <button class="btn btn-sm btn-secondary" *ngIf="uiState.clientDetails.status == clientStatus.Blocked"
-      (click)="changeStatus(clientStatus.Active)">
-      Unblock
-    </button>
+      <button class="btn btn-sm btn-success" *ngIf="uiState.clientDetails.status == clientStatus.PendingActivation"
+        (click)="changeStatus(clientStatus.Active)">
+        Approve
+      </button>
+      <button class="btn btn-sm btn-danger" *ngIf="uiState.clientDetails.status == clientStatus.PendingActivation"
+        (click)="changeStatus(clientStatus.Rejected)">
+        Reject
+      </button>
+      <button class="btn btn-sm btn-secondary" *ngIf="uiState.clientDetails.status == clientStatus.Active"
+        (click)="changeStatus(clientStatus.Blocked)">
+        Block
+      </button>
+      <button class="btn btn-sm btn-success" *ngIf="uiState.clientDetails.status == clientStatus.Rejected"
+        (click)="changeStatus(clientStatus.Active)">
+        Approve
+      </button>
+      <button class="btn btn-sm btn-secondary" *ngIf="uiState.clientDetails.status == clientStatus.Blocked"
+        (click)="changeStatus(clientStatus.Active)">
+        Unblock
+      </button>
 
-    <!-- Add To Group Btn -->
-    <button *ngIf="
-        uiState.clientDetails.status == clientStatus.Active &&
-        uiState.clientDetails.type == clientType.Retail
-      " type="submit" class="btn btn-success btn-sm" (click)="openAddClientToGroupModal(addClientToGroup)">
-      Add To Group
-    </button>
+      <!-- Add To Group Btn -->
+      <button *ngIf="
+      uiState.clientDetails.status == clientStatus.Active &&
+      uiState.clientDetails.type == clientType.Retail
+    " type="submit" class="btn btn-success btn-sm" (click)="openAddClientToGroupModal(addClientToGroup)">
+        Add To Group
+      </button>
+    </ng-container>
 
     <!-- Close Btn -->
     <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">

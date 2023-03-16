@@ -10,6 +10,8 @@ import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { IPrivileges } from "src/app/core/models/iuser";
+import { Roles } from "src/app/core/roles/Roles";
+import { PermissionsService } from "src/app/core/services/permissions.service";
 import { MenuService } from "src/app/shared/services/menu.service";
 
 import { MenuItem } from "./menu.model";
@@ -32,14 +34,19 @@ export class SidebarComponent implements OnInit {
   constructor(
     private router: Router,
     public translate: TranslateService,
-    private menu: MenuService
+    private menu: MenuService,
+    private permission: PermissionsService
   ) {
     translate.setDefaultLang("en");
   }
 
   ngOnInit(): void {
     // Menu Items
-    this.menuItems = this.menu.getMenu();
+    this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
+      this.privileges = res;
+      this.menuItems = this.menu.getMenu(this.privileges);
+      this.modifyMenuAuth();
+    });
   }
 
   /***
@@ -245,6 +252,72 @@ export class SidebarComponent implements OnInit {
    */
   SidebarHide() {
     document.body.classList.remove("vertical-sidebar-enable");
+  }
+
+  // modifyMenu(property: keyof IPrivileges): MenuItem[] {
+  // // Loop through each top-level menu item
+  // let menu = this.menuItems.filter((item) => {
+  //   // Check if the item has an auth property
+  //   if (item.auth) {
+  //     // Check if the user has the required privilege for this item
+  //     if (this.privileges?.[property]?.includes(item.auth)) {
+  //       // If the item has sub-items, filter them based on privileges as well
+  //       if (item.subItems && item.subItems.length) {
+  //         item.subItems = item.subItems.filter((subItem) => {
+  //           // Check if the user has the required privilege for this sub-item
+  //           if (this.privileges?.[property]?.includes(subItem.auth!)) {
+  //             // If the sub-item has sub-sub-items, filter them based on privileges as well
+  //             if (subItem.subItems && subItem.subItems.length) {
+  //               subItem.subItems = subItem.subItems.filter((subSubItem) => {
+  //                 // Check if the user has the required privilege for this sub-sub-item
+  //                 return this.privileges?.[property]?.includes(
+  //                   subSubItem.auth!
+  //                 );
+  //               });
+  //             }
+  //             return true;
+  //           }
+  //           return false;
+  //         });
+  //       }
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  //   // If the item doesn't have an auth property, include it in the menu
+  //   return true;
+  // });
+  // return menu;
+  // }
+
+  // modifyMenuAuth() {
+  //   this.menuItems = this.menuItems.filter((item) => {
+  //     if (item.auth) {
+  //       if (item.subItems && item.subItems.length) {
+  //         return item.subItems.filter((subItem) => {
+  //           if (subItem.auth) {
+  //             if (subItem.subItems && subItem.subItems.length)
+  //               return subItem.subItems.filter((subSub) => subSub.auth);
+
+  //             return subItem;
+  //           } else return false;
+  //         });
+  //       }
+  //       return true;
+  //     } else return false;
+  //   });
+  // }
+
+  modifyMenuAuth() {
+    const filterItems = (items: any) => {
+      return items.filter((item: any) => {
+        if (item.auth) {
+          if (item.subItems) item.subItems = filterItems(item.subItems);
+          return true;
+        } else return false;
+      });
+    };
+    this.menuItems = filterItems(this.menuItems);
   }
 }
 
