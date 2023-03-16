@@ -4,7 +4,6 @@ import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import PerfectScrollbar from "perfect-scrollbar";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { SystemAdminService } from "src/app/shared/services/system-admin/system-admin.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -125,19 +124,6 @@ export class UserPrivilegesComponent implements OnInit {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		// this.gridApi.sizeColumnsToFit();
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 		if ((this, this.uiState.roles.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 	//#region

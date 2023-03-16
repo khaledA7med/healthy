@@ -4,7 +4,6 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { NavigationEnd, Router } from "@angular/router";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
-import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -163,19 +162,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		// this.gridApi.sizeColumnsToFit();
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 		if ((this, this.uiState.policies.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 	//#region Filter INIT and Functions
