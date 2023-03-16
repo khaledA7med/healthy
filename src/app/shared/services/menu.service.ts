@@ -202,6 +202,78 @@ export class MenuService {
             ],
           },
           {
+            id: 113,
+            label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.TEXT",
+            parentId: 1,
+            subItems: [
+              {
+                id: 1013,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFCOVERS",
+                link: AppRoutes.MasterTable.production.libraryOfCovers,
+                parentId: 113,
+              },
+              {
+                id: 1014,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFINTERESTSINSURED",
+                link: AppRoutes.MasterTable.production
+                  .libraryOfInterestsInsured,
+                parentId: 113,
+              },
+              {
+                id: 1015,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFTERMS",
+                link: AppRoutes.MasterTable.production.libraryOfTerms,
+                parentId: 113,
+              },
+              {
+                id: 1016,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFDEDUCTIBLES",
+                link: AppRoutes.MasterTable.production.libraryOfDeductibles,
+                parentId: 113,
+              },
+              {
+                id: 1017,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFEXCLUSIONS",
+                link: AppRoutes.MasterTable.production.libraryOfExclusions,
+                parentId: 113,
+              },
+              {
+                id: 1018,
+                label:
+                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFWARRANTIES",
+                link: AppRoutes.MasterTable.production.libraryOfWarranties,
+                parentId: 113,
+              },
+              {
+                id: 1019,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIFEPLAN",
+                link: AppRoutes.MasterTable.production.lifePlan,
+                parentId: 113,
+              },
+              {
+                id: 1020,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESMAKE",
+                link: AppRoutes.MasterTable.production.vehiclesMake,
+                parentId: 113,
+              },
+              {
+                id: 1021,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESTYPE",
+                link: AppRoutes.MasterTable.production.vehiclesType,
+                parentId: 113,
+              },
+              {
+                id: 1022,
+                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESCOLOR",
+                link: AppRoutes.MasterTable.production.vehiclesColor,
+                parentId: 113,
+              },
+            ],
+          },
+          {
             id: 114,
             label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TEXT",
             parentId: 1,
@@ -312,27 +384,27 @@ export class MenuService {
             ],
           },
           {
-            id: 114,
+            id: 115,
             label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.TEXT",
             parentId: 1,
             subItems: [
               {
-                id: 1014,
+                id: 1015,
                 label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLIENTS",
                 link: AppRoutes.MasterTable.listOfDocuments.clients,
-                parentId: 114,
-              },
-              {
-                id: 1015,
-                label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLAIMS",
-                link: AppRoutes.MasterTable.listOfDocuments.claims,
-                parentId: 114,
+                parentId: 115,
               },
               {
                 id: 1016,
+                label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.CLAIMS",
+                link: AppRoutes.MasterTable.listOfDocuments.claims,
+                parentId: 116,
+              },
+              {
+                id: 1017,
                 label: "MENUITEMS.MASTERTABLE.LIST.LISTOFDOCUMENTS.PRODUCTION",
                 link: AppRoutes.MasterTable.listOfDocuments.production,
-                parentId: 114,
+                parentId: 117,
               },
             ],
           },
@@ -444,6 +516,19 @@ export class MenuService {
                 id: 4003,
                 label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWALNOTICE",
                 link: AppRoutes.Production.reports.renewalsNotice,
+                parentId: 403,
+              },
+            ],
+          },
+          {
+            id: 404,
+            label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
+            parentId: 4,
+            subItems: [
+              {
+                id: 4001,
+                label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
+                link: AppRoutes.Production.reports.archive.dcNote,
                 parentId: 403,
               },
             ],
