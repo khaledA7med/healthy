@@ -191,15 +191,51 @@ export const MENU: MenuItem[] = [
         ],
       },
       {
-        id: 113,
-        label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.TEXT",
+        id: 114,
+        label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TEXT",
         parentId: 1,
         subItems: [
           {
-            id: 1013,
-            label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFCOVERS",
-            link: AppRoutes.MasterTable.production.libraryOfCovers,
-            parentId: 113,
+            id: 1014,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKE",
+            link: AppRoutes.MasterTable.claims.carsMake,
+            parentId: 114,
+          },
+          {
+            id: 1015,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.HOSPITALS",
+            link: AppRoutes.MasterTable.claims.hospitals,
+            parentId: 114,
+          },
+          {
+            id: 1016,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.INSURANCEWORKSHOPDETAILS",
+            link: AppRoutes.MasterTable.claims.insuranceWorkShopDetails,
+            parentId: 114,
+          },
+          {
+            id: 1017,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TPALIST",
+            link: AppRoutes.MasterTable.claims.tpaList,
+            parentId: 114,
+          },
+          {
+            id: 1018,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSGENERALITEMS",
+            link: AppRoutes.MasterTable.claims.claimsGeneralItems,
+            parentId: 114,
+          },
+          {
+            id: 1019,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSSTATUS",
+            link: AppRoutes.MasterTable.claims.claimsStatus,
+            parentId: 114,
+          },
+          {
+            id: 1020,
+            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSREJECTIONREASONS",
+            link: AppRoutes.MasterTable.claims.claimsRejectionReasons,
+            parentId: 114,
           },
           {
             id: 1014,
