@@ -50,7 +50,12 @@ export const AppRoutes = {
       claimsGeneralItems: "claims-general-items",
       claimsStatus: "claims-status",
       claimsRejectionReasons: "claims-rejection-reasons"
-    }
+    },
+    vehiclesTypes: "vehicles-types",
+    contactsListPosition: "contacts-list-position",
+    cities: "cities",
+    defaultEmails: "default-emails",
+    bankSettings: "bank-settings",
   },
   Client: {
     base: "clients",

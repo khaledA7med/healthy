@@ -294,6 +294,56 @@ const routes: Routes = [
         (m) => m.ClaimsRejectionReasonsModule
       ),
   },
+  {
+    path: AppRoutes.MasterTable.vehiclesTypes,
+    data: {
+      title: "Vehicles Types",
+    },
+    loadChildren: () =>
+      import("./vehicles-types/vehicles-types.module").then(
+        (m) => m.VehiclesTypesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.contactsListPosition,
+    data: {
+      title: "Contacts List Position",
+    },
+    loadChildren: () =>
+      import("./contacts-list-position/contacts-list-position.module").then(
+        (m) => m.ContactsListPositionModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.cities,
+    data: {
+      title: "Cities",
+    },
+    loadChildren: () =>
+      import("./cities/cities.module").then(
+        (m) => m.CitiesModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.defaultEmails,
+    data: {
+      title: "Default Settings",
+    },
+    loadChildren: () =>
+      import("./default-emails/default-emails.module").then(
+        (m) => m.DefaultEmailsModule
+      ),
+  },
+  {
+    path: AppRoutes.MasterTable.bankSettings,
+    data: {
+      title: "Banks Settings",
+    },
+    loadChildren: () =>
+      import("./bank-settings/bank-settings.module").then(
+        (m) => m.BankSettingsModule
+      ),
+  },
 ];
 
 @NgModule({
