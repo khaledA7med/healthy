@@ -17,7 +17,7 @@ import {
   IDatasource,
   IGetRowsParams,
 } from "ag-grid-community";
-import { Observable, of, Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
 import { clientManageCols } from "src/app/shared/app/grid/clientCols";

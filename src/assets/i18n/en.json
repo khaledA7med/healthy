@@ -70,6 +70,25 @@
           "CLIENTS": "Clients",
           "CLAIMS": "Claims",
           "PRODUCTION": "Production"
+        },
+        "PRODUCTION": {
+          "TEXT": "Production",
+          "LIBRARYOFCOVERS": "Library Of Covers",
+          "LIBRARYOFINTERESTSINSURED": "Library Of Interests Insured",
+          "LIBRARYOFTERMS": "Library Of Terms & Conditions",
+          "LIBRARYOFDEDUCTIBLES": "Library Of Deductibles",
+          "LIBRARYOFEXCLUSIONS": "Library Of Exclusions",
+          "LIBRARYOFWARRANTIES": "Library Of Warranties",
+          "LIFEPLAN": "Life Plan",
+          "VEHICLESMAKE": "Vehicles (Make)",
+          "VEHICLESTYPE": "Vehicles (Type)",
+          "VEHICLESCOLOR": "Vehicles (Color)"
+        },
+        "LISTOFDOCUMENTS": {
+          "TEXT": "List Of Required Documents",
+          "CLIENTS": "Clients",
+          "CLAIMS": "Claims",
+          "PRODUCTION": "Production"
         }
       }
     },

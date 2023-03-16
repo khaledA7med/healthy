@@ -30,15 +30,29 @@ export class MasterTableService {
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
+          route: ApiRoutes.MasterTable.Client.contactLineOfBusiness,
           name: BaseData.ContactLineOfBusiness,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
+          route: ApiRoutes.MasterTable.Client.contactDepartment,
           name: BaseData.ContactDepartment,
         },
       ],
       QuotingRequirements: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+      ],
+      MasterTableProductionLibraries: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
@@ -74,80 +88,6 @@ export class MasterTableService {
         {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
-        },
-      ],
-      InsuranceCompaniesDocuments: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.TypeOfCustomerServices,
-          name: BaseData.TypeOfCustomerServices,
-        },
-      ],
-      CustomerServiceCompanyRequiremenrs: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
-          name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
-          name: BaseData.ContactLineOfBusiness,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
-          name: BaseData.ContactDepartment,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.policyEndorsTypes,
-          name: BaseData.PolicyEndorsTypes,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-      ],
-      ClaimsHospitals: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.regions,
-          name: BaseData.Regions,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-      ],
-      insuranceWorkshopDetails: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.cities,
-          name: BaseData.Cities,
-        },
-      ],
-      ClaimsGeneralItems: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
-          name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
-          name: BaseData.ContactLineOfBusiness,
-        },
-      ],
-      ClaimsStatus: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.claimStatus,
-          name: BaseData.ClaimStatus,
-        },
-      ],
-      ClaimsRejectionReasons: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.TypeClaimsRejectionReason,
-          name: BaseData.TypeClaimsRejectionReason,
         },
       ],
       Client: [
@@ -669,27 +609,6 @@ export class MasterTableService {
         break;
       case MODULES.MasterTableProductionLibraries:
         this.dataSrc = data.MasterTableProductionLibraries;
-        break;
-      case MODULES.InsuranceCompaniesDocuments:
-        this.dataSrc = data.InsuranceCompaniesDocuments;
-        break;
-      case MODULES.CustomerServiceCompanyRequirements:
-        this.dataSrc = data.CustomerServiceCompanyRequiremenrs;
-        break;
-      case MODULES.Hospitals:
-        this.dataSrc = data.ClaimsHospitals;
-        break;
-      case MODULES.InsuranceWorkshopDetails:
-        this.dataSrc = data.insuranceWorkshopDetails;
-        break;
-      case MODULES.ClaimsGeneralItems:
-        this.dataSrc = data.ClaimsGeneralItems;
-        break;
-      case MODULES.ClaimsStatus:
-        this.dataSrc = data.ClaimsStatus;
-        break;
-      case MODULES.ClaimsRejectionReasons:
-        this.dataSrc = data.ClaimsRejectionReasons;
         break;
       case MODULES.MasterTableListOfRequiredDocuments:
         this.dataSrc = data.MasterTableListOfRequiredDocuments;

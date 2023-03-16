@@ -191,51 +191,15 @@ export const MENU: MenuItem[] = [
         ],
       },
       {
-        id: 114,
-        label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TEXT",
+        id: 113,
+        label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.TEXT",
         parentId: 1,
         subItems: [
           {
-            id: 1014,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKE",
-            link: AppRoutes.MasterTable.claims.carsMake,
-            parentId: 114,
-          },
-          {
-            id: 1015,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.HOSPITALS",
-            link: AppRoutes.MasterTable.claims.hospitals,
-            parentId: 114,
-          },
-          {
-            id: 1016,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.INSURANCEWORKSHOPDETAILS",
-            link: AppRoutes.MasterTable.claims.insuranceWorkShopDetails,
-            parentId: 114,
-          },
-          {
-            id: 1017,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.TPALIST",
-            link: AppRoutes.MasterTable.claims.tpaList,
-            parentId: 114,
-          },
-          {
-            id: 1018,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSGENERALITEMS",
-            link: AppRoutes.MasterTable.claims.claimsGeneralItems,
-            parentId: 114,
-          },
-          {
-            id: 1019,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSSTATUS",
-            link: AppRoutes.MasterTable.claims.claimsStatus,
-            parentId: 114,
-          },
-          {
-            id: 1020,
-            label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CLAIMSREJECTIONREASONS",
-            link: AppRoutes.MasterTable.claims.claimsRejectionReasons,
-            parentId: 114,
+            id: 1013,
+            label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFCOVERS",
+            link: AppRoutes.MasterTable.production.libraryOfCovers,
+            parentId: 113,
           },
           {
             id: 1014,
@@ -325,24 +289,28 @@ export const MENU: MenuItem[] = [
     id: 2,
     label: "MENUITEMS.CLIENTREGISTRY.TEXT",
     icon: "ri-folder-user-line",
+    auth: ClientsPermissions.ChClientsRegistryAdmin,
     subItems: [
       {
         id: 201,
         label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTREGISTRY",
         link: AppRoutes.Client.clientRegistry,
         parentId: 2,
+        auth: ClientsPermissions.ChClientsRegistry,
       },
       {
         id: 202,
         label: "MENUITEMS.CLIENTREGISTRY.LIST.CLIENTGROUPS",
         link: AppRoutes.Client.groups,
         parentId: 2,
+        auth: ClientsPermissions.ChClientsGrouping,
       },
       {
         id: 203,
         label: "MENUITEMS.CLIENTREGISTRY.LIST.REPORTS",
         link: AppRoutes.Client.reports,
         parentId: 2,
+        auth: ClientsPermissions.ChClientsRegistryAdmin,
       },
     ],
   },
@@ -435,7 +403,20 @@ export const MENU: MenuItem[] = [
           {
             id: 4001,
             label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
-            link: AppRoutes.Production.archive.dcNote,
+            link: AppRoutes.Production.reports.archive.dcNote,
+            parentId: 403,
+          },
+        ],
+      },
+      {
+        id: 404,
+        label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
+        parentId: 4,
+        subItems: [
+          {
+            id: 4001,
+            label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
+            link: AppRoutes.Production.reports.archive.dcNote,
             parentId: 403,
           },
         ],

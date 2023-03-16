@@ -195,7 +195,8 @@ export class MenuService {
                 id: 1017,
                 label:
                   "MENUITEMS.MASTERTABLE.LIST.CUSTOMERSERVICE.CANCELLATIONREASONS",
-                link: AppRoutes.MasterTable.customerService.cancellationReason,
+                link: AppRoutes.MasterTable.customerService
+                  .customerServiceCancellationReason,
                 parentId: 112,
               },
             ],
