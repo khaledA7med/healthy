@@ -91,6 +91,11 @@
         }
       }
     },
+    "VEHICLESTYPES": "Vehicles Types",
+    "CONTACTSLISTPOSITIONS": "Contacts List Positions",
+    "CITIES": "Cities",
+    "DEFAULTEMAILS": "Default Emails",
+    "BANKSETTINGS": "Bank Settings",
     "CUSTOMERSERVICE": {
       "TEXT": "Customer Service",
       "LIST": {
