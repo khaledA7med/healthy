@@ -324,65 +324,6 @@ export class MenuService
                 link: AppRoutes.MasterTable.claims.claimsRejectionReasons,
                 parentId: 114,
               },
-              {
-                id: 1014,
-                label:
-                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFINTERESTSINSURED",
-                link: AppRoutes.MasterTable.production
-                  .libraryOfInterestsInsured,
-                parentId: 113,
-              },
-              {
-                id: 1015,
-                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFTERMS",
-                link: AppRoutes.MasterTable.production.libraryOfTerms,
-                parentId: 113,
-              },
-              {
-                id: 1016,
-                label:
-                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFDEDUCTIBLES",
-                link: AppRoutes.MasterTable.production.libraryOfDeductibles,
-                parentId: 113,
-              },
-              {
-                id: 1017,
-                label:
-                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFEXCLUSIONS",
-                link: AppRoutes.MasterTable.production.libraryOfExclusions,
-                parentId: 113,
-              },
-              {
-                id: 1018,
-                label:
-                  "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIBRARYOFWARRANTIES",
-                link: AppRoutes.MasterTable.production.libraryOfWarranties,
-                parentId: 113,
-              },
-              {
-                id: 1019,
-                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.LIFEPLAN",
-                link: AppRoutes.MasterTable.production.lifePlan,
-                parentId: 113,
-              },
-              {
-                id: 1020,
-                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESMAKE",
-                link: AppRoutes.MasterTable.production.vehiclesMake,
-                parentId: 113,
-              },
-              {
-                id: 1021,
-                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESTYPE",
-                link: AppRoutes.MasterTable.production.vehiclesType,
-                parentId: 113,
-              },
-              {
-                id: 1022,
-                label: "MENUITEMS.MASTERTABLE.LIST.PRODUCTION.VEHICLESCOLOR",
-                link: AppRoutes.MasterTable.production.vehiclesColor,
-                parentId: 113,
-              },
             ],
           },
           {
@@ -418,7 +359,7 @@ export class MenuService
           },
           {
             id: 117,
-            label: "MENUITEMS.MASTERTABLE.LIST.CONTACTSLISTPOSITIONS",
+            label: "MENUITEMS.MASTERTABLE.LIST.CONTACTSLISTPOSITION",
             link: AppRoutes.MasterTable.contactsListPosition,
             parentId: 1,
           },
