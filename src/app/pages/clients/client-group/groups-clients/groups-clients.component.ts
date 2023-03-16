@@ -3,7 +3,6 @@ import { ClientsGroupsService } from "src/app/shared/services/clients/clients.gr
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
 import { groupClientsCols } from "src/app/shared/app/grid/clinetGroupsCols";
-import PerfectScrollbar from "perfect-scrollbar";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
@@ -119,18 +118,6 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
 		this.gridApi.sizeColumnsToFit();
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 	}
 
 	get form() {

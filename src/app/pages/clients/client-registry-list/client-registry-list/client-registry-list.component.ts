@@ -17,10 +17,9 @@ import {
   IDatasource,
   IGetRowsParams,
 } from "ag-grid-community";
-import { Observable, of, Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
-import PerfectScrollbar from "perfect-scrollbar";
 import { clientManageCols } from "src/app/shared/app/grid/clientCols";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
@@ -92,7 +91,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 
   constructor(
     private clientService: ClientsService,
-    private tableRef: ElementRef,
     private message: MessagesService,
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
@@ -183,24 +181,6 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-horizontal-scroll-viewport"
-      );
-    const agBodyViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-vertical-scroll-viewport"
-      );
-
-    if (agBodyViewport) {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport) {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
   }
 
   //  filter Section

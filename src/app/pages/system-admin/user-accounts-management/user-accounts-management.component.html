@@ -32,7 +32,7 @@
 </div>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 
@@ -123,8 +123,8 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2" *ngIf="uiState.editUserMode">
                         <label for="staffId">Staff ID</label>
                         <input id="staffId" class="form-control form-control-sm" formControlName="staffId"
-                            [ngClass]="{'is-submitted': (ff['staffId'].touched || uiState.submitted) && ff['staffId'].invalid}" />
-                        <span *ngIf="(ff['staffId'].touched || uiState.submitted) && ff['staffId'].invalid"
+                            [ngClass]="{'is-submitted': (ff.staffId?.touched || uiState.submitted) && ff.staffId?.invalid}" />
+                        <span *ngIf="(ff.staffId?.touched || uiState.submitted) && ff.staffId?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -132,11 +132,11 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="fullName">Full Name</label>
                         <ng-select id="fullName" placeholder="Select Staff Name" (change)="getUserDetails($event.id)"
-                            [ngClass]="{'is-submitted': (ff['fullName'].touched || uiState.submitted) && ff['fullName'].invalid}"
+                            [ngClass]="{'is-submitted': (ff.fullName?.touched || uiState.submitted) && ff.fullName?.invalid}"
                             formControlName="fullName" [items]="(lookupData | async)?.ProducersList?.content!"
                             bindLabel="name" bindValue="name" [loading]="lookupData ? false : true">
                         </ng-select>
-                        <span *ngIf="(ff['fullName'].touched || uiState.submitted) && ff['fullName'].invalid"
+                        <span *ngIf="(ff.fullName?.touched || uiState.submitted) && ff.fullName?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -144,8 +144,8 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2" *ngIf="uiState.editUserMode">
                         <label for="jobTitle">Job Title</label>
                         <input id="jobTitle" class="form-control form-control-sm" formControlName="jobTitle"
-                            [ngClass]="{'is-submitted': (ff['jobTitle'].touched || uiState.submitted) && ff['jobTitle'].invalid}" />
-                        <span *ngIf="(ff['jobTitle'].touched || uiState.submitted) && ff['staffId'].invalid"
+                            [ngClass]="{'is-submitted': (ff.jobTitle?.touched || uiState.submitted) && ff.jobTitle?.invalid}" />
+                        <span *ngIf="(ff.jobTitle?.touched || uiState.submitted) && ff.staffId?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -153,8 +153,8 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="userName">User Name</label>
                         <input id="userName" class="form-control form-control-sm" formControlName="userName"
-                            [ngClass]="{'is-submitted': (ff['userName'].touched || uiState.submitted) && ff['userName'].invalid}" />
-                        <span *ngIf="(ff['userName'].touched || uiState.submitted) && ff['userName'].invalid"
+                            [ngClass]="{'is-submitted': (ff.userName?.touched || uiState.submitted) && ff.userName?.invalid}" />
+                        <span *ngIf="(ff.userName?.touched || uiState.submitted) && ff.userName?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -162,11 +162,11 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="branch">branch</label>
                         <ng-select id="branch" placeholder="Select branch" formControlName="branch"
-                            [ngClass]="{'is-submitted': (ff['branch'].touched || uiState.submitted) && ff['branch'].invalid}"
+                            [ngClass]="{'is-submitted': (ff.branch?.touched || uiState.submitted) && ff.branch?.invalid}"
                             [items]="(lookupData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
                             [loading]="lookupData ? false : true">
                         </ng-select>
-                        <span *ngIf="(ff['branch'].touched || uiState.submitted) && ff['branch'].invalid"
+                        <span *ngIf="(ff.branch?.touched || uiState.submitted) && ff.branch?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -174,8 +174,8 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="phoneNo">Phone No</label>
                         <input id="phoneNo" class="form-control form-control-sm" formControlName="phoneNo"
-                            [ngClass]="{'is-submitted': (ff['phoneNo'].touched || uiState.submitted) && ff['phoneNo'].invalid}" />
-                        <span *ngIf="(ff['phoneNo'].touched || uiState.submitted) && ff['phoneNo'].invalid"
+                            [ngClass]="{'is-submitted': (ff.phoneNo?.touched || uiState.submitted) && ff.phoneNo?.invalid}" />
+                        <span *ngIf="(ff.phoneNo?.touched || uiState.submitted) && ff.phoneNo?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -183,8 +183,8 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="email">Email</label>
                         <input id="email" class="form-control form-control-sm" formControlName="email"
-                            [ngClass]="{'is-submitted': (ff['email'].touched || uiState.submitted) && ff['email'].invalid}" />
-                        <span *ngIf="(ff['email'].touched || uiState.submitted) && ff['email'].invalid"
+                            [ngClass]="{'is-submitted': (ff.email?.touched || uiState.submitted) && ff.email?.invalid}" />
+                        <span *ngIf="(ff.email?.touched || uiState.submitted) && ff.email?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
 
@@ -194,17 +194,16 @@
                         <div class="input-group input-group-sm">
                             <ng-select id="securityRole" placeholder="Select Security Role"
                                 class="form-control SCSelect p-0 border-0"
-                                [ngClass]="{'is-submitted': (ff['DDSecurityRole'].touched || uiState.submitted) && ff['DDSecurityRole'].invalid}"
+                                [ngClass]="{'is-submitted': (ff.DDSecurityRole?.touched || uiState.submitted) && ff.DDSecurityRole?.invalid}"
                                 [items]="(lookupData | async)?.UserSecurityRoles?.content!" bindLabel="name"
                                 formControlName="DDSecurityRole" bindValue="name" [loading]="lookupData ? false : true">
                             </ng-select>
                             <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
-                                (click)="addSecurityRole(ff['DDSecurityRole'].value)">
+                                (click)="addSecurityRole(ff.DDSecurityRole?.value!)">
                                 <i class="ri-add-fill mx-1"></i>
                             </button>
                         </div>
-                        <span
-                            *ngIf="(ff['DDSecurityRole'].touched || uiState.submitted) && ff['DDSecurityRole'].invalid"
+                        <span *ngIf="(ff.DDSecurityRole?.touched || uiState.submitted) && ff.DDSecurityRole?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
                     <!-- Security Roles Table -->

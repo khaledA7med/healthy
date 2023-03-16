@@ -66,7 +66,7 @@ const routes: Routes = [
 			import("./production-renewal-notice-report/production-renewal-notice-report.module").then((m) => m.ProductionRenewalNoticeReportModule),
 	},
 	{
-		path: AppRoutes.Production.archive.dcNote,
+		path: AppRoutes.Production.reports.archive.dcNote,
 		data: {
 			title: "Debite / Credit Notes (Clients Premium)",
 		},

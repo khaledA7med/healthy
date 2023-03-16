@@ -28,13 +28,13 @@ export class PermissionsService {
       take(1),
       map((privileges: IPrivileges) => {
         const privilegeArray = privileges?.[property] || [];
-        return privilege.some((p) => privilegeArray.includes(p));
+        return privilege.every((p) => privilegeArray.includes(p));
       }),
       map((authorized) => (authorized ? true : false))
     );
   }
 
-  private getAccessRoles(): BehaviorSubject<IPrivileges> | any {
+  getAccessRoles(): BehaviorSubject<IPrivileges> | any {
     if (
       this.permissions$.value &&
       Object.keys(this.permissions$.value).length > 0

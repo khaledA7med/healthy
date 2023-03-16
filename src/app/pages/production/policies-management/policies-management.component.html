@@ -25,7 +25,7 @@
 
 <div>
     <div class="ag-theme-alpine" appTableView>
-        <ag-grid-angular id="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+        <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
         </ag-grid-angular>
     </div>
 </div>
@@ -202,7 +202,7 @@
                                 class="form-control form-control-sm" placeholder="0.00" formControlName="amountNo">
                         </div>
 
-                        <div class="col" id="Amount2Div" *ngIf="f['operatordList'].value === 'Between' ">
+                        <div class="col" id="Amount2Div" *ngIf="f.operatordList?.value === 'Between' ">
                             <input id="filterAmountNo2" name="AmountNo2" type="number" min="0"
                                 class="form-control form-control-sm" placeholder="0.00" formControlName="amountNo2">
                         </div>

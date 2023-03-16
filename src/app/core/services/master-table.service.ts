@@ -9,17 +9,14 @@ import { CachingService } from "./caching.service";
 @Injectable({
   providedIn: "root",
 })
-export class MasterTableService
-{
+export class MasterTableService {
   private dataSrc: { route: string; name: string }[];
   private readonly env: string = environment.baseURL;
-  constructor (private http: HttpClient, private caching: CachingService)
-  {
+  constructor(private http: HttpClient, private caching: CachingService) {
     this.dataSrc = [];
   }
 
-  getBaseData (module: string)
-  {
+  getBaseData(module: string) {
     let data = {
       LineOfBusiness: [
         {
@@ -33,11 +30,11 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
+          route: ApiRoutes.MasterTable.Client.contactLineOfBusiness,
           name: BaseData.ContactLineOfBusiness,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
+          route: ApiRoutes.MasterTable.Client.contactDepartment,
           name: BaseData.ContactDepartment,
         },
       ],
@@ -47,8 +44,36 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+        {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
+        },
+      ],
+      MasterTableProductionLibraries: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+      ],
+      MasterTableListOfRequiredDocuments: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.getPolicyTypeIssue,
+          name: BaseData.GetPolicyTypeIssue,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.vehicleCarsMake,
+          name: BaseData.VehicleCarsMake,
         },
       ],
       PolicyIssuanceRequirements: [
@@ -63,80 +88,6 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
-        },
-      ],
-      InsuranceCompaniesDocuments: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.TypeOfCustomerServices,
-          name: BaseData.TypeOfCustomerServices,
-        },
-      ],
-      CustomerServiceCompanyRequiremenrs: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
-          name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
-          name: BaseData.ContactLineOfBusiness,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactDepartment,
-          name: BaseData.ContactDepartment,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.policyEndorsTypes,
-          name: BaseData.PolicyEndorsTypes,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-      ],
-      ClaimsHospitals: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.regions,
-          name: BaseData.Regions,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-      ],
-      insuranceWorkshopDetails: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
-          name: BaseData.InsuranceCompanies,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.cities,
-          name: BaseData.Cities,
-        }
-      ],
-      ClaimsGeneralItems: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
-          name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
-          name: BaseData.ContactLineOfBusiness,
-        },
-      ],
-      ClaimsStatus: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.claimStatus,
-          name: BaseData.ClaimStatus,
-        },
-      ],
-      ClaimsRejectionReasons: [
-        {
-          route: ApiRoutes.MasterTable.MasterTables.TypeClaimsRejectionReason,
-          name: BaseData.TypeClaimsRejectionReason,
         },
       ],
       Client: [
@@ -299,7 +250,8 @@ export class MasterTableService
           name: BaseData.SalesleadStatus,
         },
         {
-          route: ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
+          route:
+            ApiRoutes.MasterTable.BusinessDevelopment.prospectsReportsTypes,
           name: BaseData.ProspectsReportsTypes,
         },
       ],
@@ -609,8 +561,7 @@ export class MasterTableService
       ],
     };
 
-    switch (module)
-    {
+    switch (module) {
       case MODULES.Client:
         this.dataSrc = data.Client;
         break;
@@ -656,26 +607,11 @@ export class MasterTableService
       case MODULES.PolicyIssuanceRequirements:
         this.dataSrc = data.PolicyIssuanceRequirements;
         break;
-      case MODULES.InsuranceCompaniesDocuments:
-        this.dataSrc = data.InsuranceCompaniesDocuments;
+      case MODULES.MasterTableProductionLibraries:
+        this.dataSrc = data.MasterTableProductionLibraries;
         break;
-      case MODULES.CustomerServiceCompanyRequirements:
-        this.dataSrc = data.CustomerServiceCompanyRequiremenrs;
-        break;
-      case MODULES.Hospitals:
-        this.dataSrc = data.ClaimsHospitals;
-        break;
-      case MODULES.InsuranceWorkshopDetails:
-        this.dataSrc = data.insuranceWorkshopDetails;
-        break;
-      case MODULES.ClaimsGeneralItems:
-        this.dataSrc = data.ClaimsGeneralItems;
-        break;
-      case MODULES.ClaimsStatus:
-        this.dataSrc = data.ClaimsStatus;
-        break;
-      case MODULES.ClaimsRejectionReasons:
-        this.dataSrc = data.ClaimsRejectionReasons;
+      case MODULES.MasterTableListOfRequiredDocuments:
+        this.dataSrc = data.MasterTableListOfRequiredDocuments;
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;
@@ -684,11 +620,10 @@ export class MasterTableService
         break;
     }
 
-    for (let i = 0; i < this.dataSrc.length; i++)
-    {
+    for (let i = 0; i < this.dataSrc.length; i++) {
       this.http
-        .get<any>(this.env + this.dataSrc[ i ].route, {
-          context: new HttpContext().set(MODULE_NAME, this.dataSrc[ i ].name),
+        .get<any>(this.env + this.dataSrc[i].route, {
+          context: new HttpContext().set(MODULE_NAME, this.dataSrc[i].name),
         })
         .subscribe();
     }

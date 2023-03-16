@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 export enum SalesLeadStatus {
 	Prospect = "Prospect",
 	Confirmed = "Confirmed",
@@ -10,4 +12,15 @@ export enum SalesLeadStatus {
 export enum SalesLeadType {
 	New = "New",
 	Renewel = "Renewal",
+}
+
+export interface ISalesLeadFollowUpsForm {
+	names?: FormControl<string[] | null>;
+	msg?: FormControl<string | null>;
+	no?: FormControl<string | null>;
+}
+export interface ISalesLeadFollowUpsReq {
+	names?: string[] | null;
+	msg?: string | null;
+	no?: string | null;
 }

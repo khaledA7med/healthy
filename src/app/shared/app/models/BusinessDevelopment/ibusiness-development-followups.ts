@@ -1,7 +1,7 @@
 export interface ISalesLeadFollowUps {
-	sNo?: number;
-	leadNo?: string;
-	notes?: string;
-	savedUser?: string;
-	savedDate?: Date;
+	sNo?: number | null;
+	leadNo?: string | null;
+	notes?: string | null;
+	savedUser?: string | null;
+	savedDate?: Date | null;
 }

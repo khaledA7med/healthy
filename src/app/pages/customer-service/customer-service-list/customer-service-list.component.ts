@@ -21,18 +21,23 @@ import {
 import { Observable, Subscription } from "rxjs";
 import { NgbOffcanvas, NgbOffcanvasRef } from "@ng-bootstrap/ng-bootstrap";
 
-import PerfectScrollbar from "perfect-scrollbar";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import { ICustomerServiceFilters } from "src/app/shared/app/models/CustomerService/icustomer-service-filter";
+import {
+  ICustomerServiceFilters,
+  ICustomerServiceFiltersForm,
+} from "src/app/shared/app/models/CustomerService/icustomer-service-filter";
 import { ICustomerService } from "src/app/shared/app/models/CustomerService/icustomer-service";
 import { customerServiceManageCols } from "src/app/shared/app/grid/customerServiceCols";
 import AppUtils from "src/app/shared/app/util";
-import { ICustomerServiceFollowUp } from "src/app/shared/app/models/CustomerService/icustomer-service-followup";
+import {
+  ICustomerServiceFollowUp,
+  ICustomerServiceFollowUpForm,
+} from "src/app/shared/app/models/CustomerService/icustomer-service-followup";
 import {
   CustomerServiceStatus,
   CustomerServiceStatusRes,
@@ -89,9 +94,9 @@ export class CustomerServiceListComponent
   };
 
   // Follow Up Canvas
-  followUpForm!: FormGroup;
+  followUpForm!: FormGroup<ICustomerServiceFollowUpForm>;
   // filter form
-  filterForms!: FormGroup;
+  filterForms!: FormGroup<ICustomerServiceFiltersForm>;
   lookupData!: Observable<IBaseMasterTable>;
   // to unSubscribe
   subscribes: Subscription[] = [];
@@ -205,24 +210,6 @@ export class CustomerServiceListComponent
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
-
-    const agBodyHorizontalViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-horizontal-scroll-viewport"
-      );
-    const agBodyViewport: HTMLElement =
-      this.tableRef.nativeElement.querySelector(
-        "#gridScrollbar .ag-body-viewport"
-      );
-
-    if (agBodyViewport) {
-      const vertical = new PerfectScrollbar(agBodyViewport);
-      vertical.update();
-    }
-    if (agBodyHorizontalViewport) {
-      const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-      horizontal.update();
-    }
   }
 
   //#region filter Section
@@ -231,7 +218,7 @@ export class CustomerServiceListComponent
   }
 
   private initFilterForm(): void {
-    this.filterForms = new FormGroup({
+    this.filterForms = new FormGroup<ICustomerServiceFiltersForm>({
       client: new FormControl(null),
       status: new FormControl([...this.uiState.filters.status!]),
       type: new FormControl([]),
@@ -251,12 +238,12 @@ export class CustomerServiceListComponent
   CheckdurationEvt(e: Event) {
     let elem = e.target as HTMLInputElement;
     if (elem.checked) {
-      this.f["duration"]?.enable();
+      this.f.duration?.enable();
     } else {
-      this.f["duration"]?.reset();
-      this.f["duration"]?.disable();
+      this.f.duration?.reset();
+      this.f.duration?.disable();
     }
-    this.f["duration"]?.updateValueAndValidity();
+    this.f.duration?.updateValueAndValidity();
   }
 
   get f() {
@@ -264,8 +251,8 @@ export class CustomerServiceListComponent
   }
 
   setDeadLineFilter(e: any) {
-    this.f["deadlineFrom"].patchValue(this.appUtils.dateFormater(e.from));
-    this.f["deadlineTo"].patchValue(this.appUtils.dateFormater(e.to));
+    this.f.deadlineFrom?.patchValue(e.from);
+    this.f.deadlineTo?.patchValue(e.to);
   }
 
   getLookupData() {
@@ -276,8 +263,12 @@ export class CustomerServiceListComponent
     this.uiState.filters = {
       ...this.uiState.filters,
       ...this.filterForms.value,
-      duration: this.f["duration"].value
-        ? JSON.stringify(this.f["duration"].value)
+      deadlineFrom: this.appUtils.dateFormater(
+        this.f.deadlineFrom?.value
+      ) as any,
+      deadlineTo: this.appUtils.dateFormater(this.f.deadlineTo?.value) as any,
+      duration: this.f.duration?.value
+        ? JSON.stringify(this.f.duration.value)
         : "",
     };
   }
@@ -294,7 +285,7 @@ export class CustomerServiceListComponent
 
   //#region FollowUp Cancvas
   private initFollowUpForm(): void {
-    this.followUpForm = new FormGroup({
+    this.followUpForm = new FormGroup<ICustomerServiceFollowUpForm>({
       names: new FormControl([], Validators.required),
       msg: new FormControl(null, Validators.required),
       no: new FormControl(null),
@@ -336,7 +327,7 @@ export class CustomerServiceListComponent
   }
 
   sendFollowUp() {
-    this.ff["no"].patchValue(this.uiState.followUpData.requestNo);
+    this.ff.no?.patchValue(this.uiState.followUpData.requestNo);
     this.uiState.submitted = true;
     if (!this.followUpForm.valid) {
       return;
@@ -344,12 +335,12 @@ export class CustomerServiceListComponent
       let sub = this.customerService
         .saveNote(this.followUpForm.value)
         .subscribe(
-          (res: HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>) => {
-            if (res.body?.status) {
-              this.message.toast(res.body!.message!, "success");
+          (res: IBaseResponse<ICustomerServiceFollowUp[]>) => {
+            if (res.status) {
+              this.message.toast(res.message!, "success");
               this.followUpForm.reset();
               this.loadFollowUpData(this.uiState.followUpData.requestNo);
-            } else this.message.toast(res.body!.message!, "error");
+            } else this.message.toast(res.message!, "error");
           },
           (err: HttpErrorResponse) => {
             this.message.popup("Oops!", err.message, "error");

@@ -18,7 +18,10 @@ export const ApiRoutes = {
       regions: LookUpTables + BaseData.Regions,
       cities: LookUpTables + BaseData.Cities,
       claimStatus: LookUpTables + BaseData.ClaimStatus,
-      TypeClaimsRejectionReason: LookUpTables + BaseData.TypeClaimsRejectionReason,
+      TypeClaimsRejectionReason:
+        LookUpTables + BaseData.TypeClaimsRejectionReason,
+      vehicleCarsMake: LookUpTables + BaseData.VehicleCarsMake,
+      getPolicyTypeIssue: LookUpTables + BaseData.GetPolicyTypeIssue,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -247,7 +250,7 @@ export const ApiRoutes = {
     customerService: {
       InsuranceCompaniesDocuments: {
         search: "/MasterTables/CustomerService/CompanyDocuments/Search",
-        upload: "/MasterTables/CustomerService/CompanyDocuments/Upload"
+        upload: "/MasterTables/CustomerService/CompanyDocuments/Upload",
       },
       customerServiceRequirements: {
         search: "/MasterTables/CustomerService/CompanyRequirments/Search",
@@ -268,13 +271,13 @@ export const ApiRoutes = {
         search: "/MasterTables/CustomerService/SuspectiveCauses/Index",
         save: "/MasterTables/CustomerService/SuspectiveCauses/Save",
         edit: "/MasterTables/CustomerService/SuspectiveCauses/Edit",
-        delete: "/MasterTables/CustomerService/SuspectiveCauses/Delete"
+        delete: "/MasterTables/CustomerService/SuspectiveCauses/Delete",
       },
       customerServiceCancellationReasons: {
         search: "/MasterTables/CustomerService/CancellationReasons/Index",
         save: "/MasterTables/CustomerService/CancellationReasons/Save",
         edit: "/MasterTables/CustomerService/CancellationReasons/Edit",
-        delete: "/MasterTables/CustomerService/CancellationReasonsDelete"
+        delete: "/MasterTables/CustomerService/CancellationReasonsDelete",
       },
     },
     Claims: {
@@ -282,42 +285,42 @@ export const ApiRoutes = {
         search: "/MasterTables/Claims/CarsMake/Index",
         save: "/MasterTables/Claims/CarsMake/Save",
         edit: "/MasterTables/Claims/CarsMake/Edit",
-        delete: "/MasterTables/Claims/CarsMake/Delete"
+        delete: "/MasterTables/Claims/CarsMake/Delete",
       },
       hospitals: {
         search: "/MasterTables/Claims/Hospital/Index",
         save: "/MasterTables/Claims/Hospital/Save",
         edit: "/MasterTables/Claims/Hospital/Edit",
-        delete: "/MasterTables/Claims/Hospital/Delete"
+        delete: "/MasterTables/Claims/Hospital/Delete",
       },
       insuranceWorkshopDetails: {
         search: "/MasterTables/Claims/WorkshopDetails/Search",
         save: "/MasterTables/Claims/WorkshopDetails/Save",
         edit: "/MasterTables/Claims/WorkshopDetails/Edit",
-        delete: "/MasterTables/Claims/WorkshopDetails/Delete"
+        delete: "/MasterTables/Claims/WorkshopDetails/Delete",
       },
       tpaList: {
         search: "/MasterTables/Claims/TPAList/Index",
         save: "/MasterTables/Claims/TPAList/Save",
-        delete: "/MasterTables/Claims/TPAList/Delete"
+        delete: "/MasterTables/Claims/TPAList/Delete",
       },
       claimsGeneralItems: {
         search: "/MasterTables/Claims/GeneralItems/Search",
         save: "/MasterTables/Claims/GeneralItems/Save",
         edit: "/MasterTables/Claims/GeneralItems/Edit",
-        delete: "/MasterTables/Claims/GeneralItems/Delete"
+        delete: "/MasterTables/Claims/GeneralItems/Delete",
       },
       claimsStatus: {
         search: "/MasterTables/Claims/Status/Search",
         save: "/MasterTables/Claims/Status/Save",
         edit: "/MasterTables/Claims/Status/Edit",
-        delete: "/MasterTables/Claims/Status/Delete"
+        delete: "/MasterTables/Claims/Status/Delete",
       },
       claimsRejectionReasons: {
         search: "/MasterTables/Claims/RejectionReasons/Search",
         save: "/MasterTables/Claims/RejectionReasons/Save",
         edit: "/MasterTables/Claims/RejectionReasons/Edit",
-        delete: "/MasterTables/Claims/RejectionReasons/Delete"
+        delete: "/MasterTables/Claims/RejectionReasons/Delete",
       },
     },
     vehiclesTypes: {
@@ -348,6 +351,88 @@ export const ApiRoutes = {
       save: "/MasterTables/BanksSettings/Save",
       edit: "/MasterTables/BanksSettings/Edit",
       delete: "/MasterTables/BanksSettings/Delete",
+    },
+    production: {
+      libraryOfCovers: {
+        search: "/MasterTables/LibraryofCovers/Search",
+        save: "/MasterTables/LibraryofCovers/Save",
+        edit: "/MasterTables/LibraryofCovers/Edit",
+        delete: "/MasterTables/LibraryofCovers/Delete",
+      },
+      libraryOfInterestsInsured: {
+        search: "/MasterTables/InterestsInsuredLibrary/Search",
+        save: "/MasterTables/InterestsInsuredLibrary/Save",
+        edit: "/MasterTables/InterestsInsuredLibrary/Edit",
+        delete: "/MasterTables/InterestsInsuredLibrary/Delete",
+      },
+      libraryOfTermsAndConditions: {
+        search: "/MasterTables/TermsAndConditions/Search",
+        save: "/MasterTables/TermsAndConditions/Save",
+        edit: "/MasterTables/TermsAndConditions/Edit",
+        delete: "/MasterTables/TermsAndConditions/Delete",
+      },
+      libraryOfDeductibles: {
+        search: "/MasterTables/Deductibles/Search",
+        save: "/MasterTables/Deductibles/Save",
+        edit: "/MasterTables/Deductibles/Edit",
+        delete: "/MasterTables/Deductibles/Delete",
+      },
+      libraryOfExclusions: {
+        search: "/MasterTables/Exclusions/Search",
+        save: "/MasterTables/Exclusions/Save",
+        edit: "/MasterTables/Exclusions/Edit",
+        delete: "/MasterTables/Exclusions/Delete",
+      },
+      libraryOfWarranties: {
+        search: "/MasterTables/Warranties/Search",
+        save: "/MasterTables/Warranties/Save",
+        edit: "/MasterTables/Warranties/Edit",
+        delete: "/MasterTables/Warranties/Delete",
+      },
+      lifePlan: {
+        search: "/MasterTables/LifePlan/Search",
+        save: "/MasterTables/LifePlan/Save",
+        edit: "/MasterTables/LifePlan/Edit",
+        delete: "/MasterTables/LifePlan/Delete",
+      },
+      vehicleMake: {
+        search: "/MasterTables/VehicleCarMake/Search",
+        save: "/MasterTables/VehicleCarMake/Save",
+        edit: "/MasterTables/VehicleCarMake/Edit",
+        delete: "/MasterTables/VehicleCarMake/Delete",
+      },
+      vehicleType: {
+        search: "/MasterTables/VehicleTypes/Search",
+        save: "/MasterTables/VehicleTypes/Save",
+        edit: "/MasterTables/VehicleTypes/Edit",
+        delete: "/MasterTables/VehicleTypes/Delete",
+      },
+      vehicleColor: {
+        search: "/MasterTables/VehicleColors/Search",
+        save: "/MasterTables/VehicleColors/Save",
+        edit: "/MasterTables/VehicleColors/Edit",
+        delete: "/MasterTables/VehicleColors/Delete",
+      },
+    },
+    listOfDocuments: {
+      clients: {
+        search: "/MasterTables/DocumentsClients/Search",
+        save: "/MasterTables/DocumentsClients/Save",
+        edit: "/MasterTables/DocumentsClients/Edit",
+        delete: "/MasterTables/DocumentsClients/Delete",
+      },
+      claims: {
+        search: "/MasterTables/DocumentsClaims/Search",
+        save: "/MasterTables/DocumentsClaims/Save",
+        edit: "/MasterTables/DocumentsClaims/Edit",
+        delete: "/MasterTables/DocumentsClaims/Delete",
+      },
+      production: {
+        search: "/MasterTables/DocumentsPolicies/Search",
+        save: "/MasterTables/DocumentsPolicies/Save",
+        edit: "/MasterTables/DocumentsPolicies/Edit",
+        delete: "/MasterTables/DocumentsPolicies/Delete",
+      },
     },
   },
   Clients: {

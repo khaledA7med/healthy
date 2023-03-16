@@ -1,10 +1,9 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { NavigationEnd, Router } from "@angular/router";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
-import PerfectScrollbar from "perfect-scrollbar";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -12,7 +11,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { productionCols } from "src/app/shared/app/grid/productionCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
-import { IProductionFilters } from "src/app/shared/app/models/Production/iproduction-filters";
+import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
@@ -48,7 +47,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		filterByAmount: false,
 	};
 
-	filterForm!: FormGroup;
+	filterForm!: FormGroup<IProductionFiltersForm>;
 	lookupData!: Observable<IBaseMasterTable>;
 	@ViewChild("filter") policiesFilter!: ElementRef;
 
@@ -105,25 +104,19 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
-					if (res.status) {
-						this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
-						this.uiState.policies.list = res.body?.data!;
-						params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
-						if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
-						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
+				if (res.status) {
+					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+					this.uiState.policies.list = res.body?.data!;
+					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
+					if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
+					this.uiState.gridReady = true;
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "warning");
+					this.gridApi.hideOverlay();
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -163,19 +156,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		// this.gridApi.sizeColumnsToFit();
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 		if ((this, this.uiState.policies.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 	//#region Filter INIT and Functions
@@ -184,7 +164,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup({
+		this.filterForm = new FormGroup<IProductionFiltersForm>({
 			status: new FormControl(["Active"]),
 			branch: new FormControl(""),
 			ourRef: new FormControl(""),
@@ -225,14 +205,9 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	}
 
 	getLineOfBusiness(e: IGenericResponseType) {
-		let sub = this.masterService.getLineOfBusiness(e.name).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.uiState.lineOfBusinessList = res.body?.data!.content;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.masterService.getLineOfBusiness(e.name).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.uiState.lineOfBusinessList = res.body?.data!.content;
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -240,47 +215,55 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.uiState.filters = {
 			...this.uiState.filters,
 			...this.filterForm.value,
-			amount: JSON.stringify(this.f["amount"].value),
-			amountNo: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo"].value) : "",
-			amountNo2: this.f["amountNo2"].value ? JSON.stringify(this.f["amountNo2"].value) : "",
+			issueFrom: this.appUtils.dateFormater(this.f.issueFrom?.value) as any,
+			issueTo: this.appUtils.dateFormater(this.f.issueTo?.value) as any,
+			financeApproveFrom: this.appUtils.dateFormater(this.f.financeApproveFrom?.value) as any,
+			financeApproveTo: this.appUtils.dateFormater(this.f.financeApproveTo?.value) as any,
+			inceptionFrom: this.appUtils.dateFormater(this.f.inceptionFrom?.value) as any,
+			inceptionTo: this.appUtils.dateFormater(this.f.inceptionTo?.value) as any,
+			financeEntryFrom: this.appUtils.dateFormater(this.f.financeEntryFrom?.value) as any,
+			financeEntryTo: this.appUtils.dateFormater(this.f.financeEntryTo?.value) as any,
+			amount: JSON.stringify(this.f.amount?.value) as any,
+			amountNo: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo?.value) : "",
+			amountNo2: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo2?.value) : "",
 		};
 	}
 
 	setIssueRangeFilter(e: any) {
-		this.f["issueFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["issueTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.issueFrom?.patchValue(e.from);
+		this.f.issueTo?.patchValue(e.to);
 	}
 
 	setFinApprovedRangeFilter(e: any) {
-		this.f["financeApproveFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["financeApproveTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.financeApproveFrom?.patchValue(e.from);
+		this.f.financeApproveTo?.patchValue(e.to);
 	}
 
 	setInceptionRangeFilter(e: any) {
-		this.f["inceptionFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["inceptionTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.inceptionFrom?.patchValue(e.from);
+		this.f.inceptionTo?.patchValue(e.to);
 	}
 
 	setFinEntryRangeFilter(e: any) {
-		this.f["financeEntryFrom"].patchValue(this.appUtils.dateFormater(e.from));
-		this.f["financeEntryTo"].patchValue(this.appUtils.dateFormater(e.to));
+		this.f.financeEntryFrom?.patchValue(e.from);
+		this.f.financeEntryTo?.patchValue(e.to);
 	}
 
 	disableAmountFilter() {
-		if (this.f["amount"].value === false) {
-			this.f["field"].reset();
-			this.f["operatordList"].reset();
-			this.f["amountNo"].reset();
-			this.f["amountNo2"].reset();
-			this.f["field"].disable();
-			this.f["operatordList"].disable();
-			this.f["amountNo"].disable();
-			this.f["amountNo2"].disable();
+		if (this.f.amount?.value === false) {
+			this.f.field?.reset();
+			this.f.operatordList?.reset();
+			this.f.amountNo?.reset();
+			this.f.amountNo2?.reset();
+			this.f.field?.disable();
+			this.f.operatordList?.disable();
+			this.f.amountNo?.disable();
+			this.f.amountNo2?.disable();
 		} else {
-			this.f["field"].enable();
-			this.f["operatordList"].enable();
-			this.f["amountNo"].enable();
-			this.f["amountNo2"].enable();
+			this.f.field?.enable();
+			this.f.operatordList?.enable();
+			this.f.amountNo?.enable();
+			this.f.amountNo2?.enable();
 		}
 	}
 

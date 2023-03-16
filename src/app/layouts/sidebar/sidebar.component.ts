@@ -8,8 +8,10 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
+import { IPrivileges } from "src/app/core/models/iuser";
+import { MenuService } from "src/app/shared/services/menu.service";
 
-import { MENU } from "./menu";
 import { MenuItem } from "./menu.model";
 
 @Component({
@@ -18,19 +20,26 @@ import { MenuItem } from "./menu.model";
   styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-  menu: any;
   toggle: any = true;
   menuItems: MenuItem[] = [];
+
+  privileges!: IPrivileges;
+
   @ViewChild("sideMenu") sideMenu!: ElementRef;
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
-  constructor(private router: Router, public translate: TranslateService) {
+  subscribe!: Subscription;
+  constructor(
+    private router: Router,
+    public translate: TranslateService,
+    private menu: MenuService
+  ) {
     translate.setDefaultLang("en");
   }
 
   ngOnInit(): void {
     // Menu Items
-    this.menuItems = MENU;
+    this.menuItems = this.menu.getMenu();
   }
 
   /***
@@ -238,3 +247,5 @@ export class SidebarComponent implements OnInit {
     document.body.classList.remove("vertical-sidebar-enable");
   }
 }
+
+// return item.auth ? this.privileges.Clients?.includes(item.auth) : true;

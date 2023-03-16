@@ -19,19 +19,19 @@ export interface UserModel {
 }
 
 export interface UserModelData {
-	sno?: number;
-	staffId?: number;
-	fullName?: string;
-	userName?: string;
-	jobTitle?: string;
-	phoneNo?: string;
-	email?: string;
-	branch?: string;
-	pass?: string;
-	savedUser?: string;
-	savedDate?: Date;
-	updateUser?: string;
-	updateDate?: Date;
-	DDSecurityRole?: string;
-	securityRoles?: string[];
+	sno?: number | null;
+	staffId?: number | null;
+	fullName?: string | null;
+	userName?: string | null;
+	jobTitle?: string | null;
+	phoneNo?: string | null;
+	email?: string | null;
+	branch?: string | null;
+	pass?: string | null;
+	savedUser?: string | null;
+	savedDate?: Date | null;
+	updateUser?: string | null;
+	updateDate?: Date | null;
+	DDSecurityRole?: string | null;
+	securityRoles?: string[] | null;
 }

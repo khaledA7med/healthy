@@ -1,6 +1,10 @@
-import { inject, NgModule, Type } from "@angular/core";
-import { CanMatchFn, RouterModule, Routes } from "@angular/router";
-import { ClientGuard } from "src/app/core/guards/clients/client.guard";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { map } from "rxjs/operators";
+import {
+  ClientFormGuard,
+  ClientGuard,
+} from "src/app/core/guards/clients/client.guard";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
@@ -17,8 +21,8 @@ const routes: Routes = [
     canActivate: [
       () =>
         ClientGuard([
-          // ClientsPermissions.ChClientsRegistry,
-          ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsRegistry,
         ]),
     ],
   },
@@ -29,6 +33,13 @@ const routes: Routes = [
       import(
         "./../../shared/components/client-preview/client-preview.module"
       ).then((m) => m.ClientPreviewModule),
+    canActivate: [
+      () =>
+        ClientGuard([
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsRegistry,
+        ]),
+    ],
   },
   {
     path: AppRoutes.Client.clientForms,
@@ -39,6 +50,13 @@ const routes: Routes = [
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule
       ),
+    canActivate: [
+      () =>
+        ClientFormGuard([
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
+        ]),
+    ],
   },
   {
     path: AppRoutes.Client.clientEdit + ":id",

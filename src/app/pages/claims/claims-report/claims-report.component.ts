@@ -108,10 +108,10 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe(
 			(res: HttpResponse<IBaseResponse<string[]>>) => {
 				this.uiState.lists.subStatusList = res.body?.data!;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
 			}
+			// (err: HttpErrorResponse) => {
+			// 	this.message.popup("Oops!", err.message, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}
@@ -200,11 +200,11 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				} else this.message.popup("Sorry!", res.body?.message!, "warning");
 				// Hide Loader
 				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err) => {
-				this.eventService.broadcast(reserved.isLoading, false);
-				this.message.popup("Sorry!", err.message!, "error");
 			}
+			// (err) => {
+			// 	this.eventService.broadcast(reserved.isLoading, false);
+			// 	this.message.popup("Sorry!", err.message!, "error");
+			// }
 		);
 		this.subscribes.push(sub);
 	}

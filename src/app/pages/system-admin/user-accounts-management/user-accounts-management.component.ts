@@ -6,7 +6,6 @@ import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsP
 import { Observable, Subscription } from "rxjs";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
-import PerfectScrollbar from "perfect-scrollbar";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -14,14 +13,14 @@ import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import AppUtils from "src/app/shared/app/util";
-import { ISystemAdminFilters } from "src/app/shared/app/models/SystemAdmin/isystem-admin-filters";
+import { ISystemAdminFilters, ISystemAdminFiltersForm } from "src/app/shared/app/models/SystemAdmin/isystem-admin-filters";
 import { ISystemAdmin } from "src/app/shared/app/models/SystemAdmin/isystem-admin";
 import { systemAdminCols } from "src/app/shared/app/grid/systemAdminCols";
 import { SystemAdminService } from "src/app/shared/services/system-admin/system-admin.service";
 import { SystemAdminStatus } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
 import { EventService } from "src/app/core/services/event.service";
 import { UserModel, UserModelData } from "src/app/shared/app/models/SystemAdmin/isystem-admin-user-form";
-import { UserDetails } from "src/app/shared/app/models/SystemAdmin/system-admin-utils";
+import { UserDetails } from "src/app/shared/app/models/SystemAdmin/isystem-admin-user-details";
 import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
@@ -54,7 +53,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		editUserData: {} as UserModelData,
 	};
 
-	filterForm!: FormGroup;
+	filterForm!: FormGroup<ISystemAdminFiltersForm>;
 	lookupData!: Observable<IBaseMasterTable>;
 
 	@ViewChild("filter") policiesFilter!: ElementRef;
@@ -156,19 +155,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		// this.gridApi.sizeColumnsToFit();
-
-		const agBodyHorizontalViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-horizontal-scroll-viewport");
-		const agBodyViewport: HTMLElement = this.tableRef.nativeElement.querySelector("#gridScrollbar .ag-body-viewport");
-
-		if (agBodyViewport) {
-			const vertical = new PerfectScrollbar(agBodyViewport);
-			vertical.update();
-		}
-		if (agBodyHorizontalViewport) {
-			const horizontal = new PerfectScrollbar(agBodyHorizontalViewport);
-			horizontal.update();
-		}
 		if ((this, this.uiState.admins.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
 
@@ -178,11 +164,11 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup({
-			fullName: new FormControl(""),
-			branch: new FormControl(""),
-			jobTitle: new FormControl(""),
-			status: new FormControl([]),
+		this.filterForm = new FormGroup<ISystemAdminFiltersForm>({
+			fullName: new FormControl(null),
+			branch: new FormControl(null),
+			jobTitle: new FormControl(null),
+			status: new FormControl(null),
 		});
 	}
 
@@ -257,7 +243,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	//#region Add/Edit User Modal
 
 	userModal!: NgbModalRef;
-	userForm!: FormGroup;
+	userForm!: FormGroup<UserModel>;
 	userFormSubmitted = false as boolean;
 
 	initUserForm() {
@@ -325,17 +311,17 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 
 	addSecurityRole(value: string) {
-		if (this.ff["DDSecurityRole"].valid || this.uiState.editUserMode) {
+		if (this.ff.DDSecurityRole?.valid || this.uiState.editUserMode) {
 			let newVal = new FormControl();
 			newVal.patchValue(value);
 			let exitChecker = this.securityRolesArray.getRawValue() as Array<string>;
 			if (!exitChecker.includes(value)) this.securityRolesArray.push(newVal);
 			else this.message.popup("Oops!", "Security Role Already Added", "error");
 
-			if (this.securityRolesArray.length > 0) this.ff["DDSecurityRole"].clearValidators();
-			else this.ff["DDSecurityRole"].addValidators(Validators.required);
+			if (this.securityRolesArray.length > 0) this.ff.DDSecurityRole?.clearValidators();
+			else this.ff.DDSecurityRole?.addValidators(Validators.required);
 		} else {
-			this.ff["DDSecurityRole"].markAsTouched();
+			this.ff.DDSecurityRole?.markAsTouched();
 		}
 	}
 
@@ -356,26 +342,26 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 
 	fillAddUserForm(data: UserDetails) {
-		this.ff["branch"].patchValue(data.branch);
-		this.ff["email"].patchValue(data.email);
-		this.ff["phoneNo"].patchValue(data.mobile);
-		this.ff["branch"].patchValue(data.branch);
-		this.ff["jobTitle"].patchValue(data.position);
+		this.ff.branch?.patchValue(data.branch!);
+		this.ff.email?.patchValue(data.email!);
+		this.ff.phoneNo?.patchValue(data.mobile!);
+		this.ff.branch?.patchValue(data.branch!);
+		this.ff.jobTitle?.patchValue(data.position!);
 	}
 
 	fillEditUserForm(data: UserModelData) {
-		this.ff["staffId"].patchValue(data.staffId);
-		this.ff["fullName"].patchValue(data.fullName);
-		this.ff["userName"].patchValue(data.userName);
-		this.ff["branch"].patchValue(data.branch);
-		this.ff["email"].patchValue(data.email);
-		this.ff["phoneNo"].patchValue(data.phoneNo);
-		this.ff["branch"].patchValue(data.branch);
-		this.ff["jobTitle"].patchValue(data.jobTitle);
-		this.ff["staffId"].disable();
-		this.ff["fullName"].disable();
-		this.ff["userName"].disable();
-		this.ff["jobTitle"].disable();
+		this.ff.staffId?.patchValue(data.staffId!);
+		this.ff.fullName?.patchValue(data.fullName!);
+		this.ff.userName?.patchValue(data.userName!);
+		this.ff.branch?.patchValue(data.branch!);
+		this.ff.email?.patchValue(data.email!);
+		this.ff.phoneNo?.patchValue(data.phoneNo!);
+		this.ff.branch?.patchValue(data.branch!);
+		this.ff.jobTitle?.patchValue(data.jobTitle!);
+		this.ff.staffId?.disable();
+		this.ff.fullName?.disable();
+		this.ff.userName?.disable();
+		this.ff.jobTitle?.disable();
 		data.securityRoles?.forEach((sr: string) => this.addSecurityRole(sr));
 	}
 
