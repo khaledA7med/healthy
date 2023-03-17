@@ -47,7 +47,7 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="branchs">
+                                                        formControlName="branchs" (change)="ngSelectChange('branch')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Insurance Company -->
@@ -68,7 +68,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany">
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Class Of Business -->
@@ -88,7 +89,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="classOfBusiness">
+                                                        formControlName="classOfBusiness"
+                                                        (change)="ngSelectChange('classOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Producer -->

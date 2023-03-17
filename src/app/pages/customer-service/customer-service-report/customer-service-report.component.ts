@@ -74,18 +74,29 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.statusList = res.CServiceStatus?.content!;
 		});
 		this.subscribes.push(sub);
+
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<csReportForm>({
 			branch: new FormControl("Select All"),
 			user: new FormControl("Select All"),
-			classOfBusiness: new FormControl(null),
-			insuranceCompany: new FormControl(null),
+			classOfBusiness: new FormControl([]),
+			insuranceCompany: new FormControl([]),
 			clientData: new FormControl(null),
-			status: new FormControl(null),
-			reportType: new FormControl(null),
-			currentStatus: new FormControl(null),
+			status: new FormControl([]),
+			reportType: new FormControl(1),
+			currentStatus: new FormControl(1),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -112,6 +123,38 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 				break;
 			default:
 				break;
+		}
+	}
+
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "insuranceCompany":
+				this.f.insuranceCompany?.value?.length! < this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(false)
+					: this.f.insuranceCompany?.value?.length! == this.uiState.lists.insuranceCompanyControlLists.length
+					? this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true)
+					: "";
+				break;
+
+			case "status":
+				this.f.status?.value?.length! < this.uiState.lists.statusList.length
+					? this.uiState.checkAllControls.allStatusControl.patchValue(false)
+					: this.f.status?.value?.length! == this.uiState.lists.statusList.length
+					? this.uiState.checkAllControls.allStatusControl.patchValue(true)
+					: "";
+				break;
+
+			case "classOfBusiness":
+				this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false)
+					: this.f.classOfBusiness?.value?.length! == this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true)
+					: "";
+				break;
+
+				break;
+			default:
+				return;
 		}
 	}
 

@@ -24,7 +24,7 @@
                                                         <ng-select [items]="uiState.lists.clientsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" [formControl]="uiState.clientDataContorl"
                                                             (change)="setClientData($event)">
                                                         </ng-select>
@@ -38,7 +38,7 @@
                                                         <ng-select [items]="uiState.lists.groupsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" formControlName="clientGroup">
                                                         </ng-select>
                                                     </div>
@@ -52,7 +52,7 @@
                                                     <ng-select [items]="uiState.lists.branchesLists"
                                                         placeholder="Select Branch(s)"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="name" formControlName="branch">
                                                     </ng-select>
                                                 </div>
@@ -74,7 +74,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany">
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Class Of Business -->
@@ -95,7 +96,7 @@
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
                                                         formControlName="classOfBusiness"
-                                                        (change)="getLinesOfBusiness($event)">
+                                                        (change)="getLinesOfBusiness($event);ngSelectChange('classOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Line Of Business -->
@@ -114,7 +115,8 @@
                                                         placeholder="Select Line Of Business" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="lineOfBusiness">
+                                                        formControlName="lineOfBusiness"
+                                                        (change)="ngSelectChange('linesOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Report Type -->
@@ -125,7 +127,7 @@
                                                     <ng-select
                                                         [items]="(lookupData | async)?.RenewalNoticeReportStatus?.content!"
                                                         placeholder="Select Report Type" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="id" formControlName="reportType">
                                                     </ng-select>
                                                 </div>

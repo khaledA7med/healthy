@@ -103,20 +103,24 @@
                                         <th class="fw-semibold">Company Comm. DN/CN No. :</th>
                                         <td class="input-text-right">{{ uiState.policyDetails.compCommDncnno }}</td>
                                     </tr>
-                                    <tr>
-                                        <th class="fw-semibold">Commission (%) :</th>
-                                        <td class="input-text-right">{{ uiState.policyDetails.compCommPerc }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="fw-semibold">Company Commission :</th>
-                                        <td class="input-text-right">{{ uiState.policyDetails.compComm | currency:
-                                            'SAR' : '' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="fw-semibold">Commission VAT :</th>
-                                        <td class="input-text-right">{{ uiState.policyDetails.compCommVat | currency:
-                                            'SAR' : '' }}</td>
-                                    </tr>
+                                    <ng-container
+                                        *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChHideCompanyCommission)">
+                                        <tr>
+                                            <th class="fw-semibold">Commission (%) :</th>
+                                            <td class="input-text-right">{{ uiState.policyDetails.compCommPerc }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Company Commission :</th>
+                                            <td class="input-text-right">{{ uiState.policyDetails.compComm | currency:
+                                                'SAR' : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Commission VAT :</th>
+                                            <td class="input-text-right">{{ uiState.policyDetails.compCommVat |
+                                                currency:
+                                                'SAR' : '' }}</td>
+                                        </tr>
+                                    </ng-container>
                                 </tbody>
                             </table>
                         </div>
@@ -250,7 +254,8 @@
                 <!-- End PAYMENT TERMS Table -->
 
                 <!-- Start PRODUCERS COMMISSIONS Table -->
-                <div class="card my-3">
+                <div class="card my-3"
+                    *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChHideProducerCommission)">
                     <div class="card-header">
                         <h6 class="card-title text-muted text-uppercase mb-0">Producers Commissions</h6>
                     </div>
@@ -370,16 +375,17 @@
 
         </div>
     </div>
-    <div class="modal-footer">
-        <!-- Close Btn -->
-        <button [disabled]="uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1"
-            class="btn btn-sm btn-info mx-2" (click)="changeStatus('Approve')">
-            Approve
-        </button>
-        <button [disabled]="uiState.policyDetails.reject == 1 || uiState.policyDetails.done == 1"
-            class="btn btn-sm btn-secondary mx-2" (click)="changeStatus('Reject')">
-            Reject
-        </button>
+    <div class="modal-footer pt-2">
+        <ng-container *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChProdEntryApproval)">
+            <button [disabled]="uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1"
+                class="btn btn-sm btn-info mx-2" (click)="changeStatus('Approve')">
+                Approve
+            </button>
+            <button [disabled]="uiState.policyDetails.reject == 1 || uiState.policyDetails.done == 1"
+                class="btn btn-sm btn-secondary mx-2" (click)="changeStatus('Reject')">
+                Reject
+            </button>
+        </ng-container>
         <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">
             Close
         </button>

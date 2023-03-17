@@ -65,14 +65,24 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 		});
 		this.subscribes.push(sub);
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<IBusinessDevelopmentProspectsReportForm>({
-			branchs: new FormControl(null),
-			producers: new FormControl(null),
-			classofBusiness: new FormControl(null),
-			reportType: new FormControl(null, Validators.required),
+			branchs: new FormControl([]),
+			producers: new FormControl([]),
+			classofBusiness: new FormControl([]),
+			reportType: new FormControl(1, Validators.required),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -94,6 +104,36 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 				break;
 			default:
 				break;
+		}
+	}
+
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "classOfBusiness":
+				this.f.classofBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false)
+					: this.f.classofBusiness?.value?.length! == this.uiState.lists.classOfBusinessLists.length
+					? this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true)
+					: "";
+				break;
+
+			case "producers":
+				this.f.producers?.value?.length! < this.uiState.lists.producersLists.length
+					? this.uiState.checkAllControls.allProducersControl.patchValue(false)
+					: this.f.producers?.value?.length! == this.uiState.lists.producersLists.length
+					? this.uiState.checkAllControls.allProducersControl.patchValue(true)
+					: "";
+				break;
+
+			case "branch":
+				this.f.branchs?.value?.length! < this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(false)
+					: this.f.branchs?.value?.length! == this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllControls.allBranchControl.patchValue(true)
+					: "";
+				break;
+			default:
+				return;
 		}
 	}
 

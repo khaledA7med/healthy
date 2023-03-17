@@ -88,7 +88,6 @@ export class PermissionsInterceptor implements HttpInterceptor {
 
       return this.perm.refreshToken().pipe(
         switchMap((token: any) => {
-          console.log(token);
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.data.accessToken);
           return next.handle(this.addToken(request, token.data.accessToken));

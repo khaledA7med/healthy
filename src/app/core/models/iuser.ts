@@ -30,4 +30,8 @@ export interface IPrivileges {
   Clients?: string[];
   Production?: string[];
   CustomerService?: string[];
+  BussinessDevelopment?: string[];
+  Claims?: string[];
+  Alert?: string[];
+  MasterTables?: string[];
 }

@@ -29,6 +29,9 @@ import { IDocumentList } from "./../../app/models/App/IDocument";
 import { EventService } from "src/app/core/services/event.service";
 import { reserved } from "src/app/core/models/reservedWord";
 import { MasterMethodsService } from "../../services/master-methods.service";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { Roles } from "src/app/core/roles/Roles";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 
 @Component({
   selector: "app-modal-for-details",
@@ -42,6 +45,8 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     updatedState: false,
   };
 
+  permissions$!: Observable<string[]>;
+  privileges = ClientsPermissions;
   clientStatus: typeof ClientStatus = ClientStatus;
   clientType: typeof ClientType = ClientType;
   subscribes: Subscription[] = [];
@@ -60,7 +65,8 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     private table: MasterTableService,
     private eventService: EventService,
     private masterMethod: MasterMethodsService,
-    public util: AppUtils
+    public util: AppUtils,
+    private permission: PermissionsService
   ) {}
 
   ngAfterViewInit(): void {
@@ -69,6 +75,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
     this.getClintDetails(this.uiState.id);
     this.initAddClientToGroupForm();
     this.getLookupData();
+    this.permissions$ = this.permission.getPrivileges(Roles.Clients);
   }
 
   openPreviewModal(): void {

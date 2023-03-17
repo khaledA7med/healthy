@@ -10,6 +10,8 @@ import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { IPrivileges } from "src/app/core/models/iuser";
+import { Roles } from "src/app/core/roles/Roles";
+import { PermissionsService } from "src/app/core/services/permissions.service";
 import { MenuService } from "src/app/shared/services/menu.service";
 
 import { MenuItem } from "./menu.model";
@@ -30,16 +32,20 @@ export class SidebarComponent implements OnInit {
 
   subscribe!: Subscription;
   constructor(
-    private router: Router,
     public translate: TranslateService,
-    private menu: MenuService
+    private menu: MenuService,
+    private permission: PermissionsService
   ) {
     translate.setDefaultLang("en");
   }
 
   ngOnInit(): void {
     // Menu Items
-    this.menuItems = this.menu.getMenu();
+    this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
+      this.privileges = res;
+      this.menuItems = this.menu.getMenu(this.privileges);
+      this.modifyMenuAuth();
+    });
   }
 
   /***
@@ -246,6 +252,16 @@ export class SidebarComponent implements OnInit {
   SidebarHide() {
     document.body.classList.remove("vertical-sidebar-enable");
   }
-}
 
-// return item.auth ? this.privileges.Clients?.includes(item.auth) : true;
+  modifyMenuAuth() {
+    const filterItems = (items: any) => {
+      return items.filter((item: any) => {
+        if (item.auth) {
+          if (item.subItems) item.subItems = filterItems(item.subItems);
+          return true;
+        } else return false;
+      });
+    };
+    this.menuItems = filterItems(this.menuItems);
+  }
+}

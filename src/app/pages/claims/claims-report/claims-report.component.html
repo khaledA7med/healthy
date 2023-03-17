@@ -24,7 +24,7 @@
                                                         <ng-select [items]="uiState.lists.branchesLists"
                                                             placeholder="Select Branch(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true"
+                                                            [clearable]="false" [searchable]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
                                                             formControlName="branch">
                                                         </ng-select>
@@ -38,7 +38,7 @@
                                                         <ng-select [items]="uiState.lists.clientsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" [formControl]="uiState.clientDataContorl">
                                                         </ng-select>
                                                     </div>
@@ -51,7 +51,7 @@
                                                         <ng-select [items]="uiState.lists.groupsList!"
                                                             placeholder="Select Group"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" formControlName="clientGroup">
                                                         </ng-select>
                                                     </div>
@@ -73,7 +73,8 @@
                                                             placeholder="Select Status" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                            formControlName="status" (change)="getSubStatus()">
+                                                            formControlName="status"
+                                                            (change)="getSubStatus();ngSelectChange('status')">
                                                         </ng-select>
                                                     </div>
                                                     <!-- Sub Status -->
@@ -91,7 +92,8 @@
                                                             placeholder="Select Sub Status" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                            formControlName="subStatus">
+                                                            formControlName="subStatus"
+                                                            (change)="getSubStatus();ngSelectChange('subStatus')">
                                                         </ng-select>
                                                     </div>
                                                     <!-- Rejection Reason -->
@@ -128,7 +130,8 @@
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                            formControlName="insuranceCompany">
+                                                            formControlName="insuranceCompany"
+                                                            (change)="getSubStatus();ngSelectChange('insuranceCompany')">
                                                         </ng-select>
                                                     </div>
                                                     <!-- Class Of Business -->
@@ -150,7 +153,7 @@
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
                                                             formControlName="classOfBusiness"
-                                                            (change)="getLinesOfBusiness($event)">
+                                                            (change)="getLinesOfBusiness($event);ngSelectChange('classOfBusiness')">
                                                         </ng-select>
                                                     </div>
                                                     <!-- Line Of Business -->
@@ -170,7 +173,8 @@
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
                                                             [clearable]="true" [searchable]="true" [multiple]="true"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                            formControlName="lineOfBusiness">
+                                                            formControlName="lineOfBusiness"
+                                                            (change)="ngSelectChange('lineOfBusiness')">
                                                         </ng-select>
                                                     </div>
                                                 </div>
@@ -185,10 +189,15 @@
                                                         <ng-select
                                                             [items]="(lookupData | async)?.CSReportType?.content!"
                                                             placeholder="Select Report Type" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true"
+                                                            [clearable]="false" [searchable]="true"
+                                                            [ngClass]="{'is-submitted': (f.reportType?.touched || submitted) && f.reportType?.invalid}"
                                                             [closeOnSelect]="false" bindLabel="name" bindValue="id"
                                                             formControlName="reportType">
                                                         </ng-select>
+                                                        <div class="invalid-feedback d-inline-block fw-bold"
+                                                            *ngIf="(f.reportType?.touched || submitted) && f.reportType?.invalid">
+                                                            Required
+                                                        </div>
                                                     </div>
                                                     <!-- minDate -->
                                                     <div class="col-12 pe-0">

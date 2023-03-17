@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { map } from "rxjs/operators";
 import {
   ClientFormGuard,
   ClientGuard,
@@ -67,6 +66,13 @@ const routes: Routes = [
       import("./client-registry-forms/client-registry-forms.module").then(
         (m) => m.ClientRegistryFormsModule
       ),
+    canActivate: [
+      () =>
+        ClientFormGuard([
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsRegistryAdministratorReadOnly,
+        ]),
+    ],
   },
   {
     path: AppRoutes.Client.groups,
@@ -77,6 +83,13 @@ const routes: Routes = [
       import("./client-group/client-group.module").then(
         (m) => m.ClientGroupModule
       ),
+    canActivate: [
+      () =>
+        ClientGuard([
+          ClientsPermissions.ChClientsRegistryAdmin,
+          ClientsPermissions.ChClientsGrouping,
+        ]),
+    ],
   },
   {
     path: AppRoutes.Client.reports,
@@ -87,6 +100,9 @@ const routes: Routes = [
       import("./client-reports/client-reports.module").then(
         (m) => m.ClientReportsModule
       ),
+    canActivate: [
+      () => ClientGuard([ClientsPermissions.ChClientsRegistryAdmin]),
+    ],
   },
   {
     path: "",
