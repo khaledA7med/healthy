@@ -20,7 +20,8 @@
       <i class="ri-filter-3-line me-1"></i>
       Filters
     </button>
-    <a [routerLink]="'/' + uiState.routerLink.forms" class="btn btn-sm btn-success d-flex align-items-center">
+    <a [routerLink]="'/' + uiState.routerLink.forms" class="btn btn-sm btn-success d-flex align-items-center"
+      *ngIf="!(permissions$ | async)?.includes(uiState.privileges.ChClaimsManagementSystemReadOnly)">
       <i class="ri-add-line me-1"></i> New Claim
     </a>
   </div>
@@ -188,7 +189,8 @@
         <!-- col branch  -->
         <div class="col-12 mb-3">
           <label for="form-label">Branch:</label>
-          <input type="text" class="form-control form-control-sm" disabled />
+          <input type="text" class="form-control form-control-sm"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllUsersClaim)!" />
         </div>
         <!-- /col -->
         <!-- col insurance company -->
@@ -203,7 +205,8 @@
         <div class="co-12 mb-3">
           <label for="form-label">Created By:</label>
           <ng-select [loading]="formData ? false : true" [items]="(formData | async)?.AllUsers?.content!"
-            bindLabel="name" bindValue="name" class="form-control-sm p-0" placeholder=""
+            bindLabel="name" bindValue="name" class="form-control-sm p-0"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllUsersClaim)!"
             formControlName="savedUser"></ng-select>
         </div>
         <!-- /col -->
