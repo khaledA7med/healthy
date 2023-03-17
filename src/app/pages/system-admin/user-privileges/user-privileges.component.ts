@@ -559,6 +559,11 @@ export class UserPrivilegesComponent implements OnInit {
 					label: "Claims Modules",
 				},
 				{
+					control: this.ff.chCustomerServiceModule!,
+					name: "chCustomerServiceModule",
+					label: "Customer Service Module",
+				},
+				{
 					control: this.ff.chTypeProspects!,
 					name: "chTypeProspects",
 					label: "Type Prospects",

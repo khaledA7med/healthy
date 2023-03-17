@@ -1,12 +1,12 @@
 export enum Roles {
-  SuperAdmin = "SuperAdmin",
-  User = "User",
+	SuperAdmin = "SuperAdmin",
+	User = "User",
 
-  Clients = "Clients",
-  Production = "Production",
-  CustomerService = "CustomerService",
-  Claims = "Claims",
-  Alert = "Claims",
-  BusinessDevelopment = "Claims",
-  MasterTables = "Claims",
+	MasterTables = "MasterTables",
+	Clients = "Clients",
+	BusinessDevelopment = "BussinessDevelopment",
+	Production = "Production",
+	CustomerService = "CustomerService",
+	Claims = "Claims",
+	Alert = "Alert",
 }
