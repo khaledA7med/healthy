@@ -1,4 +1,11 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
@@ -10,272 +17,251 @@ import { MenuService } from "src/app/shared/services/menu.service";
 import { MenuItem } from "./menu.model";
 
 @Component({
-	selector: "app-sidebar",
-	templateUrl: "./sidebar.component.html",
-	styleUrls: ["./sidebar.component.scss"],
+  selector: "app-sidebar",
+  templateUrl: "./sidebar.component.html",
+  styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-	toggle: any = true;
-	menuItems: MenuItem[] = [];
+  toggle: any = true;
+  menuItems: MenuItem[] = [];
 
-	privileges!: IPrivileges;
+  privileges!: IPrivileges;
 
-	@ViewChild("sideMenu") sideMenu!: ElementRef;
-	@Output() mobileMenuButtonClicked = new EventEmitter();
+  @ViewChild("sideMenu") sideMenu!: ElementRef;
+  @Output() mobileMenuButtonClicked = new EventEmitter();
 
-	subscribe!: Subscription;
-	constructor(private router: Router, public translate: TranslateService, private menu: MenuService, private permission: PermissionsService) {
-		translate.setDefaultLang("en");
-	}
+  subscribe!: Subscription;
+  constructor(
+    public translate: TranslateService,
+    private menu: MenuService,
+    private permission: PermissionsService
+  ) {
+    translate.setDefaultLang("en");
+  }
 
-	ngOnInit(): void {
-		// Menu Items
-		this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
-			this.privileges = res;
-			this.menuItems = this.menu.getMenu(this.privileges);
-			console.log(res);
-			console.log(this.menuItems);
-			this.modifyMenuAuth();
-		});
-	}
+  ngOnInit(): void {
+    // Menu Items
+    this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
+      this.privileges = res;
+      this.menuItems = this.menu.getMenu(this.privileges);
+      this.modifyMenuAuth();
+    });
+  }
 
-	/***
-	 * Activate droup down set
-	 */
-	ngAfterViewInit() {
-		this.initActiveMenu();
-	}
+  /***
+   * Activate droup down set
+   */
+  ngAfterViewInit() {
+    this.initActiveMenu();
+  }
 
-	removeActivation(items: any) {
-		items.forEach((item: any) => {
-			if (item.classList.contains("menu-link")) {
-				if (!item.classList.contains("active")) {
-					item.setAttribute("aria-expanded", false);
-				}
-				item.nextElementSibling ? item.nextElementSibling.classList.remove("show") : null;
-			}
-			if (item.classList.contains("nav-link")) {
-				if (item.nextElementSibling) {
-					item.nextElementSibling.classList.remove("show");
-				}
-				item.setAttribute("aria-expanded", false);
-			}
-			item.classList.remove("active");
-		});
-	}
+  removeActivation(items: any) {
+    items.forEach((item: any) => {
+      if (item.classList.contains("menu-link")) {
+        if (!item.classList.contains("active")) {
+          item.setAttribute("aria-expanded", false);
+        }
+        item.nextElementSibling
+          ? item.nextElementSibling.classList.remove("show")
+          : null;
+      }
+      if (item.classList.contains("nav-link")) {
+        if (item.nextElementSibling) {
+          item.nextElementSibling.classList.remove("show");
+        }
+        item.setAttribute("aria-expanded", false);
+      }
+      item.classList.remove("active");
+    });
+  }
 
-	toggleSubItem(event: any) {
-		let isCurrentMenuId = event.target.closest("a.nav-link");
-		let isMenu = isCurrentMenuId.nextElementSibling as any;
-		let dropDowns = Array.from(document.querySelectorAll(".sub-menu"));
-		dropDowns.forEach((node: any) => {
-			node.classList.remove("show");
-		});
+  toggleSubItem(event: any) {
+    let isCurrentMenuId = event.target.closest("a.nav-link");
+    let isMenu = isCurrentMenuId.nextElementSibling as any;
+    let dropDowns = Array.from(document.querySelectorAll(".sub-menu"));
+    dropDowns.forEach((node: any) => {
+      node.classList.remove("show");
+    });
 
-		let subDropDowns = Array.from(document.querySelectorAll(".menu-dropdown .nav-link"));
-		subDropDowns.forEach((submenu: any) => {
-			submenu.setAttribute("aria-expanded", "false");
-		});
+    let subDropDowns = Array.from(
+      document.querySelectorAll(".menu-dropdown .nav-link")
+    );
+    subDropDowns.forEach((submenu: any) => {
+      submenu.setAttribute("aria-expanded", "false");
+    });
 
-		if (event.target && event.target.nextElementSibling) {
-			isCurrentMenuId.setAttribute("aria-expanded", "true");
-			event.target.nextElementSibling.classList.toggle("show");
-		}
-	}
+    if (event.target && event.target.nextElementSibling) {
+      isCurrentMenuId.setAttribute("aria-expanded", "true");
+      event.target.nextElementSibling.classList.toggle("show");
+    }
+  }
 
-	toggleExtraSubItem(event: any) {
-		let isCurrentMenuId = event.target.closest("a.nav-link");
-		let isMenu = isCurrentMenuId.nextElementSibling as any;
-		let dropDowns = Array.from(document.querySelectorAll(".extra-sub-menu"));
-		dropDowns.forEach((node: any) => {
-			node.classList.remove("show");
-		});
+  toggleExtraSubItem(event: any) {
+    let isCurrentMenuId = event.target.closest("a.nav-link");
+    let isMenu = isCurrentMenuId.nextElementSibling as any;
+    let dropDowns = Array.from(document.querySelectorAll(".extra-sub-menu"));
+    dropDowns.forEach((node: any) => {
+      node.classList.remove("show");
+    });
 
-		let subDropDowns = Array.from(document.querySelectorAll(".menu-dropdown .nav-link"));
-		subDropDowns.forEach((submenu: any) => {
-			submenu.setAttribute("aria-expanded", "false");
-		});
+    let subDropDowns = Array.from(
+      document.querySelectorAll(".menu-dropdown .nav-link")
+    );
+    subDropDowns.forEach((submenu: any) => {
+      submenu.setAttribute("aria-expanded", "false");
+    });
 
-		if (event.target && event.target.nextElementSibling) {
-			isCurrentMenuId.setAttribute("aria-expanded", "true");
-			event.target.nextElementSibling.classList.toggle("show");
-		}
-	}
+    if (event.target && event.target.nextElementSibling) {
+      isCurrentMenuId.setAttribute("aria-expanded", "true");
+      event.target.nextElementSibling.classList.toggle("show");
+    }
+  }
 
-	toggleItem(event: any) {
-		let isCurrentMenuId = event.target.closest("a.nav-link");
-		let isMenu = isCurrentMenuId.nextElementSibling as any;
-		if (isMenu.classList.contains("show")) {
-			isMenu.classList.remove("show");
-			isCurrentMenuId.setAttribute("aria-expanded", "false");
-		} else {
-			let dropDowns = Array.from(document.querySelectorAll("#navbar-nav .show"));
-			dropDowns.forEach((node: any) => {
-				node.classList.remove("show");
-			});
-			isMenu ? isMenu.classList.add("show") : null;
-			const ul = document.getElementById("navbar-nav");
-			if (ul) {
-				const iconItems = Array.from(ul.getElementsByTagName("a"));
-				let activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
-				activeIconItems.forEach((item: any) => {
-					item.setAttribute("aria-expanded", "false");
-					item.classList.remove("active");
-				});
-			}
-			isCurrentMenuId.setAttribute("aria-expanded", "true");
-			if (isCurrentMenuId) {
-				this.activateParentDropdown(isCurrentMenuId);
-			}
-		}
-	}
+  toggleItem(event: any) {
+    let isCurrentMenuId = event.target.closest("a.nav-link");
+    let isMenu = isCurrentMenuId.nextElementSibling as any;
+    if (isMenu.classList.contains("show")) {
+      isMenu.classList.remove("show");
+      isCurrentMenuId.setAttribute("aria-expanded", "false");
+    } else {
+      let dropDowns = Array.from(
+        document.querySelectorAll("#navbar-nav .show")
+      );
+      dropDowns.forEach((node: any) => {
+        node.classList.remove("show");
+      });
+      isMenu ? isMenu.classList.add("show") : null;
+      const ul = document.getElementById("navbar-nav");
+      if (ul) {
+        const iconItems = Array.from(ul.getElementsByTagName("a"));
+        let activeIconItems = iconItems.filter((x: any) =>
+          x.classList.contains("active")
+        );
+        activeIconItems.forEach((item: any) => {
+          item.setAttribute("aria-expanded", "false");
+          item.classList.remove("active");
+        });
+      }
+      isCurrentMenuId.setAttribute("aria-expanded", "true");
+      if (isCurrentMenuId) {
+        this.activateParentDropdown(isCurrentMenuId);
+      }
+    }
+  }
 
-	// remove active items of two-column-menu
-	activateParentDropdown(item: any) {
-		item.classList.add("active");
-		let parentCollapseDiv = item.closest(".collapse.menu-dropdown");
+  // remove active items of two-column-menu
+  activateParentDropdown(item: any) {
+    item.classList.add("active");
+    let parentCollapseDiv = item.closest(".collapse.menu-dropdown");
 
-		if (parentCollapseDiv) {
-			// to set aria expand true remaining
-			parentCollapseDiv.classList.add("show");
-			parentCollapseDiv.parentElement.children[0].classList.add("active");
-			parentCollapseDiv.parentElement.children[0].setAttribute("aria-expanded", "true");
-			if (parentCollapseDiv.parentElement.closest(".collapse.menu-dropdown")) {
-				parentCollapseDiv.parentElement.closest(".collapse").classList.add("show");
-				if (parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling)
-					parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling.classList.add("active");
-				if (parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling.closest(".collapse")) {
-					parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling.closest(".collapse").classList.add("show");
-					parentCollapseDiv.parentElement
-						.closest(".collapse")
-						.previousElementSibling.closest(".collapse")
-						.previousElementSibling.classList.add("active");
-				}
-			}
-			return false;
-		}
-		return false;
-	}
+    if (parentCollapseDiv) {
+      // to set aria expand true remaining
+      parentCollapseDiv.classList.add("show");
+      parentCollapseDiv.parentElement.children[0].classList.add("active");
+      parentCollapseDiv.parentElement.children[0].setAttribute(
+        "aria-expanded",
+        "true"
+      );
+      if (parentCollapseDiv.parentElement.closest(".collapse.menu-dropdown")) {
+        parentCollapseDiv.parentElement
+          .closest(".collapse")
+          .classList.add("show");
+        if (
+          parentCollapseDiv.parentElement.closest(".collapse")
+            .previousElementSibling
+        )
+          parentCollapseDiv.parentElement
+            .closest(".collapse")
+            .previousElementSibling.classList.add("active");
+        if (
+          parentCollapseDiv.parentElement
+            .closest(".collapse")
+            .previousElementSibling.closest(".collapse")
+        ) {
+          parentCollapseDiv.parentElement
+            .closest(".collapse")
+            .previousElementSibling.closest(".collapse")
+            .classList.add("show");
+          parentCollapseDiv.parentElement
+            .closest(".collapse")
+            .previousElementSibling.closest(".collapse")
+            .previousElementSibling.classList.add("active");
+        }
+      }
+      return false;
+    }
+    return false;
+  }
 
-	updateActive(event: any) {
-		const ul = document.getElementById("navbar-nav");
-		if (ul) {
-			const items = Array.from(ul.querySelectorAll("a.nav-link"));
-			this.removeActivation(items);
-		}
-		this.activateParentDropdown(event.target);
-	}
+  updateActive(event: any) {
+    const ul = document.getElementById("navbar-nav");
+    if (ul) {
+      const items = Array.from(ul.querySelectorAll("a.nav-link"));
+      this.removeActivation(items);
+    }
+    this.activateParentDropdown(event.target);
+  }
 
-	initActiveMenu() {
-		const pathName = window.location.pathname;
-		const ul = document.getElementById("navbar-nav");
-		if (ul) {
-			const items = Array.from(ul.querySelectorAll("a.nav-link"));
-			let activeItems = items.filter((x: any) => x.classList.contains("active"));
-			this.removeActivation(activeItems);
+  initActiveMenu() {
+    const pathName = window.location.pathname;
+    const ul = document.getElementById("navbar-nav");
+    if (ul) {
+      const items = Array.from(ul.querySelectorAll("a.nav-link"));
+      let activeItems = items.filter((x: any) =>
+        x.classList.contains("active")
+      );
+      this.removeActivation(activeItems);
 
-			let matchingMenuItem = items.find((x: any) => {
-				return x.pathname === pathName;
-			});
-			if (matchingMenuItem) {
-				this.activateParentDropdown(matchingMenuItem);
-			}
-		}
-	}
+      let matchingMenuItem = items.find((x: any) => {
+        return x.pathname === pathName;
+      });
+      if (matchingMenuItem) {
+        this.activateParentDropdown(matchingMenuItem);
+      }
+    }
+  }
 
-	/**
-	 * Returns true or false if given menu item has child or not
-	 * @param item menuItem
-	 */
-	hasItems(item: MenuItem) {
-		return item.subItems !== undefined ? item.subItems.length > 0 : false;
-	}
+  /**
+   * Returns true or false if given menu item has child or not
+   * @param item menuItem
+   */
+  hasItems(item: MenuItem) {
+    return item.subItems !== undefined ? item.subItems.length > 0 : false;
+  }
 
-	/**
-	 * Toggle the menu bar when having mobile screen
-	 */
-	toggleMobileMenu(event: any) {
-		var sidebarsize = document.documentElement.getAttribute("data-sidebar-size");
-		if (sidebarsize == "sm-hover-active") {
-			document.documentElement.setAttribute("data-sidebar-size", "sm-hover");
-		} else {
-			document.documentElement.setAttribute("data-sidebar-size", "sm-hover-active");
-		}
-	}
+  /**
+   * Toggle the menu bar when having mobile screen
+   */
+  toggleMobileMenu(event: any) {
+    var sidebarsize =
+      document.documentElement.getAttribute("data-sidebar-size");
+    if (sidebarsize == "sm-hover-active") {
+      document.documentElement.setAttribute("data-sidebar-size", "sm-hover");
+    } else {
+      document.documentElement.setAttribute(
+        "data-sidebar-size",
+        "sm-hover-active"
+      );
+    }
+  }
 
-	/**
-	 * SidebarHide modal
-	 * @param content modal content
-	 */
-	SidebarHide() {
-		document.body.classList.remove("vertical-sidebar-enable");
-	}
+  /**
+   * SidebarHide modal
+   * @param content modal content
+   */
+  SidebarHide() {
+    document.body.classList.remove("vertical-sidebar-enable");
+  }
 
-	// modifyMenu(property: keyof IPrivileges): MenuItem[] {
-	// // Loop through each top-level menu item
-	// let menu = this.menuItems.filter((item) => {
-	//   // Check if the item has an auth property
-	//   if (item.auth) {
-	//     // Check if the user has the required privilege for this item
-	//     if (this.privileges?.[property]?.includes(item.auth)) {
-	//       // If the item has sub-items, filter them based on privileges as well
-	//       if (item.subItems && item.subItems.length) {
-	//         item.subItems = item.subItems.filter((subItem) => {
-	//           // Check if the user has the required privilege for this sub-item
-	//           if (this.privileges?.[property]?.includes(subItem.auth!)) {
-	//             // If the sub-item has sub-sub-items, filter them based on privileges as well
-	//             if (subItem.subItems && subItem.subItems.length) {
-	//               subItem.subItems = subItem.subItems.filter((subSubItem) => {
-	//                 // Check if the user has the required privilege for this sub-sub-item
-	//                 return this.privileges?.[property]?.includes(
-	//                   subSubItem.auth!
-	//                 );
-	//               });
-	//             }
-	//             return true;
-	//           }
-	//           return false;
-	//         });
-	//       }
-	//       return true;
-	//     }
-	//     return false;
-	//   }
-	//   // If the item doesn't have an auth property, include it in the menu
-	//   return true;
-	// });
-	// return menu;
-	// }
-
-	// modifyMenuAuth() {
-	//   this.menuItems = this.menuItems.filter((item) => {
-	//     if (item.auth) {
-	//       if (item.subItems && item.subItems.length) {
-	//         return item.subItems.filter((subItem) => {
-	//           if (subItem.auth) {
-	//             if (subItem.subItems && subItem.subItems.length)
-	//               return subItem.subItems.filter((subSub) => subSub.auth);
-
-	//             return subItem;
-	//           } else return false;
-	//         });
-	//       }
-	//       return true;
-	//     } else return false;
-	//   });
-	// }
-
-	modifyMenuAuth() {
-		const filterItems = (items: any) => {
-			return items.filter((item: any) => {
-				if (item.auth) {
-					if (item.subItems) item.subItems = filterItems(item.subItems);
-					return true;
-				} else return false;
-			});
-		};
-		this.menuItems = filterItems(this.menuItems);
-	}
+  modifyMenuAuth() {
+    const filterItems = (items: any) => {
+      return items.filter((item: any) => {
+        if (item.auth) {
+          if (item.subItems) item.subItems = filterItems(item.subItems);
+          return true;
+        } else return false;
+      });
+    };
+    this.menuItems = filterItems(this.menuItems);
+  }
 }
-
-// return item.auth ? this.privileges.Clients?.includes(item.auth) : true;
