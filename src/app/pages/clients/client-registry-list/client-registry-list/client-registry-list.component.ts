@@ -33,6 +33,7 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { Roles } from "src/app/core/roles/Roles";
+import { AuthenticationService } from "src/app/core/services/auth.service";
 
 @Component({
   selector: "app-client-registry-list",
@@ -95,11 +96,13 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     private offcanvasService: NgbOffcanvas,
     private table: MasterTableService,
     private router: Router,
-    private permission: PermissionsService
+    private permission: PermissionsService,
+    private auth: AuthenticationService
   ) {}
 
   ngOnInit(): void {
     this.permissions$ = this.permission.getPrivileges(Roles.Clients);
+
     this.initFilterForm();
     this.getLookupData();
     let sub = this.router.events.subscribe((evt) => {
@@ -109,6 +112,12 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
             this.gridApi.setDatasource(this.dataSource);
         }
       }
+    });
+    this.permissions$.subscribe((res: string[]) => {
+      if (!res.includes(this.uiState.privileges.ChAccessAllProducersClients))
+        this.filterForm.controls["producer"].patchValue(
+          this.auth.getUser().name
+        );
     });
     this.subscribes.push(sub);
   }

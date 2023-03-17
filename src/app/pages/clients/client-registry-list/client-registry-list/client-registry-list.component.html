@@ -62,7 +62,8 @@
           <label for="producer" class="form-label">Producer</label>
           <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="producer"
-            formControlName="producer">
+            formControlName="producer"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersClients)">
           </ng-select>
         </div>
 

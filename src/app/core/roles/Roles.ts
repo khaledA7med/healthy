@@ -6,4 +6,7 @@ export enum Roles {
   Production = "Production",
   CustomerService = "CustomerService",
   Claims = "Claims",
+  Alert = "Claims",
+  BusinessDevelopment = "Claims",
+  MasterTables = "Claims",
 }
