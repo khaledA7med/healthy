@@ -27,7 +27,8 @@
         </button>
         <a type="button" [routerLink]="'/' + uiState.routerLink.forms"
             class="btn btn-sm btn-success  d-flex align-items-center" id="create-btn" asp-action="CSRegistry"
-            asp-controller="CustomerService">
+            asp-controller="CustomerService"
+            *ngIf="!(permissions$ | async)?.includes(uiState.privileges.ChCustomerServiceReadOnly)">
             <i class="ri-add-line align-bottom me-1"></i> New Request
         </a>
     </div>
@@ -116,7 +117,8 @@
                     <label for="Branch" class="form-label text-muted fw-bold fs-13">Branch</label>
                     <ng-select id="Branch" class="is-invalid" placeholder="Select Branch" formControlName="branch"
                         [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBrancheCustomer)">
                     </ng-select>
                 </div>
 
@@ -156,7 +158,8 @@
                     <ng-select id="CreatedBy" class="is-invalid" placeholder="Created By"
                         [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="createdBy" bindLabel="name"
-                        bindValue="name">
+                        bindValue="name"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllUsersCustomer)">
                     </ng-select>
                 </div>
 

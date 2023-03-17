@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { CustomerServiceFormGuard } from "src/app/core/guards/customer-service/customer-service.guard";
+import { CustomerServicePermissions } from "src/app/core/roles/customer-service-permissions";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 
 const routes: Routes = [
@@ -35,6 +37,9 @@ const routes: Routes = [
 			title: "Make Invoice",
 		},
 		loadChildren: () => import("./policies-forms/policies-forms.module").then((m) => m.PoliciesFormsModule),
+		canActivate: [
+			() => CustomerServiceFormGuard([CustomerServicePermissions.ChCustomerService, CustomerServicePermissions.ChCustomerServiceReadOnly]),
+		],
 	},
 	{
 		path: AppRoutes.Production.editCommissions,
