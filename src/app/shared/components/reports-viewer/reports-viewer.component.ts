@@ -59,7 +59,5 @@ export class ReportsViewerComponent implements OnInit, OnDestroy {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
 	}
 
-	ngOnInit(): void {
-		console.log("Reports Viewer Init: ", this.data);
-	}
+	ngOnInit(): void {}
 }

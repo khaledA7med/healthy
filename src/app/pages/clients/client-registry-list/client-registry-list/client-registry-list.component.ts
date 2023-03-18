@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { NavigationEnd, NavigationStart, Router } from "@angular/router";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 
 import { clientManageCols } from "src/app/shared/app/grid/clientCols";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -20,6 +20,11 @@ import { PermissionsService } from "src/app/core/services/permissions.service";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
+import { ClientPreviewComponent } from "src/app/shared/components/client-preview/client-preview.component";
+import { reserved } from "src/app/core/models/reservedWord";
+import { EventService } from "src/app/core/services/event.service";
+import { IClientPreview } from "src/app/shared/app/models/Clients/iclient-preview";
+// import { ClientPreviewComponent } from "src/app/shared/components/client-preview/client-preview.component";
 
 @Component({
 	selector: "app-client-registry-list",
@@ -29,6 +34,7 @@ import { AuthenticationService } from "src/app/core/services/auth.service";
 })
 export class ClientRegistryListComponent implements OnInit, OnDestroy {
 	@ViewChild("filter") clintFilter!: ElementRef;
+	modalRef!: NgbModalRef;
 	uiState = {
 		routerLink: { forms: AppRoutes.Client.clientForms },
 		gridReady: false,
@@ -64,6 +70,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 		suppressCsvExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
+		context: { comp: this },
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,
@@ -83,7 +90,9 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 		private table: MasterTableService,
 		private router: Router,
 		private permission: PermissionsService,
-		private auth: AuthenticationService
+		private modalService: NgbModal,
+		private auth: AuthenticationService,
+		private eventService: EventService
 	) {}
 
 	ngOnInit(): void {
@@ -102,7 +111,12 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 			if (!res.includes(this.uiState.privileges.ChAccessAllProducersClients))
 				this.filterForm.controls["producer"].patchValue(this.auth.getUser().name);
 		});
-		this.subscribes.push(sub, sub2);
+		let sub3 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2, sub3);
 	}
 
 	// Table Section
@@ -190,6 +204,30 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 			...this.filterForm.value,
 		};
 	}
+
+	openClientPreview(id: string) {
+		this.eventService.broadcast(reserved.isLoading, true);
+		let sub = this.clientService.getClintDetails(id).subscribe(
+			(res: HttpResponse<IBaseResponse<IClientPreview>>) => {
+				if (res.status) {
+					this.modalRef = this.modalService.open(ClientPreviewComponent, { fullscreen: true, scrollable: true });
+					this.modalRef.componentInstance.data = {
+						id,
+						clientDetails: res.body?.data!,
+					};
+					this.eventService.broadcast(reserved.isLoading, false);
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "error");
+				}
+			}
+			// error: (error: HttpErrorResponse) => {
+			// 	this.eventService.broadcast(reserved.isLoading, false);
+			// 	this.message.popup("Oops!", error.message, "error");
+			// },
+		);
+		this.subscribes.push(sub);
+	}
+
 	onClientFilters(): void {
 		this.modifyFilterReq();
 		this.gridApi.setDatasource(this.dataSource);
