@@ -1,4 +1,4 @@
-import { ICompanyRequirementsFilter, ICompanyRequirementsFilterData } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-filter';
+import { ICompanyRequirementsFilter } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-filter';
 import { IAddCompanyRequirements, IAddCompanyRequirementsData } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-form';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
@@ -14,7 +14,6 @@ import { MessagesService } from 'src/app/shared/services/messages.service';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { MODULES } from 'src/app/core/models/MODULES';
-import { ICompanyRequirements } from 'src/app/shared/app/models/MasterTables/customer-service/i-company-requirements';
 import { CustomerServiceRequirementsCols } from 'src/app/shared/app/grid/companyRequirementsCols';
 import { CompanyRequirementsService } from 'src/app/shared/services/master-tables/customer-service/company-requirements.service';
 
@@ -33,18 +32,15 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   CompanyRequirementsFormSubmitted = false as boolean;
   CompanyRequirementsModal!: NgbModalRef;
   CompanyRequirementsForm!: FormGroup<IAddCompanyRequirements>;
-  CompanyRequirementsFilterForm!: FormGroup<ICompanyRequirementsFilterData>
 
   @ViewChild("CompanyRequirementsContent") CompanyRequirementsContent!: ElementRef;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    filter: {} as ICompanyRequirementsFilter,
-    Filterlist: {
-      filter: [] as ICompanyRequirementsFilter[],
+    lists: {
+      itemsList: [] as ICompanyRequirementsFilter[],
     },
-    list: [] as ICompanyRequirements[],
     totalPages: 0,
     editCompanyRequirementsMode: false as Boolean,
     editCompanyRequirementsData: {} as IAddCompanyRequirementsData,
@@ -79,7 +75,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initFilterForm();
     this.initCompanyRequirementsForm();
     this.getLookupData();
   }
@@ -98,9 +93,9 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
         {
           if (res.body?.status)
           {
-            this.uiState.Filterlist.filter = res.body?.data!;
-            params.successCallback(this.uiState.list, this.uiState.list.length);
-            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            this.uiState.lists.itemsList = res.body?.data!;
+            params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
+            if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else
           {
@@ -138,23 +133,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
-  }
-
-
-  initFilterForm ()
-  {
-    this.CompanyRequirementsFilterForm = new FormGroup<ICompanyRequirementsFilterData>({
-      endorsType: new FormControl("", Validators.required),
-      classofInsurance: new FormControl("", Validators.required),
-      lineOfBusiness: new FormControl("", Validators.required),
-      insuranceCompanyID: new FormControl(null, Validators.required)
-    });
-  }
-
-  get ff ()
-  {
-    return this.CompanyRequirementsFilterForm.controls
+    this.gridApi.sizeColumnsToFit();
   }
 
 
@@ -198,7 +177,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
       classofInsurance: new FormControl(null, Validators.required),
       insuranceCompanyID: new FormControl(null),
       lineOfBusiness: new FormControl(null, Validators.required),
-      insuranceCompanyName: new FormControl(null, Validators.required),
       item: new FormControl(null, Validators.required),
     })
   }
@@ -214,7 +192,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     this.f.endorsType?.patchValue(data.endorsType!);
     this.f.classofInsurance?.patchValue(data.classofInsurance!);
     this.f.insuranceCompanyID?.patchValue(data.insuranceCompanyID!);
-    this.f.insuranceCompanyName?.patchValue(data.insuranceCompanyName!);
     this.f.item?.patchValue(data.item!);
     this.f.lineOfBusiness?.patchValue(data.lineOfBusiness!);
   }

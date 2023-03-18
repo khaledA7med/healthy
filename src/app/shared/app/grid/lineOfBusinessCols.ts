@@ -12,7 +12,6 @@ export const lineOfBusinessCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sNo",
-        minWidth: 100,
     },
     {
         headerName: "Class of Insurance",
@@ -25,11 +24,9 @@ export const lineOfBusinessCols: ColDef[] = [
     {
         headerName: "Line of Business(Ar)",
         field: "lineofBusinessAr",
-        minWidth: 250,
     },
     {
         headerName: "Abbreviation",
         field: "abbreviation",
-        minWidth: 120,
     }
 ];

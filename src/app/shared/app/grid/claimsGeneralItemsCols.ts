@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { ClaimsGeneralItemsFormsComponent } from "src/app/pages/master-tables/claims/claims-general-items/claims-general-items/claims-general-items-forms.component";
+import GlobalCellRender from "./globalCellRender";
 
 export const claimsGeneralItemsCols: ColDef[] = [
     {
@@ -12,16 +13,14 @@ export const claimsGeneralItemsCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sno",
-        minWidth: 70,
     },
     {
         headerName: "Item",
         field: "item",
-        minWidth: 320,
     },
     {
         headerName: "Default",
         field: "mandatory",
-        minWidth: 250,
+        cellRenderer: GlobalCellRender.NotifyChecker,
     },
 ];

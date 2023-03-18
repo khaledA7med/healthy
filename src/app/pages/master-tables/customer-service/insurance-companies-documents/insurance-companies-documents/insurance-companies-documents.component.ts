@@ -1,11 +1,10 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from 'rxjs';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
-import AppUtils from 'src/app/shared/app/util';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -17,7 +16,6 @@ import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { IInsuranceCompaniesDocumentsForm, IInsuranceCompaniesDocumentsFormData } from 'src/app/shared/app/models/MasterTables/customer-service/i-insurance-companies-form';
 import { IDocumentReq } from 'src/app/shared/app/models/App/IDocumentReq';
-import { IQuotingRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
 
 @Component({
   selector: 'app-insurance-companies-documents',
@@ -81,10 +79,17 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy
       let sub = this.InsuranceCompaniesDocumentsService.getInsuranceCompaniesDocuments(data).subscribe(
         (res: HttpResponse<IBaseResponse<IInsuranceCompaniesDocuments[]>>) =>
         {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status)
+          {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else
+          {
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          }
         },
         (err: HttpErrorResponse) =>
         {
@@ -116,7 +121,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
 
   }
   constructor (

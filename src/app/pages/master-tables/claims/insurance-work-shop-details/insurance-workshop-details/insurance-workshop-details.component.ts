@@ -69,10 +69,17 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy
       let sub = this.InsuranceWorkshopDetailsService.getInsuranceWorkshopDetails(this.uiState.insuranceCompany).subscribe(
         (res: HttpResponse<IBaseResponse<IInsuranceWorkshopDetails[]>>) =>
         {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status)
+          {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else
+          {
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          }
         },
         (err: HttpErrorResponse) =>
         {

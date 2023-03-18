@@ -55,6 +55,16 @@ export class MasterTableService
           name: BaseData.InsuranceCompanies,
         },
       ],
+      CustomerServiceDocuments: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.TypeOfCustomerServices,
+          name: BaseData.TypeOfCustomerServices,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+      ],
       CustomerServiceRequirements: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
@@ -71,6 +81,28 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
           name: BaseData.ContactLineOfBusiness,
+        },
+      ],
+      ClaimsGeneralItems: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insurClasses,
+          name: BaseData.InsurClasses,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
+          name: BaseData.LineOfBusiness,
+        },
+      ],
+      ClaimsStatus: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.claimStatus,
+          name: BaseData.ClaimStatus,
+        },
+      ],
+      ClaimsRejectionReasons: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.TypeClaimsRejectionReason,
+          name: BaseData.TypeClaimsRejectionReason,
         },
       ],
       MasterTableProductionLibraries: [
@@ -635,6 +667,9 @@ export class MasterTableService
       case MODULES.PolicyIssuanceRequirements:
         this.dataSrc = data.PolicyIssuanceRequirements;
         break;
+      case MODULES.InsuranceCompaniesDocuments:
+        this.dataSrc = data.CustomerServiceDocuments;
+        break;
       case MODULES.CustomerServiceCompanyRequirements:
         this.dataSrc = data.CustomerServiceRequirements;
         break;
@@ -643,6 +678,15 @@ export class MasterTableService
         break;
       case MODULES.MasterTableListOfRequiredDocuments:
         this.dataSrc = data.MasterTableListOfRequiredDocuments;
+        break;
+      case MODULES.ClaimsGeneralItems:
+        this.dataSrc = data.ClaimsGeneralItems;
+        break;
+      case MODULES.ClaimsStatus:
+        this.dataSrc = data.ClaimsStatus;
+        break;
+      case MODULES.ClaimsRejectionReasons:
+        this.dataSrc = data.ClaimsRejectionReasons;
         break;
       case MODULES.DefaultEmails:
         this.dataSrc = data.DefaultEmails;

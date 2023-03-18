@@ -27,5 +27,18 @@ export interface IQuotingRequirementsData
     itemArabic?: string,
     description?: string,
     descriptionArabic?: string,
-
+}
+export interface IQuotingRequirementsFilter
+{
+    sNo?: number | null,
+    identity?: string | null,
+    type?: string | null,
+    defaultTick?: number | null,
+    class?: string | null,
+    lineOfBusiness?: string | null,
+    insuranceCopmany?: string | null,
+    item?: string | null,
+    itemArabic?: string | null,
+    description?: string | null,
+    descriptionArabic?: string | null,
 }

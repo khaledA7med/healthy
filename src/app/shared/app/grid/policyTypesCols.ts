@@ -13,7 +13,6 @@ export const policyTypesCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sno",
-        minWidth: 100,
     },
     {
         headerName: "Policy Type",

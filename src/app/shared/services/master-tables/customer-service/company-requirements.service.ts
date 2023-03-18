@@ -17,9 +17,9 @@ export class CompanyRequirementsService
 
   constructor (private http: HttpClient) { }
 
-  getCompanyRequirements (filter: ICompanyRequirementsFilter): Observable<HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>>
+  getCompanyRequirements (data: { endorsType: string, classofInsurance: string, insuranceCompanyID: number, lineOfBusiness: string }): Observable<HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>>
   {
-    return this.http.post<IBaseResponse<ICompanyRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.search, { ...filter }, {
+    return this.http.post<IBaseResponse<ICompanyRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.search, { ...data }, {
       observe: "response",
     });
   }

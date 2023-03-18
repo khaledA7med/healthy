@@ -1,28 +1,30 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
-import {
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-} from "ag-grid-community";
+import
+  {
+    Component,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+  } from "@angular/core";
+import
+  {
+    CellEvent,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    IDatasource,
+    IGetRowsParams,
+  } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from "rxjs";
 import { insuranceClassCols } from "src/app/shared/app/grid/insuranceClassCols";
-import {
-  IInsuranceClass,
-  IInsuranceClassData,
-} from "src/app/shared/app/models/MasterTables/i-insurance-class";
+import
+  {
+    IInsuranceClass,
+    IInsuranceClassData,
+  } from "src/app/shared/app/models/MasterTables/i-insurance-class";
 import { InsuranceClassesService } from "src/app/shared/services/master-tables/insurance-classes.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -33,10 +35,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 @Component({
   selector: "app-insurance-classes",
   templateUrl: "./insurance-classes.component.html",
-  styleUrls: ["./insurance-classes.component.scss"],
+  styleUrls: [ "./insurance-classes.component.scss" ],
   encapsulation: ViewEncapsulation.None,
 })
-export class InsuranceClassesComponent implements OnInit, OnDestroy {
+export class InsuranceClassesComponent implements OnInit, OnDestroy
+{
   InsuranceFormSubmitted = false as boolean;
   InsuranceModal!: NgbModalRef;
   InsuranceForm!: FormGroup<IInsuranceClass>;
@@ -53,7 +56,7 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi>{};
+  gridApi: GridApi = <GridApi> {};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -71,21 +74,25 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  ngOnInit(): void {
+  ngOnInit (): void
+  {
     this.initInsuranceForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
+    getRows: (params: IGetRowsParams) =>
+    {
       this.gridApi.showLoadingOverlay();
       let sub = this.InsuranceClassesService.getInsuranceClasses().subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) => {
+        (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) =>
+        {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
-        (err: HttpErrorResponse) => {
+        (err: HttpErrorResponse) =>
+        {
           this.message.popup("Oops!", err.message, "error");
         }
       );
@@ -93,35 +100,39 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     },
   };
 
-  constructor(
+  constructor (
     private InsuranceClassesService: InsuranceClassesService,
-    private tableRef: ElementRef,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
-  onCellClicked(params: CellEvent) {
-    if (params.column.getColId() == "action") {
+  onCellClicked (params: CellEvent)
+  {
+    if (params.column.getColId() == "action")
+    {
       params.api.getCellRendererInstances({
-        rowNodes: [params.node],
-        columns: [params.column],
+        rowNodes: [ params.node ],
+        columns: [ params.column ],
       });
     }
   }
 
-  onPageSizeChange() {
+  onPageSizeChange ()
+  {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady(param: GridReadyEvent) {
+  onGridReady (param: GridReadyEvent)
+  {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
-  openInsuranceDialoge(id?: string) {
+  openInsuranceDialoge (id?: string)
+  {
     this.resetInsuranceForm();
     this.InsuranceModal = this.modalService.open(this.insuranceContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -129,16 +140,19 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
       backdrop: "static",
       size: "md",
     });
-    if (id) {
+    if (id)
+    {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceClassesService.getEditInsuranceData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClassData>>) => {
+        (res: HttpResponse<IBaseResponse<IInsuranceClassData>>) =>
+        {
           this.uiState.editInsuranceMode = true;
           this.uiState.editInsuranceData = res.body?.data!;
           this.fillEditInsuranceForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
-        (err: HttpErrorResponse) => {
+        (err: HttpErrorResponse) =>
+        {
           this.message.popup("Oops!", err.message, "error");
           this.eventService.broadcast(reserved.isLoading, false);
         }
@@ -146,14 +160,16 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
       this.subscribes.push(sub);
     }
 
-    this.InsuranceModal.hidden.subscribe(() => {
+    this.InsuranceModal.hidden.subscribe(() =>
+    {
       this.resetInsuranceForm();
       this.InsuranceFormSubmitted = false;
       this.uiState.editInsuranceMode = false;
     });
   }
 
-  initInsuranceForm() {
+  initInsuranceForm ()
+  {
     this.InsuranceForm = new FormGroup<IInsuranceClass>({
       sNo: new FormControl(null),
       className: new FormControl(null, Validators.required),
@@ -163,17 +179,20 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     });
   }
 
-  get f() {
+  get f ()
+  {
     return this.InsuranceForm.controls;
   }
 
-  fillAddIsnuranceForm(data: IInsuranceClassData) {
+  fillAddIsnuranceForm (data: IInsuranceClassData)
+  {
     this.f.className?.patchValue(data.className!);
     this.f.classNameAr?.patchValue(data.classNameAr!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
   }
 
-  fillEditInsuranceForm(data: IInsuranceClassData) {
+  fillEditInsuranceForm (data: IInsuranceClassData)
+  {
     this.f.className?.patchValue(data.className!);
     this.f.classNameAr?.patchValue(data.classNameAr!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
@@ -181,8 +200,10 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     this.f.classNameAr?.disable();
   }
 
-  validationChecker(): boolean {
-    if (this.InsuranceForm.invalid) {
+  validationChecker (): boolean
+  {
+    if (this.InsuranceForm.invalid)
+    {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -193,7 +214,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  submitInsuranceData(form: FormGroup) {
+  submitInsuranceData (form: FormGroup)
+  {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IInsuranceClassData = {
@@ -207,7 +229,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceClassesService.saveInsuranceClass(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
+      (res: HttpResponse<IBaseResponse<number>>) =>
+      {
         this.InsuranceModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
@@ -215,7 +238,8 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
-      (err: HttpErrorResponse) => {
+      (err: HttpErrorResponse) =>
+      {
         this.message.popup("Oops!", err.error.message, "error");
         this.eventService.broadcast(reserved.isLoading, false);
       }
@@ -223,30 +247,35 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  resetInsuranceForm() {
+  resetInsuranceForm ()
+  {
     this.InsuranceForm.reset();
     this.f.className?.enable();
     this.f.classNameAr?.enable();
   }
 
-  DeleteInsurance(id: string, ClassName: string) {
+  DeleteInsurance (id: string, ClassName: string)
+  {
     let sub = this.InsuranceClassesService.DeleteInsurance(
       id,
       ClassName
     ).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
       },
-      (err: HttpErrorResponse) => {
+      (err: HttpErrorResponse) =>
+      {
         this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void
+  {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }

@@ -1,23 +1,24 @@
+import { IPolicyIssuanceRequirementsFilter } from './../../../../../../shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements';
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import
-  {
-    Component,
-    ElementRef,
-    OnDestroy,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-  } from "@angular/core";
+{
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import
-  {
-    CellEvent,
-    GridApi,
-    GridOptions,
-    GridReadyEvent,
-    IDatasource,
-    IGetRowsParams,
-  } from "ag-grid-community";
+{
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from "rxjs";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -27,19 +28,19 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import
-  {
-    Caching,
-    IBaseMasterTable,
-    IGenericResponseType,
-  } from "src/app/core/models/masterTableModels";
+{
+  Caching,
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { policyIssuanceRequirementsCols } from "src/app/shared/app/grid/policyIssuanceRequirementsCols";
 import
-  {
-    IPolicyIssuanceRequirements,
-    IPolicyIssuanceRequirementsData,
-  } from "src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements";
+{
+  IPolicyIssuanceRequirements,
+  IPolicyIssuanceRequirementsData,
+} from "src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements";
 import { PolicyIssuanceRequirementsService } from "src/app/shared/services/master-tables/business-development/sales/policy-issuance-requirements.service";
 
 @Component({
@@ -62,7 +63,9 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IPolicyIssuanceRequirements[],
+    list: {
+      itemsList: [] as IPolicyIssuanceRequirementsFilter[],
+    },
     totalPages: 0,
     editPolicyIssuanceRequirementsMode: false as Boolean,
     editPolicyIssuanceRequirementsData: {} as IPolicyIssuanceRequirementsData,
@@ -97,22 +100,17 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      const data: IPolicyIssuanceRequirementsData = {
-        class: this.uiState.class,
-        lineOfBusiness: this.uiState.lineOfBusiness,
-        insuranceCopmany: this.uiState.insuranceCompanies,
-      };
       let sub =
         this.PolicyIssuanceRequirementsService.getPolicyIssuanceRequirements(
-          data
+          { class: this.f.class?.value!, lineOfBusiness: this.f.lineOfBusiness?.value!, insuranceCopmany: this.f.insuranceCopmany?.value! }
         ).subscribe(
-          (res: HttpResponse<IBaseResponse<IPolicyIssuanceRequirements[]>>) =>
+          (res: HttpResponse<IBaseResponse<IPolicyIssuanceRequirementsFilter[]>>) =>
           {
             if (res.body?.status)
             {
-              this.uiState.list = res.body?.data!;
-              params.successCallback(this.uiState.list, this.uiState.list.length);
-              if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+              this.uiState.list.itemsList = res.body?.data!;
+              params.successCallback(this.uiState.list.itemsList, this.uiState.list.itemsList.length);
+              if (this.uiState.list.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else
             {
@@ -213,23 +211,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy
 
   checkValue (event: any)
   {
-    console.log(event);
     this.uiState.defaultTick = event;
-  }
-
-  changeClass (e: any)
-  {
-    this.uiState.class = e?.name;
-  }
-  changeLineOfBusiness (e: any)
-  {
-    this.uiState.lineOfBusiness = e?.name;
-  }
-
-  filter (e: any)
-  {
-    this.uiState.insuranceCompanies = e?.name;
-    this.gridApi.setDatasource(this.dataSource);
   }
 
   getPolicyIssuanceRequirementsData (id: string)

@@ -29,3 +29,20 @@ export interface IPolicyIssuanceRequirementsData
     descriptionArabic?: string,
 
 }
+export interface IPolicyIssuanceRequirementsFilter
+{
+
+    sNo?: number | null,
+    identity?: string | null,
+    type?: string | null,
+    defaultTick?: number | null,
+    class?: string | null,
+    lineOfBusiness?: string | null,
+    insuranceCopmany?: string | null,
+    item?: string | null,
+    itemArabic?: string | null,
+    description?: string | null,
+    descriptionArabic?: string | null,
+
+
+}
