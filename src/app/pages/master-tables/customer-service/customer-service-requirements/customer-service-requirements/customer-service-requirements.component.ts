@@ -1,9 +1,9 @@
-import { ICompanyRequirementsFilter } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-filter';
+import { ICompanyRequirementsFilter, ICompanyRequirementsFilterData } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-filter';
 import { IAddCompanyRequirements, IAddCompanyRequirementsData } from './../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-form';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal, NgbModalRef, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from 'rxjs';
@@ -33,15 +33,17 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   CompanyRequirementsFormSubmitted = false as boolean;
   CompanyRequirementsModal!: NgbModalRef;
   CompanyRequirementsForm!: FormGroup<IAddCompanyRequirements>;
-  CompanyRequirementsFilterForm!: FormGroup;
+  CompanyRequirementsFilterForm!: FormGroup<ICompanyRequirementsFilterData>
 
-  @ViewChild("CompanyRequirementsFilter") CompanyRequirementsFilter!: ElementRef;
   @ViewChild("CompanyRequirementsContent") CompanyRequirementsContent!: ElementRef;
 
   uiState = {
     gridReady: false,
     submitted: false,
     filter: {} as ICompanyRequirementsFilter,
+    Filterlist: {
+      filter: [] as ICompanyRequirementsFilter[],
+    },
     list: [] as ICompanyRequirements[],
     totalPages: 0,
     editCompanyRequirementsMode: false as Boolean,
@@ -71,7 +73,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     private message: MessagesService,
     private CompanyRequirementsService: CompanyRequirementsService,
     private eventService: EventService,
-    private offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
     private table: MasterTableService,
   ) { }
@@ -92,13 +93,20 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.CompanyRequirementsService.getCompanyRequirements(this.uiState.filter).subscribe(
-        (res: HttpResponse<IBaseResponse<ICompanyRequirements[]>>) =>
+      let sub = this.CompanyRequirementsService.getCompanyRequirements({ endorsType: this.f.endorsType?.value!, classofInsurance: this.f.classofInsurance?.value!, insuranceCompanyID: this.f.insuranceCompanyID?.value!, lineOfBusiness: this.f.lineOfBusiness?.value! }).subscribe(
+        (res: HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>) =>
         {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status)
+          {
+            this.uiState.Filterlist.filter = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else
+          {
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          }
         },
         (err: HttpErrorResponse) =>
         {
@@ -133,38 +141,22 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     // this.gridApi.sizeColumnsToFit();
   }
 
-  openFilterOffcanvas (): void
-  {
-    this.offcanvasService.open(this.CompanyRequirementsFilter, { position: "end" });
-  }
 
-  private initFilterForm (): void
+  initFilterForm ()
   {
-    this.CompanyRequirementsFilterForm = new FormGroup({
+    this.CompanyRequirementsFilterForm = new FormGroup<ICompanyRequirementsFilterData>({
       endorsType: new FormControl("", Validators.required),
       classofInsurance: new FormControl("", Validators.required),
       lineOfBusiness: new FormControl("", Validators.required),
-      insuranceCompanyID: new FormControl("", Validators.required)
+      insuranceCompanyID: new FormControl(null, Validators.required)
     });
   }
 
-  modifyFilterReq ()
+  get ff ()
   {
-    this.uiState.filter = {
-      ...this.uiState.filter,
-      ...this.CompanyRequirementsFilterForm.value,
-    };
-  }
-  onCompanyRequirementsFilters (): void
-  {
-    this.modifyFilterReq();
-    this.gridApi.setDatasource(this.dataSource);
+    return this.CompanyRequirementsFilterForm.controls
   }
 
-  clearFilter ()
-  {
-    this.CompanyRequirementsFilterForm.reset();
-  }
 
   getLineOfBusiness (className: string)
   {

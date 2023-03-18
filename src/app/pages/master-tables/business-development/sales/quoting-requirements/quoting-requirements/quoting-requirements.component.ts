@@ -11,10 +11,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { Caching, IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
 import { MODULES } from 'src/app/core/models/MODULES';
+import { MasterMethodsService } from 'src/app/shared/services/master-methods.service';
 import { IQuotingRequirements, IQuotingRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
 import { quotingRequirementsCols } from 'src/app/shared/app/grid/quotingRequirementsCols';
 import { QuotingRequirementsService } from 'src/app/shared/services/master-tables/business-development/sales/quoting-requirements.service';
-import { MasterMethodsService } from 'src/app/shared/services/master-methods.service';
 
 @Component({
   selector: 'app-quoting-requirements',
@@ -78,10 +78,17 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
       let sub = this.QuotingRequirementsService.getQuotingRequirements(data).subscribe(
         (res: HttpResponse<IBaseResponse<IQuotingRequirements[]>>) =>
         {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status)
+          {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else
+          {
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          }
         },
         (err: HttpErrorResponse) =>
         {

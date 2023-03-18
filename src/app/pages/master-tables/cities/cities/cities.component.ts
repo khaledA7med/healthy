@@ -24,31 +24,31 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { vehiclesTypesCols } from "src/app/shared/app/grid/vehiclesTypesCols";
-import { VehiclesTypesService } from "src/app/shared/services/master-tables/vehicles-types.service";
-import { IVehiclesTypes, IVehiclesTypesData } from "src/app/shared/app/models/MasterTables/i-vehicles-types";
+import { citiesCols } from "src/app/shared/app/grid/citiesCols";
+import { CitiesService } from "src/app/shared/services/master-tables/cities.service";
+import { ICities, ICitiesData } from "src/app/shared/app/models/MasterTables/i-cities";
 
 @Component({
-  selector: 'app-vehicles-types',
-  templateUrl: './vehicles-types.component.html',
-  styleUrls: [ './vehicles-types.component.scss' ],
+  selector: 'app-cities',
+  templateUrl: './cities.component.html',
+  styleUrls: [ './cities.component.scss' ],
   encapsulation: ViewEncapsulation.None,
 })
-export class VehiclesTypesComponent implements OnInit, OnDestroy
+export class CitiesComponent implements OnInit, OnDestroy
 {
 
-  VehiclesTypesFormSubmitted = false as boolean;
-  VehiclesTypesModal!: NgbModalRef;
-  VehiclesTypesForm!: FormGroup<IVehiclesTypes>;
-  @ViewChild("VehiclesTypesContent") VehiclesTypesContent!: TemplateRef<any>;
+  CitiesFormSubmitted = false as boolean;
+  CitiesModal!: NgbModalRef;
+  CitiesForm!: FormGroup<ICities>;
+  @ViewChild("CitiesContent") CitiesContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IVehiclesTypes[],
+    list: [] as ICities[],
     totalPages: 0,
-    editVehiclesTypesMode: false as Boolean,
-    editVehiclesTypesData: {} as IVehiclesTypesData,
+    editCitiesMode: false as Boolean,
+    editCitiesData: {} as ICitiesData,
   };
 
   subscribes: Subscription[] = [];
@@ -58,7 +58,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: vehiclesTypesCols,
+    columnDefs: citiesCols,
     suppressCsvExport: true,
     context: { comp: this },
     defaultColDef: {
@@ -72,7 +72,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
   };
 
   constructor (
-    private VehiclesTypesService: VehiclesTypesService,
+    private CitiesService: CitiesService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
@@ -80,15 +80,15 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
-    this.initVehiclesTypesForm();
+    this.initCitiesForm();
   }
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.VehiclesTypesService.getVehiclesTypes().subscribe(
-        (res: HttpResponse<IBaseResponse<IVehiclesTypes[]>>) =>
+      let sub = this.CitiesService.getCities().subscribe(
+        (res: HttpResponse<IBaseResponse<ICities[]>>) =>
         {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
@@ -128,10 +128,10 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     this.gridApi.sizeColumnsToFit();
   }
 
-  openVehiclesTypeDialoge (id?: string)
+  openCitiesDialoge (id?: string)
   {
-    this.resetVehiclesTypesForm();
-    this.VehiclesTypesModal = this.modalService.open(this.VehiclesTypesContent, {
+    this.resetCitiesForm();
+    this.CitiesModal = this.modalService.open(this.CitiesContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
@@ -140,12 +140,12 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     if (id)
     {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.VehiclesTypesService.getEditVehiclesTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IVehiclesTypesData>>) =>
+      let sub = this.CitiesService.getEditCities(id).subscribe(
+        (res: HttpResponse<IBaseResponse<ICitiesData>>) =>
         {
-          this.uiState.editVehiclesTypesMode = true;
-          this.uiState.editVehiclesTypesData = res.body?.data!;
-          this.fillAddVehiclesTypesForm(res.body?.data!);
+          this.uiState.editCitiesMode = true;
+          this.uiState.editCitiesData = res.body?.data!;
+          this.fillAddCitiesForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
         (err: HttpErrorResponse) =>
@@ -157,44 +157,41 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
       this.subscribes.push(sub);
     }
 
-    this.VehiclesTypesModal.hidden.subscribe(() =>
+    this.CitiesModal.hidden.subscribe(() =>
     {
-      this.resetVehiclesTypesForm();
-      this.VehiclesTypesFormSubmitted = false;
-      this.uiState.editVehiclesTypesMode = false;
+      this.resetCitiesForm();
+      this.CitiesFormSubmitted = false;
+      this.uiState.editCitiesMode = false;
     });
   }
 
 
-  initVehiclesTypesForm ()
+  initCitiesForm ()
   {
-    this.VehiclesTypesForm = new FormGroup<IVehiclesTypes>({
+    this.CitiesForm = new FormGroup<ICities>({
       sNo: new FormControl(null),
-      vehicleType: new FormControl(null, Validators.required),
-      abbreviation: new FormControl(null, Validators.required),
+      city: new FormControl(null, Validators.required)
     });
   }
 
   get f ()
   {
-    return this.VehiclesTypesForm.controls;
+    return this.CitiesForm.controls;
   }
 
-  fillAddVehiclesTypesForm (data: IVehiclesTypesData)
+  fillAddCitiesForm (data: ICitiesData)
   {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.city?.patchValue(data.city!);
   }
 
-  fillEditVehiclesTypesForm (data: IVehiclesTypesData)
+  fillEditCitiesForm (data: ICitiesData)
   {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
+    this.f.city?.patchValue(data.city!);
   }
 
   validationChecker (): boolean
   {
-    if (this.VehiclesTypesForm.invalid)
+    if (this.CitiesForm.invalid)
     {
       this.message.popup(
         "Attention!",
@@ -206,26 +203,25 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitVehiclesTypesData (form: FormGroup)
+  submitCitiesData (form: FormGroup)
   {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
-    const data: IVehiclesTypesData = {
-      sNo: this.uiState.editVehiclesTypesMode
-        ? this.uiState.editVehiclesTypesData.sNo
+    const data: ICitiesData = {
+      sNo: this.uiState.editCitiesMode
+        ? this.uiState.editCitiesData.sNo
         : 0,
-      vehicleType: formData.vehicleType,
-      abbreviation: formData.abbreviation,
+      city: formData.city
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.VehiclesTypesService.saveVehiclesTypes(data).subscribe(
+    let sub = this.CitiesService.saveCities(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
-        this.VehiclesTypesModal.dismiss();
+        this.CitiesModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetVehiclesTypesForm();
+        this.resetCitiesForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
@@ -238,14 +234,14 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  resetVehiclesTypesForm ()
+  resetCitiesForm ()
   {
-    this.VehiclesTypesForm.reset();
+    this.CitiesForm.reset();
   }
 
-  DeleteVehiclesTypes (id: string)
+  DeleteCities (id: string)
   {
-    let sub = this.VehiclesTypesService.DeleteVehiclesTypes(id).subscribe(
+    let sub = this.CitiesService.DeleteCities(id).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
@@ -264,4 +260,6 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy
   {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
+
+
 }

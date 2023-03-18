@@ -26,7 +26,16 @@ import { ClaimsListComponent } from "./claims-list.component";
             <i class="ri-chat-follow-up-fill align-bottom me-2 text-muted"></i>
             Follow Up
           </button>
-          <button ngbDropdownItem (click)="Edit()" class="btn btn-sm">
+          <button
+            ngbDropdownItem
+            (click)="Edit()"
+            class="btn btn-sm"
+            *ngIf="
+              !(comp.permissions$ | async)?.includes(
+                comp.uiState.privileges.ChClaimsManagementSystemReadOnly
+              )
+            "
+          >
             <i class="ri-edit-line align-bottom me-2 text-muted"></i>
             Edit
           </button>
@@ -84,9 +93,9 @@ import { ClaimsListComponent } from "./claims-list.component";
 })
 export class ClaimsControlsComponent {
   private params!: ICellRendererParams;
-  private comp!: ClaimsListComponent;
+  public comp!: ClaimsListComponent;
 
-  constructor(private _Router: Router, private message: MessagesService) {}
+  constructor(private _Router: Router) {}
 
   agInit(params: ICellRendererParams) {
     this.params = params;

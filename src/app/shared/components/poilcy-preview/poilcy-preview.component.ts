@@ -20,7 +20,6 @@ import { ProductionService } from "../../services/production/production.service"
 	selector: "app-poilcy-preview",
 	templateUrl: "./poilcy-preview.component.html",
 	styleUrls: ["./poilcy-preview.component.scss"],
-	providers: [AppUtils],
 })
 export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	@Input() data!: {

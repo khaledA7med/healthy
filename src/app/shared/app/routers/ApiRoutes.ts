@@ -22,6 +22,7 @@ export const ApiRoutes = {
         LookUpTables + BaseData.TypeClaimsRejectionReason,
       vehicleCarsMake: LookUpTables + BaseData.VehicleCarsMake,
       getPolicyTypeIssue: LookUpTables + BaseData.GetPolicyTypeIssue,
+      CategoryOfDefaultEmail: LookUpTables + BaseData.CategoryOfDefaultEmail,
     },
     Client: {
       clientType: LookUpTables + BaseData.ClientType,
@@ -426,7 +427,6 @@ export const ApiRoutes = {
     defaultEmail: {
       search: "/MasterTables/DefaultEmail/Search",
       save: "/MasterTables/DefaultEmail/Save",
-      edit: "/MasterTables/DefaultEmail/Edit",
     },
     bankSettings: {
       search: "/MasterTables/BanksSettings/Search",
