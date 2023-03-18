@@ -14,6 +14,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { csReportForm, csReportReq } from "src/app/shared/app/models/CustomerService/icustomer-service-report";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
+import { NavigationStart, Router } from "@angular/router";
 
 @Component({
 	selector: "app-customer-service-report",
@@ -55,7 +56,8 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -73,7 +75,12 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.producersLists = res.Producers?.content!;
 			this.uiState.lists.statusList = res.CServiceStatus?.content!;
 		});
-		this.subscribes.push(sub);
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
 
 		let date = new Date();
 		let todayDate = {

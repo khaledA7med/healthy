@@ -207,12 +207,12 @@
 
         <div class="col-lg-4  my-2">
             <!-- Start PAYMENT TERMS Table -->
-            <div class="card">
+            <div class="card overflow-hidden">
                 <div class="card-header">
                     <h6 class="card-title text-muted text-uppercase mb-0">Payment Terms</h6>
                 </div>
-                <div class="card-body table-responsive table-card">
-                    <table class="table table-nowrap mb-0 overflow-auto">
+                <div class="card-body table-responsive table-card overflow-scroll">
+                    <table class="table table-nowrap mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Payment Date</th>
@@ -251,8 +251,7 @@
             <!-- End PAYMENT TERMS Table -->
 
             <!-- Start PRODUCERS COMMISSIONS Table -->
-            <div class="card my-3"
-                *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChHideProducerCommission)">
+            <div class="card" *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChHideProducerCommission)">
                 <div class="card-header">
                     <h6 class="card-title text-muted text-uppercase mb-0">Producers Commissions</h6>
                 </div>
