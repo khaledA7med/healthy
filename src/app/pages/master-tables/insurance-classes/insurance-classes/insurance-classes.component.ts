@@ -1,28 +1,10 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
-import {
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-} from "ag-grid-community";
+import { HttpResponse } from "@angular/common/http";
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from "rxjs";
 import { insuranceClassCols } from "src/app/shared/app/grid/insuranceClassCols";
-import {
-  IInsuranceClass,
-  IInsuranceClassData,
-} from "src/app/shared/app/models/MasterTables/i-insurance-class";
+import { IInsuranceClass, IInsuranceClassData } from "src/app/shared/app/models/MasterTables/i-insurance-class";
 import { InsuranceClassesService } from "src/app/shared/services/master-tables/insurance-classes.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -31,222 +13,199 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
-  selector: "app-insurance-classes",
-  templateUrl: "./insurance-classes.component.html",
-  styleUrls: ["./insurance-classes.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+	selector: "app-insurance-classes",
+	templateUrl: "./insurance-classes.component.html",
+	styleUrls: ["./insurance-classes.component.scss"],
+	encapsulation: ViewEncapsulation.None,
 })
 export class InsuranceClassesComponent implements OnInit, OnDestroy {
-  InsuranceFormSubmitted = false as boolean;
-  InsuranceModal!: NgbModalRef;
-  InsuranceForm!: FormGroup<IInsuranceClass>;
-  @ViewChild("insuranceContent") insuranceContent!: TemplateRef<any>;
+	InsuranceFormSubmitted = false as boolean;
+	InsuranceModal!: NgbModalRef;
+	InsuranceForm!: FormGroup<IInsuranceClass>;
+	@ViewChild("insuranceContent") insuranceContent!: TemplateRef<any>;
 
-  uiState = {
-    gridReady: false,
-    submitted: false,
-    list: [] as IInsuranceClass[],
-    totalPages: 0,
-    editInsuranceMode: false as Boolean,
-    editInsuranceData: {} as IInsuranceClassData,
-  };
+	uiState = {
+		gridReady: false,
+		submitted: false,
+		list: [] as IInsuranceClass[],
+		totalPages: 0,
+		editInsuranceMode: false as Boolean,
+		editInsuranceData: {} as IInsuranceClassData,
+	};
 
-  subscribes: Subscription[] = [];
+	subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi>{};
-  gridOpts: GridOptions = {
-    rowModelType: "infinite",
-    editType: "fullRow",
-    animateRows: true,
-    columnDefs: insuranceClassCols,
-    suppressCsvExport: true,
-    context: { comp: this },
-    defaultColDef: {
-      flex: 1,
-      minWidth: 100,
-      sortable: true,
-      resizable: true,
-    },
-    onGridReady: (e) => this.onGridReady(e),
-    onCellClicked: (e) => this.onCellClicked(e),
-  };
+	gridApi: GridApi = <GridApi>{};
+	gridOpts: GridOptions = {
+		rowModelType: "infinite",
+		editType: "fullRow",
+		animateRows: true,
+		columnDefs: insuranceClassCols,
+		suppressCsvExport: true,
+		context: { comp: this },
+		defaultColDef: {
+			flex: 1,
+			minWidth: 100,
+			sortable: true,
+			resizable: true,
+		},
+		onGridReady: (e) => this.onGridReady(e),
+		onCellClicked: (e) => this.onCellClicked(e),
+	};
 
-  ngOnInit(): void {
-    this.initInsuranceForm();
-  }
+	ngOnInit(): void {
+		this.initInsuranceForm();
+	}
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      this.gridApi.showLoadingOverlay();
-      let sub = this.InsuranceClassesService.getInsuranceClasses().subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) => {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
-        }
-      );
-      this.subscribes.push(sub);
-    },
-  };
+	dataSource: IDatasource = {
+		getRows: (params: IGetRowsParams) => {
+			this.gridApi.showLoadingOverlay();
+			let sub = this.InsuranceClassesService.getInsuranceClasses().subscribe((res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) => {
+				if (res.body?.status) {
+					this.uiState.list = res.body?.data!;
+					params.successCallback(this.uiState.list, this.uiState.list.length);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  constructor(
-    private InsuranceClassesService: InsuranceClassesService,
-    private tableRef: ElementRef,
-    private message: MessagesService,
-    private eventService: EventService,
-    private modalService: NgbModal
-  ) {}
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
+			this.subscribes.push(sub);
+		},
+	};
 
-  onCellClicked(params: CellEvent) {
-    if (params.column.getColId() == "action") {
-      params.api.getCellRendererInstances({
-        rowNodes: [params.node],
-        columns: [params.column],
-      });
-    }
-  }
+	constructor(
+		private InsuranceClassesService: InsuranceClassesService,
+		private message: MessagesService,
+		private eventService: EventService,
+		private modalService: NgbModal
+	) {}
 
-  onPageSizeChange() {
-    this.gridApi.showLoadingOverlay();
-    this.gridApi.setDatasource(this.dataSource);
-  }
+	onCellClicked(params: CellEvent) {
+		if (params.column.getColId() == "action") {
+			params.api.getCellRendererInstances({
+				rowNodes: [params.node],
+				columns: [params.column],
+			});
+		}
+	}
 
-  onGridReady(param: GridReadyEvent) {
-    this.gridApi = param.api;
-    this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
-  }
+	onPageSizeChange() {
+		this.gridApi.showLoadingOverlay();
+		this.gridApi.setDatasource(this.dataSource);
+	}
 
-  openInsuranceDialoge(id?: string) {
-    this.resetInsuranceForm();
-    this.InsuranceModal = this.modalService.open(this.insuranceContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "md",
-    });
-    if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.InsuranceClassesService.getEditInsuranceData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClassData>>) => {
-          this.uiState.editInsuranceMode = true;
-          this.uiState.editInsuranceData = res.body?.data!;
-          this.fillEditInsuranceForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
-        }
-      );
-      this.subscribes.push(sub);
-    }
+	onGridReady(param: GridReadyEvent) {
+		this.gridApi = param.api;
+		this.gridApi.setDatasource(this.dataSource);
+		// this.gridApi.sizeColumnsToFit();
+	}
 
-    this.InsuranceModal.hidden.subscribe(() => {
-      this.resetInsuranceForm();
-      this.InsuranceFormSubmitted = false;
-      this.uiState.editInsuranceMode = false;
-    });
-  }
+	openInsuranceDialoge(id?: string) {
+		this.resetInsuranceForm();
+		this.InsuranceModal = this.modalService.open(this.insuranceContent, {
+			ariaLabelledBy: "modal-basic-title",
+			centered: true,
+			backdrop: "static",
+			size: "md",
+		});
+		if (id) {
+			this.eventService.broadcast(reserved.isLoading, true);
+			let sub = this.InsuranceClassesService.getEditInsuranceData(id).subscribe((res: HttpResponse<IBaseResponse<IInsuranceClassData>>) => {
+				if (res.body?.status) {
+					this.uiState.editInsuranceMode = true;
+					this.uiState.editInsuranceData = res.body?.data!;
+					this.fillEditInsuranceForm(res.body?.data!);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  initInsuranceForm() {
-    this.InsuranceForm = new FormGroup<IInsuranceClass>({
-      sNo: new FormControl(null),
-      className: new FormControl(null, Validators.required),
-      classNameAr: new FormControl(null),
-      abbreviation: new FormControl(null),
-      allowedToAccessInsuranceClasses: new FormControl(null),
-    });
-  }
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub);
+		}
 
-  get f() {
-    return this.InsuranceForm.controls;
-  }
+		this.InsuranceModal.hidden.subscribe(() => {
+			this.resetInsuranceForm();
+			this.InsuranceFormSubmitted = false;
+			this.uiState.editInsuranceMode = false;
+		});
+	}
 
-  fillAddIsnuranceForm(data: IInsuranceClassData) {
-    this.f.className?.patchValue(data.className!);
-    this.f.classNameAr?.patchValue(data.classNameAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-  }
+	initInsuranceForm() {
+		this.InsuranceForm = new FormGroup<IInsuranceClass>({
+			sNo: new FormControl(null),
+			className: new FormControl(null, Validators.required),
+			classNameAr: new FormControl(null),
+			abbreviation: new FormControl(null),
+			allowedToAccessInsuranceClasses: new FormControl(null),
+		});
+	}
 
-  fillEditInsuranceForm(data: IInsuranceClassData) {
-    this.f.className?.patchValue(data.className!);
-    this.f.classNameAr?.patchValue(data.classNameAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-    this.f.className?.disable();
-    this.f.classNameAr?.disable();
-  }
+	get f() {
+		return this.InsuranceForm.controls;
+	}
 
-  validationChecker(): boolean {
-    if (this.InsuranceForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
-      return false;
-    }
-    return true;
-  }
+	fillAddIsnuranceForm(data: IInsuranceClassData) {
+		this.f.className?.patchValue(data.className!);
+		this.f.classNameAr?.patchValue(data.classNameAr!);
+		this.f.abbreviation?.patchValue(data.abbreviation!);
+	}
 
-  submitInsuranceData(form: FormGroup) {
-    this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IInsuranceClassData = {
-      sNo: this.uiState.editInsuranceMode
-        ? this.uiState.editInsuranceData.sNo
-        : 0,
-      className: formData.className,
-      classNameAr: formData.classNameAr,
-      abbreviation: formData.abbreviation,
-    };
-    if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.InsuranceClassesService.saveInsuranceClass(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        this.InsuranceModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetInsuranceForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	fillEditInsuranceForm(data: IInsuranceClassData) {
+		this.f.className?.patchValue(data.className!);
+		this.f.classNameAr?.patchValue(data.classNameAr!);
+		this.f.abbreviation?.patchValue(data.abbreviation!);
+		this.f.className?.disable();
+		this.f.classNameAr?.disable();
+	}
 
-  resetInsuranceForm() {
-    this.InsuranceForm.reset();
-    this.f.className?.enable();
-    this.f.classNameAr?.enable();
-  }
+	validationChecker(): boolean {
+		if (this.InsuranceForm.invalid) {
+			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+			return false;
+		}
+		return true;
+	}
 
-  DeleteInsurance(id: string, ClassName: string) {
-    let sub = this.InsuranceClassesService.DeleteInsurance(
-      id,
-      ClassName
-    ).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	submitInsuranceData(form: FormGroup) {
+		this.uiState.submitted = true;
+		const formData = form.getRawValue();
+		const data: IInsuranceClassData = {
+			sNo: this.uiState.editInsuranceMode ? this.uiState.editInsuranceData.sNo : 0,
+			className: formData.className,
+			classNameAr: formData.classNameAr,
+			abbreviation: formData.abbreviation,
+		};
+		if (!this.validationChecker()) return;
+		this.eventService.broadcast(reserved.isLoading, true);
+		let sub = this.InsuranceClassesService.saveInsuranceClass(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+			if (res.body?.status) {
+				this.InsuranceModal.dismiss();
+				this.uiState.submitted = false;
+				this.resetInsuranceForm();
+				this.gridApi.setDatasource(this.dataSource);
+				this.message.toast(res.body?.message!, "success");
+			} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  ngOnDestroy(): void {
-    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-  }
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
+		this.subscribes.push(sub);
+	}
+
+	resetInsuranceForm() {
+		this.InsuranceForm.reset();
+		this.f.className?.enable();
+		this.f.classNameAr?.enable();
+	}
+
+	DeleteInsurance(id: string, ClassName: string) {
+		let sub = this.InsuranceClassesService.DeleteInsurance(id, ClassName).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
+		this.subscribes.push(sub);
+	}
+
+	ngOnDestroy(): void {
+		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }

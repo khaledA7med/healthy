@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormGroup, AbstractControl, FormArray, FormControl, Validators } from "@angular/forms";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { Observable, Subscription } from "rxjs";
@@ -215,14 +215,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 	getQuotingReq(data: IRequirementRequest) {
 		let check = this.checkCompanyExist(this.f?.quotingRequirementsList?.value, data.companyName!);
 		if (!check) {
-			let sub = this.businessDevService.quotRequirements(data).subscribe(
-				(res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-					res.body?.data?.map((c) => this.createReqFormArr("quoting", c));
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Sorry!", err.message!, "warning");
-				}
-			);
+			let sub = this.businessDevService.quotRequirements(data).subscribe((res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
+				if (res.body?.status) res.body?.data?.map((c) => this.createReqFormArr("quoting", c));
+				else this.message.popup("Sorry!", res.body?.message!, "warning");
+			});
 			this.subscribes.push(sub);
 		} else {
 			this.message.popup("Sorry!", "Company is already exist");
@@ -232,14 +228,10 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 	getPolicyReq(data: IRequirementRequest) {
 		let check = this.checkCompanyExist(this.f?.policyRequiermentsList?.value, data.companyName!);
 		if (!check) {
-			let sub = this.businessDevService.policyRequirements(data).subscribe(
-				(res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
-					res.body?.data?.map((c) => this.createReqFormArr("policy", c));
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Sorry!", err.message!, "warning");
-				}
-			);
+			let sub = this.businessDevService.policyRequirements(data).subscribe((res: HttpResponse<IBaseResponse<IRequirement[]>>) => {
+				if (res.body?.status) res.body?.data?.map((c) => this.createReqFormArr("policy", c));
+				else this.message.popup("Sorry!", res.body?.message!, "warning");
+			});
 			this.subscribes.push(sub);
 		} else {
 			this.message.popup("Sorry!", "Company is already exist");
@@ -373,21 +365,15 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 	// #region edit
 	getSalesLead(id: string) {
 		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.businessDevService.getSalesLeadById(id).subscribe(
-			(res: HttpResponse<IBaseResponse<ISalesLeadDetails>>) => {
-				if (res.body?.status) {
-					this.eventService.broadcast(reserved.isLoading, false);
-					this.patchValuesWhenEdit(res.body?.data!);
-				} else {
-					this.eventService.broadcast(reserved.isLoading, false);
-					this.message.popup("Sorry!", res.body?.message!, "error");
-				}
-			},
-			(err: HttpErrorResponse) => {
+		let sub = this.businessDevService.getSalesLeadById(id).subscribe((res: HttpResponse<IBaseResponse<ISalesLeadDetails>>) => {
+			if (res.body?.status) {
 				this.eventService.broadcast(reserved.isLoading, false);
-				this.message.popup("Error", err.message!, "error");
+				this.patchValuesWhenEdit(res.body?.data!);
+			} else {
+				this.eventService.broadcast(reserved.isLoading, false);
+				this.message.popup("Sorry!", res.body?.message!, "error");
 			}
-		);
+		});
 		this.subscribes.push(sub);
 	}
 

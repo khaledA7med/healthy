@@ -5,7 +5,7 @@ import { FormGroup, Validators, FormControl } from "@angular/forms";
 import { groupClientsCols } from "src/app/shared/app/grid/clinetGroupsCols";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { Subscription } from "rxjs";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { IClientGroups } from "src/app/shared/app/models/Clients/iclientgroups";
@@ -86,18 +86,14 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		getRows: (params: IGetRowsParams) => {
 			if (this.group) {
 				this.gridApi.showLoadingOverlay();
-				let sub = this.groupService.getGroupClients(this.group?.groupName!).subscribe(
-					(res: HttpResponse<IBaseResponse<IClient[]>>) => {
+				let sub = this.groupService.getGroupClients(this.group?.groupName!).subscribe((res: HttpResponse<IBaseResponse<IClient[]>>) => {
+					if (res.body?.status) {
 						this.uiState.group.list = res.body?.data!;
 						params.successCallback(this.uiState.group.list, this.uiState.group.list.length);
 						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
-					},
-					(err: HttpErrorResponse) => {
-						this.message.popup("Oops!", err.message, "error");
-						this.gridApi.hideOverlay();
-					}
-				);
+					} else this.message.popup("Oops!", res.body?.message!, "error");
+					this.gridApi.hideOverlay();
+				});
 				this.subscribes.push(sub);
 			}
 		},

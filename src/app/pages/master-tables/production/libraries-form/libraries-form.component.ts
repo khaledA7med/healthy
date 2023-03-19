@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
@@ -74,22 +74,17 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 				insurClass: this.f.class?.value!,
 				lineOfBusiness: this.f.lineOfBusiness?.value!,
 			};
-			let sub = this.productionService.getAllItems(this.searchURI, data).subscribe(
-				(res: HttpResponse<IBaseResponse<ILibrariesFilter[]>>) => {
-					if (res.body?.status) {
-						this.uiState.lists.itemsList = res.body?.data!;
-						params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
-						if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
+			let sub = this.productionService.getAllItems(this.searchURI, data).subscribe((res: HttpResponse<IBaseResponse<ILibrariesFilter[]>>) => {
+				if (res.body?.status) {
+					this.uiState.lists.itemsList = res.body?.data!;
+					params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
+					if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -157,39 +152,27 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 	}
 
 	getEditItemData(id: string) {
-		let sub = this.productionService.editItem(this.editURI, id).subscribe(
-			(res: IBaseResponse<ILibrariesReq>) => {
-				if (res?.status) {
-					this.uiState.editMode = true;
-					this.uiState.editItemData = res.data!;
-					this.editFormGroup.patchValue({
-						...this.uiState.editItemData,
-						defaultTick: this.uiState.editItemData.defaultTick === 1 ? true : false,
-					});
-
-					console.log(this.editFormGroup.getRawValue());
-					this.openEditItemDialoge();
-				} else this.message.toast(res.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.productionService.editItem(this.editURI, id).subscribe((res: IBaseResponse<ILibrariesReq>) => {
+			if (res?.status) {
+				this.uiState.editMode = true;
+				this.uiState.editItemData = res.data!;
+				this.editFormGroup.patchValue({
+					...this.uiState.editItemData,
+					defaultTick: this.uiState.editItemData.defaultTick === 1 ? true : false,
+				});
+				this.openEditItemDialoge();
+			} else this.message.toast(res.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
 	deleteItem(id: string) {
-		let sub = this.productionService.deleteItem(this.deleteURI, id).subscribe(
-			(res: IBaseResponse<any>) => {
-				if (res?.status) {
-					this.gridApi.setDatasource(this.dataSource);
-					this.message.toast(res.message!, "success");
-				} else this.message.toast(res.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.productionService.deleteItem(this.deleteURI, id).subscribe((res: IBaseResponse<any>) => {
+			if (res?.status) {
+				this.gridApi.setDatasource(this.dataSource);
+				this.message.toast(res.message!, "success");
+			} else this.message.toast(res.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 

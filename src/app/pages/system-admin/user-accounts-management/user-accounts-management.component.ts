@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Router } from "@angular/router";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
@@ -85,11 +84,9 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private systemAdminService: SystemAdminService,
-		private tableRef: ElementRef,
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
-		private appUtils: AppUtils,
 		private eventService: EventService,
 		private modalService: NgbModal
 	) {}
@@ -103,19 +100,16 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.systemAdminService.getAllAdmins(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<ISystemAdmin[]>>) => {
+			let sub = this.systemAdminService.getAllAdmins(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<ISystemAdmin[]>>) => {
+				if (res.body?.status) {
 					this.uiState.admins.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
 					this.uiState.admins.list = res.body?.data!;
 					params.successCallback(this.uiState.admins.list, this.uiState.admins.totalPages);
-					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -198,16 +192,11 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	//#endregion
 
 	ResetPassword(id: any) {
-		let sub = this.systemAdminService.getResetPassword(id).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.gridApi.setDatasource(this.dataSource);
-				if (res.body?.status) this.message.toast(res.body!.message!, "success");
-				else this.message.toast(res.body!.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.systemAdminService.getResetPassword(id).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -227,16 +216,11 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 				dataSubmit.status = status;
 				break;
 		}
-		let sub = this.systemAdminService.changeStatus(dataSubmit).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.gridApi.setDatasource(this.dataSource);
-				if (res.body?.status) this.message.toast(res.body!.message!, "success");
-				else this.message.toast(res.body!.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.systemAdminService.changeStatus(dataSubmit).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -280,18 +264,14 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		});
 		if (id) {
 			this.eventService.broadcast(reserved.isLoading, true);
-			let sub = this.systemAdminService.getEditUserData(id).subscribe(
-				(res: HttpResponse<IBaseResponse<UserModelData>>) => {
+			let sub = this.systemAdminService.getEditUserData(id).subscribe((res: HttpResponse<IBaseResponse<UserModelData>>) => {
+				if (res.body?.status) {
 					this.uiState.editUserMode = true;
 					this.uiState.editUserData = res.body?.data!;
 					this.fillEditUserForm(res.body?.data!);
-					this.eventService.broadcast(reserved.isLoading, false);
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-					this.eventService.broadcast(reserved.isLoading, false);
-				}
-			);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
 			this.subscribes.push(sub);
 		}
 
@@ -330,14 +310,10 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 
 	getUserDetails(sno: number) {
-		let sub = this.systemAdminService.getUserDetails(sno).subscribe(
-			(res: HttpResponse<IBaseResponse<UserDetails>>) => {
-				this.fillAddUserForm(res.body?.data!);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.systemAdminService.getUserDetails(sno).subscribe((res: HttpResponse<IBaseResponse<UserDetails>>) => {
+			if (res.body?.status) this.fillAddUserForm(res.body?.data!);
+			else this.message.popup("Oops!", res.body?.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -388,20 +364,16 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		};
 		if (!this.validationChecker()) return;
 		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.systemAdminService.saveUser(data).subscribe(
-			(res: HttpResponse<IBaseResponse<number>>) => {
+		let sub = this.systemAdminService.saveUser(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+			if (res.body?.status) {
 				this.userModal.dismiss();
-				this.eventService.broadcast(reserved.isLoading, false);
 				this.uiState.submitted = false;
 				this.resetUserForm();
 				this.gridApi.setDatasource(this.dataSource);
 				this.message.toast(res.body?.message!, "success");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.error.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
-			}
-		);
+			} else this.message.popup("Oops!", res.body?.message!, "error");
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 	}
 

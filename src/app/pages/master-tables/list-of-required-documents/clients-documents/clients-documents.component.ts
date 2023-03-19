@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
@@ -60,22 +60,16 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.listOfDocumentsService.getClientsDocuments().subscribe(
-				(res: HttpResponse<IBaseResponse<IClientDocumentFilter[]>>) => {
-					if (res.body?.status) {
-						this.uiState.lists.itemsList = res.body?.data!;
-						params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
-						if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.uiState.gridReady = true;
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
+			let sub = this.listOfDocumentsService.getClientsDocuments().subscribe((res: HttpResponse<IBaseResponse<IClientDocumentFilter[]>>) => {
+				if (res.body?.status) {
+					this.uiState.lists.itemsList = res.body?.data!;
+					params.successCallback(this.uiState.lists.itemsList, this.uiState.lists.itemsList.length);
+					if (this.uiState.lists.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -125,39 +119,27 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
 	}
 
 	getEditItemData(id: string) {
-		let sub = this.listOfDocumentsService.editClientsDocuments(id).subscribe(
-			(res: IBaseResponse<IClientDocumentReq>) => {
-				if (res?.status) {
-					this.uiState.editMode = true;
-					this.uiState.editItemData = res.data!;
-					this.formGroup.patchValue({
-						sNo: this.uiState.editItemData.sNo!,
-						docName: this.uiState.editItemData.docName!,
-					});
-
-					console.log(this.formGroup.getRawValue());
-					this.openformDialoge();
-				} else this.message.toast(res.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.listOfDocumentsService.editClientsDocuments(id).subscribe((res: IBaseResponse<IClientDocumentReq>) => {
+			if (res?.status) {
+				this.uiState.editMode = true;
+				this.uiState.editItemData = res.data!;
+				this.formGroup.patchValue({
+					sNo: this.uiState.editItemData.sNo!,
+					docName: this.uiState.editItemData.docName!,
+				});
+				this.openformDialoge();
+			} else this.message.toast(res.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
 	deleteItem(id: string) {
-		let sub = this.listOfDocumentsService.deleteClientsDocuments(id).subscribe(
-			(res: IBaseResponse<any>) => {
-				if (res?.status) {
-					this.gridApi.setDatasource(this.dataSource);
-					this.message.toast(res.message!, "success");
-				} else this.message.toast(res.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.listOfDocumentsService.deleteClientsDocuments(id).subscribe((res: IBaseResponse<any>) => {
+			if (res?.status) {
+				this.gridApi.setDatasource(this.dataSource);
+				this.message.toast(res.message!, "success");
+			} else this.message.toast(res.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 

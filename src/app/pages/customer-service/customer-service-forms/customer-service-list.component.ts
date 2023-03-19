@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 import { Subscription } from "rxjs";
@@ -65,23 +65,17 @@ export class CustomerServiceListComponent implements OnDestroy, OnInit {
 				policyNo: this.filter.policyNo !== null ? this.filter.policyNo : "",
 				insuranceCompName: this.filter.insuranceCompName !== null ? this.filter.insuranceCompName : "",
 			};
-			let sub = this.customerService.searchPolicy(dataTOSubmit).subscribe(
-				(res: HttpResponse<IBaseResponse<CSPolicyData[]>>) => {
-					if (res.status) {
-						this.uiState.policies = res.body?.data!;
-						params.successCallback(this.uiState.policies, this.uiState.policies.length);
-						if (this.uiState.policies.length === 0) this.gridApi.showNoRowsOverlay();
-						else this.gridApi.hideOverlay();
-					} else {
-						this.message.popup("Oops!", res.body?.message!, "warning");
-						this.gridApi.hideOverlay();
-					}
-				},
-				(err: HttpErrorResponse) => {
+			let sub = this.customerService.searchPolicy(dataTOSubmit).subscribe((res: HttpResponse<IBaseResponse<CSPolicyData[]>>) => {
+				if (res.body?.status) {
+					this.uiState.policies = res.body?.data!;
+					params.successCallback(this.uiState.policies, this.uiState.policies.length);
+					if (this.uiState.policies.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "warning");
 					this.gridApi.hideOverlay();
-					this.message.popup("Oops!", err.message, "error");
 				}
-			);
+			});
 			this.subscribes.push(sub);
 		},
 	};

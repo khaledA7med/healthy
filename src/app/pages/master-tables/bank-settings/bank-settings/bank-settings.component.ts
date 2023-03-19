@@ -1,22 +1,6 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import
-{
-  Component,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
-import
-{
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-} from "ag-grid-community";
+import { HttpResponse } from "@angular/common/http";
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from "rxjs";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -29,240 +13,187 @@ import { BankSettingsService } from "src/app/shared/services/master-tables/bank-
 import { IBankSettings, IBankSettingsData } from "src/app/shared/app/models/MasterTables/i-bank-settings";
 
 @Component({
-  selector: 'app-bank-settings',
-  templateUrl: './bank-settings.component.html',
-  styleUrls: [ './bank-settings.component.scss' ],
-  encapsulation: ViewEncapsulation.None,
+	selector: "app-bank-settings",
+	templateUrl: "./bank-settings.component.html",
+	styleUrls: ["./bank-settings.component.scss"],
+	encapsulation: ViewEncapsulation.None,
 })
-export class BankSettingsComponent implements OnInit
-{
+export class BankSettingsComponent implements OnInit {
+	BankSettingsFormSubmitted = false as boolean;
+	BankSettingsModal!: NgbModalRef;
+	BankSettingsForm!: FormGroup<IBankSettings>;
+	@ViewChild("BankSettingsContent") BankSettingsContent!: TemplateRef<any>;
 
-  BankSettingsFormSubmitted = false as boolean;
-  BankSettingsModal!: NgbModalRef;
-  BankSettingsForm!: FormGroup<IBankSettings>;
-  @ViewChild("BankSettingsContent") BankSettingsContent!: TemplateRef<any>;
+	uiState = {
+		gridReady: false,
+		submitted: false,
+		list: [] as IBankSettings[],
+		totalPages: 0,
+		editBankSettingsMode: false as Boolean,
+		editBankSettingsData: {} as IBankSettingsData,
+	};
 
-  uiState = {
-    gridReady: false,
-    submitted: false,
-    list: [] as IBankSettings[],
-    totalPages: 0,
-    editBankSettingsMode: false as Boolean,
-    editBankSettingsData: {} as IBankSettingsData,
-  };
+	subscribes: Subscription[] = [];
 
-  subscribes: Subscription[] = [];
+	gridApi: GridApi = <GridApi>{};
+	gridOpts: GridOptions = {
+		rowModelType: "infinite",
+		editType: "fullRow",
+		animateRows: true,
+		columnDefs: bankSettingsCols,
+		suppressCsvExport: true,
+		context: { comp: this },
+		defaultColDef: {
+			flex: 1,
+			minWidth: 100,
+			sortable: true,
+			resizable: true,
+		},
+		onGridReady: (e) => this.onGridReady(e),
+		onCellClicked: (e) => this.onCellClicked(e),
+	};
 
-  gridApi: GridApi = <GridApi> {};
-  gridOpts: GridOptions = {
-    rowModelType: "infinite",
-    editType: "fullRow",
-    animateRows: true,
-    columnDefs: bankSettingsCols,
-    suppressCsvExport: true,
-    context: { comp: this },
-    defaultColDef: {
-      flex: 1,
-      minWidth: 100,
-      sortable: true,
-      resizable: true,
-    },
-    onGridReady: (e) => this.onGridReady(e),
-    onCellClicked: (e) => this.onCellClicked(e),
-  };
+	constructor(
+		private BankSettingsService: BankSettingsService,
+		private message: MessagesService,
+		private eventService: EventService,
+		private modalService: NgbModal
+	) {}
 
-  constructor (
-    private BankSettingsService: BankSettingsService,
-    private message: MessagesService,
-    private eventService: EventService,
-    private modalService: NgbModal
-  ) { }
+	ngOnInit(): void {
+		this.initBankSettingsForm();
+	}
 
-  ngOnInit (): void
-  {
-    this.initBankSettingsForm();
-  }
+	dataSource: IDatasource = {
+		getRows: (params: IGetRowsParams) => {
+			this.gridApi.showLoadingOverlay();
+			let sub = this.BankSettingsService.getBankSettings().subscribe((res: HttpResponse<IBaseResponse<IBankSettings[]>>) => {
+				if (res.body?.status) {
+					this.uiState.list = res.body?.data!;
+					params.successCallback(this.uiState.list, this.uiState.list.length);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
+			this.subscribes.push(sub);
+		},
+	};
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
-      this.gridApi.showLoadingOverlay();
-      let sub = this.BankSettingsService.getBankSettings().subscribe(
-        (res: HttpResponse<IBaseResponse<IBankSettings[]>>) =>
-        {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-        }
-      );
-      this.subscribes.push(sub);
-    },
-  };
+	onCellClicked(params: CellEvent) {
+		if (params.column.getColId() == "action") {
+			params.api.getCellRendererInstances({
+				rowNodes: [params.node],
+				columns: [params.column],
+			});
+		}
+	}
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
-      params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
-      });
-    }
-  }
+	onPageSizeChange() {
+		this.gridApi.showLoadingOverlay();
+		this.gridApi.setDatasource(this.dataSource);
+	}
 
-  onPageSizeChange ()
-  {
-    this.gridApi.showLoadingOverlay();
-    this.gridApi.setDatasource(this.dataSource);
-  }
+	onGridReady(param: GridReadyEvent) {
+		this.gridApi = param.api;
+		this.gridApi.setDatasource(this.dataSource);
+		this.gridApi.sizeColumnsToFit();
+	}
 
-  onGridReady (param: GridReadyEvent)
-  {
-    this.gridApi = param.api;
-    this.gridApi.setDatasource(this.dataSource);
-    this.gridApi.sizeColumnsToFit();
-  }
+	openBankSettingsDialoge(id?: string) {
+		this.resetBankSettingsForm();
+		this.BankSettingsModal = this.modalService.open(this.BankSettingsContent, {
+			ariaLabelledBy: "modal-basic-title",
+			centered: true,
+			backdrop: "static",
+			size: "md",
+		});
+		if (id) {
+			this.eventService.broadcast(reserved.isLoading, true);
+			let sub = this.BankSettingsService.getEditBankSettings(id).subscribe((res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
+				if (res.body?.status) {
+					this.uiState.editBankSettingsMode = true;
+					this.uiState.editBankSettingsData = res.body?.data!;
+					this.fillAddBankSettingsForm(res.body?.data!);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub);
+		}
 
-  openBankSettingsDialoge (id?: string)
-  {
-    this.resetBankSettingsForm();
-    this.BankSettingsModal = this.modalService.open(this.BankSettingsContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "md",
-    });
-    if (id)
-    {
-      this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.BankSettingsService.getEditBankSettings(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IBankSettingsData>>) =>
-        {
-          this.uiState.editBankSettingsMode = true;
-          this.uiState.editBankSettingsData = res.body?.data!;
-          this.fillAddBankSettingsForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
-        }
-      );
-      this.subscribes.push(sub);
-    }
+		this.BankSettingsModal.hidden.subscribe(() => {
+			this.resetBankSettingsForm();
+			this.BankSettingsFormSubmitted = false;
+			this.uiState.editBankSettingsMode = false;
+		});
+	}
 
-    this.BankSettingsModal.hidden.subscribe(() =>
-    {
-      this.resetBankSettingsForm();
-      this.BankSettingsFormSubmitted = false;
-      this.uiState.editBankSettingsMode = false;
-    });
-  }
+	initBankSettingsForm() {
+		this.BankSettingsForm = new FormGroup<IBankSettings>({
+			sNo: new FormControl(null),
+			bankName: new FormControl(null, Validators.required),
+			swift: new FormControl(null, Validators.required),
+		});
+	}
 
+	get f() {
+		return this.BankSettingsForm.controls;
+	}
 
-  initBankSettingsForm ()
-  {
-    this.BankSettingsForm = new FormGroup<IBankSettings>({
-      sNo: new FormControl(null),
-      bankName: new FormControl(null, Validators.required),
-      swift: new FormControl(null, Validators.required),
-    });
-  }
+	fillAddBankSettingsForm(data: IBankSettingsData) {
+		this.f.bankName?.patchValue(data.bankName!);
+		this.f.swift?.patchValue(data.swift!);
+	}
 
-  get f ()
-  {
-    return this.BankSettingsForm.controls;
-  }
+	fillEditBankSettingsForm(data: IBankSettingsData) {
+		this.f.bankName?.patchValue(data.bankName!);
+		this.f.swift?.patchValue(data.swift!);
+	}
 
-  fillAddBankSettingsForm (data: IBankSettingsData)
-  {
-    this.f.bankName?.patchValue(data.bankName!);
-    this.f.swift?.patchValue(data.swift!);
-  }
+	validationChecker(): boolean {
+		if (this.BankSettingsForm.invalid) {
+			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+			return false;
+		}
+		return true;
+	}
 
-  fillEditBankSettingsForm (data: IBankSettingsData)
-  {
-    this.f.bankName?.patchValue(data.bankName!);
-    this.f.swift?.patchValue(data.swift!);
-  }
+	submitBankSettingsData(form: FormGroup) {
+		this.uiState.submitted = true;
+		const formData = form.getRawValue();
+		const data: IBankSettingsData = {
+			sNo: this.uiState.editBankSettingsMode ? this.uiState.editBankSettingsData.sNo : 0,
+			bankName: formData.bankName,
+			swift: formData.swift,
+		};
+		if (!this.validationChecker()) return;
+		this.eventService.broadcast(reserved.isLoading, true);
+		let sub = this.BankSettingsService.saveBankSettings(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+			if (res.body?.status) {
+				this.BankSettingsModal.dismiss();
+				this.eventService.broadcast(reserved.isLoading, false);
+				this.uiState.submitted = false;
+				this.resetBankSettingsForm();
+				this.gridApi.setDatasource(this.dataSource);
+				this.message.toast(res.body?.message!, "success");
+			} else this.message.popup("Oops!", res.body?.message!, "error");
+		});
+		this.subscribes.push(sub);
+	}
 
-  validationChecker (): boolean
-  {
-    if (this.BankSettingsForm.invalid)
-    {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
-      return false;
-    }
-    return true;
-  }
+	resetBankSettingsForm() {
+		this.BankSettingsForm.reset();
+	}
 
-  submitBankSettingsData (form: FormGroup)
-  {
-    this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IBankSettingsData = {
-      sNo: this.uiState.editBankSettingsMode
-        ? this.uiState.editBankSettingsData.sNo
-        : 0,
-      bankName: formData.bankName,
-      swift: formData.swift,
-    };
-    if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.BankSettingsService.saveBankSettings(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.BankSettingsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetBankSettingsForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	DeleteBankSettings(id: string) {
+		let sub = this.BankSettingsService.DeleteBankSettings(id).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
+		this.subscribes.push(sub);
+	}
 
-  resetBankSettingsForm ()
-  {
-    this.BankSettingsForm.reset();
-  }
-
-  DeleteBankSettings (id: string)
-  {
-    let sub = this.BankSettingsService.DeleteBankSettings(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
-  }
-
-  ngOnDestroy (): void
-  {
-    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-  }
-
+	ngOnDestroy(): void {
+		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }

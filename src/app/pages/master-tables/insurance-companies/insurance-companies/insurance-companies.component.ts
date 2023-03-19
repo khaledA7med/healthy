@@ -1,40 +1,14 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { HttpResponse } from "@angular/common/http";
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import {
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-} from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from "rxjs";
-import {
-  Caching,
-  IBaseMasterTable,
-  IGenericResponseType,
-} from "src/app/core/models/masterTableModels";
+import { Caching, IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { insuranceCompaniesCols } from "src/app/shared/app/grid/insuranceCompaniesCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import {
-  IInsuranceCompanies,
-  IInsuranceCompaniesData,
-} from "src/app/shared/app/models/MasterTables/insurance-companies/i-insurance-companies";
+import { IInsuranceCompanies, IInsuranceCompaniesData } from "src/app/shared/app/models/MasterTables/insurance-companies/i-insurance-companies";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { InsuranceCompaniesService } from "src/app/shared/services/master-tables/insurance-companies.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -45,351 +19,329 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { IProductsList } from "src/app/shared/app/models/MasterTables/insurance-companies/i-products-list";
 
 @Component({
-  selector: "app-insurance-companies",
-  templateUrl: "./insurance-companies.component.html",
-  styleUrls: ["./insurance-companies.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+	selector: "app-insurance-companies",
+	templateUrl: "./insurance-companies.component.html",
+	styleUrls: ["./insurance-companies.component.scss"],
+	encapsulation: ViewEncapsulation.None,
 })
 export class InsuranceCompaniesComponent implements OnInit {
-  lookupData!: Observable<IBaseMasterTable>;
-  subscribes: Subscription[] = [];
-  lineOfBussArr: IGenericResponseType[] = [];
-  InsuranceFormSubmitted = false as boolean;
-  InsuranceModal!: NgbModalRef;
-  InsuranceForm!: FormGroup<IInsuranceCompanies>;
+	lookupData!: Observable<IBaseMasterTable>;
+	subscribes: Subscription[] = [];
+	lineOfBussArr: IGenericResponseType[] = [];
+	InsuranceFormSubmitted = false as boolean;
+	InsuranceModal!: NgbModalRef;
+	InsuranceForm!: FormGroup<IInsuranceCompanies>;
 
-  @ViewChild("insuranceContent") insuranceContent!: ElementRef;
+	@ViewChild("insuranceContent") insuranceContent!: ElementRef;
 
-  uiState = {
-    gridReady: false,
-    submitted: false,
-    list: [] as IInsuranceCompanies[],
-    totalPages: 0,
-    editInsuranceMode: false as Boolean,
-    editInsuranceData: {} as IInsuranceCompaniesData,
-  };
+	uiState = {
+		gridReady: false,
+		submitted: false,
+		list: [] as IInsuranceCompanies[],
+		totalPages: 0,
+		editInsuranceMode: false as Boolean,
+		editInsuranceData: {} as IInsuranceCompaniesData,
+	};
 
-  gridApi: GridApi = <GridApi>{};
-  gridOpts: GridOptions = {
-    rowModelType: "infinite",
-    editType: "fullRow",
-    animateRows: true,
-    columnDefs: insuranceCompaniesCols,
-    suppressCsvExport: true,
-    context: { comp: this },
-    defaultColDef: {
-      flex: 1,
-      minWidth: 100,
-      sortable: true,
-      resizable: true,
-    },
-    onGridReady: (e) => this.onGridReady(e),
-    onCellClicked: (e) => this.onCellClicked(e),
-  };
+	gridApi: GridApi = <GridApi>{};
+	gridOpts: GridOptions = {
+		rowModelType: "infinite",
+		editType: "fullRow",
+		animateRows: true,
+		columnDefs: insuranceCompaniesCols,
+		suppressCsvExport: true,
+		context: { comp: this },
+		defaultColDef: {
+			flex: 1,
+			minWidth: 100,
+			sortable: true,
+			resizable: true,
+		},
+		onGridReady: (e) => this.onGridReady(e),
+		onCellClicked: (e) => this.onCellClicked(e),
+	};
 
-  constructor(
-    private masterService: MasterMethodsService,
-    private message: MessagesService,
-    private InsuranceCompaniesService: InsuranceCompaniesService,
-    private eventService: EventService,
-    private modalService: NgbModal,
-    private table: MasterTableService
-  ) {}
+	constructor(
+		private masterService: MasterMethodsService,
+		private message: MessagesService,
+		private InsuranceCompaniesService: InsuranceCompaniesService,
+		private eventService: EventService,
+		private modalService: NgbModal,
+		private table: MasterTableService
+	) {}
 
-  ngOnInit(): void {
-    this.initInsuranceForm();
-    this.getLookupData();
-  }
-  getLookupData() {
-    this.lookupData = this.table.getBaseData(MODULES.InsuranceCompanies);
-  }
+	ngOnInit(): void {
+		this.initInsuranceForm();
+		this.getLookupData();
+	}
+	getLookupData() {
+		this.lookupData = this.table.getBaseData(MODULES.InsuranceCompanies);
+	}
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      this.gridApi.showLoadingOverlay();
-      let sub =
-        this.InsuranceCompaniesService.getInsuranceCompanies().subscribe(
-          (res: HttpResponse<IBaseResponse<IInsuranceCompanies[]>>) => {
-            this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
-            this.gridApi.hideOverlay();
-          },
-          (err: HttpErrorResponse) => {
-            this.message.popup("Oops!", err.message, "error");
-          }
-        );
-      this.subscribes.push(sub);
-    },
-  };
+	dataSource: IDatasource = {
+		getRows: (params: IGetRowsParams) => {
+			this.gridApi.showLoadingOverlay();
+			let sub = this.InsuranceCompaniesService.getInsuranceCompanies().subscribe((res: HttpResponse<IBaseResponse<IInsuranceCompanies[]>>) => {
+				if (res.body?.status) {
+					this.uiState.list = res.body?.data!;
+					params.successCallback(this.uiState.list, this.uiState.list.length);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  onCellClicked(params: CellEvent) {
-    if (params.column.getColId() == "action") {
-      params.api.getCellRendererInstances({
-        rowNodes: [params.node],
-        columns: [params.column],
-      });
-    }
-  }
+				this.uiState.gridReady = true;
+				this.gridApi.hideOverlay();
+			});
+			this.subscribes.push(sub);
+		},
+	};
 
-  onPageSizeChange() {
-    this.gridApi.showLoadingOverlay();
-    this.gridApi.setDatasource(this.dataSource);
-  }
+	onCellClicked(params: CellEvent) {
+		if (params.column.getColId() == "action") {
+			params.api.getCellRendererInstances({
+				rowNodes: [params.node],
+				columns: [params.column],
+			});
+		}
+	}
 
-  onGridReady(param: GridReadyEvent) {
-    this.gridApi = param.api;
-    this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
-  }
+	onPageSizeChange() {
+		this.gridApi.showLoadingOverlay();
+		this.gridApi.setDatasource(this.dataSource);
+	}
 
-  getLineOfBusiness(className: string) {
-    let sub = this.masterService.getLineOfBusiness(className).subscribe(
-      (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
-        this.lineOfBussArr = res.body?.data?.content!;
-      },
-      (err) => {
-        this.message.popup("Sorry!", err.message!, "warning");
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	onGridReady(param: GridReadyEvent) {
+		this.gridApi = param.api;
+		this.gridApi.setDatasource(this.dataSource);
+		// this.gridApi.sizeColumnsToFit();
+	}
 
-  openInsuranceDialoge(id?: string) {
-    this.resetInsuranceForm();
-    this.InsuranceModal = this.modalService.open(this.insuranceContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "xl",
-    });
-    if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.InsuranceCompaniesService.getEditInsuranceData(
-        id
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceCompaniesData>>) => {
-          this.uiState.editInsuranceMode = true;
-          this.uiState.editInsuranceData = res.body?.data!;
-          this.fillEditInsuranceForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
-        }
-      );
-      this.subscribes.push(sub);
-    }
+	getLineOfBusiness(className: string) {
+		let sub = this.masterService.getLineOfBusiness(className).subscribe(
+			(res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
+				this.lineOfBussArr = res.body?.data?.content!;
+			},
+			(err) => {
+				this.message.popup("Sorry!", err.message!, "warning");
+			}
+		);
+		this.subscribes.push(sub);
+	}
 
-    this.InsuranceModal.hidden.subscribe(() => {
-      this.resetInsuranceForm();
-      this.InsuranceFormSubmitted = false;
-      this.uiState.editInsuranceMode = false;
-    });
-  }
+	openInsuranceDialoge(id?: string) {
+		this.resetInsuranceForm();
+		this.InsuranceModal = this.modalService.open(this.insuranceContent, {
+			ariaLabelledBy: "modal-basic-title",
+			centered: true,
+			backdrop: "static",
+			size: "xl",
+		});
+		if (id) {
+			this.eventService.broadcast(reserved.isLoading, true);
+			let sub = this.InsuranceCompaniesService.getEditInsuranceData(id).subscribe((res: HttpResponse<IBaseResponse<IInsuranceCompaniesData>>) => {
+				if (res.body?.status) {
+					this.uiState.editInsuranceMode = true;
+					this.uiState.editInsuranceData = res.body?.data!;
+					this.fillEditInsuranceForm(res.body?.data!);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  initInsuranceForm() {
-    this.InsuranceForm = new FormGroup<IInsuranceCompanies>({
-      sNo: new FormControl(null),
-      companyName: new FormControl(null, Validators.required),
-      companyNameAr: new FormControl(null),
-      abbreviation: new FormControl(null, Validators.required),
-      vatNo: new FormControl(null, Validators.required),
-      crNo: new FormControl(null, Validators.required),
-      tele1: new FormControl(null),
-      fax: new FormControl(null),
-      unifiedNo: new FormControl(null),
-      email: new FormControl(null, Validators.email),
-      address: new FormControl(null),
-      otherDetails: new FormControl(null),
-      productsList: new FormArray<FormGroup<IProductsList>>([]),
-      contactList: new FormArray<FormGroup<IContactList>>([]),
-    });
-  }
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub);
+		}
 
-  //#get edit form controls
-  get f() {
-    return this.InsuranceForm.controls;
-  }
+		this.InsuranceModal.hidden.subscribe(() => {
+			this.resetInsuranceForm();
+			this.InsuranceFormSubmitted = false;
+			this.uiState.editInsuranceMode = false;
+		});
+	}
 
-  //#products List Array
-  get productsListArray(): FormArray {
-    return this.InsuranceForm.get("productsList") as FormArray;
-  }
+	initInsuranceForm() {
+		this.InsuranceForm = new FormGroup<IInsuranceCompanies>({
+			sNo: new FormControl(null),
+			companyName: new FormControl(null, Validators.required),
+			companyNameAr: new FormControl(null),
+			abbreviation: new FormControl(null, Validators.required),
+			vatNo: new FormControl(null, Validators.required),
+			crNo: new FormControl(null, Validators.required),
+			tele1: new FormControl(null),
+			fax: new FormControl(null),
+			unifiedNo: new FormControl(null),
+			email: new FormControl(null, Validators.email),
+			address: new FormControl(null),
+			otherDetails: new FormControl(null),
+			productsList: new FormArray<FormGroup<IProductsList>>([]),
+			contactList: new FormArray<FormGroup<IContactList>>([]),
+		});
+	}
 
-  //get products List Controls
-  productsLisControls(i: number, control: string): AbstractControl {
-    return this.productsListArray.controls[i].get(control)!;
-  }
-  //#contact List Array
-  get contactListArray(): FormArray {
-    return this.InsuranceForm.get("contactList") as FormArray;
-  }
+	//#get edit form controls
+	get f() {
+		return this.InsuranceForm.controls;
+	}
 
-  //get contact List Controls
-  contactListControls(i: number, control: string): AbstractControl {
-    return this.contactListArray.controls[i].get(control)!;
-  }
+	//#products List Array
+	get productsListArray(): FormArray {
+		return this.InsuranceForm.get("productsList") as FormArray;
+	}
 
-  addProduct(data?: IProductsList) {
-    if (this.f.productsList?.invalid) {
-      this.f.productsList?.markAllAsTouched();
-      return;
-    }
-    let product = new FormGroup<IProductsList>({
-      classOfBusiness: new FormControl(data?.classOfBusiness || null),
-      lineOfBusiness: new FormControl(data?.lineOfBusiness || null),
-    });
+	//get products List Controls
+	productsLisControls(i: number, control: string): AbstractControl {
+		return this.productsListArray.controls[i].get(control)!;
+	}
+	//#contact List Array
+	get contactListArray(): FormArray {
+		return this.InsuranceForm.get("contactList") as FormArray;
+	}
 
-    if (!data) product.reset();
-    else product.disable();
+	//get contact List Controls
+	contactListControls(i: number, control: string): AbstractControl {
+		return this.contactListArray.controls[i].get(control)!;
+	}
 
-    this.f.productsList?.push(product);
-    this.productsListArray.updateValueAndValidity();
-  }
+	addProduct(data?: IProductsList) {
+		if (this.f.productsList?.invalid) {
+			this.f.productsList?.markAllAsTouched();
+			return;
+		}
+		let product = new FormGroup<IProductsList>({
+			classOfBusiness: new FormControl(data?.classOfBusiness || null),
+			lineOfBusiness: new FormControl(data?.lineOfBusiness || null),
+		});
 
-  addContact(data?: IContactList) {
-    if (this.f.contactList?.invalid) {
-      this.f.contactList?.markAllAsTouched();
-      return;
-    }
-    let contact = new FormGroup<IContactList>({
-      contactName: new FormControl(data?.contactName || null),
-      contactPosition: new FormControl(data?.contactPosition || null),
-      contactEmail: new FormControl(data?.contactEmail || null),
-      contactMobileNo: new FormControl(data?.contactMobileNo || null),
-      contactTele: new FormControl(data?.contactTele || null),
-      LineOfBusiness: new FormControl(data?.LineOfBusiness || null),
-      department: new FormControl(data?.department || null),
-      address: new FormControl(data?.address || null),
-    });
+		if (!data) product.reset();
+		else product.disable();
 
-    if (!data) contact.reset();
-    else contact.disable();
+		this.f.productsList?.push(product);
+		this.productsListArray.updateValueAndValidity();
+	}
 
-    this.f.contactList?.push(contact);
-    this.contactListArray.updateValueAndValidity();
-  }
+	addContact(data?: IContactList) {
+		if (this.f.contactList?.invalid) {
+			this.f.contactList?.markAllAsTouched();
+			return;
+		}
+		let contact = new FormGroup<IContactList>({
+			contactName: new FormControl(data?.contactName || null),
+			contactPosition: new FormControl(data?.contactPosition || null),
+			contactEmail: new FormControl(data?.contactEmail || null),
+			contactMobileNo: new FormControl(data?.contactMobileNo || null),
+			contactTele: new FormControl(data?.contactTele || null),
+			LineOfBusiness: new FormControl(data?.LineOfBusiness || null),
+			department: new FormControl(data?.department || null),
+			address: new FormControl(data?.address || null),
+		});
 
-  remove(i: number, type: string) {
-    if (type === "product") this.productsListArray.removeAt(i);
-    else if (type === "contact") this.contactListArray.removeAt(i);
-    else return;
-  }
+		if (!data) contact.reset();
+		else contact.disable();
 
-  enableEditingRow(i: number, type: string) {
-    if (type === "product") this.productsListArray.at(i).enable();
-    else if (type === "contact") this.contactListArray.at(i).enable();
-    else return;
-  }
-  //#endregion
+		this.f.contactList?.push(contact);
+		this.contactListArray.updateValueAndValidity();
+	}
 
-  fillAddIsnuranceForm(data: IInsuranceCompaniesData) {
-    this.f.companyName?.patchValue(data.companyName!);
-    this.f.companyNameAr?.patchValue(data.companyNameAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-    this.f.vatNo?.patchValue(data.vatNo!);
-    this.f.crNo?.patchValue(data.crNo!);
-    this.f.tele1?.patchValue(data.tele1!);
-    this.f.fax?.patchValue(data.fax!);
-    this.f.unifiedNo?.patchValue(data.unifiedNo!);
-    this.f.email?.patchValue(data.email!);
-    this.f.address?.patchValue(data.address!);
-    this.f.otherDetails?.patchValue(data.otherDetails!);
-    data.productsList?.forEach((sr: any) => this.addProduct(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
-  }
+	remove(i: number, type: string) {
+		if (type === "product") this.productsListArray.removeAt(i);
+		else if (type === "contact") this.contactListArray.removeAt(i);
+		else return;
+	}
 
-  fillEditInsuranceForm(data: IInsuranceCompaniesData) {
-    this.f.companyName?.patchValue(data.companyName!);
-    this.f.companyNameAr?.patchValue(data.companyNameAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-    this.f.vatNo?.patchValue(data.vatNo!);
-    this.f.crNo?.patchValue(data.crNo!);
-    this.f.tele1?.patchValue(data.tele1!);
-    this.f.fax?.patchValue(data.fax!);
-    this.f.unifiedNo?.patchValue(data.unifiedNo!);
-    this.f.email?.patchValue(data.email!);
-    this.f.address?.patchValue(data.address!);
-    this.f.otherDetails?.patchValue(data.otherDetails!);
-    data.productsList?.forEach((sr: any) => this.addProduct(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
-  }
+	enableEditingRow(i: number, type: string) {
+		if (type === "product") this.productsListArray.at(i).enable();
+		else if (type === "contact") this.contactListArray.at(i).enable();
+		else return;
+	}
+	//#endregion
 
-  validationChecker(): boolean {
-    if (this.InsuranceForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
-      return false;
-    }
-    return true;
-  }
+	fillAddIsnuranceForm(data: IInsuranceCompaniesData) {
+		this.f.companyName?.patchValue(data.companyName!);
+		this.f.companyNameAr?.patchValue(data.companyNameAr!);
+		this.f.abbreviation?.patchValue(data.abbreviation!);
+		this.f.vatNo?.patchValue(data.vatNo!);
+		this.f.crNo?.patchValue(data.crNo!);
+		this.f.tele1?.patchValue(data.tele1!);
+		this.f.fax?.patchValue(data.fax!);
+		this.f.unifiedNo?.patchValue(data.unifiedNo!);
+		this.f.email?.patchValue(data.email!);
+		this.f.address?.patchValue(data.address!);
+		this.f.otherDetails?.patchValue(data.otherDetails!);
+		data.productsList?.forEach((sr: any) => this.addProduct(sr));
+		data.contactList?.forEach((sr: any) => this.addContact(sr));
+	}
 
-  submitInsuranceData(form: FormGroup) {
-    this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IInsuranceCompaniesData = {
-      sNo: this.uiState.editInsuranceMode
-        ? this.uiState.editInsuranceData.sNo
-        : 0,
-      companyName: formData.companyName,
-      companyNameAr: formData.companyNameAr,
-      abbreviation: formData.abbreviation,
-      vatNo: formData.vatNo,
-      crNo: formData.crNo,
-      tele1: formData.tele1,
-      fax: formData.fax,
-      unifiedNo: formData.unifiedNo,
-      email: formData.email,
-      address: formData.address,
-      otherDetails: formData.otherDetails,
-      productsList: formData.productsList,
-      contactList: formData.contactList,
-    };
-    if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.InsuranceCompaniesService.saveInsuranceClass(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        this.InsuranceModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetInsuranceForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	fillEditInsuranceForm(data: IInsuranceCompaniesData) {
+		this.f.companyName?.patchValue(data.companyName!);
+		this.f.companyNameAr?.patchValue(data.companyNameAr!);
+		this.f.abbreviation?.patchValue(data.abbreviation!);
+		this.f.vatNo?.patchValue(data.vatNo!);
+		this.f.crNo?.patchValue(data.crNo!);
+		this.f.tele1?.patchValue(data.tele1!);
+		this.f.fax?.patchValue(data.fax!);
+		this.f.unifiedNo?.patchValue(data.unifiedNo!);
+		this.f.email?.patchValue(data.email!);
+		this.f.address?.patchValue(data.address!);
+		this.f.otherDetails?.patchValue(data.otherDetails!);
+		data.productsList?.forEach((sr: any) => this.addProduct(sr));
+		data.contactList?.forEach((sr: any) => this.addContact(sr));
+	}
 
-  resetInsuranceForm() {
-    this.InsuranceForm.reset();
-    this.contactListArray.clear();
-    this.productsListArray.clear();
-  }
+	validationChecker(): boolean {
+		if (this.InsuranceForm.invalid) {
+			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+			return false;
+		}
+		return true;
+	}
 
-  DeleteInsurance(id: string) {
-    let sub = this.InsuranceCompaniesService.DeleteInsurance(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
-  }
+	submitInsuranceData(form: FormGroup) {
+		this.uiState.submitted = true;
+		const formData = form.getRawValue();
+		const data: IInsuranceCompaniesData = {
+			sNo: this.uiState.editInsuranceMode ? this.uiState.editInsuranceData.sNo : 0,
+			companyName: formData.companyName,
+			companyNameAr: formData.companyNameAr,
+			abbreviation: formData.abbreviation,
+			vatNo: formData.vatNo,
+			crNo: formData.crNo,
+			tele1: formData.tele1,
+			fax: formData.fax,
+			unifiedNo: formData.unifiedNo,
+			email: formData.email,
+			address: formData.address,
+			otherDetails: formData.otherDetails,
+			productsList: formData.productsList,
+			contactList: formData.contactList,
+		};
+		if (!this.validationChecker()) return;
+		this.eventService.broadcast(reserved.isLoading, true);
+		let sub = this.InsuranceCompaniesService.saveInsuranceClass(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+			if (res.body?.status) {
+				this.InsuranceModal.dismiss();
+				this.uiState.submitted = false;
+				this.resetInsuranceForm();
+				this.gridApi.setDatasource(this.dataSource);
+				this.message.toast(res.body?.message!, "success");
+			} else this.message.popup("Oops!", res.body?.message!, "error");
 
-  ngOnDestroy(): void {
-    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-  }
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
+		this.subscribes.push(sub);
+	}
+
+	resetInsuranceForm() {
+		this.InsuranceForm.reset();
+		this.contactListArray.clear();
+		this.productsListArray.clear();
+	}
+
+	DeleteInsurance(id: string) {
+		let sub = this.InsuranceCompaniesService.DeleteInsurance(id).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
+		this.subscribes.push(sub);
+	}
+
+	ngOnDestroy(): void {
+		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }
