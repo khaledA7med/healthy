@@ -40,23 +40,23 @@ export class PermissionsInterceptor implements HttpInterceptor {
     Errors.InvalidRefresh,
     Errors.RefreshRevoked,
     Errors.RefeshTokenDonstMatch,
-    Errors.ForbiddenError,
     Errors.RefreshExpired,
+    Errors.ValidationError,
   ];
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    if (request.method === "POST") this.nullableValues(request);
+
     let currentUser = this.auth.currentToken;
     if (currentUser) request = this.addToken(request, currentUser);
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error && error.status === Errors.TokenExpired)
           return this.handle701Error(request, next);
-        else if (this.errors.includes(error.status)) {
-          this.reusableMessage();
-          return throwError(error.message);
-        } else {
+        else if (this.errors.includes(error.status)) this.reusableMessage();
+        else {
           let errorMessage = "An unknown error occurred.";
           if (error.error instanceof ErrorEvent) {
             // client-side error
@@ -71,6 +71,15 @@ export class PermissionsInterceptor implements HttpInterceptor {
         return throwError(error.message);
       })
     );
+  }
+
+  private nullableValues(request: HttpRequest<any>) {
+    if (request.body !== null) {
+      Object.keys(request.body).map((key) => {
+        if (!request.body[key] && typeof request.body[key] !== "number")
+          request.body[key] = "";
+      });
+    }
   }
 
   private addToken(request: HttpRequest<any>, token: string) {
