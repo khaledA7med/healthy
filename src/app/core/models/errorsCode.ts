@@ -7,4 +7,5 @@ export enum Errors {
   RefeshTokenDonstMatch = 808,
   InvalidAccessToken = 705,
   AccessTokenNotExpired = 704,
+  ValidationError = 603,
 }
