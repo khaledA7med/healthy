@@ -7,9 +7,8 @@ import {
   TemplateRef,
   ViewChild,
 } from "@angular/core";
-import { FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { NgbActiveModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
