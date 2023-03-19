@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
   HttpRequest,
   HttpHandler,
@@ -116,7 +116,9 @@ export class PermissionsInterceptor implements HttpInterceptor {
       .timerPopup("Attention!", "You Need To Relogin")
       .then(() => {
         this.auth.logout();
-        this.router.navigate([AppRoutes.Auth.login]);
+        this.router.navigate([AppRoutes.Auth.login], {
+          queryParams: { returnUrl: this.router.routerState.snapshot.url },
+        });
       });
   }
 }

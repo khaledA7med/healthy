@@ -14,6 +14,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { IClientReportFiltersForm, IClientReportReq } from "src/app/shared/app/models/Clients/iclient-report";
 import AppUtils from "src/app/shared/app/util";
+import { NavigationStart, Router } from "@angular/router";
 
 @Component({
 	selector: "app-client-reports",
@@ -49,7 +50,8 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -63,7 +65,12 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 			res.ClientTypes?.content! ? (this.uiState.lists.typesList = [{ id: 0, name: "Select All" }, ...res.ClientTypes?.content!]) : "";
 		});
-		this.subscribes.push(sub);
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
 
 		let date = new Date();
 		let todayDate = {

@@ -91,4 +91,5 @@ export interface IClaimDataForm extends IClaims {
   driverAge?: string;
   approvedAmount?: number;
   deductible?: number;
+  policyIdentity?: string;
 }

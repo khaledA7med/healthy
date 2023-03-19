@@ -1,18 +1,17 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import {
-  AfterViewInit,
   Component,
+  Input,
   OnDestroy,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { Router } from "@angular/router";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
-import { MasterTableService } from "src/app/core/services/master-table.service";
 import Swal from "sweetalert2";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { IDocumentList } from "../../app/models/App/IDocument";
@@ -27,9 +26,11 @@ import { ProductionService } from "../../services/production/production.service"
   selector: "app-poilcy-preview",
   templateUrl: "./poilcy-preview.component.html",
   styleUrls: ["./poilcy-preview.component.scss"],
-  providers: [AppUtils],
 })
-export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
+export class PoilcyPreviewComponent implements OnInit, OnDestroy {
+  @Input() data!: {
+    id: string;
+  };
   uiState = {
     sno: "",
     policyDetails: {} as IPolicyPreview,
@@ -39,9 +40,6 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
   };
 
   subscribes: Subscription[] = [];
-  previewModalRef!: NgbModalRef;
-  addToGroupModalRef!: NgbModalRef;
-  addClientToGroupForm!: FormGroup;
 
   permissions$!: Observable<string[]>;
 
@@ -49,31 +47,15 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild("details") detailsModal!: TemplateRef<any>;
   constructor(
-    private modalService: NgbModal,
-    private route: ActivatedRoute,
     private router: Router,
     private message: MessagesService,
     private productinService: ProductionService,
-    public util: AppUtils
+    public util: AppUtils,
+    public modal: NgbActiveModal
   ) {}
-
-  ngAfterViewInit(): void {
-    this.openPreviewModal();
-    this.getSNO();
+  ngOnInit(): void {
+    this.uiState.sno = this.data.id;
     this.getPolicyDetails(this.uiState.sno);
-  }
-
-  openPreviewModal(): void {
-    this.previewModalRef = this.modalService.open(this.detailsModal, {
-      fullscreen: true,
-    });
-    this.backToMainRoute();
-  }
-
-  getSNO(): void {
-    this.route.paramMap.subscribe((res) => {
-      this.uiState.sno = res.get("sno")!;
-    });
   }
 
   getPolicyDetails(id: string): void {
@@ -231,7 +213,6 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
               next: (res: HttpResponse<IBaseResponse<null>>) => {
                 this.message.toast(res.body?.message!, "success");
                 this.uiState.updatedState = true;
-                this.previewModalRef.close();
                 this.backToMainRoute();
               },
               error: (error: HttpErrorResponse) => {
@@ -279,7 +260,6 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
           next: (res: HttpResponse<IBaseResponse<null>>) => {
             this.message.toast(res.body?.message!, "success");
             this.uiState.updatedState = true;
-            this.previewModalRef.close();
             this.backToMainRoute();
           },
           error: (error: HttpErrorResponse) => {
@@ -293,11 +273,7 @@ export class PoilcyPreviewComponent implements AfterViewInit, OnDestroy {
 
   // To Do back to main route when close modal
   backToMainRoute() {
-    this.previewModalRef.hidden.subscribe(() => {
-      this.router.navigate([{ outlets: { details: null } }], {
-        state: { updated: this.uiState.updatedState },
-      });
-    });
+    this.modal.dismiss();
   }
 
   ngOnDestroy() {

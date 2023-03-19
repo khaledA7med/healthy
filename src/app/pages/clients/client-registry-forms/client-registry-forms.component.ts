@@ -384,12 +384,12 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
     if (this.uiState.editId) formData.append("sNo", this.uiState.editId);
 
-    formData.append("FullName", val.fullName!);
-    formData.append("FullNameAr", val.fullNameAr!);
-    formData.append("OfficalName", val.officalName!);
-    formData.append("RelationshipStatus", val.relationshipStatus!);
-    formData.append("BusinessType", val.businessType!);
-    formData.append("Type", val.type!);
+    formData.append("FullName", val.fullName! ?? "");
+    formData.append("FullNameAr", val.fullNameAr! ?? "");
+    formData.append("OfficalName", val.officalName! ?? "");
+    formData.append("RelationshipStatus", val.relationshipStatus! ?? "");
+    formData.append("BusinessType", val.businessType! ?? "");
+    formData.append("Type", val.type! ?? "");
 
     // Retail
     formData.append("IDNo", val.retail?.idNo ?? "");
@@ -430,21 +430,21 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
     formData.append("Capital", val.corporate?.capital ?? "");
     formData.append("Premium", val.corporate?.premium ?? "");
     formData.append("BuildingNo", val.buildingNo!);
-    formData.append("Tele", val.tele!);
-    formData.append("Tele2", val.tele2!);
-    formData.append("Fax", val.fax!);
-    formData.append("Channel", val.channel!);
-    formData.append("Interface", val.interface!);
-    formData.append("Producer", val.producer!);
-    formData.append("ScreeningResult", val.screeningResult!);
-    formData.append("Branch", val.branch!);
-    formData.append("StreetName", val.streetName!);
-    formData.append("SecondryNo", val.secondryNo!);
-    formData.append("DistrictName", val.districtName!);
-    formData.append("PostalCode", val.postalCode!);
-    formData.append("CityName", val.cityName!);
-    formData.append("Email", val.email!);
-    formData.append("Website", val.website!);
+    formData.append("Tele", val.tele! ?? "");
+    formData.append("Tele2", val.tele2! ?? "");
+    formData.append("Fax", val.fax! ?? "");
+    formData.append("Channel", val.channel! ?? "");
+    formData.append("Interface", val.interface! ?? "");
+    formData.append("Producer", val.producer! ?? "");
+    formData.append("ScreeningResult", val.screeningResult! ?? "");
+    formData.append("Branch", val.branch! ?? "");
+    formData.append("StreetName", val.streetName! ?? "");
+    formData.append("SecondryNo", val.secondryNo! ?? "");
+    formData.append("DistrictName", val.districtName! ?? "");
+    formData.append("PostalCode", val.postalCode! ?? "");
+    formData.append("CityName", val.cityName! ?? "");
+    formData.append("Email", val.email! ?? "");
+    formData.append("Website", val.website! ?? "");
 
     this.contactControlArray.controls.forEach((el) => el.enable());
 
@@ -473,7 +473,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
         contacts[i].position ?? ""
       );
       formData.append(`ClientContacts[${i}].tele`, contacts[i].tele ?? "");
-      formData.append(`ClientContacts[${i}].email`, contacts[i].email!);
+      formData.append(`ClientContacts[${i}].email`, contacts[i].email! ?? "");
       formData.append(`ClientContacts[${i}].branch`, contacts[i].branch ?? "");
     }
 

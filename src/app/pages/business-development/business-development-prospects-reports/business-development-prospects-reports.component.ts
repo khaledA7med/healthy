@@ -18,6 +18,7 @@ import {
 	IBusinessDevelopmentProspectsReportForm,
 	IBusinessDevelopmentProspectsReportReq,
 } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-prospects-report";
+import { NavigationStart, Router } from "@angular/router";
 
 @Component({
 	selector: "app-business-development-prospects-reports",
@@ -52,7 +53,8 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -64,7 +66,14 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 			this.uiState.lists.producersLists = res.Producers?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 		});
-		this.subscribes.push(sub);
+
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
+
 		let date = new Date();
 		let todayDate = {
 			gon: {

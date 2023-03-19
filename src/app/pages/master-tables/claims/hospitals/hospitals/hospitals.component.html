@@ -20,7 +20,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
 
-    <form [formGroup]="HospitalsForm" (ngSubmit)="submitHospitalsData(HospitalsForm)">
+    <form [formGroup]="HospitalsForm" (ngSubmit)="submitHospitalsData()">
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
                 <div class="my-3 h-100">
@@ -214,63 +214,48 @@
                                                     </td>
 
                                                     <td>
-                                                        <label>VVIP</label>
                                                         <input type="checkbox" formControlName="ClassVvip">
                                                     </td>
                                                     <td>
-                                                        <label>VIP</label>
                                                         <input type="checkbox" formControlName="ClassVip">
                                                     </td>
                                                     <td>
-                                                        <label>A+</label>
                                                         <input type="checkbox" formControlName="ClassAp">
                                                     </td>
                                                     <td>
-                                                        <label>A</label>
                                                         <input type="checkbox" formControlName="ClassA">
                                                     </td>
                                                     <td>
-                                                        <label>A-</label>
                                                         <input type="checkbox" formControlName="ClassAm">
                                                     </td>
                                                     <td>
-                                                        <label>B+</label>
                                                         <input type="checkbox" formControlName="ClassBp">
                                                     </td>
                                                     <td>
-                                                        <label>B</label>
                                                         <input type="checkbox" formControlName="ClassB">
                                                     </td>
                                                     <td>
-                                                        <label>B-</label>
                                                         <input type="checkbox" formControlName="ClassBm">
                                                     </td>
                                                     <td>
-                                                        <label>C+</label>
                                                         <input type="checkbox" formControlName="ClassCp">
                                                     </td>
                                                     <td>
-                                                        <label>C</label>
                                                         <input type="checkbox" formControlName="ClassC">
                                                     </td>
                                                     <td>
-                                                        <label>C-</label>
                                                         <input type="checkbox" formControlName="ClassCm">
                                                     </td>
                                                     <td>
-                                                        <label>CA</label>
                                                         <input type="checkbox" formControlName="ClassCa">
                                                     </td>
                                                     <td>
-                                                        <label>CAE</label>
                                                         <input type="checkbox" formControlName="ClassCae">
                                                     </td>
                                                     <td>
-                                                        <label>D</label>
                                                         <input type="checkbox" formControlName="ClassCD">
                                                     </td>
                                                     <td>
-                                                        <label>E</label>
                                                         <input type="checkbox" formControlName="ClassE">
                                                     </td>
 

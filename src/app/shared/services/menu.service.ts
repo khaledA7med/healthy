@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { IPrivileges } from "src/app/core/models/iuser";
+import { ClaimsPermissions } from "src/app/core/roles/claims-permissions";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
+import { CustomerServicePermissions } from "src/app/core/roles/customer-service-permissions";
 import { MasterTablePermissions } from "src/app/core/roles/master-table-permissions";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { MenuItem } from "src/app/layouts/sidebar/menu.model";
@@ -708,21 +710,27 @@ export class MenuService {
         id: 5,
         label: "MENUITEMS.CUSTOMERSERVICE.TEXT",
         icon: "ri-customer-service-2-line",
-        auth: true,
+        auth: privileges.CustomerService?.includes(
+          CustomerServicePermissions.ChCustomerService
+        ),
         subItems: [
           {
             id: 501,
             label: "MENUITEMS.CUSTOMERSERVICE.LIST.MANAGEMENT",
             link: AppRoutes.CustomerService.base,
             parentId: 5,
-            auth: true,
+            auth: privileges.CustomerService?.includes(
+              CustomerServicePermissions.ChRequestsManagements
+            ),
           },
           {
             id: 502,
             label: "MENUITEMS.CUSTOMERSERVICE.LIST.REPORTS",
             link: AppRoutes.CustomerService.reports,
             parentId: 5,
-            auth: true,
+            auth: privileges.CustomerService?.includes(
+              CustomerServicePermissions.ChCustSerReports
+            ),
           },
         ],
       },
@@ -730,21 +738,23 @@ export class MenuService {
         id: 6,
         label: "MENUITEMS.CLAIMS.TEXT",
         icon: "ri-file-copy-2-line",
-        auth: true,
+        auth: privileges.Claims?.includes(ClaimsPermissions.ChClaims),
         subItems: [
           {
             id: 601,
             label: "MENUITEMS.CLAIMS.LIST.MANAGEMENT",
             link: AppRoutes.Claims.base,
             parentId: 6,
-            auth: true,
+            auth: privileges.Claims?.includes(
+              ClaimsPermissions.ChClaimsManagement
+            ),
           },
           {
             id: 602,
             label: "MENUITEMS.CLAIMS.LIST.REPORTS",
             link: AppRoutes.Claims.reports,
             parentId: 6,
-            auth: true,
+            auth: privileges.Claims?.includes(ClaimsPermissions.ChClaimsReport),
           },
         ],
       },

@@ -132,7 +132,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   onGridReady (param: GridReadyEvent)
   {
     this.gridApi = param.api;
-    this.gridApi.setDatasource(this.dataSource);
+    // this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
@@ -173,11 +173,11 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   initCompanyRequirementsForm ()
   {
     this.CompanyRequirementsForm = new FormGroup<IAddCompanyRequirements>({
-      endorsType: new FormControl(null, Validators.required),
-      classofInsurance: new FormControl(null, Validators.required),
+      endorsType: new FormControl("", Validators.required),
+      classofInsurance: new FormControl("", Validators.required),
       insuranceCompanyID: new FormControl(null),
-      lineOfBusiness: new FormControl(null, Validators.required),
-      item: new FormControl(null, Validators.required),
+      lineOfBusiness: new FormControl("", Validators.required),
+      item: new FormControl("", Validators.required),
     })
   }
 
@@ -235,7 +235,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
         this.CompanyRequirementsModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetCompanyRequirementsForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },

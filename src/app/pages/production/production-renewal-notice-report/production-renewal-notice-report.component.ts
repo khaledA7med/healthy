@@ -14,6 +14,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { IPolicyRenewalNoticeReportForm, IPolicyRenewalNoticeReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-notice-report";
+import { NavigationStart, Router } from "@angular/router";
 @Component({
 	selector: "app-production-renewal-notice-report",
 	templateUrl: "./production-renewal-notice-report.component.html",
@@ -52,7 +53,8 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -66,7 +68,12 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			res.ClientsList?.content! ? (this.uiState.lists.clientsLists = [{ id: 0, name: "Select all" }, ...res.ClientsList?.content!]) : "";
 			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select all" }, ...res.GroupsList?.content!]) : "";
 		});
-		this.subscribes.push(sub);
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
 
 		let date = new Date();
 		let todayDate = {

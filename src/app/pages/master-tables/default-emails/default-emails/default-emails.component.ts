@@ -34,22 +34,24 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy
     submitted: false,
     getDefaultEmailsMode: false as Boolean,
     getDefaultEmailsData: {} as IDefaultEmailsData,
-    list: [] as IDefaultEmails,
+    list: [] as IDefaultEmails[],
     category: "Claims - Clients",
   };
   subscribes: Subscription[] = [];
 
-  getDefaultEmails ()
+  getDefaultEmails (category: string): void
   {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.DefaultEmailsService.getDefaultEmails(
-      this.uiState.category
+      category
     ).subscribe(
       (res: HttpResponse<IBaseResponse<IDefaultEmailsData>>) =>
       {
         this.uiState.getDefaultEmailsMode = true;
-        this.uiState.getDefaultEmailsData = res.body?.data!;
-        this.fillDefaultEmails(res.body?.data!);
+        if (res.body?.status)
+        {
+          this.fillDefaultEmails(res.body?.data!)
+        }
         this.eventService.broadcast(reserved.isLoading, false);
       },
       (err: HttpErrorResponse) =>
@@ -120,7 +122,7 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy
   filter (e: any)
   {
     this.uiState.category = e?.name;
-    this.getDefaultEmails();
+    this.getDefaultEmails(this.uiState.category);
   }
 
   submitDefaultEmailsData (form: FormGroup)
@@ -138,8 +140,7 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy
       {
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
-        this.resetDefaultEmailsForm();
-        this.getDefaultEmails();
+        this.getDefaultEmails(this.uiState.category);
         this.message.toast(res.body?.message!, "success");
       },
       (err: HttpErrorResponse) =>

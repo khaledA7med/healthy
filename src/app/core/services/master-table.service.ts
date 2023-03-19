@@ -77,10 +77,16 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
+        }
+      ],
+      Hospitals: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.contactLineOfBusiness,
-          name: BaseData.ContactLineOfBusiness,
+          route: ApiRoutes.MasterTable.MasterTables.regions,
+          name: BaseData.Regions,
         },
       ],
       ClaimsGeneralItems: [
@@ -678,6 +684,9 @@ export class MasterTableService
         break;
       case MODULES.MasterTableListOfRequiredDocuments:
         this.dataSrc = data.MasterTableListOfRequiredDocuments;
+        break;
+      case MODULES.Hospitals:
+        this.dataSrc = data.Hospitals;
         break;
       case MODULES.ClaimsGeneralItems:
         this.dataSrc = data.ClaimsGeneralItems;

@@ -8,8 +8,12 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { NavigationEnd, Router } from "@angular/router";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import {
+  NgbModal,
+  NgbModalRef,
+  NgbOffcanvas,
+} from "@ng-bootstrap/ng-bootstrap";
 import {
   CellEvent,
   GridApi,
@@ -38,6 +42,7 @@ import {
 } from "src/app/shared/app/models/Production/iproduction-filters";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
+import { PoilcyPreviewComponent } from "src/app/shared/components/poilcy-preview/poilcy-preview.component";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
@@ -47,7 +52,6 @@ import { ProductionService } from "src/app/shared/services/production/production
   templateUrl: "./policies-management.component.html",
   styleUrls: ["./policies-management.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  providers: [AppUtils],
 })
 export class PoliciesManagementComponent implements OnInit, OnDestroy {
   uiState = {
@@ -77,6 +81,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
   filterForm!: FormGroup<IProductionFiltersForm>;
   lookupData!: Observable<IBaseMasterTable>;
   @ViewChild("filter") policiesFilter!: ElementRef;
+  modalRef!: NgbModalRef;
 
   subscribes: Subscription[] = [];
   gridApi: GridApi = <GridApi>{};
@@ -112,6 +117,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
     private table: MasterTableService,
     private appUtils: AppUtils,
     private router: Router,
+    private modalService: NgbModal,
     private permission: PermissionsService,
     private auth: AuthenticationService
   ) {}
@@ -138,7 +144,12 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
       if (!res.includes(this.uiState.privileges.ChProductionAccessAllUsers))
         this.f.producer?.patchValue(this.auth.getUser().name!);
     });
-    this.subscribes.push(sub, sub2);
+    let sub3 = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+      }
+    });
+    this.subscribes.push(sub, sub2, sub3);
   }
 
   dataSource: IDatasource = {
@@ -331,6 +342,16 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
       this.f.amountNo?.enable();
       this.f.amountNo2?.enable();
     }
+  }
+
+  openPolicyPreview(id: string) {
+    this.modalRef = this.modalService.open(PoilcyPreviewComponent, {
+      fullscreen: true,
+      scrollable: true,
+    });
+    this.modalRef.componentInstance.data = {
+      id,
+    };
   }
 
   onPolicyFilters(): void {

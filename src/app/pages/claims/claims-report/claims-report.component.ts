@@ -14,6 +14,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { claimsReportForm, claimsReportReq } from "src/app/shared/app/models/Claims/iclaims-report";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
+import { NavigationStart, Router } from "@angular/router";
 
 @Component({
 	selector: "app-claims-report",
@@ -57,7 +58,8 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -73,7 +75,12 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 			this.uiState.lists.statusList = res.ClaimStatus?.content!;
 		});
-		this.subscribes.push(sub);
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
 
 		let date = new Date();
 		let todayDate = {

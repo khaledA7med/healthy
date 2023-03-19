@@ -1,7 +1,7 @@
 <div class="row justify-content-between align-items-center mb-3">
     <div class="col-3 form-group row align-items-center">
-        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
-        <div class="col-sm-4">
+        <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
+        <div class="col-sm-8">
             <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
                 [(ngModel)]="uiState.filters.pageSize">
                 <ng-option [value]="25">25</ng-option>
@@ -59,7 +59,7 @@
                     <label for="branchName" class="form-label">Branch:</label>
                     <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branchName"
-                        [readonly]="(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
                         formControlName="branch">
                     </ng-select>
                 </div>
@@ -83,7 +83,7 @@
                     <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
                         [closeOnSelect]="false" [hideSelected]="true" id="producerName" formControlName="producer"
-                        [readonly]="(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!">
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!">
                     </ng-select>
                 </div>
                 <!-- Insurance Company -->
@@ -154,7 +154,7 @@
                     <label for="created" class="form-label">created By</label>
                     <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="created"
-                        [readonly]="(permissions$ | async)?.includes(uiState.privileges.ChProductionAccessAllUsers)!"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChProductionAccessAllUsers)!"
                         formControlName="createdBy">
                     </ng-select>
                 </div>

@@ -35,6 +35,7 @@ export interface IPolicy {
   issueDate?: Date;
   periodFrom?: Date;
   periodTo?: Date;
+  numberOfBeneficiaries?: number;
   oldIssueDate?: string;
   oldPeriodFrom?: Date;
   oldPeriodTo?: Date;
