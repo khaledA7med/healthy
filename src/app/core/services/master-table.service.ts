@@ -47,10 +47,6 @@ export class MasterTableService
           name: BaseData.InsurClasses,
         },
         {
-          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
-          name: BaseData.LineOfBusiness,
-        },
-        {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
         },
@@ -139,10 +135,6 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
-          name: BaseData.LineOfBusiness,
         },
         {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,

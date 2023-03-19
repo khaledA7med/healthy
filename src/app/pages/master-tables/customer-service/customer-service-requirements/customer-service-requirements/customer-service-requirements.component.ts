@@ -60,6 +60,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -154,28 +155,34 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
 
   openCompanyRequirementsDialoge ()
   {
-    this.resetCompanyRequirementsForm();
-    this.CompanyRequirementsModal = this.modalService.open(this.CompanyRequirementsContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "lg",
-    });
-
-    this.CompanyRequirementsModal.hidden.subscribe(() =>
+    if (this.f.classofInsurance?.valid && this.f.lineOfBusiness?.valid && this.f.endorsType?.valid && this.f.insuranceCompanyID?.valid)
     {
-      this.resetCompanyRequirementsForm();
-      this.CompanyRequirementsFormSubmitted = false;
-      this.uiState.editCompanyRequirementsMode = false;
-    });
+      this.uiState.submitted = false;
+      this.CompanyRequirementsModal = this.modalService.open(this.CompanyRequirementsContent, {
+        ariaLabelledBy: "modal-basic-title",
+        centered: true,
+        backdrop: "static",
+        size: "lg",
+      });
+
+      this.CompanyRequirementsModal.hidden.subscribe(() =>
+      {
+        this.resetCompanyRequirementsForm();
+      });
+    } else
+    {
+      this.uiState.submitted = true;
+    }
   }
+
 
   initCompanyRequirementsForm ()
   {
     this.CompanyRequirementsForm = new FormGroup<IAddCompanyRequirements>({
+      sno: new FormControl(0),
       endorsType: new FormControl("", Validators.required),
       classofInsurance: new FormControl("", Validators.required),
-      insuranceCompanyID: new FormControl(null),
+      insuranceCompanyID: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl("", Validators.required),
       item: new FormControl("", Validators.required),
     })
@@ -185,25 +192,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
   get f ()
   {
     return this.CompanyRequirementsForm.controls;
-  }
-
-  fillAddCompanyRequirementsForm (data: IAddCompanyRequirementsData)
-  {
-    this.f.endorsType?.patchValue(data.endorsType!);
-    this.f.classofInsurance?.patchValue(data.classofInsurance!);
-    this.f.insuranceCompanyID?.patchValue(data.insuranceCompanyID!);
-    this.f.item?.patchValue(data.item!);
-    this.f.lineOfBusiness?.patchValue(data.lineOfBusiness!);
-  }
-
-  fillEditCompanyRequirementsForm (data: IAddCompanyRequirementsData)
-  {
-    this.f.endorsType?.patchValue(data.endorsType!);
-    this.f.classofInsurance?.patchValue(data.classofInsurance!);
-    this.f.insuranceCompanyID?.patchValue(data.insuranceCompanyID!);
-    this.f.insuranceCompanyName?.patchValue(data.insuranceCompanyName!);
-    this.f.item?.patchValue(data.item!);
-    this.f.lineOfBusiness?.patchValue(data.lineOfBusiness!);
   }
 
   validationChecker (): boolean
@@ -216,32 +204,30 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitCompanyRequirementsData (form: FormGroup)
+  submitCompanyRequirementsData (form: FormGroup<IAddCompanyRequirements>)
   {
-    this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IAddCompanyRequirementsData = {
-      endorsType: formData.endorsType,
-      classofInsurance: formData.classofInsurance,
-      insuranceCompanyID: formData.insuranceCompanyID,
-      lineOfBusiness: formData.lineOfBusiness,
-      item: formData.item
-    };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
+    const data: IAddCompanyRequirementsData = {
+      ...form.getRawValue(),
+    };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
+      (res: IBaseResponse<any>) =>
       {
-        this.CompanyRequirementsModal.dismiss();
+        if (res.status)
+        {
+          this.CompanyRequirementsModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res.message!, "success");
+          this.gridApi.setDatasource(this.dataSource);
+        } else this.message.popup("Sorry!", res.message!, "warning");
+        // Hide Loader
         this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
       },
-      (err: HttpErrorResponse) =>
+      (err) =>
       {
-        this.message.popup("Oops!", err.error.message, "error");
         this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Sorry!", err.message!, "error");
       }
     );
     this.subscribes.push(sub);
@@ -249,17 +235,20 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy
 
   resetCompanyRequirementsForm ()
   {
-    this.CompanyRequirementsForm.reset();
+    this.f.sno?.patchValue(0);
+    this.f.item?.reset();
+    this.uiState.editCompanyRequirementsMode = false;
+    this.uiState.submitted = false;
   }
 
   DeleteCompanyRequirements (sno: number)
   {
     let sub = this.CompanyRequirementsService.DeleteCompanyRequirements(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
+      (res: IBaseResponse<any>) =>
       {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res.status) this.message.toast(res.message!, "success");
+        else this.message.toast(res.message!, "error");
       },
       (err: HttpErrorResponse) =>
       {

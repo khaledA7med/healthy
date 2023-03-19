@@ -23,15 +23,15 @@ export class PolicyIssuanceRequirementsService
     });
   }
 
-  savePolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<HttpResponse<IBaseResponse<number>>>
+  savePolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<IBaseResponse<IPolicyIssuanceRequirementsData[]>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<IPolicyIssuanceRequirementsData[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.save, { ...data });
   }
 
 
-  getEditPolicyIssuanceRequirements (id: string): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirementsData>>>
+  getEditPolicyIssuanceRequirements (id: string): Observable<IBaseResponse<IPolicyIssuanceRequirementsData>>
   {
-    return this.http.get<IBaseResponse<IPolicyIssuanceRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.edit, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IPolicyIssuanceRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.edit, { params: { id } });
   }
 
   DeletePolicyIssuanceRequirements (id: string): Observable<HttpResponse<IBaseResponse<number>>>
