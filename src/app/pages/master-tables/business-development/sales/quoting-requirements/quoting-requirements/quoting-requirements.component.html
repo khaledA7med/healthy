@@ -19,7 +19,7 @@
                                             bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                             [ngClass]="{'is-submitted': (f.class?.touched || uiState.submitted) && f.class?.invalid}"
                                             [items]="(lookupData | async)?.InsurClasses?.content!"
-                                            (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
+                                            (change)="getLineOfBusiness($event?.name)">
                                         </ng-select>
                                         <span *ngIf="(f.class?.touched || uiState.submitted) && f.class?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
@@ -31,7 +31,7 @@
                                             placeholder="Select Lien Of Business" formControlName="lineOfBusiness"
                                             bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                             [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
-                                            (change)="changeLineOfBusiness($event)" [items]="lineOfBussArr">
+                                            [items]="lineOfBussArr">
                                         </ng-select>
                                         <span
                                             *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
@@ -44,7 +44,7 @@
                                             placeholder="Select Insurance Company" formControlName="insuranceCopmany"
                                             bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                             [ngClass]="{'is-submitted': (f.insuranceCopmany?.touched || uiState.submitted) && f.insuranceCopmany?.invalid}"
-                                            (change)="filter($event)"
+                                            (change)="gridApi.setDatasource(dataSource);"
                                             [items]="(lookupData | async)?.InsuranceCompanies?.content!">
                                         </ng-select>
                                         <span

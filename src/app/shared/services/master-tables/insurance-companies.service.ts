@@ -24,17 +24,17 @@ export class InsuranceCompaniesService
     });
   }
 
-  saveInsuranceClass (data: IInsuranceCompaniesData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveInsuranceCompanies (data: IInsuranceCompaniesData): Observable<HttpResponse<IBaseResponse<number>>>
   {
     return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.insuranceCompanies.save, data, { observe: "response" });
   }
 
-  getEditInsuranceData (id: string): Observable<HttpResponse<IBaseResponse<IInsuranceCompaniesData>>>
+  getEditInsuranceCompanies (id: string): Observable<HttpResponse<IBaseResponse<IInsuranceCompaniesData>>>
   {
     return this.http.get<IBaseResponse<IInsuranceCompaniesData>>(this.env + ApiRoutes.masterTables.insuranceCompanies.edit, { params: { id }, observe: "response" });
   }
 
-  DeleteInsurance (id: string): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteInsuranceCompanies (id: string): Observable<HttpResponse<IBaseResponse<number>>>
   {
     return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.insuranceCompanies.delete, {}, { params: { id }, observe: "response" })
   }

@@ -110,7 +110,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
   openLegalStatusDialoge (id?: string)

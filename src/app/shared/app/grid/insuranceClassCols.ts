@@ -12,7 +12,6 @@ export const insuranceClassCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sNo",
-        minWidth: 100,
     },
     {
         headerName: "Class of Insurance",
@@ -21,11 +20,9 @@ export const insuranceClassCols: ColDef[] = [
     {
         headerName: "Class of Insurance(Ar)",
         field: "classNameAr",
-        minWidth: 250,
     },
     {
         headerName: "Abbreviation",
         field: "abbreviation",
-        minWidth: 120,
     }
 ];

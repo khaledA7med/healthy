@@ -12,7 +12,7 @@ import { MasterTableService } from 'src/app/core/services/master-table.service';
 import { Caching, IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
 import { MODULES } from 'src/app/core/models/MODULES';
 import { MasterMethodsService } from 'src/app/shared/services/master-methods.service';
-import { IQuotingRequirements, IQuotingRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
+import { IQuotingRequirements, IQuotingRequirementsData, IQuotingRequirementsFilter } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
 import { quotingRequirementsCols } from 'src/app/shared/app/grid/quotingRequirementsCols';
 import { QuotingRequirementsService } from 'src/app/shared/services/master-tables/business-development/sales/quoting-requirements.service';
 
@@ -36,7 +36,9 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   uiState = {
     gridReady: false,
     submitted: false,
-    list: [] as IQuotingRequirements[],
+    list: {
+      itemsList: [] as IQuotingRequirementsFilter[],
+    },
     totalPages: 0,
     editQuotingRequirementsMode: false as Boolean,
     editQuotingRequirementsData: {} as IQuotingRequirementsData,
@@ -70,19 +72,14 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      const data: IQuotingRequirementsData = {
-        class: this.uiState.class,
-        lineOfBusiness: this.uiState.lineOfBusiness,
-        insuranceCopmany: this.uiState.insuranceCompanies
-      };
-      let sub = this.QuotingRequirementsService.getQuotingRequirements(data).subscribe(
-        (res: HttpResponse<IBaseResponse<IQuotingRequirements[]>>) =>
+      let sub = this.QuotingRequirementsService.getQuotingRequirements({ class: this.f.class?.value!, lineOfBusiness: this.f.lineOfBusiness?.value!, insuranceCopmany: this.f.insuranceCopmany?.value! }).subscribe(
+        (res: HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>) =>
         {
           if (res.body?.status)
           {
-            this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list, this.uiState.list.length);
-            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            this.uiState.list.itemsList = res.body?.data!;
+            params.successCallback(this.uiState.list.itemsList, this.uiState.list.itemsList.length);
+            if (this.uiState.list.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else
           {
@@ -178,21 +175,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   checkValue (event: any)
   {
     this.uiState.defaultTick = event;
-  }
-
-  changeClass (e: any)
-  {
-    this.uiState.class = e?.name
-  }
-  changeLineOfBusiness (e: any)
-  {
-    this.uiState.lineOfBusiness = e?.name
-  }
-
-  filter (e: any)
-  {
-    this.uiState.insuranceCompanies = e?.name
-    this.gridApi.setDatasource(this.dataSource);
   }
 
   getQuotingRequirementsData (id: string)

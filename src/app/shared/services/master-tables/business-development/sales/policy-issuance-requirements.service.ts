@@ -4,7 +4,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import { ApiRoutes } from 'src/app/shared/app/routers/ApiRoutes';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { IPolicyIssuanceRequirements, IPolicyIssuanceRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements';
+import { IPolicyIssuanceRequirements, IPolicyIssuanceRequirementsData, IPolicyIssuanceRequirementsFilter } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,9 @@ export class PolicyIssuanceRequirementsService
 
   constructor (private http: HttpClient) { }
 
-  getPolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirements[]>>>
+  getPolicyIssuanceRequirements (data: { class: string, lineOfBusiness: string, insuranceCopmany: string }): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirementsFilter[]>>>
   {
-    return this.http.post<IBaseResponse<IPolicyIssuanceRequirements[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.search, data, {
+    return this.http.post<IBaseResponse<IPolicyIssuanceRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.search, { ...data }, {
       observe: "response",
     });
   }

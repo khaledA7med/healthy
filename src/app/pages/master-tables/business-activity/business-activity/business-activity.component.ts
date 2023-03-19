@@ -5,7 +5,6 @@ import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from 'rxjs';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
 import { MessagesService } from 'src/app/shared/services/messages.service';
-import AppUtils from 'src/app/shared/app/util';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { reserved } from 'src/app/core/models/reservedWord';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -110,7 +109,7 @@ export class BusinessActivityComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
   openBusinessActivityDialoge (id?: string)

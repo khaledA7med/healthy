@@ -1,22 +1,22 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import
-  {
-    Component,
-    OnDestroy,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-  } from "@angular/core";
+{
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import
-  {
-    CellEvent,
-    GridApi,
-    GridOptions,
-    GridReadyEvent,
-    IDatasource,
-    IGetRowsParams,
-  } from "ag-grid-community";
+{
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from "rxjs";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -25,10 +25,10 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import
-  {
-    ILineOfBusiness,
-    ILineOfBusinessData,
-  } from "src/app/shared/app/models/MasterTables/i-line-of-business";
+{
+  ILineOfBusiness,
+  ILineOfBusinessData,
+} from "src/app/shared/app/models/MasterTables/i-line-of-business";
 import { LineOfBusinessService } from "src/app/shared/services/master-tables/line-of-business.service";
 import { lineOfBusinessCols } from "src/app/shared/app/grid/lineOfBusinessCols";
 import { MasterTableService } from "src/app/core/services/master-table.service";
@@ -132,7 +132,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
   constructor (

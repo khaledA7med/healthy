@@ -31,6 +31,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
   ClaimsGeneralItemsModal!: NgbModalRef;
   ClaimsGeneralItemsForm!: FormGroup<IClaimsGeneralItems>;
   lineOfBussArr: IGenericResponseType[] = [];
+  isChecked!: number;
 
   @ViewChild("ClaimsGeneralItemsContent") ClaimsGeneralItemsContent!: TemplateRef<any>;
 
@@ -42,8 +43,8 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
     editClaimsGeneralItemsMode: false as Boolean,
     editClaimsGeneralItemsData: {} as IClaimsGeneralItemsData,
     classOfInsurance: "Accident",
-    lineofBusiness: "Group Personal Accident"
-
+    lineofBusiness: "Group Personal Accident",
+    mandatory: 0
   };
 
   subscribes: Subscription[] = [];
@@ -77,10 +78,17 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
       let sub = this.ClaimsGeneralItemsService.getClaimsGeneralItems(data).subscribe(
         (res: HttpResponse<IBaseResponse<IClaimsGeneralItems[]>>) =>
         {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status)
+          {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else
+          {
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          }
         },
         (err: HttpErrorResponse) =>
         {
@@ -166,6 +174,11 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy
       }
     );
     this.subscribes.push(sub);
+  }
+
+  checkValue (event: any)
+  {
+    this.uiState.mandatory = event;
   }
 
   getClaimsGeneralItemsData (sno: number)

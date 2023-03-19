@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<form class="mb-4" [formGroup]="CompanyRequirementsFilterForm" autocomplete="off">
+<form class="mb-4" [formGroup]="CompanyRequirementsForm" autocomplete="off">
     <ngb-accordion #acc="ngbAccordion" activeIds="1">
         <!-- Line Of Business -->
         <ngb-panel id="1" title="Quoting Requirements" cardClass="open mb-4">
@@ -27,11 +27,11 @@
                                         <ng-select id="insuranceCompanyID" class="form-control-sm is-invalid"
                                             placeholder="Select Insurance Company" formControlName="insuranceCompanyID"
                                             bindValue="id" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [ngClass]="{'is-submitted': (ff.insuranceCompanyID?.touched || uiState.submitted) && ff.insuranceCompanyID?.invalid}"
+                                            [ngClass]="{'is-submitted': (f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid}"
                                             [items]="(lookupData | async)?.InsuranceCompanies?.content!">
                                         </ng-select>
                                         <span
-                                            *ngIf="(ff.insuranceCompanyID?.touched || uiState.submitted) && ff.insuranceCompanyID?.invalid"
+                                            *ngIf="(f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
@@ -40,11 +40,11 @@
                                         <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
                                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                                             bindLabel="name"
-                                            [ngClass]="{'is-submitted': (ff.endorsType?.touched || uiState.submitted) && ff.endorsType?.invalid}"
+                                            [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
                                             bindValue="name" id="endorsType" formControlName="endorsType">
                                         </ng-select>
                                         <span
-                                            *ngIf="(ff.endorsType?.touched || uiState.submitted) && ff.endorsType?.invalid"
+                                            *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
                                     <div class="col-3 mb-2">
@@ -52,12 +52,12 @@
                                         <ng-select id="classofInsurance" class="form-control-sm is-invalid"
                                             placeholder="Select Class Of Insurance" formControlName="classofInsurance"
                                             bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [ngClass]="{'is-submitted': (ff.classofInsurance?.touched || uiState.submitted) && ff.classofInsurance?.invalid}"
+                                            [ngClass]="{'is-submitted': (f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid}"
                                             [items]="(lookupData | async)?.InsurClasses?.content!"
                                             (change)="getLineOfBusiness($event?.name)">
                                         </ng-select>
                                         <span
-                                            *ngIf="(ff.classofInsurance?.touched || uiState.submitted) && ff.classofInsurance?.invalid"
+                                            *ngIf="(f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
 
                                     </div>
@@ -66,11 +66,12 @@
                                         <ng-select id="lineOfBusiness" class="form-control-sm is-invalid"
                                             placeholder="Select Lien Of Business" formControlName="lineOfBusiness"
                                             bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [ngClass]="{'is-submitted': (ff.lineOfBusiness?.touched || uiState.submitted) && ff.lineOfBusiness?.invalid}"
+                                            (change)="gridApi.setDatasource(dataSource);"
+                                            [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
                                             [items]="lineOfBussArr">
                                         </ng-select>
                                         <span
-                                            *ngIf="(ff.lineOfBusiness?.touched || uiState.submitted) && ff.lineOfBusiness?.invalid"
+                                            *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
 
                                     </div>

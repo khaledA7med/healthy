@@ -4,7 +4,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import { ApiRoutes } from 'src/app/shared/app/routers/ApiRoutes';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { IQuotingRequirements, IQuotingRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
+import { IQuotingRequirements, IQuotingRequirementsData, IQuotingRequirementsFilter } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,9 @@ export class QuotingRequirementsService
 
   constructor (private http: HttpClient) { }
 
-  getQuotingRequirements (data: IQuotingRequirementsData): Observable<HttpResponse<IBaseResponse<IQuotingRequirements[]>>>
+  getQuotingRequirements (data: { class: string, lineOfBusiness: string, insuranceCopmany: string }): Observable<HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>>
   {
-    return this.http.post<IBaseResponse<IQuotingRequirements[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.search, data, {
+    return this.http.post<IBaseResponse<IQuotingRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.search, { ...data }, {
       observe: "response",
     });
   }

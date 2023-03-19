@@ -12,26 +12,21 @@ export const insuranceBrokersCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sno",
-        minWidth: 100,
     },
     {
         headerName: "Name",
         field: "companyName",
-        minWidth: 250,
     },
     {
         headerName: "Tele",
         field: "mobileNo",
-        minWidth: 250,
     },
     {
         headerName: "Email",
         field: "email",
-        minWidth: 120,
     },
     {
         headerName: "Address",
         field: "address",
-        minWidth: 120,
     },
 ];

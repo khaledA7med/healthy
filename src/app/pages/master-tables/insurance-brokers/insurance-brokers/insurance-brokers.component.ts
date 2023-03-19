@@ -1,21 +1,23 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
-import {
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-} from "ag-grid-community";
+import
+  {
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+  } from "@angular/core";
+import
+  {
+    CellEvent,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    IDatasource,
+    IGetRowsParams,
+  } from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from "rxjs";
 import { insuranceBrokersCols } from "src/app/shared/app/grid/insuranceBrokersCols";
@@ -27,18 +29,20 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import {
-  IInsuranceBrokers,
-  IInsuranceBrokersData,
-} from "src/app/shared/app/models/MasterTables/i-insurance-brokers";
+import
+  {
+    IInsuranceBrokers,
+    IInsuranceBrokersData,
+  } from "src/app/shared/app/models/MasterTables/i-insurance-brokers";
 
 @Component({
   selector: "app-insurance-brokers",
   templateUrl: "./insurance-brokers.component.html",
-  styleUrls: ["./insurance-brokers.component.scss"],
+  styleUrls: [ "./insurance-brokers.component.scss" ],
   encapsulation: ViewEncapsulation.None,
 })
-export class InsuranceBrokersComponent implements OnInit {
+export class InsuranceBrokersComponent implements OnInit, OnDestroy
+{
   InsuranceFormSubmitted = false as boolean;
   InsuranceModal!: NgbModalRef;
   InsuranceForm!: FormGroup<IInsuranceBrokers>;
@@ -55,7 +59,7 @@ export class InsuranceBrokersComponent implements OnInit {
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi>{};
+  gridApi: GridApi = <GridApi> {};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -73,30 +77,32 @@ export class InsuranceBrokersComponent implements OnInit {
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor(
+  constructor (
     private InsuranceBrokersService: InsuranceBrokersService,
-    private tableRef: ElementRef,
     private message: MessagesService,
-    private appUtils: AppUtils,
     private eventService: EventService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
+  ngOnInit (): void
+  {
     this.initInsuranceForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
+    getRows: (params: IGetRowsParams) =>
+    {
       this.gridApi.showLoadingOverlay();
       let sub = this.InsuranceBrokersService.getInsuranceBrokers().subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceBrokers[]>>) => {
+        (res: HttpResponse<IBaseResponse<IInsuranceBrokers[]>>) =>
+        {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
-        (err: HttpErrorResponse) => {
+        (err: HttpErrorResponse) =>
+        {
           this.message.popup("Oops!", err.message, "error");
         }
       );
@@ -104,27 +110,32 @@ export class InsuranceBrokersComponent implements OnInit {
     },
   };
 
-  onCellClicked(params: CellEvent) {
-    if (params.column.getColId() == "action") {
+  onCellClicked (params: CellEvent)
+  {
+    if (params.column.getColId() == "action")
+    {
       params.api.getCellRendererInstances({
-        rowNodes: [params.node],
-        columns: [params.column],
+        rowNodes: [ params.node ],
+        columns: [ params.column ],
       });
     }
   }
 
-  onPageSizeChange() {
+  onPageSizeChange ()
+  {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady(param: GridReadyEvent) {
+  onGridReady (param: GridReadyEvent)
+  {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    if ((this, this.uiState.list.length > 0)) this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
-  openInsuranceDialoge(id?: string) {
+  openInsuranceDialoge (id?: string)
+  {
     this.resetInsuranceForm();
     this.InsuranceModal = this.modalService.open(this.insuranceContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -132,16 +143,19 @@ export class InsuranceBrokersComponent implements OnInit {
       backdrop: "static",
       size: "md",
     });
-    if (id) {
+    if (id)
+    {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceBrokersService.getEditInsuranceData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceBrokersData>>) => {
+        (res: HttpResponse<IBaseResponse<IInsuranceBrokersData>>) =>
+        {
           this.uiState.editInsuranceMode = true;
           this.uiState.editInsuranceData = res.body?.data!;
           this.fillEditInsuranceForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         },
-        (err: HttpErrorResponse) => {
+        (err: HttpErrorResponse) =>
+        {
           this.message.popup("Oops!", err.message, "error");
           this.eventService.broadcast(reserved.isLoading, false);
         }
@@ -149,14 +163,16 @@ export class InsuranceBrokersComponent implements OnInit {
       this.subscribes.push(sub);
     }
 
-    this.InsuranceModal.hidden.subscribe(() => {
+    this.InsuranceModal.hidden.subscribe(() =>
+    {
       this.resetInsuranceForm();
       this.InsuranceFormSubmitted = false;
       this.uiState.editInsuranceMode = false;
     });
   }
 
-  initInsuranceForm() {
+  initInsuranceForm ()
+  {
     this.InsuranceForm = new FormGroup<IInsuranceBrokers>({
       sno: new FormControl(null),
       companyName: new FormControl(null, Validators.required),
@@ -166,26 +182,31 @@ export class InsuranceBrokersComponent implements OnInit {
     });
   }
 
-  get f() {
+  get f ()
+  {
     return this.InsuranceForm.controls;
   }
 
-  fillAddIsnuranceForm(data: IInsuranceBrokersData) {
+  fillAddIsnuranceForm (data: IInsuranceBrokersData)
+  {
     this.f.companyName?.patchValue(data.companyName!);
     this.f.mobileNo?.patchValue(data.mobileNo!);
     this.f.email?.patchValue(data.email!);
     this.f.address?.patchValue(data.address!);
   }
 
-  fillEditInsuranceForm(data: IInsuranceBrokersData) {
+  fillEditInsuranceForm (data: IInsuranceBrokersData)
+  {
     this.f.companyName?.patchValue(data.companyName!);
     this.f.mobileNo?.patchValue(data.mobileNo!);
     this.f.email?.patchValue(data.email!);
     this.f.address?.patchValue(data.address!);
   }
 
-  validationChecker(): boolean {
-    if (this.InsuranceForm.invalid) {
+  validationChecker (): boolean
+  {
+    if (this.InsuranceForm.invalid)
+    {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -196,7 +217,8 @@ export class InsuranceBrokersComponent implements OnInit {
     return true;
   }
 
-  submitInsuranceData(form: FormGroup) {
+  submitInsuranceData (form: FormGroup)
+  {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IInsuranceBrokersData = {
@@ -211,7 +233,8 @@ export class InsuranceBrokersComponent implements OnInit {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceBrokersService.saveInsuranceBrokers(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
+      (res: HttpResponse<IBaseResponse<number>>) =>
+      {
         this.InsuranceModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
@@ -219,7 +242,8 @@ export class InsuranceBrokersComponent implements OnInit {
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
       },
-      (err: HttpErrorResponse) => {
+      (err: HttpErrorResponse) =>
+      {
         this.message.popup("Oops!", err.error.message, "error");
         this.eventService.broadcast(reserved.isLoading, false);
       }
@@ -227,25 +251,30 @@ export class InsuranceBrokersComponent implements OnInit {
     this.subscribes.push(sub);
   }
 
-  resetInsuranceForm() {
+  resetInsuranceForm ()
+  {
     this.InsuranceForm.reset();
   }
 
-  DeleteInsurance(id: string) {
+  DeleteInsurance (id: string)
+  {
     let sub = this.InsuranceBrokersService.DeleteInsurance(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: HttpResponse<IBaseResponse<any>>) =>
+      {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
       },
-      (err: HttpErrorResponse) => {
+      (err: HttpErrorResponse) =>
+      {
         this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void
+  {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }
