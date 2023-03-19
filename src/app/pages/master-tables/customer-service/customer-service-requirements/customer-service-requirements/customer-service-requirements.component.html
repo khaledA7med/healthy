@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="col-12 mb-2">
-                        <label for="endorsType" class="form-label">Endors Type:</label>
+                        <label for="endorsType" class="asterisk-input">Endors Type:</label>
                         <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
                             [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
                             [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"

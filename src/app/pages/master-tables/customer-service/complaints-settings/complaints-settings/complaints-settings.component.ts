@@ -24,6 +24,7 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
   uiState = {
     gridReady: false,
     submitted: false,
+    editComplaintSettingsMode: false as Boolean,
     complaintSettingsData: {} as IComplaintSettingsData[],
     data: [] as IComplaintSettings[]
 
@@ -63,6 +64,7 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
 
   fillEditComplaintsSettingsForm (data: IComplaintSettingsData)
   {
+    console.log(data)
     this.f.compalintDeadLine?.patchValue(data.compalintDeadLine!);
     this.f.reminderDays?.patchValue(data.reminderDays!);
   }
@@ -79,10 +81,11 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
 
   getComplaintSettings ()
   {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ComplaintSettingsService.getComplaintSettings().subscribe(
       (res: HttpResponse<IBaseResponse<IComplaintSettingsData>>) =>
       {
-        this.eventService.broadcast(reserved.isLoading, true);
+        this.uiState.editComplaintSettingsMode = true;
         this.fillEditComplaintsSettingsForm(res.body?.data!)
         this.eventService.broadcast(reserved.isLoading, false);
       },

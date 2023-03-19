@@ -1,30 +1,30 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import
-  {
-    Component,
-    OnDestroy,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-  } from "@angular/core";
+{
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import
-  {
-    CellEvent,
-    GridApi,
-    GridOptions,
-    GridReadyEvent,
-    IDatasource,
-    IGetRowsParams,
-  } from "ag-grid-community";
+{
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
 import { Subscription } from "rxjs";
 import { insuranceClassCols } from "src/app/shared/app/grid/insuranceClassCols";
 import
-  {
-    IInsuranceClass,
-    IInsuranceClassData,
-  } from "src/app/shared/app/models/MasterTables/i-insurance-class";
+{
+  IInsuranceClass,
+  IInsuranceClassData,
+} from "src/app/shared/app/models/MasterTables/i-insurance-class";
 import { InsuranceClassesService } from "src/app/shared/services/master-tables/insurance-classes.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
@@ -174,7 +174,7 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy
       sNo: new FormControl(null),
       className: new FormControl(null, Validators.required),
       classNameAr: new FormControl(null),
-      abbreviation: new FormControl(null),
+      abbreviation: new FormControl(null, Validators.required),
       allowedToAccessInsuranceClasses: new FormControl(null),
     });
   }

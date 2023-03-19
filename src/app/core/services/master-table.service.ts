@@ -77,11 +77,7 @@ export class MasterTableService
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
           name: BaseData.InsurClasses,
-        },
-        {
-          route: ApiRoutes.MasterTable.MasterTables.lineOfBusiness,
-          name: BaseData.LineOfBusiness,
-        },
+        }
       ],
       Hospitals: [
         {
