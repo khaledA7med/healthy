@@ -1027,35 +1027,35 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < reject.length; i++) {
       formData.append(
         `ClaimRejectionDeductionsList[${i}].clientNo`,
-        reject[i].clientNo!.toString()
+        reject[i].clientNo!.toString() ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].clientName`,
-        reject[i].clientName!
+        reject[i].clientName! ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].amount`,
-        reject[i].amount!.toString()
+        reject[i].amount!.toString() ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].type`,
-        reject[i].type!
+        reject[i].type! ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].rejectionNote`,
-        reject[i].rejectionNote!
+        reject[i].rejectionNote! ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].rejectionReason`,
-        reject[i].rejectionReason!
+        reject[i].rejectionReason! ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].rejectionReason`,
-        reject[i].rejectionReason!
+        reject[i].rejectionReason! ?? ""
       );
       formData.append(
         `ClaimRejectionDeductionsList[${i}].rejectionReason`,
-        reject[i].rejectionReason!
+        reject[i].rejectionReason! ?? ""
       );
     }
 
@@ -1077,7 +1077,7 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       );
       formData.append(
         `ClaimsGeneral[${i}].mandatory`,
-        itemDetail[i].mandatory!.toString()
+        itemDetail[i].mandatory!.toString() ?? ""
       );
     }
 
@@ -1158,24 +1158,33 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       "otherCurrAmount",
       val.claimAmounts?.otherCurrAmount?.toString() ?? "0"
     );
-    formData.append("otherCurr", val.claimAmounts?.otherCurr!);
+    formData.append("otherCurr", val.claimAmounts?.otherCurr! ?? "");
 
     // Dates
-    formData.append("chIntimationDate", val.chIntimationDate?.toString()!);
+    formData.append(
+      "chIntimationDate",
+      val.chIntimationDate?.toString()! ?? ""
+    );
     formData.append(
       "intimationDate",
-      this.util.dateFormater(val.intimationDate!)
+      this.util.dateFormater(val.intimationDate!) ?? ""
     );
-    formData.append("chDateOfLoss", val.chDateOfLoss?.toString()!);
+    formData.append("chDateOfLoss", val.chDateOfLoss?.toString()! ?? "");
     formData.append("dateOfLoss", this.util.dateFormater(val.dateOfLoss));
-    formData.append("chDateOfReceive", val.chDateOfReceive?.toString()!);
+    formData.append("chDateOfReceive", val.chDateOfReceive?.toString()! ?? "");
     formData.append("dateOfReceive", this.util.dateFormater(val.dateOfReceive));
-    formData.append("chDateofSubmission", val.chDateofSubmission?.toString()!);
+    formData.append(
+      "chDateofSubmission",
+      val.chDateofSubmission?.toString()! ?? ""
+    );
     formData.append(
       "dateOfSubmission",
       this.util.dateFormater(val.dateOfSubmission)
     );
-    formData.append("chDateOfDeadline", val.chDateOfDeadline?.toString()!);
+    formData.append(
+      "chDateOfDeadline",
+      val.chDateOfDeadline?.toString()! ?? ""
+    );
     formData.append(
       "DateOfDeadline",
       this.util.dateFormater(val.dateOfDeadline)
