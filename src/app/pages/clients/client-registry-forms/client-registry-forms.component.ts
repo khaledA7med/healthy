@@ -473,7 +473,7 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
         contacts[i].position ?? ""
       );
       formData.append(`ClientContacts[${i}].tele`, contacts[i].tele ?? "");
-      formData.append(`ClientContacts[${i}].email`, contacts[i].email!);
+      formData.append(`ClientContacts[${i}].email`, contacts[i].email! ?? "");
       formData.append(`ClientContacts[${i}].branch`, contacts[i].branch ?? "");
     }
 

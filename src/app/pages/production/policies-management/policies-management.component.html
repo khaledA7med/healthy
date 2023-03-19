@@ -1,7 +1,7 @@
 <div class="row justify-content-between align-items-center mb-3">
     <div class="col-3 form-group row align-items-center">
-        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
-        <div class="col-sm-4">
+        <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
+        <div class="col-sm-8">
             <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
                 [(ngModel)]="uiState.filters.pageSize">
                 <ng-option [value]="25">25</ng-option>
