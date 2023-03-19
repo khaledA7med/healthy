@@ -27,6 +27,7 @@ export interface IProductionForms {
   minDriverAge?: FormControl<number | null>;
   issueDate?: FormControl<string | null>;
   expiryDate?: FormControl<string | null>;
+  numberOfBeneficiaries?: FormControl<number | null>;
   claimNoOfDays?: FormControl<number | null>;
   csNoOfDays?: FormControl<number | null>;
   remarks?: FormControl<string | null>;

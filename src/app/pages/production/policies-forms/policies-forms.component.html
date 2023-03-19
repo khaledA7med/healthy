@@ -137,7 +137,7 @@
                             <!--./col-->
 
                             <!-- Our Policy Ref -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 mb-2">
+                            <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
                                 <label for="oasisPolRef" class="">Our
                                     Policy Ref</label>
                                 <div class="input-group input-group-sm">
@@ -164,7 +164,7 @@
                             </div>
 
                             <!-- Policy No -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="PolicyNo" class="asterisk-input">Policy
                                     No</label>
                                 <input type="text" class="form-control form-control-sm" formControlName="policyNo"
@@ -174,7 +174,7 @@
                             </div>
 
                             <!-- Endors Type-->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="endorsType"
                                     [ngClass]="{'asterisk-input' :f.issueType?.value === uiState.policy.issueType.endorsement}">Endors
                                     Type</label>
@@ -192,7 +192,7 @@
                             </div>
 
                             <!-- Endors No -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="endorsNo"
                                     [ngClass]="{'asterisk-input' :f.issueType?.value === uiState.policy.issueType.endorsement}">Endors
                                     No</label>
@@ -203,7 +203,7 @@
                             </div>
 
                             <!-- Issued By -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="insurComp" class="asterisk-input">Issued By</label>
                                 <ng-select formControlName="insurComp" id="insurComp" placeholder="Insurance Company"
                                     [items]="(formData | async)?.InsuranceCompanies?.content!" bindLabel="name"
@@ -219,7 +219,7 @@
                             </div>
 
                             <!-- Class Of Insurance -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="className" class="asterisk-input">Class Of Business</label>
                                 <ng-select formControlName="className" id="className" placeholder="Class Of Business"
                                     [items]="(formData | async)?.InsurClasses?.content!" bindLabel="name"
@@ -235,7 +235,7 @@
                             </div>
 
                             <!-- Line Of Business -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="lineOfBusiness" class="asterisk-input">Line Of Business</label>
                                 <!-- [items]="(formData | async)?.lineOfBusiness?.content!" bindLabel="name" bindValue="name" -->
                                 <ng-select formControlName="lineOfBusiness" id="lineOfBusiness"
@@ -252,7 +252,7 @@
                             </div>
 
                             <!-- Minimum Driver Age -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="minDriverAge"
                                     [ngClass]="{'asterisk-input': f.minDriverAge?.enabled}">Minimum Driver Age</label>
                                 <div class="input-group input-group-sm">
@@ -289,8 +289,18 @@
                                     (dateChange)="expiryDate($event)"></app-gregorian-picker>
                             </div>
 
+                            <!-- Number Of Beneficiaries -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
+                                <label for="numberOfBeneficiaries" class="asterisk-input">No. Of Beneficiaries</label>
+                                <input type="number" class="form-control form-control-sm"
+                                    formControlName="numberOfBeneficiaries" id="numberOfBeneficiaries"
+                                    [ngClass]="{'is-invalid': (f.numberOfBeneficiaries?.touched || uiState.submitted) && f.numberOfBeneficiaries?.invalid}"
+                                    placeholder="Number Of Beneficiaries">
+                                <span class="invalid-feedback mt-0">Required</span>
+                            </div>
+
                             <!-- Claims Deadline -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="claimNoOfDays">Claims Deadline</label>
                                 <div class="input-group input-group-sm">
                                     <input type="number" class="form-control" formControlName="claimNoOfDays"
@@ -300,7 +310,7 @@
                             </div>
 
                             <!-- CS Deadline -->
-                            <div class="col-lg-3 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="csNoOfDays">CS Deadline</label>
                                 <div class="input-group input-group-sm">
                                     <input type="number" class="form-control" formControlName="csNoOfDays"
@@ -310,7 +320,7 @@
                             </div>
 
                             <!-- Remarks -->
-                            <div class="col-lg-6 col-md-6 col-ms-12 my-1">
+                            <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                                 <label for="remarks">Remarks</label>
                                 <textarea class="form-control form-control-sm" formControlName="remarks" id="remarks"
                                     rows="1"></textarea>
@@ -812,13 +822,26 @@
     <div class="card">
         <div class="container-fluid">
             <div class="card-body px-1 py-3">
-                <div class="row">
-                    <div class="d-flex justify-content-end">
+                <div class="row justify-content-end align-items-end">
+                    <!-- Branch -->
+                    <div class="col-lg-3 col-md-6">
+                        <label class="col-form-label asterisk-input" for="branch">Branch</label>
+                        <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
+                            [ngClass]="{'is-submitted': (f.branch?.touched || uiState.submitted) && f.branch?.invalid}"
+                            [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                            [loading]="formData ? false : true" placeholder="Branch">
+                        </ng-select>
+                        <span class="invalid-feedback fw-bold mt-0"
+                            *ngIf="(f.branch?.touched || uiState.submitted) && f.branch?.invalid">Required</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-12 mt-sm-3 d-flex justify-content-end">
                         <button type="submit" class="btn btn-sm btn-success me-2">
                             <i class="ri-save-2-fill"></i>
                             Save
                         </button>
-                        <button type="button" id="sa-warning" (click)="resetForm()" class="btn btn-sm btn-soft-danger">
+                        <button type="button" id="sa-warning" (click)="resetForm()" class="btn btn-sm btn-soft-danger"
+                            *ngIf="!uiState.editMode">
                             <i class="ri-delete-bin-2-line"></i>
                             Clear
                         </button>

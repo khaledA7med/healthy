@@ -2,10 +2,7 @@
     <h4 class="modal-title">Policy Details</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 </div>
-
-
 <div class="modal-body bg-light p-3">
-
     <div class="row">
         <div class="col-lg-4  my-2">
             <!-- Start Client Details Table -->
@@ -385,25 +382,4 @@
     <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">
         Close
     </button>
-    <!-- Change status Btn -->
-    <!-- <div ngbDropdown placement="top-right" class="dropdown d-flex justify-content-center align-items-center">
-            <button type="button" class="btn btn-sm btn-soft-info" ngbDropdownToggle>
-                <i class="ri-more-fill align-middle"></i>
-            </button>
-            <div ngbDropdownMenu>
-                <button ngbDropdownItem
-                    [disabled]="uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1"
-                    (click)="changeStatus('Approve')">
-                    Approve
-                </button>
-                <button ngbDropdownItem
-                    [disabled]="uiState.policyDetails.reject == 1 || uiState.policyDetails.done == 1"
-                    (click)="changeStatus('Reject')">
-                    Reject
-                </button>
-                <button ngbDropdownItem disabled *ngIf="!uiState.policyDetails">
-                    No Action
-                </button>
-            </div>
-        </div> -->
 </div>

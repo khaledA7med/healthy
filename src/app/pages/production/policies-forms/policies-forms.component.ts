@@ -219,6 +219,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       issueDate: new FormControl(null, Validators.required),
       periodFrom: new FormControl(null, Validators.required),
       periodTo: new FormControl(null, Validators.required),
+      numberOfBeneficiaries: new FormControl(null, [
+        Validators.required,
+        Validators.min(1),
+      ]),
       claimNoOfDays: new FormControl(null),
       csNoOfDays: new FormControl(null),
       remarks: new FormControl(null),
@@ -244,6 +248,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       producersCommissionsList: new FormArray<
         FormGroup<IPolicyCommissionListForms>
       >([]),
+      branch: new FormControl(null, Validators.required),
     });
   }
 
@@ -333,6 +338,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             claimNoOfDays: +client?.claimNoOfDays!,
             csnoOfDays: +client?.csNoOfDays!,
             remarks: client?.remarks,
+            numberOfBeneficiaries: +client?.numberOfBeneficiaries!,
           };
 
           this.setPolicyDataToForm(data);
@@ -396,6 +402,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
             compCommAmount: data.compComm,
             compCommVAT: data.compCommVAT,
             producerComm: data.producerComm,
+            branch: data.branch,
           });
           this.setPolicyDataToForm(data);
         } else this.message.popup("Oops!", res.body?.message!, "warning");
@@ -1137,6 +1144,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     formData.append("ClassName", val.className! ?? "");
     formData.append("LineOfBusiness", val.lineOfBusiness! ?? "");
     formData.append("MinDriverAge", val.minDriverAge?.toString() ?? "0");
+    formData.append(
+      "NumberOfBeneficiaries",
+      val.numberOfBeneficiaries?.toString() ?? "0"
+    );
 
     formData.append("IssueDate", this.appUtils.dateFormater(val.issueDate!));
     formData.append("PeriodTo", this.appUtils.dateFormater(val.periodTo!));
