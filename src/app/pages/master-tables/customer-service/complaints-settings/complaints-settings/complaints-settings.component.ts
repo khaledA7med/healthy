@@ -17,10 +17,18 @@ import { IComplaintSettings, IComplaintSettingsData } from 'src/app/shared/app/m
 export class ComplaintsSettingsComponent implements OnInit, OnDestroy
 {
 
-  submitted: boolean = false;
   ComplaintsSettingsFormSubmitted = false as boolean;
   ComplaintsSettingsForm!: FormGroup<IComplaintSettings>;
   subscribes: Subscription[] = [];
+
+  uiState = {
+    gridReady: false,
+    submitted: false,
+    complaintSettingsData: {} as IComplaintSettingsData[],
+    data: [] as IComplaintSettings[]
+
+  };
+  complaintSettingsData = {} as IComplaintSettingsData[];
 
   constructor (
     private ComplaintSettingsService: ComplaintSettingsService,
@@ -30,6 +38,7 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
 
   ngOnInit (): void
   {
+    this.getComplaintSettings();
     this.initComplaintsSettingsForm();
   }
 
@@ -52,6 +61,12 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
     this.f.reminderDays?.patchValue(data.reminderDays!);
   }
 
+  fillEditComplaintsSettingsForm (data: IComplaintSettingsData)
+  {
+    this.f.compalintDeadLine?.patchValue(data.compalintDeadLine!);
+    this.f.reminderDays?.patchValue(data.reminderDays!);
+  }
+
   validationChecker (): boolean
   {
     if (this.ComplaintsSettingsForm.invalid)
@@ -62,9 +77,27 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
     return true;
   }
 
+  getComplaintSettings ()
+  {
+    let sub = this.ComplaintSettingsService.getComplaintSettings().subscribe(
+      (res: HttpResponse<IBaseResponse<IComplaintSettingsData>>) =>
+      {
+        this.eventService.broadcast(reserved.isLoading, true);
+        this.fillEditComplaintsSettingsForm(res.body?.data!)
+        this.eventService.broadcast(reserved.isLoading, false);
+      },
+      (err: HttpErrorResponse) =>
+      {
+        this.message.popup("Oops!", err.error?.message, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
+
   submitComplaintsSettingsData (form: FormGroup)
   {
-    this.submitted = true;
+    this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IComplaintSettings = {
       compalintDeadLine: formData.compalintDeadLine,
@@ -76,7 +109,7 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy
       (res: HttpResponse<IBaseResponse<number>>) =>
       {
         this.eventService.broadcast(reserved.isLoading, false);
-        this.submitted = false;
+        this.uiState.submitted = false;
         this.resetComplaintsSettingsForm();
         this.message.toast(res.body?.message!, "success");
       },

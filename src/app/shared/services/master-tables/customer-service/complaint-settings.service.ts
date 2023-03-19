@@ -16,9 +16,9 @@ export class ComplaintSettingsService
 
   constructor (private http: HttpClient) { }
 
-  getComplaintSettings (): Observable<HttpResponse<IBaseResponse<IComplaintSettings[]>>>
+  getComplaintSettings (): Observable<HttpResponse<IBaseResponse<IComplaintSettingsData>>>
   {
-    return this.http.get<IBaseResponse<IComplaintSettings[]>>(this.env + ApiRoutes.masterTables.customerService.complaintsSettings.search, {
+    return this.http.get<IBaseResponse<IComplaintSettingsData>>(this.env + ApiRoutes.masterTables.customerService.complaintsSettings.search, {
       observe: "response",
     });
   }

@@ -15,19 +15,20 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                         <label for="compalintDeadLine" class="asterisk-input">Complaint DeadLine</label>
                                         <input id="compalintDeadLine" type="number" class="form-control form-control-sm"
-                                            [ngClass]="{'is-invalid': (f.compalintDeadLine?.touched || submitted) && f.compalintDeadLine?.invalid}"
+                                            [ngClass]="{'is-invalid': (f.compalintDeadLine?.touched || uiState.submitted) && f.compalintDeadLine?.invalid}"
                                             formControlName="compalintDeadLine" />
                                         <span
-                                            *ngIf="(f.compalintDeadLine?.touched || submitted) && f.compalintDeadLine?.invalid"
+                                            *ngIf="(f.compalintDeadLine?.touched || uiState.submitted) && f.compalintDeadLine?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                         <label for="reminderDays" class="asterisk-input">Complaint DeadLine</label>
                                         <input id="reminderDays" type="number" class="form-control form-control-sm"
-                                            [ngClass]="{'is-invalid': (f.reminderDays?.touched || submitted) && f.reminderDays?.invalid}"
+                                            [ngClass]="{'is-invalid': (f.reminderDays?.touched || uiState.submitted) && f.reminderDays?.invalid}"
                                             formControlName="reminderDays" />
-                                        <span *ngIf="(f.reminderDays?.touched || submitted) && f.reminderDays?.invalid"
+                                        <span
+                                            *ngIf="(f.reminderDays?.touched || uiState.submitted) && f.reminderDays?.invalid"
                                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                     </div>
 

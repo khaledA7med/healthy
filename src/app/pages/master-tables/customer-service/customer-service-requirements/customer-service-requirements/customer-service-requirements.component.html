@@ -12,14 +12,14 @@
 <form class="mb-4" [formGroup]="CompanyRequirementsForm" autocomplete="off">
     <ngb-accordion #acc="ngbAccordion" activeIds="1">
         <!-- Line Of Business -->
-        <ngb-panel id="1" title="Quoting Requirements" cardClass="open mb-4">
+        <ngb-panel id="1" title="Company Requirements" cardClass="open mb-4">
             <ng-template ngbPanelContent="1">
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                     <div class="container-fluid mb-3">
                         <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
                             <div class="card-body">
                                 <div class="ribbon ribbon-info round-shape">
-                                    Line Of Business
+                                    Company Requirements
                                 </div>
                                 <div class="row my-4">
                                     <div class="col-3 mb-2">
@@ -87,7 +87,7 @@
 </form>
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 45vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 

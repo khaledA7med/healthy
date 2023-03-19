@@ -4,7 +4,7 @@ import { IBaseResponse } from '../../app/models/App/IBaseResponse';
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { ApiRoutes } from '../../app/routers/ApiRoutes';
 import { environment } from 'src/environments/environment';
-import { IDefaultEmails, IDefaultEmailsData } from '../../app/models/MasterTables/i-default-emails';
+import { IDefaultEmailsData } from '../../app/models/MasterTables/i-default-emails';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class DefaultEmailsService
 
   getDefaultEmails (category: string): Observable<HttpResponse<IBaseResponse<IDefaultEmailsData>>>
   {
-    return this.http.post<IBaseResponse<IDefaultEmailsData>>(this.env + ApiRoutes.masterTables.defaultEmail.search, {}, {
+    return this.http.get<IBaseResponse<IDefaultEmailsData>>(this.env + ApiRoutes.masterTables.defaultEmail.search, {
       params: { category }, observe: "response",
     });
   }
