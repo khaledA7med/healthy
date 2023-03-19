@@ -19,7 +19,6 @@ import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form
 import { ClaimInvoicesFormComponent } from "./form-helpers/claim-invoices-form.component";
 import { ClaimRejectDeductFormComponent } from "./form-helpers/claim-reject-deduct-form.component";
 import { ReportsViewerModule } from "src/app/shared/components/reports-viewer/reports-viewer.module";
-import { PoilcyPreviewModule } from "src/app/shared/components/poilcy-preview/poilcy-preview.module";
 
 export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
 
@@ -45,6 +44,5 @@ export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
     NgbTooltipModule,
     ReportsViewerModule,
   ],
-  providers: [PoilcyPreviewModule],
 })
 export class ClaimsFormsModule {}
