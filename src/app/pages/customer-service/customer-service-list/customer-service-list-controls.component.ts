@@ -30,9 +30,23 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 						</ul>
 					</li>
 					<button ngbDropdownItem (click)="FollowUp()" class="btn btn-sm">Follow Up</button>
-					<button ngbDropdownItem class="btn btn-sm" (click)="Edit()">Edit</button>
-					<button ngbDropdownItem class="btn btn-sm" (click)="makeInvoice()">Make Invoice</button>
-					<li>
+					<button
+						ngbDropdownItem
+						class="btn btn-sm"
+						(click)="Edit()"
+						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)"
+					>
+						Edit
+					</button>
+					<button
+						ngbDropdownItem
+						class="btn btn-sm"
+						(click)="makeInvoice()"
+						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)"
+					>
+						Make Invoice
+					</button>
+					<li *ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)">
 						<a class="btn btn-sm dropdown-item">Change Status To &nbsp; &nbsp; &raquo;</a>
 						<ul class="dropdown-menu dropdown-submenu">
 							<li *ngIf="params.data?.status !== status.Pending">

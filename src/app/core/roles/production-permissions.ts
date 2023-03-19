@@ -1,0 +1,15 @@
+export enum ProductionPermissions {
+  ChProduction = "ChProduction",
+  ChProdPolicies = "ChProdPolicies",
+  ChEntryCorrection = "ChEntryCorrection",
+  ChProdEntryApproval = "ChProdEntryApproval",
+  ChProdReports = "ChProdReports",
+  ChProductionReadOnly = "ChProductionReadOnly",
+  ViewAllBranchs = "ViewAllBranchs",
+  ChAccessAllProducersProduction = "ChAccessAllProducersProduction",
+  ChProductionAccessAllUsers = "ChProductionAccessAllUsers",
+  ChEditCommissions = "ChEditCommissions",
+  ChUpdateDeliveryStatus = "ChUpdateDeliveryStatus",
+  ChHideCompanyCommission = "ChHideCompanyCommission",
+  ChHideProducerCommission = "ChHideProducerCommission",
+}

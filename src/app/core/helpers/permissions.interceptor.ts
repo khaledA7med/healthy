@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
   HttpRequest,
   HttpHandler,
@@ -88,7 +88,6 @@ export class PermissionsInterceptor implements HttpInterceptor {
 
       return this.perm.refreshToken().pipe(
         switchMap((token: any) => {
-          console.log(token);
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.data.accessToken);
           return next.handle(this.addToken(request, token.data.accessToken));
@@ -117,7 +116,9 @@ export class PermissionsInterceptor implements HttpInterceptor {
       .timerPopup("Attention!", "You Need To Relogin")
       .then(() => {
         this.auth.logout();
-        this.router.navigate([AppRoutes.Auth.login]);
+        this.router.navigate([AppRoutes.Auth.login], {
+          queryParams: { returnUrl: this.router.routerState.snapshot.url },
+        });
       });
   }
 }

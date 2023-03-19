@@ -49,6 +49,12 @@ input[disabled] {
   cursor: pointer;
 }
 
+.modal-fullscreen {
+  .modal-body {
+    min-height: 85vh;
+  }
+}
+
 // **** NG - SELECT ****//
 .ng-select-container {
   min-height: calc(1.5em + 0.5rem + 1px) !important;

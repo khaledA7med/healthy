@@ -19,6 +19,7 @@ import { DebitCreditNotesCols } from "src/app/shared/app/grid/debitCreditNotesCo
 import { debitCreditNoteForm, IdebitCreditNoteFilter } from "src/app/shared/app/models/Production/iproduction-notes-filters";
 import { IDebitCreditNote } from "src/app/shared/app/models/Production/iproduction-notes";
 import { DCNotesModel } from "src/app/shared/app/models/Production/production-util";
+import { NavigationStart, Router } from "@angular/router";
 @Component({
 	selector: "app-debit-credit-note-report",
 	templateUrl: "./debit-credit-note-report.component.html",
@@ -73,12 +74,28 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private tableRef: ElementRef
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
+		let sub = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub);
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	onGridReady(param: GridReadyEvent) {

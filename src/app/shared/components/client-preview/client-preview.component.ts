@@ -1,16 +1,19 @@
 import {
-  AfterViewInit,
   Component,
+  Input,
   OnDestroy,
+  OnInit,
   TemplateRef,
-  ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { HttpResponse } from "@angular/common/http";
 
-import { ActivatedRoute, Router } from "@angular/router";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbActiveModal,
+  NgbModal,
+  NgbModalRef,
+} from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 
 import Swal from "sweetalert2";
@@ -26,87 +29,63 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IChangeStatusRequest } from "../../app/models/Clients/iclientStatusReq";
 import { IDocumentList } from "./../../app/models/App/IDocument";
-import { EventService } from "src/app/core/services/event.service";
-import { reserved } from "src/app/core/models/reservedWord";
 import { MasterMethodsService } from "../../services/master-methods.service";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { Roles } from "src/app/core/roles/Roles";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
 
 @Component({
   selector: "app-modal-for-details",
   templateUrl: "./client-preview.component.html",
   styleUrls: ["./client-preview.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
-export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
+export class ClientPreviewComponent implements OnInit, OnDestroy {
+  @Input() data!: {
+    id: string;
+    clientDetails: {};
+  };
   uiState = {
-    id: "",
     clientDetails: {} as IClientPreview,
     updatedState: false,
   };
 
+  permissions$!: Observable<string[]>;
+  privileges = ClientsPermissions;
   clientStatus: typeof ClientStatus = ClientStatus;
   clientType: typeof ClientType = ClientType;
   subscribes: Subscription[] = [];
-  previewModalRef!: NgbModalRef;
   addToGroupModalRef!: NgbModalRef;
   addClientToGroupForm!: FormGroup;
   lookupData!: Observable<IBaseMasterTable>;
-  @ViewChild("details") detailsModal!: TemplateRef<any>;
   constructor(
     private modalService: NgbModal,
-    private route: ActivatedRoute,
     private clientService: ClientsService,
-    private router: Router,
     private message: MessagesService,
     private clientsGroupService: ClientsGroupsService,
     private table: MasterTableService,
-    private eventService: EventService,
     private masterMethod: MasterMethodsService,
-    public util: AppUtils
+    public util: AppUtils,
+    public modal: NgbActiveModal,
+    private permission: PermissionsService
   ) {}
-
-  ngAfterViewInit(): void {
-    this.openPreviewModal();
-    this.getId();
-    this.getClintDetails(this.uiState.id);
-    this.initAddClientToGroupForm();
+  ngOnInit(): void {
     this.getLookupData();
-  }
-
-  openPreviewModal(): void {
-    this.previewModalRef = this.modalService.open(this.detailsModal, {
-      fullscreen: true,
-    });
-    this.backToMainRoute();
-  }
-
-  getId(): void {
-    this.route.paramMap.subscribe((res) => {
-      this.uiState.id = res.get("id")!;
-    });
+    this.getClintDetails(this.data.id);
+    this.initAddClientToGroupForm();
+    this.permissions$ = this.permission.getPrivileges(Roles.Clients);
   }
 
   getClintDetails(id: string): void {
-    this.eventService.broadcast(reserved.isLoading, true);
-
-    let sub = this.clientService.getClintDetails(id).subscribe({
-      next: (res: HttpResponse<IBaseResponse<IClientPreview>>) => {
-        this.uiState.clientDetails = res.body?.data!;
-        AppUtils.nullValues(this.uiState.clientDetails);
-        this.uiState.clientDetails.clientsBankAccounts?.map((b) =>
-          AppUtils.nullValues(b)
-        );
-        this.uiState.clientDetails.clientContacts?.map((c) =>
-          AppUtils.nullValues(c)
-        );
-        this.customizeClientDocuments();
-        this.eventService.broadcast(reserved.isLoading, false);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.eventService.broadcast(reserved.isLoading, false);
-
-        this.message.popup("Oops!", error.message, "error");
-      },
-    });
-    this.subscribes.push(sub);
+    this.uiState.clientDetails = this.data.clientDetails;
+    AppUtils.nullValues(this.uiState.clientDetails);
+    this.uiState.clientDetails.clientsBankAccounts?.map((b) =>
+      AppUtils.nullValues(b)
+    );
+    this.uiState.clientDetails.clientContacts?.map((c) =>
+      AppUtils.nullValues(c)
+    );
+    this.customizeClientDocuments();
   }
   customizeClientDocuments() {
     this.uiState.clientDetails.documentList?.forEach((el: IDocumentList) => {
@@ -203,12 +182,11 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
               next: (res: HttpResponse<IBaseResponse<null>>) => {
                 this.message.toast(res.body?.message!, "success");
                 this.uiState.updatedState = true;
-                this.previewModalRef.close();
                 this.backToMainRoute();
               },
-              error: (error: HttpErrorResponse) => {
-                this.message.popup("Oops!", error.message, "error");
-              },
+              // error: (error: HttpErrorResponse) => {
+              // 	this.message.popup("Oops!", error.message, "error");
+              // },
             });
             this.subscribes.push(sub);
           }
@@ -248,12 +226,11 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
           next: (res: HttpResponse<IBaseResponse<null>>) => {
             this.message.toast(res.body?.message!, "success");
             this.uiState.updatedState = true;
-            this.previewModalRef.close();
             this.backToMainRoute();
           },
-          error: (error: HttpErrorResponse) => {
-            this.message.popup("Oops!", error.message, "error");
-          },
+          // error: (error: HttpErrorResponse) => {
+          // 	this.message.popup("Oops!", error.message, "error");
+          // },
         });
         this.subscribes.push(sub);
       }
@@ -303,7 +280,6 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
             this.message.toast(res.body?.message!, "success");
             this.uiState.updatedState = true;
             this.addToGroupModalRef.close();
-            this.previewModalRef.close();
             this.backToMainRoute();
           } else this.message.popup("Sorry", res.body?.message!, "warning");
         },
@@ -315,11 +291,7 @@ export class ClientPreviewComponent implements AfterViewInit, OnDestroy {
 
   // To Do back to main route when close modal
   backToMainRoute() {
-    this.previewModalRef.hidden.subscribe(() => {
-      this.router.navigate([{ outlets: { details: null } }], {
-        state: { updated: this.uiState.updatedState },
-      });
-    });
+    this.modalService.dismissAll();
   }
 
   ngOnDestroy() {

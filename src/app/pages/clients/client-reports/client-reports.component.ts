@@ -14,6 +14,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { IClientReportFiltersForm, IClientReportReq } from "src/app/shared/app/models/Clients/iclient-report";
 import AppUtils from "src/app/shared/app/util";
+import { NavigationStart, Router } from "@angular/router";
 
 @Component({
 	selector: "app-client-reports",
@@ -49,7 +50,8 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
-		private utils: AppUtils
+		private utils: AppUtils,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -63,16 +65,32 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 			res.ClientTypes?.content! ? (this.uiState.lists.typesList = [{ id: 0, name: "Select All" }, ...res.ClientTypes?.content!]) : "";
 		});
-		this.subscribes.push(sub);
+		let sub2 = this.router.events.subscribe((event) => {
+			if (event instanceof NavigationStart) {
+				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+			}
+		});
+		this.subscribes.push(sub, sub2);
+
+		let date = new Date();
+		let todayDate = {
+			gon: {
+				year: date.getFullYear(),
+				month: date.getMonth() + 1,
+				day: date.getDate(),
+			},
+		};
+		this.minDate(todayDate);
+		this.maxDate(todayDate);
 	}
 
 	initFilterForm(): void {
 		this.filterForms = new FormGroup<IClientReportFiltersForm>({
-			status: new FormControl(["Active"]),
+			status: new FormControl(["Active"], Validators.required),
 			name: new FormControl(""),
 			accountNumber: new FormControl(""),
 			crNO: new FormControl("Select All"),
-			producer: new FormControl("Select All", Validators.required),
+			producer: new FormControl("Select All"),
 			type: new FormControl("Select All"),
 			branchs: new FormControl([]),
 			minDate: new FormControl(null, Validators.required),
@@ -92,6 +110,26 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 				break;
 			default:
 				break;
+		}
+	}
+	ngSelectChange(listName: string) {
+		switch (listName) {
+			case "status":
+				this.f.status?.value?.length! < this.uiState.lists.clientStatus.length
+					? this.uiState.checkAllContorls.checkAllStatus.patchValue(false)
+					: this.f.status?.value?.length! == this.uiState.lists.clientStatus.length
+					? this.uiState.checkAllContorls.checkAllStatus.patchValue(true)
+					: "";
+				break;
+			case "branchs":
+				this.f.branchs?.value?.length! < this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllContorls.checkAllBranches.patchValue(false)
+					: this.f.branchs?.value?.length! == this.uiState.lists.branchesLists.length
+					? this.uiState.checkAllContorls.checkAllBranches.patchValue(true)
+					: "";
+				break;
+			default:
+				return;
 		}
 	}
 

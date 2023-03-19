@@ -73,7 +73,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany">
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Class Of Business -->
@@ -93,7 +94,8 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="classOfBusiness">
+                                                        formControlName="classOfBusiness"
+                                                        (change)="ngSelectChange('classOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Status -->
@@ -111,7 +113,7 @@
                                                         placeholder="Select Status" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="status">
+                                                        formControlName="status" (change)="ngSelectChange('status')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Report Type -->
@@ -121,7 +123,7 @@
                                                     </div>
                                                     <ng-select [items]="(lookupData | async)?.CSReportType?.content!"
                                                         placeholder="Select Report Type" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="id" formControlName="reportType">
                                                     </ng-select>
                                                 </div>
@@ -132,7 +134,7 @@
                                                     </div>
                                                     <ng-select [items]="(lookupData | async)?.CSReportStatus?.content!"
                                                         placeholder="Select Status" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="id" formControlName="currentStatus">
                                                     </ng-select>
                                                 </div>

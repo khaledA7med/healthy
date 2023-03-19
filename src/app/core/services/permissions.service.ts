@@ -68,6 +68,14 @@ export class PermissionsService {
     return this.hasPrivilege(privilege, Roles.CustomerService);
   }
 
+  hasMasterTablesPrivilege(privilege: string[]): BehaviorSubject<boolean> {
+    return this.hasPrivilege(privilege, Roles.MasterTables);
+  }
+
+  hasClaimsPrivilege(privilege: string[]): BehaviorSubject<boolean> {
+    return this.hasPrivilege(privilege, Roles.Claims);
+  }
+
   getPrivileges(module: keyof IPrivileges): Observable<string[]> {
     return this.getAccessRoles().pipe(
       map((privileges: IPrivileges) => privileges?.[module] || [])
