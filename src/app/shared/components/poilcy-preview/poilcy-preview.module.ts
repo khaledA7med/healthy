@@ -7,7 +7,8 @@ import { SharedModule } from "../../shared.module";
 export const routes: Routes = [{ path: "", component: PoilcyPreviewComponent }];
 
 @NgModule({
-	declarations: [PoilcyPreviewComponent],
-	imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  declarations: [PoilcyPreviewComponent],
+  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  exports: [PoilcyPreviewComponent],
 })
 export class PoilcyPreviewModule {}
