@@ -102,7 +102,6 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy {
     const data: IDefaultEmailsData = {
       ...form.getRawValue(),
     };
-    console.log(data);
     let sub = this.DefaultEmailsService.saveDefaultEmails(data).subscribe(
       (res: IBaseResponse<any>) => {
         if (res?.status) {
