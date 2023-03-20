@@ -4,7 +4,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import { ApiRoutes } from 'src/app/shared/app/routers/ApiRoutes';
 import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { IPolicyIssuanceRequirements, IPolicyIssuanceRequirementsData } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements';
+import { IPolicyIssuanceRequirements, IPolicyIssuanceRequirementsData, IPolicyIssuanceRequirementsFilter } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements';
 
 @Injectable({
   providedIn: 'root'
@@ -16,22 +16,22 @@ export class PolicyIssuanceRequirementsService
 
   constructor (private http: HttpClient) { }
 
-  getPolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirements[]>>>
+  getPolicyIssuanceRequirements (data: { class: string, lineOfBusiness: string, insuranceCopmany: string }): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirementsFilter[]>>>
   {
-    return this.http.post<IBaseResponse<IPolicyIssuanceRequirements[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.search, data, {
+    return this.http.post<IBaseResponse<IPolicyIssuanceRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.search, { ...data }, {
       observe: "response",
     });
   }
 
-  savePolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<HttpResponse<IBaseResponse<number>>>
+  savePolicyIssuanceRequirements (data: IPolicyIssuanceRequirementsData): Observable<IBaseResponse<IPolicyIssuanceRequirementsData[]>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<IPolicyIssuanceRequirementsData[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.save, { ...data });
   }
 
 
-  getEditPolicyIssuanceRequirements (id: string): Observable<HttpResponse<IBaseResponse<IPolicyIssuanceRequirementsData>>>
+  getEditPolicyIssuanceRequirements (id: string): Observable<IBaseResponse<IPolicyIssuanceRequirementsData>>
   {
-    return this.http.get<IBaseResponse<IPolicyIssuanceRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.edit, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IPolicyIssuanceRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.PolicyIssuanceRequirements.edit, { params: { id } });
   }
 
   DeletePolicyIssuanceRequirements (id: string): Observable<HttpResponse<IBaseResponse<number>>>

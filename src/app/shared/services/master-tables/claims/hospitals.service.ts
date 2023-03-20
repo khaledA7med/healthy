@@ -22,7 +22,7 @@ export class HospitalsService
     });
   }
 
-  saveHospitals (data: IHospitalsData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveHospitals (data: FormData): Observable<HttpResponse<IBaseResponse<number>>>
   {
     return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.hospitals.save, data, { observe: "response" });
   }

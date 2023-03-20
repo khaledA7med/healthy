@@ -10,7 +10,13 @@ import { VehiclesTypeListControlsComponent } from "./vehicles-type-list-controls
 export const routes: Routes = [{ path: "", component: VehiclesTypeComponent }];
 
 @NgModule({
-	declarations: [VehiclesTypeComponent, VehiclesTypeListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule, RouterModule.forChild(routes)],
+  declarations: [VehiclesTypeComponent, VehiclesTypeListControlsComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AgGridModule,
+    NgbModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class VehiclesTypeModule {}

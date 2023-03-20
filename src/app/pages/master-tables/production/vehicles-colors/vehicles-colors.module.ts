@@ -7,10 +7,18 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { VehiclesColorListControlsComponent } from "./vehicles-color-list-controls.component";
 
-export const routes: Routes = [{ path: "", component: VehiclesColorsComponent }];
+export const routes: Routes = [
+  { path: "", component: VehiclesColorsComponent },
+];
 
 @NgModule({
-	declarations: [VehiclesColorsComponent, VehiclesColorListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule, RouterModule.forChild(routes)],
+  declarations: [VehiclesColorsComponent, VehiclesColorListControlsComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AgGridModule,
+    NgbModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class VehiclesColorsModule {}

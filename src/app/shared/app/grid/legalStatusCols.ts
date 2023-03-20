@@ -13,7 +13,6 @@ export const legalStatusCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sno",
-        minWidth: 100,
     },
     {
         headerName: "Legal Status",

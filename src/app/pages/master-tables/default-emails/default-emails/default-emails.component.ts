@@ -1,4 +1,4 @@
-import { HttpResponse } from "@angular/common/http";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { EventService } from "src/app/core/services/event.service";
 import { Observable, Subscription } from "rxjs";
@@ -10,117 +10,115 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { DefaultEmailsService } from "src/app/shared/services/master-tables/default-emails.service";
-import { IDefaultEmails, IDefaultEmailsData } from "src/app/shared/app/models/MasterTables/i-default-emails";
+import {
+  IDefaultEmails,
+  IDefaultEmailsData,
+} from "src/app/shared/app/models/MasterTables/i-default-emails";
 
 @Component({
-	selector: "app-default-emails",
-	templateUrl: "./default-emails.component.html",
-	styleUrls: ["./default-emails.component.scss"],
+  selector: "app-default-emails",
+  templateUrl: "./default-emails.component.html",
+  styleUrls: ["./default-emails.component.scss"],
 })
 export class DefaultEmailsComponent implements OnInit, OnDestroy {
-	lookupData!: Observable<IBaseMasterTable>;
-	DefaultEmailsFormSubmitted = false as boolean;
-	DefaultEmailsForm!: FormGroup<IDefaultEmails>;
+  lookupData!: Observable<IBaseMasterTable>;
+  DefaultEmailsFormSubmitted = false as boolean;
+  DefaultEmailsForm!: FormGroup<IDefaultEmails>;
 
-	uiState = {
-		submitted: false,
-		getDefaultEmailsMode: false as Boolean,
-		getDefaultEmailsData: {} as IDefaultEmailsData,
-		list: [] as IDefaultEmails,
-		category: "Claims - Clients",
-	};
-	subscribes: Subscription[] = [];
+  uiState = {
+    submitted: false as Boolean,
+    getDefaultEmailsMode: false as Boolean,
+    getDefaultEmailsData: {} as IDefaultEmailsData,
+    category: "Claims - Clients",
+  };
+  subscribes: Subscription[] = [];
 
-	getDefaultEmails() {
-		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.DefaultEmailsService.getDefaultEmails(this.uiState.category).subscribe((res: HttpResponse<IBaseResponse<IDefaultEmailsData>>) => {
-			if (res.body?.status) {
-				this.uiState.getDefaultEmailsMode = true;
-				this.uiState.getDefaultEmailsData = res.body?.data!;
-				this.fillDefaultEmails(res.body?.data!);
-			} else this.message.popup("Oops!", res.body?.message!, "error");
+  getDefaultEmails(category: string): void {
+    let sub = this.DefaultEmailsService.getDefaultEmails(category).subscribe(
+      (res: HttpResponse<IBaseResponse<IDefaultEmailsData>>) => {
+        if (res.body?.status) {
+          this.uiState.getDefaultEmailsMode = true;
+          this.uiState.getDefaultEmailsData = res.body?.data!;
+          this.f.category?.patchValue(
+            this.uiState.getDefaultEmailsData.category!
+          );
+          this.f.item?.patchValue(this.uiState.getDefaultEmailsData.item!);
+        } else this.message.toast(res.body?.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
-			this.eventService.broadcast(reserved.isLoading, false);
-		});
-		this.subscribes.push(sub);
-	}
+  constructor(
+    private DefaultEmailsService: DefaultEmailsService,
+    private message: MessagesService,
+    private table: MasterTableService,
+    private eventService: EventService
+  ) {}
 
-	constructor(
-		private DefaultEmailsService: DefaultEmailsService,
-		private message: MessagesService,
-		private table: MasterTableService,
-		private eventService: EventService
-	) {}
+  ngOnInit(): void {
+    this.initDefaultEmailsForm();
+    this.f.category?.patchValue(this.uiState.category);
+    this.getDefaultEmails(this.uiState.category);
+    this.getLookupData();
+  }
 
-	ngOnInit(): void {
-		this.initDefaultEmailsForm();
-		this.getLookupData();
-	}
+  getLookupData() {
+    this.lookupData = this.table.getBaseData(MODULES.DefaultEmails);
+  }
 
-	getLookupData() {
-		this.lookupData = this.table.getBaseData(MODULES.DefaultEmails);
-	}
+  initDefaultEmailsForm() {
+    this.DefaultEmailsForm = new FormGroup<IDefaultEmails>({
+      category: new FormControl(null, Validators.required),
+      item: new FormControl(null, Validators.required),
+    });
+  }
 
-	initDefaultEmailsForm() {
-		this.DefaultEmailsForm = new FormGroup<IDefaultEmails>({
-			category: new FormControl("", Validators.required),
-			item: new FormControl("", Validators.required),
-		});
-	}
+  get f() {
+    return this.DefaultEmailsForm.controls;
+  }
 
-	get f() {
-		return this.DefaultEmailsForm.controls;
-	}
+  validationChecker(): boolean {
+    if (this.DefaultEmailsForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
 
-	fillAddLineOfBusinessForm(data: IDefaultEmailsData) {
-		this.f.category?.patchValue(data.category!);
-		this.f.item?.patchValue(data.item!);
-	}
+  filter(e: any) {
+    this.uiState.category = e?.name;
+    this.getDefaultEmails(this.uiState.category);
+  }
 
-	fillDefaultEmails(data: IDefaultEmailsData) {
-		this.f.item?.patchValue(data.item!);
-	}
+  submitDefaultEmailsData(form: FormGroup<IDefaultEmails>) {
+    this.uiState.submitted = true;
+    if (!this.validationChecker()) return;
+    const data: IDefaultEmailsData = {
+      ...form.getRawValue(),
+    };
+    let sub = this.DefaultEmailsService.saveDefaultEmails(data).subscribe(
+      (res: IBaseResponse<any>) => {
+        if (res?.status) {
+          this.message.toast(res.message!, "success");
+          this.getDefaultEmails(this.uiState.category);
+        } else this.message.popup("Sorry!", res.message!, "warning");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
+    );
+    this.subscribes.push(sub);
+  }
 
-	validationChecker(): boolean {
-		if (this.DefaultEmailsForm.invalid) {
-			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
-			return false;
-		}
-		return true;
-	}
+  resetDefaultEmailsForm() {
+    this.DefaultEmailsForm.reset();
+  }
 
-	filter(e: any) {
-		this.uiState.category = e?.name;
-		this.getDefaultEmails();
-	}
-
-	submitDefaultEmailsData(form: FormGroup) {
-		this.uiState.submitted = true;
-		const formData = form.getRawValue();
-		const data: IDefaultEmailsData = {
-			category: formData.category,
-			item: formData.item,
-		};
-		if (!this.validationChecker()) return;
-		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.DefaultEmailsService.saveDefaultEmails(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-			if (res.body?.status) {
-				this.uiState.submitted = false;
-				this.resetDefaultEmailsForm();
-				this.getDefaultEmails();
-				this.message.toast(res.body?.message!, "success");
-			} else this.message.popup("Oops!", res.body?.message!, "error");
-
-			this.eventService.broadcast(reserved.isLoading, false);
-		});
-		this.subscribes.push(sub);
-	}
-
-	resetDefaultEmailsForm() {
-		this.DefaultEmailsForm.reset();
-	}
-
-	ngOnDestroy(): void {
-		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-	}
+  ngOnDestroy(): void {
+    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+  }
 }

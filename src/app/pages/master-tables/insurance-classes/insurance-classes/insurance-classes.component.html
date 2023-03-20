@@ -27,7 +27,7 @@
 
                     <!-- Class Of Insurance -->
                     <div class="col-12 mb-2">
-                        <label for="className">Class Of Insurance</label>
+                        <label for="className" class="asterisk-input">Class Of Insurance</label>
                         <input id="classNameAr" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                             formControlName="className" />
@@ -44,8 +44,10 @@
 
                     <!-- abbreviation -->
                     <div class="col-12 mb-2">
-                        <label for="abbreviation">Abbreviation</label>
-                        <input id="abbreviation" class="form-control form-control-sm" formControlName="abbreviation" />
+                        <label for="abbreviation" class="asterisk-input">Abbreviation</label>
+                        <input id="abbreviation" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
+                            formControlName="abbreviation" />
 
                     </div>
                 </div>

@@ -13,7 +13,6 @@ export const nationalitiesCols: ColDef[] = [
     {
         headerName: "No.",
         field: "sno",
-        minWidth: 100,
     },
     {
         headerName: "Nationality",

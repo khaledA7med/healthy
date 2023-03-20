@@ -14,11 +14,10 @@
                                 <div class="row my-4">
 
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                                        <label for="status" class="asterisk-input">Status</label>
-                                        <ng-select id="status" class="form-control-sm is-invalid"
-                                            placeholder="Select Status" formControlName="status" bindValue="name"
-                                            bindLabel="name" (change)="filter($event)"
-                                            [loading]="lookupData ? false : true"
+                                        <label class="asterisk-input">Status</label>
+                                        <ng-select class="form-control-sm is-invalid" placeholder="Select Status"
+                                            formControlName="status" bindValue="name" bindLabel="name"
+                                            (change)="filter($event)" [loading]="lookupData ? false : true"
                                             [items]="(lookupData | async)?.ClaimStatus?.content!">
                                         </ng-select>
                                         <span *ngIf="(f.status?.touched || uiState.submitted) && f.status?.invalid"
@@ -80,8 +79,8 @@
                 <div class="col-12 row">
 
                     <div class="col-lg-12 col-md-12 col-sm-12 my-1">
-                        <label for="status" class="asterisk-input">Status</label>
-                        <ng-select id="status" class="form-control-sm is-invalid" placeholder="Select Status"
+                        <label class="asterisk-input">Status</label>
+                        <ng-select class="form-control-sm is-invalid" placeholder="Select Status"
                             formControlName="status" bindValue="name" bindLabel="name" (change)="filter($event)"
                             [loading]="lookupData ? false : true" [items]="(lookupData | async)?.ClaimStatus?.content!">
                         </ng-select>

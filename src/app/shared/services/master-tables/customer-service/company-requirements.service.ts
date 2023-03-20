@@ -17,20 +17,20 @@ export class CompanyRequirementsService
 
   constructor (private http: HttpClient) { }
 
-  getCompanyRequirements (filter: ICompanyRequirementsFilter): Observable<HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>>
+  getCompanyRequirements (data: { endorsType: string, classofInsurance: string, insuranceCompanyID: number, lineOfBusiness: string }): Observable<HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>>
   {
-    return this.http.post<IBaseResponse<ICompanyRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.search, { ...filter }, {
+    return this.http.post<IBaseResponse<ICompanyRequirementsFilter[]>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.search, { ...data }, {
       observe: "response",
     });
   }
 
-  saveCompanyRequirements (data: IAddCompanyRequirementsData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveCompanyRequirements (data: IAddCompanyRequirementsData): Observable<IBaseResponse<any>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.save, { ...data });
   }
 
-  DeleteCompanyRequirements (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteCompanyRequirements (sno: number): Observable<IBaseResponse<any>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.delete, {}, { params: { sno }, observe: "response" })
+    return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.delete, {}, { params: { sno } })
   }
 }
