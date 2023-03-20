@@ -1098,25 +1098,27 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
   checkPolicyEndorsNo(): void {
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.productionService
-      .checkEndorsNo(this.f.policyNo?.value!, this.f.endorsNo?.value!)
-      .subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
-          this.eventService.broadcast(reserved.isLoading, false);
-          this.message
-            .templateComfirmation(
-              "Attention!",
-              res.body.message!,
-              "Continue",
-              "info",
-              "question"
-            )
-            .then((res: SweetAlertResult) => {
-              if (res.isConfirmed) this.sendFormRequestData();
-            });
-        } else this.sendFormRequestData();
-      });
-    this.subscribes.push(sub);
+    if (this.f.issueType?.value === issueType.endorsement) {
+      let sub = this.productionService
+        .checkEndorsNo(this.f.policyNo?.value!, this.f.endorsNo?.value!)
+        .subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+          if (res.body?.status) {
+            this.eventService.broadcast(reserved.isLoading, false);
+            this.message
+              .templateComfirmation(
+                "Attention!",
+                res.body.message!,
+                "Continue",
+                "info",
+                "question"
+              )
+              .then((res: SweetAlertResult) => {
+                if (res.isConfirmed) this.sendFormRequestData();
+              });
+          } else this.sendFormRequestData();
+        });
+      this.subscribes.push(sub);
+    } else this.sendFormRequestData();
   }
 
   sendFormRequestData(): void {
