@@ -8,7 +8,7 @@ export enum ProductionPermissions {
   ViewAllBranchs = "ViewAllBranchs",
   ChAccessAllProducersProduction = "ChAccessAllProducersProduction",
   ChProductionAccessAllUsers = "ChProductionAccessAllUsers",
-  ChEditCommissions = "ChEditCommissions",
+  ChChangeProducerComm = "ChChangeProducerComm",
   ChUpdateDeliveryStatus = "ChUpdateDeliveryStatus",
   ChHideCompanyCommission = "ChHideCompanyCommission",
   ChHideProducerCommission = "ChHideProducerCommission",
