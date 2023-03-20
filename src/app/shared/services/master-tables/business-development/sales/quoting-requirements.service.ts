@@ -23,15 +23,15 @@ export class QuotingRequirementsService
     });
   }
 
-  saveQuotingRequirements (data: IQuotingRequirementsData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveQuotingRequirements (data: IQuotingRequirementsData): Observable<IBaseResponse<IQuotingRequirementsData[]>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<IQuotingRequirementsData[]>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.save, { ...data });
   }
 
 
-  getEditQuotingRequirements (id: string): Observable<HttpResponse<IBaseResponse<IQuotingRequirementsData>>>
+  getEditQuotingRequirements (id: string): Observable<IBaseResponse<IQuotingRequirementsData>>
   {
-    return this.http.get<IBaseResponse<IQuotingRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.edit, { params: { id }, observe: "response" });
+    return this.http.get<IBaseResponse<IQuotingRequirementsData>>(this.env + ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements.edit, { params: { id } });
   }
 
   DeleteQuotingRequirements (id: string): Observable<HttpResponse<IBaseResponse<number>>>

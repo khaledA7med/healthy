@@ -14,13 +14,13 @@ export interface IAddCompanyRequirements
 }
 export interface IAddCompanyRequirementsData
 {
-    sno?: number;
-    endorsType?: string;
-    classofInsurance?: string;
-    insuranceCompanyID?: number;
-    lineOfBusiness?: string;
-    insuranceCompanyName?: string;
-    item?: string;
-    oldItem?: string;
-    userName?: string;
+    sno?: number | null;
+    endorsType?: string | null;
+    classofInsurance?: string | null;
+    insuranceCompanyID?: number | null;
+    lineOfBusiness?: string | null;
+    insuranceCompanyName?: string | null;
+    item?: string | null;
+    oldItem?: string | null;
+    userName?: string | null;
 }

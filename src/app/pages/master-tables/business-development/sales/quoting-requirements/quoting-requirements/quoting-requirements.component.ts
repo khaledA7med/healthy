@@ -29,6 +29,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   QuotingRequirementsFormSubmitted = false as boolean;
   QuotingRequirementsModal!: NgbModalRef;
   QuotingRequirementsForm!: FormGroup<IQuotingRequirements>;
+  EditQuotingRequirementsForm!: FormGroup<IQuotingRequirements>;
   lineOfBussArr: IGenericResponseType[] = [];
 
   @ViewChild("QuotingRequirementsContent") QuotingRequirementsContent!: TemplateRef<any>;
@@ -42,10 +43,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     totalPages: 0,
     editQuotingRequirementsMode: false as Boolean,
     editQuotingRequirementsData: {} as IQuotingRequirementsData,
-    class: "Accident",
-    lineOfBusiness: "Group Personal Accident",
-    insuranceCompanies: "--All--",
-    defaultTick: 0
   };
   isChecked!: number;
   subscribes: Subscription[] = [];
@@ -64,6 +61,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -72,7 +70,8 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     getRows: (params: IGetRowsParams) =>
     {
       this.gridApi.showLoadingOverlay();
-      let sub = this.QuotingRequirementsService.getQuotingRequirements({ class: this.f.class?.value!, lineOfBusiness: this.f.lineOfBusiness?.value!, insuranceCopmany: this.f.insuranceCopmany?.value! }).subscribe(
+      const data: { class: string, lineOfBusiness: string, insuranceCopmany: string } = { class: this.f.class?.value!, lineOfBusiness: this.f.lineOfBusiness?.value!, insuranceCopmany: this.f.insuranceCopmany?.value! }
+      let sub = this.QuotingRequirementsService.getQuotingRequirements(data).subscribe(
         (res: HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>) =>
         {
           if (res.body?.status)
@@ -117,7 +116,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
   constructor (
@@ -132,6 +131,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   ngOnInit (): void
   {
     this.initQuotingRequirementsForm();
+    this.initEditQuotingRequirementsForm();
     this.getLookupData();
   }
 
@@ -172,63 +172,55 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     this.subscribes.push(sub);
   }
 
-  checkValue (event: any)
-  {
-    this.uiState.defaultTick = event;
-  }
-
   getQuotingRequirementsData (id: string)
   {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.QuotingRequirementsService.getEditQuotingRequirements(id).subscribe(
-      (res: HttpResponse<IBaseResponse<IQuotingRequirementsData>>) =>
+      (res: IBaseResponse<IQuotingRequirementsData>) =>
       {
-        this.uiState.editQuotingRequirementsMode = true;
-        this.uiState.editQuotingRequirementsData = res.body?.data!;
-        this.fillEditQuotingRequirementsForm(res.body?.data!);
-        this.eventService.broadcast(reserved.isLoading, false);
+        if (res?.status)
+        {
+          this.uiState.editQuotingRequirementsMode = true;
+          this.uiState.editQuotingRequirementsData = res.data!;
+          this.EditQuotingRequirementsForm.patchValue({ ...this.uiState.editQuotingRequirementsData, defaultTick: this.uiState.editQuotingRequirementsData.defaultTick === 1 ? true : false })
+          this.openQuotingRequirementsDialoge();
+        } else this.message.toast(res.message!, "error");
       },
       (err: HttpErrorResponse) =>
       {
         this.message.popup("Oops!", err.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
       }
     );
     this.subscribes.push(sub);
   }
 
-  openQuotingRequirementsDialoge (id: string)
+  openQuotingRequirementsDialoge ()
   {
-    this.resetQuotingRequirementsForm();
     this.QuotingRequirementsModal = this.modalService.open(this.QuotingRequirementsContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
-      size: "md",
+      size: "lg",
     });
-
-    this.getQuotingRequirementsData(id);
 
     this.QuotingRequirementsModal.hidden.subscribe(() =>
     {
-      this.resetQuotingRequirementsForm();
-      this.QuotingRequirementsFormSubmitted = false;
-      this.uiState.editQuotingRequirementsMode = false;
+      this.resetEditQuotingRequirementsForm();
     });
   }
 
   initQuotingRequirementsForm ()
   {
     this.QuotingRequirementsForm = new FormGroup<IQuotingRequirements>({
-      sNo: new FormControl(null),
-      item: new FormControl("", Validators.required),
-      itemArabic: new FormControl("", Validators.required),
-      description: new FormControl(""),
-      descriptionArabic: new FormControl(""),
-      defaultTick: new FormControl(null),
-      class: new FormControl("", Validators.required),
-      lineOfBusiness: new FormControl("", Validators.required),
-      insuranceCopmany: new FormControl("", Validators.required),
+      sNo: new FormControl(0),
+      item: new FormControl(null, Validators.required),
+      itemArabic: new FormControl(null, Validators.required),
+      description: new FormControl(null),
+      descriptionArabic: new FormControl(null),
+      defaultTick: new FormControl(false),
+      class: new FormControl(null, Validators.required),
+      lineOfBusiness: new FormControl(null, Validators.required),
+      insuranceCopmany: new FormControl(null, Validators.required),
     })
   }
 
@@ -237,25 +229,19 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     return this.QuotingRequirementsForm.controls;
   }
 
-  fillAddQuotingRequirementsForm (data: IQuotingRequirementsData)
+  initEditQuotingRequirementsForm ()
   {
-    this.f.item?.patchValue(data.item!);
-    this.f.itemArabic?.patchValue(data.itemArabic!);
-    this.f.description?.patchValue(data.description!);
-    this.f.descriptionArabic?.patchValue(data.descriptionArabic!);
-    this.f.defaultTick?.patchValue(data.defaultTick!);
-    this.f.class?.patchValue(data.class!);
-    this.f.lineOfBusiness?.patchValue(data.lineOfBusiness!);
-    this.f.insuranceCopmany?.patchValue(data.insuranceCopmany!);
-  }
-
-  fillEditQuotingRequirementsForm (data: IQuotingRequirementsData)
-  {
-    this.f.item?.patchValue(data.item!);
-    this.f.itemArabic?.patchValue(data.itemArabic!);
-    this.f.description?.patchValue(data.description!);
-    this.f.descriptionArabic?.patchValue(data.descriptionArabic!);
-    this.f.defaultTick?.patchValue(data.defaultTick!);
+    this.EditQuotingRequirementsForm = new FormGroup<IQuotingRequirements>({
+      sNo: new FormControl(null),
+      defaultTick: new FormControl(null),
+      class: new FormControl(null),
+      lineOfBusiness: new FormControl(null),
+      insuranceCopmany: new FormControl(null),
+      item: new FormControl(null, Validators.required),
+      itemArabic: new FormControl(null, Validators.required),
+      description: new FormControl(null),
+      descriptionArabic: new FormControl(null),
+    });
   }
 
   validationChecker (): boolean
@@ -268,45 +254,57 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitQuotingRequirementsData (form: FormGroup)
+  submitQuotingRequirementsData (form: FormGroup<IQuotingRequirements>)
   {
     this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IQuotingRequirementsData = {
-      sNo: this.uiState.editQuotingRequirementsMode ? this.uiState.editQuotingRequirementsData.sNo : 0,
-      class: formData.class,
-      item: formData.item,
-      itemArabic: formData.itemArabic,
-      description: formData.description,
-      descriptionArabic: formData.descriptionArabic,
-      defaultTick: this.uiState.defaultTick,
-      lineOfBusiness: formData.lineOfBusiness,
-      insuranceCopmany: formData.insuranceCompanies
-    };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
+
+    // const formData = form.getRawValue();
+    const data: IQuotingRequirementsData = {
+      ...form.getRawValue(),
+      defaultTick: form.getRawValue().defaultTick === true ? 1 : 0,
+    };
     let sub = this.QuotingRequirementsService.saveQuotingRequirements(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
+      (res: IBaseResponse<any>) =>
       {
-        this.QuotingRequirementsModal?.dismiss();
+        if (res.status)
+        {
+          if (this.uiState.editQuotingRequirementsMode)
+          {
+            this.QuotingRequirementsModal.dismiss();
+            this.eventService.broadcast(reserved.isLoading, false);
+          } else
+          {
+            this.f.item?.reset();
+            this.f.itemArabic?.reset();
+            this.f.description?.reset();
+            this.f.descriptionArabic?.reset();
+            this.f.defaultTick?.reset();
+          }
+          this.message.toast(res.message!, "success");
+          this.gridApi.setDatasource(this.dataSource);
+        } else this.message.popup("Sorry!", res.message!, "warning");
         this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetQuotingRequirementsForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
       },
-      (err: HttpErrorResponse) =>
+      (err) =>
       {
-        this.message.popup("Oops!", err.error.message, "error");
         this.eventService.broadcast(reserved.isLoading, false);
+        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
+  resetEditQuotingRequirementsForm ()
+  {
+    this.EditQuotingRequirementsForm.reset();
+  }
+
   resetQuotingRequirementsForm ()
   {
     this.QuotingRequirementsForm.reset();
+    this.uiState.submitted = false;
   }
 
   ngOnDestroy (): void

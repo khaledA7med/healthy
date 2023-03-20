@@ -58,7 +58,7 @@ export class PolicyIssuanceRequirementsFormsComponent
 
   Edit ()
   {
-    this.comp.openPolicyIssuanceRequirementsDialoge(this.params.data.identity);
+    this.comp.getPolicyIssuanceRequirementsData(this.params.data.identity);
   }
 
   Delete ()

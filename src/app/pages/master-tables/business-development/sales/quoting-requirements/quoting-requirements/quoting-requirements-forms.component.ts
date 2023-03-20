@@ -58,7 +58,7 @@ export class QuotingRequirementsFormsComponent
 
   Edit ()
   {
-    this.comp.openQuotingRequirementsDialoge(this.params.data.identity);
+    this.comp.getQuotingRequirementsData(this.params.data.identity);
   }
 
   Delete ()

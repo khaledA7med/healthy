@@ -24,13 +24,13 @@ export class CompanyRequirementsService
     });
   }
 
-  saveCompanyRequirements (data: IAddCompanyRequirementsData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveCompanyRequirements (data: IAddCompanyRequirementsData): Observable<IBaseResponse<any>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.save, { ...data });
   }
 
-  DeleteCompanyRequirements (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteCompanyRequirements (sno: number): Observable<IBaseResponse<any>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.delete, {}, { params: { sno }, observe: "response" })
+    return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.masterTables.customerService.customerServiceRequirements.delete, {}, { params: { sno } })
   }
 }
