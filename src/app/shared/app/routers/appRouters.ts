@@ -11,6 +11,9 @@ export const AppRoutes = {
     notFound: "pages/404",
     notAuth: "pages/401",
   },
+  Activities: {
+    taskboard: "taskboard",
+  },
   MasterTable: {
     insuranceClasses: "insurance-classes",
     lineOfBusiness: "line-of-business",

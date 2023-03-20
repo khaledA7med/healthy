@@ -1,0 +1,9 @@
+.btn-group button {
+  height: 26px;
+  &:active {
+    height: 26px;
+  }
+  &.active {
+    height: 26px !important;
+  }
+}

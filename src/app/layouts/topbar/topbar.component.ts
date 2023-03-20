@@ -31,6 +31,7 @@ export class TopbarComponent implements OnInit {
 
   userData!: UserAccess;
   emailRoute: string = AppRoutes.Email.base;
+  taskboardRoute: string = AppRoutes.Activities.taskboard;
 
   constructor(
     @Inject(DOCUMENT) private document: any,

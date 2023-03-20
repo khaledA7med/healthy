@@ -653,7 +653,7 @@ export class MenuService {
             link: AppRoutes.Production.editCommissions,
             parentId: 4,
             auth: privileges.Production?.includes(
-              ProductionPermissions.ChEditCommissions
+              ProductionPermissions.ChChangeProducerComm
             ),
           },
           {
