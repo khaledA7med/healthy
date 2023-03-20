@@ -28,14 +28,6 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { complaintsTypesCols } from "src/app/shared/app/grid/complaintTypesCols";
 import { ComplaintTypesService } from "src/app/shared/services/master-tables/customer-service/complaint-types.service";
-import { Subscription } from "rxjs";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { MessagesService } from "src/app/shared/services/messages.service";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { reserved } from "src/app/core/models/reservedWord";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { complaintsTypesCols } from "src/app/shared/app/grid/complaintTypesCols";
-import { ComplaintTypesService } from "src/app/shared/services/master-tables/customer-service/complaint-types.service";
 
 @Component({
   selector: "app-complaints-types",
