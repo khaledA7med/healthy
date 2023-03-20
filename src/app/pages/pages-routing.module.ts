@@ -52,6 +52,11 @@ const routes: Routes = [
     loadChildren: () =>
       import("./email/email.module").then((m) => m.EmailModule),
   },
+  {
+    path: "",
+    loadChildren: () =>
+      import("./activities/activities.module").then((m) => m.ActivitiesModule),
+  },
 ];
 
 @NgModule({

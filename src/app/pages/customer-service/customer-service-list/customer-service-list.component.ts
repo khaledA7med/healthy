@@ -1,6 +1,6 @@
 import { CustomerServiceService } from "./../../../shared/services/customer-service/customer-service.service";
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
@@ -136,8 +136,8 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 
-			let sub = this.customerService.getCustomerService(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<ICustomerService[]>>) => {
+			let sub = this.customerService.getCustomerService(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<ICustomerService[]>>) => {
+				if (res.body?.status) {
 					this.uiState.customerService.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
 					this.uiState.customerService.list = res.body?.data!;
@@ -145,13 +145,9 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 
 					params.successCallback(this.uiState.customerService.list, this.uiState.customerService.totalPages);
 					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-					this.gridApi.hideOverlay();
-				}
-			);
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.gridApi.hideOverlay();
+			});
 			this.subscribes.push(sub);
 		},
 	};
@@ -275,19 +271,14 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	}
 
 	loadFollowUpData(requestNo: string): void {
-		let sub = this.customerService.getFollowUps(requestNo).subscribe(
-			(res: HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>) => {
-				if (res.body?.status) {
-					this.uiState.followUpData.requestNo = requestNo;
-					this.uiState.followUpData.list = res.body?.data!;
-				} else {
-					this.message.popup("Oops!", res.body?.message!, "error");
-				}
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
+		let sub = this.customerService.getFollowUps(requestNo).subscribe((res: HttpResponse<IBaseResponse<ICustomerServiceFollowUp[]>>) => {
+			if (res.body?.status) {
+				this.uiState.followUpData.requestNo = requestNo;
+				this.uiState.followUpData.list = res.body?.data!;
+			} else {
+				this.message.popup("Oops!", res.body?.message!, "error");
 			}
-		);
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -310,18 +301,13 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
-			let sub = this.customerService.saveNote(this.followUpForm.value).subscribe(
-				(res: IBaseResponse<ICustomerServiceFollowUp[]>) => {
-					if (res.status) {
-						this.message.toast(res.message!, "success");
-						this.followUpForm.reset();
-						this.loadFollowUpData(this.uiState.followUpData.requestNo);
-					} else this.message.toast(res.message!, "error");
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-				}
-			);
+			let sub = this.customerService.saveNote(this.followUpForm.value).subscribe((res: IBaseResponse<ICustomerServiceFollowUp[]>) => {
+				if (res.status) {
+					this.message.toast(res.message!, "success");
+					this.followUpForm.reset();
+					this.loadFollowUpData(this.uiState.followUpData.requestNo);
+				} else this.message.toast(res.message!, "error");
+			});
 			this.subscribes.push(sub);
 		}
 	}
@@ -350,16 +336,11 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 				dataSubmit.status = status;
 				break;
 		}
-		let sub = this.customerService.changeStatus(dataSubmit).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				this.gridApi.setDatasource(this.dataSource);
-				if (res.body?.status) this.message.toast(res.body!.message!, "success");
-				else this.message.toast(res.body!.message!, "error");
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.customerService.changeStatus(dataSubmit).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.gridApi.setDatasource(this.dataSource);
+			if (res.body?.status) this.message.toast(res.body!.message!, "success");
+			else this.message.toast(res.body!.message!, "error");
+		});
 
 		this.subscribes.push(sub);
 	}
@@ -386,16 +367,16 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			parent.removeChild(statusCountChecker);
 		}
 		let childContent = `<div class=" col-12 d-flex align-items-center">
-					<div class="badge bg-warning mx-1 p-1 text-dark">
+					<div class="badge bg-warning mx-1 p-1 text-bg-light">
 					${CustomerServiceStatusRes.Pending} <span>(${pending.length})</span>
 					</div>
-					<div class="badge bg-yellow mx-1 p-1 text-dark">
+					<div class="badge bg-soft-yellow mx-1 p-1 text-bg-light">
 					${CustomerServiceStatusRes.NewRequest} <span>(${newReq.length})</span>
 					</div>
-					<div class="badge bg-success mx-1 p-1 text-dark">
+					<div class="badge bg-success mx-1 p-1 text-bg-light">
 					${CustomerServiceStatusRes.Closed} <span>(${closed.length})</span>
 					</div>
-					<div class="badge bg-danger mx-1 p-1 text-dark">
+					<div class="badge bg-danger mx-1 p-1 text-bg-light">
 					${CustomerServiceStatusRes.Cancelled} <span>(${cancelled.length})</span>
 					</div>
 					</div>`;

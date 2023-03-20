@@ -79,13 +79,13 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
       this.gridApi.showLoadingOverlay();
       let sub = this.InsuranceClassesService.getInsuranceClasses().subscribe(
         (res: HttpResponse<IBaseResponse<IInsuranceClass[]>>) => {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+          } else this.message.popup("Oops!", res.body?.message!, "error");
+
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
         }
       );
       this.subscribes.push(sub);

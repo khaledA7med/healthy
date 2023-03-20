@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Observable, Subscription, using } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
@@ -17,7 +17,7 @@ import { MODULES } from "src/app/core/models/MODULES";
 import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
-import { HttpResponse, HttpErrorResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { ISalesLeadFollowUpsForm, SalesLeadStatus, SalesLeadType } from "src/app/shared/app/models/BusinessDevelopment/business-development-util";
 import { DragulaService } from "ng2-dragula";
 import AppUtils from "src/app/shared/app/util";
@@ -31,7 +31,6 @@ import { reserved } from "src/app/core/models/reservedWord";
 	templateUrl: "./business-development-management.component.html",
 	styleUrls: ["./business-development-management.component.scss"],
 	encapsulation: ViewEncapsulation.None,
-	providers: [AppUtils],
 })
 export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy {
 	uiState = {
@@ -112,7 +111,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	};
 	constructor(
 		private businssDevelopmenService: BusinessDevelopmentService,
-		private tableRef: ElementRef,
 		private message: MessagesService,
 		private dragulaService: DragulaService,
 		private offcanvasService: NgbOffcanvas,
@@ -133,22 +131,23 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
 			if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, true);
-			let sub = this.businssDevelopmenService.getAllSalesLeads(this.uiState.filters).subscribe(
-				(res: HttpResponse<IBaseResponse<IBusinessDevelopment[]>>) => {
-					this.uiState.salesLead.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.businssDevelopmenService
+				.getAllSalesLeads(this.uiState.filters)
+				.subscribe((res: HttpResponse<IBaseResponse<IBusinessDevelopment[]>>) => {
+					if (res.body?.status) {
+						this.uiState.salesLead.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
-					this.uiState.salesLead.list = res.body?.data!;
-					params.successCallback(this.uiState.salesLead.list, this.uiState.salesLead.totalPages);
-					this.gridApi.hideOverlay();
-					this.uiState.gridReady = true;
-					this.cardsDataFiltering();
-					if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-					if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
-				}
-			);
+						this.uiState.salesLead.list = res.body?.data!;
+						params.successCallback(this.uiState.salesLead.list, this.uiState.salesLead.totalPages);
+						this.gridApi.hideOverlay();
+						this.uiState.gridReady = true;
+						this.cardsDataFiltering();
+						if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
+					} else {
+						this.message.popup("Oops!", res.body?.message!, "error");
+						if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
+					}
+				});
 			this.subscribes.push(sub);
 		},
 	};
@@ -280,19 +279,18 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 				dataSubmit.status = status;
 				break;
 		}
-		let sub = this.businssDevelopmenService.changeStatus(dataSubmit).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
+		let sub = this.businssDevelopmenService.changeStatus(dataSubmit).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			if (res.body?.status) {
 				this.gridApi.setDatasource(this.dataSource);
 				if (res.body?.status) this.message.toast(res.body!.message!, "success");
 				else this.message.toast(res.body!.message!, "error");
 
 				if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
+			} else {
+				this.message.popup("Oops!", res.body?.message!, "error");
 				if (this.uiState.view === "card") this.eventService.broadcast(reserved.isLoading, false);
 			}
-		);
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -380,19 +378,14 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	loadFollowUpData(leadNo: string): void {
-		let sub = this.businssDevelopmenService.getFollowUps(leadNo).subscribe(
-			(res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
-				if (res.body?.status) {
-					this.uiState.followUpData.leadNo = leadNo;
-					this.uiState.followUpData.list = res.body?.data!;
-				} else {
-					this.message.popup("Oops!", res.body?.message!, "error");
-				}
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
+		let sub = this.businssDevelopmenService.getFollowUps(leadNo).subscribe((res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
+			if (res.body?.status) {
+				this.uiState.followUpData.leadNo = leadNo;
+				this.uiState.followUpData.list = res.body?.data!;
+			} else {
+				this.message.popup("Oops!", res.body?.message!, "error");
 			}
-		);
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -414,21 +407,16 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			return;
 		} else {
 			this.eventService.broadcast(reserved.isLoading, true);
-			let sub = this.businssDevelopmenService.saveNote(this.followUpForm.value).subscribe(
-				(res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
+			let sub = this.businssDevelopmenService
+				.saveNote(this.followUpForm.value)
+				.subscribe((res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
 					if (res.body?.status) {
 						this.message.toast(res.body!.message!, "success");
 						this.followUpForm.reset();
 						this.loadFollowUpData(this.uiState.followUpData.leadNo);
 					} else this.message.toast(res.body!.message!, "error");
-
 					this.eventService.broadcast(reserved.isLoading, false);
-				},
-				(err: HttpErrorResponse) => {
-					this.message.popup("Oops!", err.message, "error");
-					this.eventService.broadcast(reserved.isLoading, false);
-				}
-			);
+				});
 			this.subscribes.push(sub);
 		}
 	}

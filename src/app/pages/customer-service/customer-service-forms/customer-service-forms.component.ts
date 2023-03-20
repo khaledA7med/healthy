@@ -8,7 +8,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import { EventService } from "src/app/core/services/event.service";
 import { reserved } from "src/app/core/models/reservedWord";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -242,34 +242,29 @@ export class CustomerServiceFormsComponent implements OnInit {
 	}
 
 	getEndorsTypeByPolicy(endorsType: string, policyNo: string) {
-		let sub = this.customerService.getEndorsTypeByPolicy(endorsType, policyNo).subscribe(
-			(res: HttpResponse<IBaseResponse<EndorsTypeByPolicy[]>>) => {
-				this.uiState.endorsTypes = res.body?.data!;
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+		let sub = this.customerService.getEndorsTypeByPolicy(endorsType, policyNo).subscribe((res: HttpResponse<IBaseResponse<EndorsTypeByPolicy[]>>) => {
+			if (res.body?.status) this.uiState.endorsTypes = res.body?.data!;
+			else this.message.popup("Oops!", res.body?.message!, "error");
+		});
 		this.subscribes.push(sub);
 	}
 
 	getCSRequirments(endorsType: string, insuranceCompName: string, classofInsurance: string, lineOfBusiness: string) {
 		this.f.requiermentsList.clear();
-		let sub = this.customerService.getCSRequirments(endorsType, insuranceCompName, classofInsurance, lineOfBusiness).subscribe(
-			(res: HttpResponse<IBaseResponse<string[]>>) => {
-				let data = [] as RequiermentsList[];
-				res.body?.data!.map((item: string) => {
-					data.push({
-						itemCheck: new FormControl(false),
-						itemValue: new FormControl(item),
+		let sub = this.customerService
+			.getCSRequirments(endorsType, insuranceCompName, classofInsurance, lineOfBusiness)
+			.subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				if (res.body?.status) {
+					let data = [] as RequiermentsList[];
+					res.body?.data!.map((item: string) => {
+						data.push({
+							itemCheck: new FormControl(false),
+							itemValue: new FormControl(item),
+						});
 					});
-				});
-				data.map((c: any) => this.createReqFormArr(c));
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-			}
-		);
+					data.map((c: any) => this.createReqFormArr(c));
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+			});
 		this.subscribes.push(sub);
 	}
 
@@ -392,19 +387,13 @@ export class CustomerServiceFormsComponent implements OnInit {
 				break;
 		}
 
-		let sub = this.customerService.changeStatus(dataSubmit).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				if (res.body?.status) {
-					this.message.toast(res.body!.message!, "success");
-					this.router.navigate([AppRoutes.CustomerService.base]);
-				} else this.message.toast(res.body!.message!, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err: HttpErrorResponse) => {
-				this.message.popup("Oops!", err.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
-			}
-		);
+		let sub = this.customerService.changeStatus(dataSubmit).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			if (res.body?.status) {
+				this.message.toast(res.body!.message!, "success");
+				this.router.navigate([AppRoutes.CustomerService.base]);
+			} else this.message.toast(res.body!.message!, "error");
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 
 		this.subscribes.push(sub);
 	}

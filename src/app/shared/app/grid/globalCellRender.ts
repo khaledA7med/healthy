@@ -77,11 +77,11 @@ export default class GlobalCellRender {
 
 	public static CSDurationChecker(e: CellEvent): string {
 		if (e?.data?.status! === CustomerServiceStatus.Pending && +e.value > 3 && +e.value < 30) {
-			return `<span class='badge bg-danger text-dark'>${e.value}</span>`;
+			return `<span class='badge bg-danger text-bg-light'>${e.value}</span>`;
 		} else if (e?.data?.status! === CustomerServiceStatus.Pending && +e.value > 30) {
-			return `<span class='badge bg-red text-dark'>${e.value}</span>`;
+			return `<span class='badge bg-red text-bg-light'>${e.value}</span>`;
 		} else if (e?.data?.status! === CustomerServiceStatus.Pending && +e.value <= 3) {
-			return `<span class='badge bg-soft-yellow text-dark'>${e.value}</span>`;
+			return `<span class='badge bg-soft-yellow text-bg-light'>${e.value}</span>`;
 		} else {
 			return `<span>${e.value}</span>`;
 		}
