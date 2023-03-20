@@ -6,7 +6,7 @@ import { ClaimsDocumentsComponent } from "./claims-documents/claims-documents.co
 import { ProductionDocumentsComponent } from "./production-documents/production-documents.component";
 
 @NgModule({
-	declarations: [],
-	imports: [CommonModule, ListOfRequiredDocumentsRoutingModule],
+  declarations: [],
+  imports: [CommonModule, ListOfRequiredDocumentsRoutingModule],
 })
 export class ListOfRequiredDocumentsModule {}

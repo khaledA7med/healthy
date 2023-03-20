@@ -1,31 +1,52 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Observable, Subscription } from 'rxjs';
-import { IBaseMasterTable } from 'src/app/core/models/masterTableModels';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { MasterTableService } from 'src/app/core/services/master-table.service';
-import { MODULES } from 'src/app/core/models/MODULES';
-import { HospitalsService } from 'src/app/shared/services/master-tables/claims/hospitals.service';
-import { hospitalsCols } from 'src/app/shared/app/grid/hospitalsCols';
-import { IHospitals, IHospitalsData } from 'src/app/shared/app/models/MasterTables/claims/hospitals/i-hospitals';
-import { IContactList } from 'src/app/shared/app/models/MasterTables/claims/hospitals/i-contact-list';
-import { INetworkList } from 'src/app/shared/app/models/MasterTables/claims/hospitals/i-network-list';
+import { Observable, Subscription } from "rxjs";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { reserved } from "src/app/core/models/reservedWord";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import { MODULES } from "src/app/core/models/MODULES";
+import { HospitalsService } from "src/app/shared/services/master-tables/claims/hospitals.service";
+import { hospitalsCols } from "src/app/shared/app/grid/hospitalsCols";
+import {
+  IHospitals,
+  IHospitalsData,
+} from "src/app/shared/app/models/MasterTables/claims/hospitals/i-hospitals";
+import { IContactList } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-contact-list";
+import { INetworkList } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-network-list";
 
 @Component({
-  selector: 'app-hospitals',
-  templateUrl: './hospitals.component.html',
-  styleUrls: [ './hospitals.component.scss' ],
+  selector: "app-hospitals",
+  templateUrl: "./hospitals.component.html",
+  styleUrls: ["./hospitals.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class HospitalsComponent implements OnInit, OnDestroy
-{
-
+export class HospitalsComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
   subscribes: Subscription[] = [];
   HospitalsFormSubmitted = false as boolean;
@@ -43,7 +64,7 @@ export class HospitalsComponent implements OnInit, OnDestroy
     editHospitalsData: {} as IHospitalsData,
   };
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -61,39 +82,34 @@ export class HospitalsComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private message: MessagesService,
     private HospitalsService: HospitalsService,
     private eventService: EventService,
     private modalService: NgbModal,
-    private table: MasterTableService,
-  ) { }
+    private table: MasterTableService
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initHospitalsForm();
     this.getLookupData();
   }
 
-  getLookupData ()
-  {
+  getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.Hospitals);
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.HospitalsService.getHospitals().subscribe(
-        (res: HttpResponse<IBaseResponse<IHospitals[]>>) =>
-        {
+        (res: HttpResponse<IBaseResponse<IHospitals[]>>) => {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
-        (err: HttpErrorResponse) =>
-        {
+        (err: HttpErrorResponse) => {
           this.message.popup("Oops!", err.message, "error");
         }
       );
@@ -101,32 +117,27 @@ export class HospitalsComponent implements OnInit, OnDestroy
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  openHospitalsDialoge (sno?: number)
-  {
+  openHospitalsDialoge(sno?: number) {
     this.resetHospitalsForm();
     this.HospitalsModal = this.modalService.open(this.HospitalsContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -134,36 +145,27 @@ export class HospitalsComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "xl",
     });
-    if (sno)
-    {
+    if (sno) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.HospitalsService.getEditHospitalsData(sno).subscribe(
-        (res: HttpResponse<IBaseResponse<IHospitalsData>>) =>
-        {
-          // this.uiState.editHospitalsMode = true;
-          // this.uiState.editHospitalsData = res.body?.data!;
-          this.fillEditHospitalsForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
+        (res: HttpResponse<IBaseResponse<IHospitalsData>>) => {
+          if (res.body?.status) {
+            this.fillEditHospitalsForm(res.body?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          } else this.message.toast(res.body!.message!, "error");
         }
       );
       this.subscribes.push(sub);
     }
 
-    this.HospitalsModal.hidden.subscribe(() =>
-    {
+    this.HospitalsModal.hidden.subscribe(() => {
       this.resetHospitalsForm();
       this.HospitalsFormSubmitted = false;
       this.uiState.editHospitalsMode = false;
     });
   }
 
-  initHospitalsForm ()
-  {
+  initHospitalsForm() {
     this.HospitalsForm = new FormGroup<IHospitals>({
       sno: new FormControl(null),
       name: new FormControl(null, Validators.required),
@@ -176,39 +178,32 @@ export class HospitalsComponent implements OnInit, OnDestroy
       region: new FormControl(null),
       contactList: new FormArray<FormGroup<IContactList>>([]),
       networkList: new FormArray<FormGroup<INetworkList>>([]),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f(): IHospitals {
     return this.HospitalsForm.controls;
   }
 
-  //#network List Array 
-  get networkListArray (): FormArray
-  {
+  //#network List Array
+  get networkListArray(): FormArray {
     return this.HospitalsForm.get("networkList") as FormArray;
   }
 
   //get network List Controls
-  networkLisControls (i: number, control: string): AbstractControl
-  {
-    return this.networkListArray.controls[ i ].get(control)!;
+  networkLisControls(i: number, control: string): AbstractControl {
+    return this.networkListArray.controls[i].get(control)!;
   }
   //#contact List Array
-  get contactListArray (): FormArray
-  {
+  get contactListArray(): FormArray {
     return this.HospitalsForm.get("contactList") as FormArray;
   }
   //get contact List Controls
-  contactListControls (i: number, control: string): AbstractControl
-  {
-    return this.contactListArray.controls[ i ].get(control)!;
+  contactListControls(i: number, control: string): AbstractControl {
+    return this.contactListArray.controls[i].get(control)!;
   }
-  addNetwork (data?: INetworkList)
-  {
-    if (this.f.networkList?.invalid)
-    {
+  addNetwork(data?: INetworkList): void {
+    if (this.f.networkList?.invalid) {
       this.f.networkList?.markAllAsTouched();
       return;
     }
@@ -239,10 +234,8 @@ export class HospitalsComponent implements OnInit, OnDestroy
     this.networkListArray.updateValueAndValidity();
   }
 
-  addContact (data?: IContactList)
-  {
-    if (this.f.contactList?.invalid)
-    {
+  addContact(data?: IContactList) {
+    if (this.f.contactList?.invalid) {
       this.f.contactList?.markAllAsTouched();
       return;
     }
@@ -261,24 +254,20 @@ export class HospitalsComponent implements OnInit, OnDestroy
     this.contactListArray.updateValueAndValidity();
   }
 
-  remove (i: number, type: string)
-  {
+  remove(i: number, type: string) {
     if (type === "network") this.networkListArray.removeAt(i);
     else if (type === "contact") this.contactListArray.removeAt(i);
     else return;
   }
 
-  enableEditingRow (i: number, type: string)
-  {
+  enableEditingRow(i: number, type: string) {
     if (type === "network") this.networkListArray.at(i).enable();
     else if (type === "contact") this.contactListArray.at(i).enable();
     else return;
   }
   //#endregion
 
-  fillAddHospitalsForm (data: IHospitalsData)
-  {
-    this.f.sno?.patchValue(data.sno!);
+  fillEditHospitalsForm(data: IHospitalsData) {
     this.f.name?.patchValue(data.name!);
     this.f.city?.patchValue(data.city!);
     this.f.address?.patchValue(data.address!);
@@ -287,22 +276,8 @@ export class HospitalsComponent implements OnInit, OnDestroy
     this.f.fax?.patchValue(data.fax!);
     this.f.specialties?.patchValue(data.specialties!);
     this.f.region?.patchValue(data.region!);
-    data.networkList?.forEach((sr: any) => this.addNetwork(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
-  }
-
-  fillEditHospitalsForm (data: IHospitalsData)
-  {
-    this.f.name?.patchValue(data.name!);
-    this.f.city?.patchValue(data.city!);
-    this.f.address?.patchValue(data.address!);
-    this.f.email?.patchValue(data.email!);
-    this.f.tele?.patchValue(data.tele!);
-    this.f.fax?.patchValue(data.fax!);
-    this.f.specialties?.patchValue(data.specialties!);
-    this.f.region?.patchValue(data.region!);
-    data.networkList?.forEach((sr: any) => this.addNetwork(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
+    data.networkList?.map((network: any) => this.addNetwork(network));
+    data.contactList?.map((con: any) => this.addContact(con));
     this.f.name?.disable();
     this.f.city?.disable();
     this.f.address?.disable();
@@ -313,65 +288,29 @@ export class HospitalsComponent implements OnInit, OnDestroy
     this.f.region?.disable();
   }
 
-  validationChecker (): boolean
-  {
-    if (this.HospitalsForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.HospitalsForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  // submitHospitalsData (form: FormGroup)
-  // {
-  //   this.uiState.submitted = true;
-  //   const formData = form.getRawValue();
-  //   const data: IHospitalsData = {
-  //     sno: this.uiState.editHospitalsMode ? this.uiState.editHospitalsData.sno : 0,
-  //     name: formData.name,
-  //     city: formData.city,
-  //     address: formData.address,
-  //     email: formData.email,
-  //     tele: formData.tele,
-  //     fax: formData.fax,
-  //     specialties: formData.specialties,
-  //     region: formData.region,
-  //     networkList: formData.networkList,
-  //     contactList: formData.contactList,
-  //   };
-  //   if (!this.validationChecker()) return;
-  //   this.eventService.broadcast(reserved.isLoading, true);
-  //   let sub = this.HospitalsService.saveHospitals(data).subscribe(
-  //     (res: HttpResponse<IBaseResponse<number>>) =>
-  //     {
-  //       this.HospitalsModal.dismiss();
-  //       this.eventService.broadcast(reserved.isLoading, false);
-  //       this.uiState.submitted = false;
-  //       this.resetHospitalsForm();
-  //       this.gridApi.setDatasource(this.dataSource);
-  //       this.message.toast(res.body?.message!, "success");
-  //     },
-  //     (err: HttpErrorResponse) =>
-  //     {
-  //       this.message.popup("Oops!", err.error.message, "error");
-  //       this.eventService.broadcast(reserved.isLoading, false);
-  //     }
-  //   );
-  //   this.subscribes.push(sub);
-  // }
-
-  submitHospitalsData (): void
-  {
+  submitHospitalsData(HospitalsForm: FormGroup<IHospitals>): void {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
 
     this.eventService.broadcast(reserved.isLoading, true);
     const formData = new FormData();
 
-    let val = this.HospitalsForm.getRawValue();
+    let val = HospitalsForm.getRawValue();
 
-    if (this.uiState.editHospitalsMode) formData.append("sno", val.sno?.toString()! ?? 0);
+    if (this.uiState.editHospitalsMode)
+      formData.append("sno", val.sno?.toString()! ?? 0);
     formData.append("name", val.name!);
     formData.append("city", val.city! ?? "");
     formData.append("address", val.address! ?? "");
@@ -380,55 +319,95 @@ export class HospitalsComponent implements OnInit, OnDestroy
     formData.append("fax", val.fax! ?? "");
     formData.append("specialties", val.specialties! ?? "");
     formData.append("region", val.region! ?? "");
-    let contact = val.contactList!
-    for (let i = 0; i < contact.length; i++)
-    {
-      formData.append(`contactList[${ i }]`, contact[ i ].Email! ?? "")
-      formData.append(`contactList[${ i }]`, contact[ i ].Name! ?? "")
-      formData.append(`contactList[${ i }]`, contact[ i ].Position! ?? "")
-      formData.append(`contactList[${ i }]`, contact[ i ].Phone! ?? "")
+    this.contactListArray.controls.forEach((el) => el.enable());
+    let contact = val.contactList!;
+    for (let i = 0; i < contact.length; i++) {
+      formData.append(`contactList[${i}]`, contact[i].Email! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].Name! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].Position! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].Phone! ?? "");
     }
-    let network = val.networkList!
-    for (let i = 0; i < network.length; i++)
-    {
-      formData.append(`networkList[${ i }]`, network[ i ].InsurCompany! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassVvip?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassVip?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassA?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassAm?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassAp?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassB?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassBm?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassBp?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassC?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassCD?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassCa?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassCae?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassCm?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassCp?.toString()! ?? "")
-      formData.append(`networkList[${ i }]`, network[ i ].ClassE?.toString()! ?? "")
+
+    this.networkListArray.controls.forEach((el) => el.enable());
+    let network = val.networkList!;
+    for (let i = 0; i < network.length; i++) {
+      formData.append(`networkList[${i}]`, network[i].InsurCompany! ?? "");
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassVvip?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassVip?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassA?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassAm?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassAp?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassB?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassBm?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassBp?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassC?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassCD?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassCa?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassCae?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassCm?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassCp?.toString()! ?? ""
+      );
+      formData.append(
+        `networkList[${i}]`,
+        network[i].ClassE?.toString()! ?? ""
+      );
     }
 
     let sub = this.HospitalsService.saveHospitals(formData).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.HospitalsModal.dismiss();
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.HospitalsModal.dismiss();
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.popup("Sorry!", res.body?.message!, "warning");
         this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetHospitalsForm();
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
       }
     );
     this.subscribes.push(sub);
   }
-  resetHospitalsForm ()
-  {
+
+  resetHospitalsForm() {
     this.HospitalsForm.reset();
     this.contactListArray.clear();
     this.networkListArray.clear();
@@ -442,26 +421,18 @@ export class HospitalsComponent implements OnInit, OnDestroy
     this.f.region?.enable();
   }
 
-  DeleteHospitals (sno: number)
-  {
+  DeleteHospitals(sno: number) {
     let sub = this.HospitalsService.DeleteHospitals(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

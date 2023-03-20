@@ -9,51 +9,43 @@
     </div>
 </div>
 
-<ngb-accordion #acc="ngbAccordion" activeIds="1">
-    <!-- Line Of Business -->
-    <ngb-panel id="1" title="Insurance Company Documents" cardClass="open my-4">
-        <ng-template ngbPanelContent="1">
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                <div class="container-fluid mb-3">
-                    <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-                        <div class="card-body">
-                            <div class="ribbon ribbon-info round-shape">
-                                Filter Insurance Company Documents
-                            </div>
-                            <div class="row my-4">
-                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                                    <label for="company" class="asterisk-input">Insurance Company</label>
-                                    <ng-select id="company" class="is-invalid" placeholder="Select Insurance Company"
-                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                                        [loading]="lookupData ? false : true" (change)="changeInsurance($event)"
-                                        [ngClass]="{'is-submitted': (f.company?.touched || uiState.submitted) && f.company?.invalid}"
-                                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
-                                    </ng-select>
-                                    <span *ngIf="(f.company?.touched || uiState.submitted) && f.company?.invalid"
-                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                                    <label for="type" class="asterisk-input">Line Of Insurance</label>
-                                    <ng-select id="type" class="is-invalid" placeholder="Select Class Of Insurance"
-                                        [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
-                                        [loading]="lookupData ? false : true" (change)="filterByType($event)"
-                                        [ngClass]="{'is-submitted': (f.type?.touched || uiState.submitted) && f.type?.invalid}"
-                                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
-                                    </ng-select>
-                                    <span *ngIf="(f.type?.touched || uiState.submitted) && f.type?.invalid"
-                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="container-fluid mb-3">
+    <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+        <div class="card-body">
+            <div class="ribbon ribbon-info round-shape">
+                Filter Insurance Company Documents
+            </div>
+            <div class="row my-4">
+                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                    <label for="company" class="asterisk-input">Insurance Company</label>
+                    <ng-select id="company" class="is-invalid" placeholder="Select Insurance Company"
+                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                        [loading]="lookupData ? false : true" (change)="changeInsurance($event)"
+                        [ngClass]="{'is-submitted': (f.company?.touched || uiState.submitted) && f.company?.invalid}"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
+                    </ng-select>
+                    <span *ngIf="(f.company?.touched || uiState.submitted) && f.company?.invalid"
+                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                    <label for="type" class="asterisk-input">Line Of Insurance</label>
+                    <ng-select id="type" class="is-invalid" placeholder="Select Class Of Insurance"
+                        [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
+                        [loading]="lookupData ? false : true" (change)="filterByType($event)"
+                        [ngClass]="{'is-submitted': (f.type?.touched || uiState.submitted) && f.type?.invalid}"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name">
+                    </ng-select>
+                    <span *ngIf="(f.type?.touched || uiState.submitted) && f.type?.invalid"
+                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                 </div>
             </div>
-        </ng-template>
-    </ngb-panel>
-</ngb-accordion>
+        </div>
+    </div>
+</div>
+
 
 <div class="ag-theme-alpine" appTableView>
-    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 45vh" [gridOptions]="gridOpts">
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 60vh" [gridOptions]="gridOpts">
     </ag-grid-angular>
 </div>
 

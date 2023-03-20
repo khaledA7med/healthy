@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import
-{
+import {
   Component,
   OnDestroy,
   OnInit,
@@ -8,8 +7,7 @@ import
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import
-{
+import {
   CellEvent,
   GridApi,
   GridOptions,
@@ -24,8 +22,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import
-{
+import {
   ILineOfBusiness,
   ILineOfBusinessData,
 } from "src/app/shared/app/models/MasterTables/i-line-of-business";
@@ -38,11 +35,10 @@ import { MODULES } from "src/app/core/models/MODULES";
 @Component({
   selector: "app-line-of-business",
   templateUrl: "./line-of-business.component.html",
-  styleUrls: [ "./line-of-business.component.scss" ],
+  styleUrls: ["./line-of-business.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class LineOfBusinessComponent implements OnInit, OnDestroy
-{
+export class LineOfBusinessComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
   LineOfBussinessFormSubmitted = false as boolean;
   LineOfBussinessModal!: NgbModalRef;
@@ -63,7 +59,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -82,119 +78,89 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
   };
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.LineOfBusinessService.getLineOfBusiness(
         this.uiState.className
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<ILineOfBusiness[]>>) =>
-        {
-          if (res.body?.status)
-          {
-            this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list, this.uiState.list.length);
-            if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
-            else this.gridApi.hideOverlay();
-          } else
-          {
-            this.uiState.gridReady = true;
-            this.gridApi.hideOverlay();
-          }
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
+      ).subscribe((res: HttpResponse<IBaseResponse<ILineOfBusiness[]>>) => {
+        if (res.body?.status) {
+          this.uiState.list = res.body?.data!;
+          params.successCallback(this.uiState.list, this.uiState.list.length);
+          if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
+          else this.gridApi.hideOverlay();
+        } else {
+          this.uiState.gridReady = true;
+          this.gridApi.hideOverlay();
         }
-      );
+      });
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  constructor (
+  constructor(
     private LineOfBusinessService: LineOfBusinessService,
     private message: MessagesService,
     private table: MasterTableService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initLineOfBusinessForm();
     this.getLookupData();
   }
 
-  getLookupData ()
-  {
+  getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.LineOfBusiness);
   }
 
-  DeleteLineOfBusiness (id: string)
-  {
+  DeleteLineOfBusiness(id: string) {
     let sub = this.LineOfBusinessService.DeleteLineOfBusiness(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  getLineOfBusinessData (id: string)
-  {
+  getLineOfBusinessData(id: string) {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LineOfBusinessService.getEditLineOfBusinessData(
       id
-    ).subscribe(
-      (res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) =>
-      {
+    ).subscribe((res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) => {
+      if (res.body?.status) {
         this.uiState.editLineOfBusinessMode = true;
         this.uiState.editLineOfBusinessData = res.body?.data!;
         this.fillEditLineOfBusinessForm(res.body?.data!);
         this.eventService.broadcast(reserved.isLoading, false);
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
-      }
-    );
+      } else this.message.toast(res.body!.message!, "error");
+    });
     this.subscribes.push(sub);
   }
 
-  openLineOfBusinessDialoge (id: string)
-  {
+  openLineOfBusinessDialoge(id: string) {
     this.resetLineOfBusinessForm();
     this.LineOfBussinessModal = this.modalService.open(
       this.LineOfBussinessContent,
@@ -208,16 +174,14 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
 
     this.getLineOfBusinessData(id);
 
-    this.LineOfBussinessModal.hidden.subscribe(() =>
-    {
+    this.LineOfBussinessModal.hidden.subscribe(() => {
       this.resetLineOfBusinessForm();
       this.LineOfBussinessFormSubmitted = false;
       this.uiState.editLineOfBusinessMode = false;
     });
   }
 
-  initLineOfBusinessForm ()
-  {
+  initLineOfBusinessForm() {
     this.LineOfBussinessForm = new FormGroup<ILineOfBusiness>({
       sNo: new FormControl(null),
       className: new FormControl("", Validators.required),
@@ -227,21 +191,18 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     });
   }
 
-  get f ()
-  {
+  get f() {
     return this.LineOfBussinessForm.controls;
   }
 
-  fillAddLineOfBusinessForm (data: ILineOfBusinessData)
-  {
+  fillAddLineOfBusinessForm(data: ILineOfBusinessData) {
     this.f.className?.patchValue(data.className!);
     this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
     this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
   }
 
-  fillEditLineOfBusinessForm (data: ILineOfBusinessData)
-  {
+  fillEditLineOfBusinessForm(data: ILineOfBusinessData) {
     this.f.className?.patchValue(data.className!);
     this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
     this.f.lineofBusinessAr?.patchValue(data.lineofBusinessAr!);
@@ -249,10 +210,8 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     this.f.className?.disable();
   }
 
-  validationChecker (): boolean
-  {
-    if (this.LineOfBussinessForm.invalid)
-    {
+  validationChecker(): boolean {
+    if (this.LineOfBussinessForm.invalid) {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -263,14 +222,12 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     return true;
   }
 
-  filter (e: any)
-  {
+  filter(e: any) {
     this.uiState.className = e?.name;
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  submitLineOfBusinessData (form: FormGroup)
-  {
+  submitLineOfBusinessData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: ILineOfBusinessData = {
@@ -285,32 +242,26 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.LineOfBussinessModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetLineOfBusinessForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.LineOfBussinessModal?.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetLineOfBusinessForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetLineOfBusinessForm ()
-  {
+  resetLineOfBusinessForm() {
     this.LineOfBussinessForm.reset();
     this.f.className?.enable();
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }

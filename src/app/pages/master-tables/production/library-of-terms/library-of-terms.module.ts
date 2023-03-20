@@ -6,10 +6,18 @@ import { SharedModule } from "src/app/shared/shared.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LibrariesFormModule } from "../libraries-form/libraries-form.module";
 
-export const routes: Routes = [{ path: "", component: LibraryOfTermsComponent }];
+export const routes: Routes = [
+  { path: "", component: LibraryOfTermsComponent },
+];
 
 @NgModule({
-	declarations: [LibraryOfTermsComponent],
-	imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgbModule, LibrariesFormModule],
+  declarations: [LibraryOfTermsComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(routes),
+    NgbModule,
+    LibrariesFormModule,
+  ],
 })
 export class LibraryOfTermsModule {}

@@ -10,7 +10,13 @@ import { LifePlanListControlsComponent } from "./life-plan-list-controls.compone
 export const routes: Routes = [{ path: "", component: LifePlanComponent }];
 
 @NgModule({
-	declarations: [LifePlanComponent, LifePlanListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule, RouterModule.forChild(routes)],
+  declarations: [LifePlanComponent, LifePlanListControlsComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AgGridModule,
+    NgbModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class LifePlanModule {}

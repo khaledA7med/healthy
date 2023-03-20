@@ -1,30 +1,50 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Observable, Subscription } from 'rxjs';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MasterTableService } from 'src/app/core/services/master-table.service';
-import { Caching, IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
-import { MODULES } from 'src/app/core/models/MODULES';
-import { MasterMethodsService } from 'src/app/shared/services/master-methods.service';
-import { IQuotingRequirements, IQuotingRequirementsData, IQuotingRequirementsFilter } from 'src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements';
-import { quotingRequirementsCols } from 'src/app/shared/app/grid/quotingRequirementsCols';
-import { QuotingRequirementsService } from 'src/app/shared/services/master-tables/business-development/sales/quoting-requirements.service';
+import { Observable, Subscription } from "rxjs";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { reserved } from "src/app/core/models/reservedWord";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import {
+  Caching,
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
+import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
+import {
+  IQuotingRequirements,
+  IQuotingRequirementsData,
+  IQuotingRequirementsFilter,
+} from "src/app/shared/app/models/MasterTables/business-development/sales/i-quoting-requirements";
+import { quotingRequirementsCols } from "src/app/shared/app/grid/quotingRequirementsCols";
+import { QuotingRequirementsService } from "src/app/shared/services/master-tables/business-development/sales/quoting-requirements.service";
 
 @Component({
-  selector: 'app-quoting-requirements',
-  templateUrl: './quoting-requirements.component.html',
-  styleUrls: [ './quoting-requirements.component.scss' ],
+  selector: "app-quoting-requirements",
+  templateUrl: "./quoting-requirements.component.html",
+  styleUrls: ["./quoting-requirements.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class QuotingRequirementsComponent implements OnInit, OnDestroy
-{
-
+export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
   QuotingRequirementsFormSubmitted = false as boolean;
   QuotingRequirementsModal!: NgbModalRef;
@@ -32,7 +52,8 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   EditQuotingRequirementsForm!: FormGroup<IQuotingRequirements>;
   lineOfBussArr: IGenericResponseType[] = [];
 
-  @ViewChild("QuotingRequirementsContent") QuotingRequirementsContent!: TemplateRef<any>;
+  @ViewChild("QuotingRequirementsContent")
+  QuotingRequirementsContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
@@ -47,7 +68,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
   isChecked!: number;
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -61,156 +82,148 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
       sortable: true,
       resizable: true,
     },
-    overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
-      const data: { class: string, lineOfBusiness: string, insuranceCopmany: string } = { class: this.f.class?.value!, lineOfBusiness: this.f.lineOfBusiness?.value!, insuranceCopmany: this.f.insuranceCopmany?.value! }
-      let sub = this.QuotingRequirementsService.getQuotingRequirements(data).subscribe(
-        (res: HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>) =>
-        {
-          if (res.body?.status)
-          {
+      const data: {
+        class: string;
+        lineOfBusiness: string;
+        insuranceCopmany: string;
+      } = {
+        class: this.f.class?.value!,
+        lineOfBusiness: this.f.lineOfBusiness?.value!,
+        insuranceCopmany: this.f.insuranceCopmany?.value!,
+      };
+      let sub = this.QuotingRequirementsService.getQuotingRequirements(
+        data
+      ).subscribe(
+        (res: HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>) => {
+          if (res.body?.status) {
             this.uiState.list.itemsList = res.body?.data!;
-            params.successCallback(this.uiState.list.itemsList, this.uiState.list.itemsList.length);
-            if (this.uiState.list.itemsList.length === 0) this.gridApi.showNoRowsOverlay();
+            params.successCallback(
+              this.uiState.list.itemsList,
+              this.uiState.list.itemsList.length
+            );
+            if (this.uiState.list.itemsList.length === 0)
+              this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
-          } else
-          {
+          } else {
             this.uiState.gridReady = true;
             this.gridApi.hideOverlay();
           }
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
         }
       );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  constructor (
+  constructor(
     private masterService: MasterMethodsService,
     private QuotingRequirementsService: QuotingRequirementsService,
     private message: MessagesService,
     private table: MasterTableService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initQuotingRequirementsForm();
     this.initEditQuotingRequirementsForm();
     this.getLookupData();
   }
 
-  getLookupData ()
-  {
+  getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.QuotingRequirements);
   }
 
-  getLineOfBusiness (className: string)
-  {
-    let sub = this.masterService.getLineOfBusiness(className).subscribe(
-      (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) =>
-      {
-        this.lineOfBussArr = res.body?.data?.content!;
-      },
-      (err) =>
-      {
-        this.message.popup("Sorry!", err.message!, "warning");
-      }
-    );
+  getLineOfBusiness(className: string) {
+    let sub = this.masterService
+      .getLineOfBusiness(className)
+      .subscribe(
+        (res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
+          if (res.body?.status) {
+            this.lineOfBussArr = res.body?.data?.content!;
+          } else this.message.toast(res.body?.message!, "error");
+        }
+      );
     this.subscribes.push(sub);
   }
 
-  DeleteQuotingRequirements (id: string)
-  {
-    let sub = this.QuotingRequirementsService.DeleteQuotingRequirements(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
-  }
-
-  getQuotingRequirementsData (id: string)
-  {
-    this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.QuotingRequirementsService.getEditQuotingRequirements(id).subscribe(
-      (res: IBaseResponse<IQuotingRequirementsData>) =>
-      {
-        if (res?.status)
-        {
-          this.uiState.editQuotingRequirementsMode = true;
-          this.uiState.editQuotingRequirementsData = res.data!;
-          this.EditQuotingRequirementsForm.patchValue({ ...this.uiState.editQuotingRequirementsData, defaultTick: this.uiState.editQuotingRequirementsData.defaultTick === 1 ? true : false })
-          this.openQuotingRequirementsDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
-    this.subscribes.push(sub);
-  }
-
-  openQuotingRequirementsDialoge ()
-  {
-    this.QuotingRequirementsModal = this.modalService.open(this.QuotingRequirementsContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "lg",
+  DeleteQuotingRequirements(id: string) {
+    let sub = this.QuotingRequirementsService.DeleteQuotingRequirements(
+      id
+    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+      this.gridApi.setDatasource(this.dataSource);
+      if (res.body?.status) this.message.toast(res.body!.message!, "success");
+      else this.message.toast(res.body!.message!, "error");
     });
+    this.subscribes.push(sub);
+  }
 
-    this.QuotingRequirementsModal.hidden.subscribe(() =>
-    {
+  getQuotingRequirementsData(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.QuotingRequirementsService.getEditQuotingRequirements(
+      id
+    ).subscribe((res: IBaseResponse<IQuotingRequirementsData>) => {
+      if (res?.status) {
+        this.uiState.editQuotingRequirementsMode = true;
+        this.uiState.editQuotingRequirementsData = res.data!;
+        this.EditQuotingRequirementsForm.patchValue({
+          ...this.uiState.editQuotingRequirementsData,
+          defaultTick:
+            this.uiState.editQuotingRequirementsData.defaultTick === 1
+              ? true
+              : false,
+        });
+        this.openQuotingRequirementsDialoge();
+      } else this.message.toast(res.message!, "error");
+    });
+    this.subscribes.push(sub);
+  }
+
+  openQuotingRequirementsDialoge() {
+    this.QuotingRequirementsModal = this.modalService.open(
+      this.QuotingRequirementsContent,
+      {
+        ariaLabelledBy: "modal-basic-title",
+        centered: true,
+        backdrop: "static",
+        size: "lg",
+      }
+    );
+
+    this.QuotingRequirementsModal.hidden.subscribe(() => {
       this.resetEditQuotingRequirementsForm();
     });
   }
 
-  initQuotingRequirementsForm ()
-  {
+  initQuotingRequirementsForm() {
     this.QuotingRequirementsForm = new FormGroup<IQuotingRequirements>({
       sNo: new FormControl(0),
       item: new FormControl(null, Validators.required),
@@ -221,16 +234,14 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
       class: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
       insuranceCopmany: new FormControl(null, Validators.required),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f() {
     return this.QuotingRequirementsForm.controls;
   }
 
-  initEditQuotingRequirementsForm ()
-  {
+  initEditQuotingRequirementsForm() {
     this.EditQuotingRequirementsForm = new FormGroup<IQuotingRequirements>({
       sNo: new FormControl(null),
       defaultTick: new FormControl(null),
@@ -244,18 +255,19 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
     });
   }
 
-  validationChecker (): boolean
-  {
-    if (this.QuotingRequirementsForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.QuotingRequirementsForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  submitQuotingRequirementsData (form: FormGroup<IQuotingRequirements>)
-  {
+  submitQuotingRequirementsData(form: FormGroup<IQuotingRequirements>) {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
@@ -265,52 +277,38 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy
       ...form.getRawValue(),
       defaultTick: form.getRawValue().defaultTick === true ? 1 : 0,
     };
-    let sub = this.QuotingRequirementsService.saveQuotingRequirements(data).subscribe(
-      (res: IBaseResponse<any>) =>
-      {
-        if (res.status)
-        {
-          if (this.uiState.editQuotingRequirementsMode)
-          {
-            this.QuotingRequirementsModal.dismiss();
-            this.eventService.broadcast(reserved.isLoading, false);
-          } else
-          {
-            this.f.item?.reset();
-            this.f.itemArabic?.reset();
-            this.f.description?.reset();
-            this.f.descriptionArabic?.reset();
-            this.f.defaultTick?.reset();
-          }
-          this.message.toast(res.message!, "success");
-          this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
-        this.eventService.broadcast(reserved.isLoading, false);
-      },
-      (err) =>
-      {
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+    let sub = this.QuotingRequirementsService.saveQuotingRequirements(
+      data
+    ).subscribe((res: IBaseResponse<any>) => {
+      if (res.status) {
+        if (this.uiState.editQuotingRequirementsMode) {
+          this.QuotingRequirementsModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+        } else {
+          this.f.item?.reset();
+          this.f.itemArabic?.reset();
+          this.f.description?.reset();
+          this.f.descriptionArabic?.reset();
+          this.f.defaultTick?.reset();
+        }
+        this.message.toast(res.message!, "success");
+        this.gridApi.setDatasource(this.dataSource);
+      } else this.message.popup("Sorry!", res.message!, "warning");
+      this.eventService.broadcast(reserved.isLoading, false);
+    });
     this.subscribes.push(sub);
   }
 
-  resetEditQuotingRequirementsForm ()
-  {
+  resetEditQuotingRequirementsForm() {
     this.EditQuotingRequirementsForm.reset();
   }
 
-  resetQuotingRequirementsForm ()
-  {
+  resetQuotingRequirementsForm() {
     this.QuotingRequirementsForm.reset();
     this.uiState.submitted = false;
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
-
 }

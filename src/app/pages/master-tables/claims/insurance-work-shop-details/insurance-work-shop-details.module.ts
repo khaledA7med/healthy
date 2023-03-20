@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InsuranceWorkshopDetailsComponent } from './insurance-workshop-details/insurance-workshop-details.component';
-import { InsuranceWorkshopDetailsFormsComponent } from './insurance-workshop-details/insurance-workshop-details-forms.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { InsuranceWorkshopDetailsComponent } from "./insurance-workshop-details/insurance-workshop-details.component";
+import { InsuranceWorkshopDetailsFormsComponent } from "./insurance-workshop-details/insurance-workshop-details-forms.component";
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
@@ -13,13 +13,13 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     InsuranceWorkshopDetailsComponent,
-    InsuranceWorkshopDetailsFormsComponent
+    InsuranceWorkshopDetailsFormsComponent,
   ],
   imports: [
     CommonModule,
     SharedModule,
     RouterModule.forChild(routes),
     AgGridModule,
-  ]
+  ],
 })
-export class InsuranceWorkShopDetailsModule { }
+export class InsuranceWorkShopDetailsModule {}

@@ -1,25 +1,39 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Subscription } from 'rxjs';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { tpaListCols } from 'src/app/shared/app/grid/tpaListCols';
-import { TpaListService } from 'src/app/shared/services/master-tables/claims/tpa-list.service';
-import { ITpaList, ITpaListData } from 'src/app/shared/app/models/MasterTables/claims/i-tpa-list';
+import { Subscription } from "rxjs";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { reserved } from "src/app/core/models/reservedWord";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { tpaListCols } from "src/app/shared/app/grid/tpaListCols";
+import { TpaListService } from "src/app/shared/services/master-tables/claims/tpa-list.service";
+import {
+  ITpaList,
+  ITpaListData,
+} from "src/app/shared/app/models/MasterTables/claims/i-tpa-list";
 
 @Component({
-  selector: 'app-tpa-list',
-  templateUrl: './tpa-list.component.html',
-  styleUrls: [ './tpa-list.component.scss' ]
+  selector: "app-tpa-list",
+  templateUrl: "./tpa-list.component.html",
+  styleUrls: ["./tpa-list.component.scss"],
 })
-export class TpaListComponent implements OnInit, OnDestroy
-{
-
+export class TpaListComponent implements OnInit, OnDestroy {
   TpaListFormSubmitted = false as boolean;
   TpaListModal!: NgbModalRef;
   TpaListForm!: FormGroup<ITpaList>;
@@ -34,7 +48,7 @@ export class TpaListComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -52,65 +66,55 @@ export class TpaListComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private TpaListService: TpaListService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initTpaListForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.TpaListService.getTpaList().subscribe(
-        (res: HttpResponse<IBaseResponse<ITpaList[]>>) =>
-        {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
+        (res: HttpResponse<IBaseResponse<ITpaList[]>>) => {
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          } else this.message.toast(res.body!.message!, "error");
         }
       );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
-  openTpaListDialoge ()
-  {
+  openTpaListDialoge() {
     this.resetTpaListForm();
     this.TpaListModal = this.modalService.open(this.TpaListContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -119,43 +123,40 @@ export class TpaListComponent implements OnInit, OnDestroy
       size: "md",
     });
 
-    this.TpaListModal.hidden.subscribe(() =>
-    {
+    this.TpaListModal.hidden.subscribe(() => {
       this.resetTpaListForm();
       this.TpaListFormSubmitted = false;
     });
   }
 
-  initTpaListForm ()
-  {
+  initTpaListForm() {
     this.TpaListForm = new FormGroup<ITpaList>({
       sno: new FormControl(null),
       tpaName: new FormControl(null, Validators.required),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f() {
     return this.TpaListForm.controls;
   }
 
-  fillAddTpaListForm (data: ITpaListData)
-  {
+  fillAddTpaListForm(data: ITpaListData) {
     this.f.tpaName?.patchValue(data.tpaName!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.TpaListForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.TpaListForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  submitTpaListData (form: FormGroup)
-  {
+  submitTpaListData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: ITpaListData = {
@@ -164,49 +165,36 @@ export class TpaListComponent implements OnInit, OnDestroy
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.TpaListService.saveTpaList(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.TpaListModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetTpaListForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.TpaListModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetTpaListForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetTpaListForm ()
-  {
+  resetTpaListForm() {
     this.TpaListForm.reset();
   }
 
-  DeleteTpaList (sno: number)
-  {
+  DeleteTpaList(sno: number) {
     let sub = this.TpaListService.DeleteTpaList(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

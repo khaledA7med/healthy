@@ -7,10 +7,21 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ProductionDocumentsListControlsComponent } from "./production-documents-list-controls.component";
 
-export const routes: Routes = [{ path: "", component: ProductionDocumentsComponent }];
+export const routes: Routes = [
+  { path: "", component: ProductionDocumentsComponent },
+];
 
 @NgModule({
-	declarations: [ProductionDocumentsComponent, ProductionDocumentsListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule, RouterModule.forChild(routes)],
+  declarations: [
+    ProductionDocumentsComponent,
+    ProductionDocumentsListControlsComponent,
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AgGridModule,
+    NgbModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class ProductionDocumentsModule {}

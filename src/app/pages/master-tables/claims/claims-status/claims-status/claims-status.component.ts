@@ -1,29 +1,47 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Observable, Subscription } from 'rxjs';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MasterTableService } from 'src/app/core/services/master-table.service';
-import { IBaseMasterTable, IGenericResponseType } from 'src/app/core/models/masterTableModels';
-import { MODULES } from 'src/app/core/models/MODULES';
-import { ClaimsStatusService } from 'src/app/shared/services/master-tables/claims/claims-status.service';
-import { claimsStatusCols } from 'src/app/shared/app/grid/claimsStatusCols';
-import { IClaimsStatus, IClaimsStatusData } from 'src/app/shared/app/models/MasterTables/claims/i-claims-status';
+import { Observable, Subscription } from "rxjs";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { reserved } from "src/app/core/models/reservedWord";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MasterTableService } from "src/app/core/services/master-table.service";
+import {
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
+import { MODULES } from "src/app/core/models/MODULES";
+import { ClaimsStatusService } from "src/app/shared/services/master-tables/claims/claims-status.service";
+import { claimsStatusCols } from "src/app/shared/app/grid/claimsStatusCols";
+import {
+  IClaimsStatus,
+  IClaimsStatusData,
+} from "src/app/shared/app/models/MasterTables/claims/i-claims-status";
 
 @Component({
-  selector: 'app-claims-status',
-  templateUrl: './claims-status.component.html',
-  styleUrls: [ './claims-status.component.scss' ],
+  selector: "app-claims-status",
+  templateUrl: "./claims-status.component.html",
+  styleUrls: ["./claims-status.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClaimsStatusComponent implements OnInit, OnDestroy
-{
-
+export class ClaimsStatusComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
   ClaimsStatusFormSubmitted = false as boolean;
   ClaimsStatusModal!: NgbModalRef;
@@ -39,13 +57,12 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
     totalPages: 0,
     editClaimsStatusMode: false as Boolean,
     editClaimsStatusData: {} as IClaimsStatusData,
-    status: "Active"
-
+    status: "Active",
   };
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -64,109 +81,86 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
   };
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
-      let sub = this.ClaimsStatusService.getClaimsStatus(this.uiState.status).subscribe(
-        (res: HttpResponse<IBaseResponse<IClaimsStatus[]>>) =>
-        {
+      let sub = this.ClaimsStatusService.getClaimsStatus(
+        this.uiState.status
+      ).subscribe((res: HttpResponse<IBaseResponse<IClaimsStatus[]>>) => {
+        if (res.body?.status) {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-        }
-      );
+        } else this.message.toast(res.body!.message!, "error");
+      });
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
-
+    this.gridApi.sizeColumnsToFit();
   }
 
-  constructor (
+  constructor(
     private ClaimsStatusService: ClaimsStatusService,
     private message: MessagesService,
     private table: MasterTableService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initClaimsStatusForm();
     this.getLookupData();
   }
 
-  getLookupData ()
-  {
+  getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.ClaimsStatus);
   }
 
-  DeleteClaimsStatus (sno: number)
-  {
+  DeleteClaimsStatus(sno: number) {
     let sub = this.ClaimsStatusService.DeleteClaimsStatus(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  getClaimsStatusData (sno: number)
-  {
+  getClaimsStatusData(sno: number) {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsStatusService.getEditClaimsStatusData(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<IClaimsStatusData>>) =>
-      {
-        this.uiState.editClaimsStatusMode = true;
-        this.uiState.editClaimsStatusData = res.body?.data!;
-        this.fillEditClaimsStatusForm(res.body?.data!);
-        this.eventService.broadcast(reserved.isLoading, false);
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<IClaimsStatusData>>) => {
+        if (res.body?.status) {
+          this.uiState.editClaimsStatusMode = true;
+          this.uiState.editClaimsStatusData = res.body?.data!;
+          this.fillEditClaimsStatusForm(res.body?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  openClaimsStatusDialoge (sno: number)
-  {
+  openClaimsStatusDialoge(sno: number) {
     this.resetClaimsStatusForm();
     this.ClaimsStatusModal = this.modalService.open(this.ClaimsStatusContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -177,96 +171,86 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy
 
     this.getClaimsStatusData(sno);
 
-    this.ClaimsStatusModal.hidden.subscribe(() =>
-    {
+    this.ClaimsStatusModal.hidden.subscribe(() => {
       this.resetClaimsStatusForm();
       this.ClaimsStatusFormSubmitted = false;
       this.uiState.editClaimsStatusMode = false;
     });
   }
 
-  initClaimsStatusForm ()
-  {
+  initClaimsStatusForm() {
     this.ClaimsStatusForm = new FormGroup<IClaimsStatus>({
       sno: new FormControl(null),
       status: new FormControl("", Validators.required),
       claimNotes: new FormControl("", Validators.required),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f() {
     return this.ClaimsStatusForm.controls;
   }
 
-  fillAddClaimsStatusForm (data: IClaimsStatusData)
-  {
+  fillAddClaimsStatusForm(data: IClaimsStatusData) {
     this.f.status?.patchValue(data.status!);
     this.f.claimNotes?.patchValue(data.claimNotes!);
   }
 
-  fillEditClaimsStatusForm (data: IClaimsStatusData)
-  {
+  fillEditClaimsStatusForm(data: IClaimsStatusData) {
     this.f.status?.patchValue(data.status!);
     this.f.claimNotes?.patchValue(data.claimNotes!);
     this.f.status?.disable();
   }
 
-  validationChecker (): boolean
-  {
-    if (this.ClaimsStatusForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.ClaimsStatusForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  filter (e: any)
-  {
-    this.uiState.status = e?.name
+  filter(e: any) {
+    this.uiState.status = e?.name;
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  submitClaimsStatusData (form: FormGroup)
-  {
+  submitClaimsStatusData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IClaimsStatusData = {
-      sno: this.uiState.editClaimsStatusMode ? this.uiState.editClaimsStatusData.sno : 0,
+      sno: this.uiState.editClaimsStatusMode
+        ? this.uiState.editClaimsStatusData.sno
+        : 0,
       status: formData.status,
       claimNotes: formData.claimNotes,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsStatusService.saveClaimsStatus(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.ClaimsStatusModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetClaimsStatusForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.ClaimsStatusModal?.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetClaimsStatusForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetClaimsStatusForm ()
-  {
+  resetClaimsStatusForm() {
     this.ClaimsStatusForm.reset();
     this.f.status?.enable();
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

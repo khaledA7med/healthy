@@ -7,8 +7,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LibrariesFormsListControlsComponent } from "./libraries-form-list-controls.component";
 
 @NgModule({
-	declarations: [LibrariesFormComponent, LibrariesFormsListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule],
-	exports: [LibrariesFormComponent],
+  declarations: [LibrariesFormComponent, LibrariesFormsListControlsComponent],
+  imports: [CommonModule, SharedModule, AgGridModule, NgbModule],
+  exports: [LibrariesFormComponent],
 })
 export class LibrariesFormModule {}
