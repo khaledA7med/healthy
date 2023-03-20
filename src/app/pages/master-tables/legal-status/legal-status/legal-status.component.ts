@@ -1,27 +1,41 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Subscription } from 'rxjs';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { legalStatusCols } from 'src/app/shared/app/grid/legalStatusCols';
-import { LegalStatusService } from 'src/app/shared/services/master-tables/legal-status.service';
-import { ILegalStatus, ILegalStatusData } from 'src/app/shared/app/models/MasterTables/i-legal-status';
+import { Subscription } from "rxjs";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { reserved } from "src/app/core/models/reservedWord";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { legalStatusCols } from "src/app/shared/app/grid/legalStatusCols";
+import { LegalStatusService } from "src/app/shared/services/master-tables/legal-status.service";
+import {
+  ILegalStatus,
+  ILegalStatusData,
+} from "src/app/shared/app/models/MasterTables/i-legal-status";
 
 @Component({
-  selector: 'app-legal-status',
-  templateUrl: './legal-status.component.html',
-  styleUrls: [ './legal-status.component.scss' ],
+  selector: "app-legal-status",
+  templateUrl: "./legal-status.component.html",
+  styleUrls: ["./legal-status.component.scss"],
   encapsulation: ViewEncapsulation.None,
-
 })
-export class LegalStatusComponent implements OnInit, OnDestroy
-{
-
+export class LegalStatusComponent implements OnInit, OnDestroy {
   LegalStatusFormSubmitted = false as boolean;
   LegalStatusModal!: NgbModalRef;
   LegalStatusForm!: FormGroup<ILegalStatus>;
@@ -38,7 +52,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -56,32 +70,28 @@ export class LegalStatusComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private LegalStatusService: LegalStatusService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initLegalStatusForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.LegalStatusService.getLegalStatus().subscribe(
-        (res: HttpResponse<IBaseResponse<ILegalStatus[]>>) =>
-        {
+        (res: HttpResponse<IBaseResponse<ILegalStatus[]>>) => {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
         },
-        (err: HttpErrorResponse) =>
-        {
+        (err: HttpErrorResponse) => {
           this.message.popup("Oops!", err.message, "error");
         }
       );
@@ -89,32 +99,27 @@ export class LegalStatusComponent implements OnInit, OnDestroy
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  openLegalStatusDialoge (id?: string)
-  {
+  openLegalStatusDialoge(id?: string) {
     this.resetLegalStatusForm();
     this.LegalStatusModal = this.modalService.open(this.LegalStatusContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -122,121 +127,101 @@ export class LegalStatusComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "md",
     });
-    if (id)
-    {
+    if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.LegalStatusService.getEditLegalStatus(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ILegalStatusData>>) =>
-        {
-          this.uiState.editLegalStatusMode = true;
-          this.uiState.editLegalStatusData = res.body?.data!;
-          this.fillAddLegalStatusForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
+        (res: HttpResponse<IBaseResponse<ILegalStatusData>>) => {
+          if (res.body?.status) {
+            this.uiState.editLegalStatusMode = true;
+            this.uiState.editLegalStatusData = res.body?.data!;
+            this.fillAddLegalStatusForm(res.body?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          } else this.message.toast(res.body!.message!, "error");
         }
       );
       this.subscribes.push(sub);
     }
 
-    this.LegalStatusModal.hidden.subscribe(() =>
-    {
+    this.LegalStatusModal.hidden.subscribe(() => {
       this.resetLegalStatusForm();
       this.LegalStatusFormSubmitted = false;
       this.uiState.editLegalStatusMode = false;
     });
   }
 
-  initLegalStatusForm ()
-  {
+  initLegalStatusForm() {
     this.LegalStatusForm = new FormGroup<ILegalStatus>({
       sno: new FormControl(null),
       legalStatus: new FormControl(null, Validators.required),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f() {
     return this.LegalStatusForm.controls;
   }
 
-  fillAddLegalStatusForm (data: ILegalStatusData)
-  {
+  fillAddLegalStatusForm(data: ILegalStatusData) {
     this.f.legalStatus?.patchValue(data.legalStatus!);
   }
 
-  fillEditLegalStatusForm (data: ILegalStatusData)
-  {
+  fillEditLegalStatusForm(data: ILegalStatusData) {
     this.f.legalStatus?.patchValue(data.legalStatus!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.LegalStatusForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.LegalStatusForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  submitLegalStatusData (form: FormGroup)
-  {
+  submitLegalStatusData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: ILegalStatusData = {
-      sno: this.uiState.editLegalStatusMode ? this.uiState.editLegalStatusData.sno : 0,
+      sno: this.uiState.editLegalStatusMode
+        ? this.uiState.editLegalStatusData.sno
+        : 0,
       legalStatus: formData.legalStatus,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LegalStatusService.saveLegalStatus(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.LegalStatusModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetLegalStatusForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.LegalStatusModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetLegalStatusForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetLegalStatusForm ()
-  {
+  resetLegalStatusForm() {
     this.LegalStatusForm.reset();
   }
 
-  DeleteLegalStatus (id: string)
-  {
+  DeleteLegalStatus(id: string) {
     let sub = this.LegalStatusService.DeleteLegalStatus(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

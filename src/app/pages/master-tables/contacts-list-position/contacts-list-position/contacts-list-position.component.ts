@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import
-{
+import {
   Component,
   OnDestroy,
   OnInit,
@@ -8,8 +7,7 @@ import
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import
-{
+import {
   CellEvent,
   GridApi,
   GridOptions,
@@ -26,21 +24,23 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { contactsListPositionCols } from "src/app/shared/app/grid/contactsListPositionCols";
 import { ContactsListPositionService } from "src/app/shared/services/master-tables/contacts-list-position.service";
-import { IContactsListPosition, IContactsListPositionData } from "src/app/shared/app/models/MasterTables/i-contacts-list-position";
+import {
+  IContactsListPosition,
+  IContactsListPositionData,
+} from "src/app/shared/app/models/MasterTables/i-contacts-list-position";
 
 @Component({
-  selector: 'app-contacts-list-position',
-  templateUrl: './contacts-list-position.component.html',
-  styleUrls: [ './contacts-list-position.component.scss' ],
+  selector: "app-contacts-list-position",
+  templateUrl: "./contacts-list-position.component.html",
+  styleUrls: ["./contacts-list-position.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ContactsListPositionComponent implements OnInit, OnDestroy
-{
-
+export class ContactsListPositionComponent implements OnInit, OnDestroy {
   ContactsListPositionFormSubmitted = false as boolean;
   ContactsListPositionModal!: NgbModalRef;
   ContactsListPositionForm!: FormGroup<IContactsListPosition>;
-  @ViewChild("ContactsListPositionContent") ContactsListPositionContent!: TemplateRef<any>;
+  @ViewChild("ContactsListPositionContent")
+  ContactsListPositionContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
@@ -53,7 +53,7 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -71,128 +71,114 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private ContactsListPositionService: ContactsListPositionService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initContactsListPositionForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
-      let sub = this.ContactsListPositionService.getContactsListPosition().subscribe(
-        (res: HttpResponse<IBaseResponse<IContactsListPosition[]>>) =>
-        {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-        }
-      );
+      let sub =
+        this.ContactsListPositionService.getContactsListPosition().subscribe(
+          (res: HttpResponse<IBaseResponse<IContactsListPosition[]>>) => {
+            if (res.body?.status) {
+              this.uiState.list = res.body?.data!;
+              params.successCallback(
+                this.uiState.list,
+                this.uiState.list.length
+              );
+              this.uiState.gridReady = true;
+              this.gridApi.hideOverlay();
+            } else this.message.toast(res.body!.message!, "error");
+          }
+        );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  openContactsListPositionDialoge (id?: string)
-  {
+  openContactsListPositionDialoge(id?: string) {
     this.resetContactsListPositionForm();
-    this.ContactsListPositionModal = this.modalService.open(this.ContactsListPositionContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "md",
-    });
-    if (id)
-    {
+    this.ContactsListPositionModal = this.modalService.open(
+      this.ContactsListPositionContent,
+      {
+        ariaLabelledBy: "modal-basic-title",
+        centered: true,
+        backdrop: "static",
+        size: "md",
+      }
+    );
+    if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.ContactsListPositionService.getEditContactsListPosition(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IContactsListPositionData>>) =>
-        {
-          this.uiState.editContactsListPositionMode = true;
-          this.uiState.editContactsListPositionData = res.body?.data!;
-          this.fillAddContactsListPositionForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
+      let sub = this.ContactsListPositionService.getEditContactsListPosition(
+        id
+      ).subscribe(
+        (res: HttpResponse<IBaseResponse<IContactsListPositionData>>) => {
+          if (res.body?.status) {
+            this.uiState.editContactsListPositionMode = true;
+            this.uiState.editContactsListPositionData = res.body?.data!;
+            this.fillAddContactsListPositionForm(res.body?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          } else this.message.toast(res.body!.message!, "error");
         }
       );
       this.subscribes.push(sub);
     }
 
-    this.ContactsListPositionModal.hidden.subscribe(() =>
-    {
+    this.ContactsListPositionModal.hidden.subscribe(() => {
       this.resetContactsListPositionForm();
       this.ContactsListPositionFormSubmitted = false;
       this.uiState.editContactsListPositionMode = false;
     });
   }
 
-
-  initContactsListPositionForm ()
-  {
+  initContactsListPositionForm() {
     this.ContactsListPositionForm = new FormGroup<IContactsListPosition>({
       sNo: new FormControl(null),
-      position: new FormControl(null, Validators.required)
+      position: new FormControl(null, Validators.required),
     });
   }
 
-  get f ()
-  {
+  get f() {
     return this.ContactsListPositionForm.controls;
   }
 
-  fillAddContactsListPositionForm (data: IContactsListPositionData)
-  {
+  fillAddContactsListPositionForm(data: IContactsListPositionData) {
     this.f.position?.patchValue(data.position!);
   }
 
-  fillEditContactsListPositionForm (data: IContactsListPositionData)
-  {
+  fillEditContactsListPositionForm(data: IContactsListPositionData) {
     this.f.position?.patchValue(data.position!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.ContactsListPositionForm.invalid)
-    {
+  validationChecker(): boolean {
+    if (this.ContactsListPositionForm.invalid) {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -203,62 +189,48 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitContactsListPositionData (form: FormGroup)
-  {
+  submitContactsListPositionData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IContactsListPositionData = {
       sNo: this.uiState.editContactsListPositionMode
         ? this.uiState.editContactsListPositionData.sNo
         : 0,
-      position: formData.position
+      position: formData.position,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let sub = this.ContactsListPositionService.saveContactsListPosition(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
+    let sub = this.ContactsListPositionService.saveContactsListPosition(
+      data
+    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+      if (res.body?.status) {
         this.ContactsListPositionModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetContactsListPositionForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
-      }
-    );
+      } else this.message.toast(res.body!.message!, "error");
+    });
     this.subscribes.push(sub);
   }
 
-  resetContactsListPositionForm ()
-  {
+  resetContactsListPositionForm() {
     this.ContactsListPositionForm.reset();
   }
 
-  DeleteContactsListPosition (id: string)
-  {
-    let sub = this.ContactsListPositionService.DeleteContactsListPosition(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+  DeleteContactsListPosition(id: string) {
+    let sub = this.ContactsListPositionService.DeleteContactsListPosition(
+      id
+    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+      this.gridApi.setDatasource(this.dataSource);
+      if (res.body?.status) this.message.toast(res.body!.message!, "success");
+      else this.message.toast(res.body!.message!, "error");
+    });
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

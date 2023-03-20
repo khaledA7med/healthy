@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import
-{
+import {
   Component,
   OnDestroy,
   OnInit,
@@ -8,8 +7,7 @@ import
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import
-{
+import {
   CellEvent,
   GridApi,
   GridOptions,
@@ -26,17 +24,18 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { citiesCols } from "src/app/shared/app/grid/citiesCols";
 import { CitiesService } from "src/app/shared/services/master-tables/cities.service";
-import { ICities, ICitiesData } from "src/app/shared/app/models/MasterTables/i-cities";
+import {
+  ICities,
+  ICitiesData,
+} from "src/app/shared/app/models/MasterTables/i-cities";
 
 @Component({
-  selector: 'app-cities',
-  templateUrl: './cities.component.html',
-  styleUrls: [ './cities.component.scss' ],
+  selector: "app-cities",
+  templateUrl: "./cities.component.html",
+  styleUrls: ["./cities.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class CitiesComponent implements OnInit, OnDestroy
-{
-
+export class CitiesComponent implements OnInit, OnDestroy {
   CitiesFormSubmitted = false as boolean;
   CitiesModal!: NgbModalRef;
   CitiesForm!: FormGroup<ICities>;
@@ -53,7 +52,7 @@ export class CitiesComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -71,65 +70,55 @@ export class CitiesComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private CitiesService: CitiesService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initCitiesForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.CitiesService.getCities().subscribe(
-        (res: HttpResponse<IBaseResponse<ICities[]>>) =>
-        {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
+        (res: HttpResponse<IBaseResponse<ICities[]>>) => {
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
       );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  openCitiesDialoge (id?: string)
-  {
+  openCitiesDialoge(id?: string) {
     this.resetCitiesForm();
     this.CitiesModal = this.modalService.open(this.CitiesContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -137,62 +126,49 @@ export class CitiesComponent implements OnInit, OnDestroy
       backdrop: "static",
       size: "md",
     });
-    if (id)
-    {
+    if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CitiesService.getEditCities(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ICitiesData>>) =>
-        {
-          this.uiState.editCitiesMode = true;
-          this.uiState.editCitiesData = res.body?.data!;
-          this.fillAddCitiesForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
+        (res: HttpResponse<IBaseResponse<ICitiesData>>) => {
+          if (res.body?.status) {
+            this.uiState.editCitiesMode = true;
+            this.uiState.editCitiesData = res.body?.data!;
+            this.fillAddCitiesForm(res.body?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
       );
       this.subscribes.push(sub);
     }
 
-    this.CitiesModal.hidden.subscribe(() =>
-    {
+    this.CitiesModal.hidden.subscribe(() => {
       this.resetCitiesForm();
       this.CitiesFormSubmitted = false;
       this.uiState.editCitiesMode = false;
     });
   }
 
-
-  initCitiesForm ()
-  {
+  initCitiesForm() {
     this.CitiesForm = new FormGroup<ICities>({
       sNo: new FormControl(null),
-      city: new FormControl(null, Validators.required)
+      city: new FormControl(null, Validators.required),
     });
   }
 
-  get f ()
-  {
+  get f() {
     return this.CitiesForm.controls;
   }
 
-  fillAddCitiesForm (data: ICitiesData)
-  {
+  fillAddCitiesForm(data: ICitiesData) {
     this.f.city?.patchValue(data.city!);
   }
 
-  fillEditCitiesForm (data: ICitiesData)
-  {
+  fillEditCitiesForm(data: ICitiesData) {
     this.f.city?.patchValue(data.city!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.CitiesForm.invalid)
-    {
+  validationChecker(): boolean {
+    if (this.CitiesForm.invalid) {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -203,63 +179,46 @@ export class CitiesComponent implements OnInit, OnDestroy
     return true;
   }
 
-  submitCitiesData (form: FormGroup)
-  {
+  submitCitiesData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: ICitiesData = {
-      sNo: this.uiState.editCitiesMode
-        ? this.uiState.editCitiesData.sNo
-        : 0,
-      city: formData.city
+      sNo: this.uiState.editCitiesMode ? this.uiState.editCitiesData.sNo : 0,
+      city: formData.city,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CitiesService.saveCities(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.CitiesModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetCitiesForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.CitiesModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetCitiesForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.popup("Sorry!", res.body?.message!, "warning");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetCitiesForm ()
-  {
+  resetCitiesForm() {
     this.CitiesForm.reset();
   }
 
-  DeleteCities (id: string)
-  {
+  DeleteCities(id: string) {
     let sub = this.CitiesService.DeleteCities(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
-
 }

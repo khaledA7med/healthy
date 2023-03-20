@@ -7,10 +7,21 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ClaimsDocumentsListControlsComponent } from "./clients-documents-list-controls.component";
 
-export const routes: Routes = [{ path: "", component: ClaimsDocumentsComponent }];
+export const routes: Routes = [
+  { path: "", component: ClaimsDocumentsComponent },
+];
 
 @NgModule({
-	declarations: [ClaimsDocumentsComponent, ClaimsDocumentsListControlsComponent],
-	imports: [CommonModule, SharedModule, AgGridModule, NgbModule, RouterModule.forChild(routes)],
+  declarations: [
+    ClaimsDocumentsComponent,
+    ClaimsDocumentsListControlsComponent,
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AgGridModule,
+    NgbModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class ClaimsDocumentsModule {}

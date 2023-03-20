@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import
-{
+import {
   Component,
   OnDestroy,
   OnInit,
@@ -8,8 +7,7 @@ import
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import
-{
+import {
   CellEvent,
   GridApi,
   GridOptions,
@@ -26,17 +24,18 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { bankSettingsCols } from "src/app/shared/app/grid/bankSettingsCols";
 import { BankSettingsService } from "src/app/shared/services/master-tables/bank-settings.service";
-import { IBankSettings, IBankSettingsData } from "src/app/shared/app/models/MasterTables/i-bank-settings";
+import {
+  IBankSettings,
+  IBankSettingsData,
+} from "src/app/shared/app/models/MasterTables/i-bank-settings";
 
 @Component({
-  selector: 'app-bank-settings',
-  templateUrl: './bank-settings.component.html',
-  styleUrls: [ './bank-settings.component.scss' ],
+  selector: "app-bank-settings",
+  templateUrl: "./bank-settings.component.html",
+  styleUrls: ["./bank-settings.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class BankSettingsComponent implements OnInit
-{
-
+export class BankSettingsComponent implements OnInit, OnDestroy {
   BankSettingsFormSubmitted = false as boolean;
   BankSettingsModal!: NgbModalRef;
   BankSettingsForm!: FormGroup<IBankSettings>;
@@ -53,7 +52,7 @@ export class BankSettingsComponent implements OnInit
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -71,65 +70,53 @@ export class BankSettingsComponent implements OnInit
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private BankSettingsService: BankSettingsService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initBankSettingsForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.BankSettingsService.getBankSettings().subscribe(
-        (res: HttpResponse<IBaseResponse<IBankSettings[]>>) =>
-        {
+        (res: HttpResponse<IBaseResponse<IBankSettings[]>>) => {
           this.uiState.list = res.body?.data!;
           params.successCallback(this.uiState.list, this.uiState.list.length);
           this.uiState.gridReady = true;
           this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
         }
       );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
-  openBankSettingsDialoge (id?: string)
-  {
+  openBankSettingsDialoge(id?: string) {
     this.resetBankSettingsForm();
     this.BankSettingsModal = this.modalService.open(this.BankSettingsContent, {
       ariaLabelledBy: "modal-basic-title",
@@ -137,37 +124,27 @@ export class BankSettingsComponent implements OnInit
       backdrop: "static",
       size: "md",
     });
-    if (id)
-    {
+    if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.BankSettingsService.getEditBankSettings(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IBankSettingsData>>) =>
-        {
+        (res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
           this.uiState.editBankSettingsMode = true;
           this.uiState.editBankSettingsData = res.body?.data!;
           this.fillAddBankSettingsForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
           this.eventService.broadcast(reserved.isLoading, false);
         }
       );
       this.subscribes.push(sub);
     }
 
-    this.BankSettingsModal.hidden.subscribe(() =>
-    {
+    this.BankSettingsModal.hidden.subscribe(() => {
       this.resetBankSettingsForm();
       this.BankSettingsFormSubmitted = false;
       this.uiState.editBankSettingsMode = false;
     });
   }
 
-
-  initBankSettingsForm ()
-  {
+  initBankSettingsForm() {
     this.BankSettingsForm = new FormGroup<IBankSettings>({
       sNo: new FormControl(null),
       bankName: new FormControl(null, Validators.required),
@@ -175,27 +152,22 @@ export class BankSettingsComponent implements OnInit
     });
   }
 
-  get f ()
-  {
+  get f() {
     return this.BankSettingsForm.controls;
   }
 
-  fillAddBankSettingsForm (data: IBankSettingsData)
-  {
+  fillAddBankSettingsForm(data: IBankSettingsData) {
     this.f.bankName?.patchValue(data.bankName!);
     this.f.swift?.patchValue(data.swift!);
   }
 
-  fillEditBankSettingsForm (data: IBankSettingsData)
-  {
+  fillEditBankSettingsForm(data: IBankSettingsData) {
     this.f.bankName?.patchValue(data.bankName!);
     this.f.swift?.patchValue(data.swift!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.BankSettingsForm.invalid)
-    {
+  validationChecker(): boolean {
+    if (this.BankSettingsForm.invalid) {
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
@@ -206,8 +178,7 @@ export class BankSettingsComponent implements OnInit
     return true;
   }
 
-  submitBankSettingsData (form: FormGroup)
-  {
+  submitBankSettingsData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IBankSettingsData = {
@@ -220,49 +191,34 @@ export class BankSettingsComponent implements OnInit
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.BankSettingsService.saveBankSettings(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<number>>) => {
         this.BankSettingsModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetBankSettingsForm();
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetBankSettingsForm ()
-  {
+  resetBankSettingsForm() {
     this.BankSettingsForm.reset();
   }
 
-  DeleteBankSettings (id: string)
-  {
+  DeleteBankSettings(id: string) {
     let sub = this.BankSettingsService.DeleteBankSettings(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

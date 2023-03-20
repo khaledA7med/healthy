@@ -1,30 +1,46 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  CellEvent,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  IDatasource,
+  IGetRowsParams,
+} from "ag-grid-community";
 import { EventService } from "src/app/core/services/event.service";
-import { Subscription } from 'rxjs';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { MessagesService } from 'src/app/shared/services/messages.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { reserved } from 'src/app/core/models/reservedWord';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { clientCategoriesCols } from 'src/app/shared/app/grid/clientCategoriesCols';
-import { ClientCategoriesService } from 'src/app/shared/services/master-tables/client-categories.service';
-import { IClientCategories, IClientCategoriesData } from 'src/app/shared/app/models/MasterTables/i-client-categories';
+import { Subscription } from "rxjs";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { MessagesService } from "src/app/shared/services/messages.service";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { reserved } from "src/app/core/models/reservedWord";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { clientCategoriesCols } from "src/app/shared/app/grid/clientCategoriesCols";
+import { ClientCategoriesService } from "src/app/shared/services/master-tables/client-categories.service";
+import {
+  IClientCategories,
+  IClientCategoriesData,
+} from "src/app/shared/app/models/MasterTables/i-client-categories";
 
 @Component({
-  selector: 'app-client-categories',
-  templateUrl: './client-categories.component.html',
-  styleUrls: [ './client-categories.component.scss' ],
+  selector: "app-client-categories",
+  templateUrl: "./client-categories.component.html",
+  styleUrls: ["./client-categories.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class ClientCategoriesComponent implements OnInit, OnDestroy
-{
-
+export class ClientCategoriesComponent implements OnInit, OnDestroy {
   ClientCategoriesFormSubmitted = false as boolean;
   ClientCategoriesModal!: NgbModalRef;
   ClientCategoriesForm!: FormGroup<IClientCategories>;
-  @ViewChild("ClientCategoriesContent") ClientCategoriesContent!: TemplateRef<any>;
+  @ViewChild("ClientCategoriesContent")
+  ClientCategoriesContent!: TemplateRef<any>;
 
   uiState = {
     gridReady: false,
@@ -37,7 +53,7 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy
 
   subscribes: Subscription[] = [];
 
-  gridApi: GridApi = <GridApi> {};
+  gridApi: GridApi = <GridApi>{};
   gridOpts: GridOptions = {
     rowModelType: "infinite",
     editType: "fullRow",
@@ -55,187 +71,160 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy
     onCellClicked: (e) => this.onCellClicked(e),
   };
 
-  constructor (
+  constructor(
     private ClientCategoriesService: ClientCategoriesService,
     private message: MessagesService,
     private eventService: EventService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.initClientCategoriesForm();
   }
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) =>
-    {
+    getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.ClientCategoriesService.getClientCategories().subscribe(
-        (res: HttpResponse<IBaseResponse<IClientCategories[]>>) =>
-        {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
+        (res: HttpResponse<IBaseResponse<IClientCategories[]>>) => {
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            this.uiState.gridReady = true;
+            this.gridApi.hideOverlay();
+          } else this.message.toast(res.body!.message!, "error");
         }
       );
       this.subscribes.push(sub);
     },
   };
 
-  onCellClicked (params: CellEvent)
-  {
-    if (params.column.getColId() == "action")
-    {
+  onCellClicked(params: CellEvent) {
+    if (params.column.getColId() == "action") {
       params.api.getCellRendererInstances({
-        rowNodes: [ params.node ],
-        columns: [ params.column ],
+        rowNodes: [params.node],
+        columns: [params.column],
       });
     }
   }
 
-  onPageSizeChange ()
-  {
+  onPageSizeChange() {
     this.gridApi.showLoadingOverlay();
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  onGridReady (param: GridReadyEvent)
-  {
+  onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
-  openClientCategoriesDialoge (id?: string)
-  {
+  openClientCategoriesDialoge(id?: string) {
     this.resetClientCategoriesForm();
-    this.ClientCategoriesModal = this.modalService.open(this.ClientCategoriesContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "md",
-    });
-    if (id)
-    {
+    this.ClientCategoriesModal = this.modalService.open(
+      this.ClientCategoriesContent,
+      {
+        ariaLabelledBy: "modal-basic-title",
+        centered: true,
+        backdrop: "static",
+        size: "md",
+      }
+    );
+    if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
-      let sub = this.ClientCategoriesService.getEditClientCategories(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IClientCategoriesData>>) =>
-        {
+      let sub = this.ClientCategoriesService.getEditClientCategories(
+        id
+      ).subscribe((res: HttpResponse<IBaseResponse<IClientCategoriesData>>) => {
+        if (res.body?.status) {
           this.uiState.editClientCategoriesMode = true;
           this.uiState.editClientCategoriesData = res.body?.data!;
           this.fillAddClientCategoriesForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
-        },
-        (err: HttpErrorResponse) =>
-        {
-          this.message.popup("Oops!", err.message, "error");
-          this.eventService.broadcast(reserved.isLoading, false);
-        }
-      );
+        } else this.message.toast(res.body!.message!, "error");
+      });
       this.subscribes.push(sub);
     }
 
-    this.ClientCategoriesModal.hidden.subscribe(() =>
-    {
+    this.ClientCategoriesModal.hidden.subscribe(() => {
       this.resetClientCategoriesForm();
       this.ClientCategoriesFormSubmitted = false;
       this.uiState.editClientCategoriesMode = false;
     });
   }
 
-  initClientCategoriesForm ()
-  {
+  initClientCategoriesForm() {
     this.ClientCategoriesForm = new FormGroup<IClientCategories>({
       sno: new FormControl(null),
       category: new FormControl(null, Validators.required),
-    })
+    });
   }
 
-  get f ()
-  {
+  get f() {
     return this.ClientCategoriesForm.controls;
   }
 
-  fillAddClientCategoriesForm (data: IClientCategoriesData)
-  {
+  fillAddClientCategoriesForm(data: IClientCategoriesData) {
     this.f.category?.patchValue(data.category!);
   }
 
-  fillEditClientCategoriesForm (data: IClientCategoriesData)
-  {
+  fillEditClientCategoriesForm(data: IClientCategoriesData) {
     this.f.category?.patchValue(data.category!);
   }
 
-  validationChecker (): boolean
-  {
-    if (this.ClientCategoriesForm.invalid)
-    {
-      this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+  validationChecker(): boolean {
+    if (this.ClientCategoriesForm.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
       return false;
     }
     return true;
   }
 
-  submitClientCategoriesData (form: FormGroup)
-  {
+  submitClientCategoriesData(form: FormGroup) {
     this.uiState.submitted = true;
     const formData = form.getRawValue();
     const data: IClientCategoriesData = {
-      sno: this.uiState.editClientCategoriesMode ? this.uiState.editClientCategoriesData.sno : 0,
+      sno: this.uiState.editClientCategoriesMode
+        ? this.uiState.editClientCategoriesData.sno
+        : 0,
       category: formData.category,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientCategoriesService.saveClientCategories(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) =>
-      {
-        this.ClientCategoriesModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetClientCategoriesForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.error.message, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+      (res: HttpResponse<IBaseResponse<number>>) => {
+        if (res.body?.status) {
+          this.ClientCategoriesModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetClientCategoriesForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  resetClientCategoriesForm ()
-  {
+  resetClientCategoriesForm() {
     this.ClientCategoriesForm.reset();
   }
 
-  DeleteClientCategories (id: string)
-  {
+  DeleteClientCategories(id: string) {
     let sub = this.ClientCategoriesService.DeleteClientCategories(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) =>
-      {
+      (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");
         else this.message.toast(res.body!.message!, "error");
-      },
-      (err: HttpErrorResponse) =>
-      {
-        this.message.popup("Oops!", err.message, "error");
       }
     );
     this.subscribes.push(sub);
   }
 
-  ngOnDestroy (): void
-  {
+  ngOnDestroy(): void {
     this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
-
 }

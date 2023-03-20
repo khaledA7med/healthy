@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { MasterTableProductionRoutingModule } from "./production-routing.module";
 
 @NgModule({
-	declarations: [],
-	imports: [CommonModule, MasterTableProductionRoutingModule],
+  declarations: [],
+  imports: [CommonModule, MasterTableProductionRoutingModule],
 })
 export class ProductionModule {}
