@@ -130,7 +130,7 @@
 
                     <!-- Staff Name -->
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
-                        <label for="fullName">Full Name</label>
+                        <label for="fullName">Staff Name</label>
                         <ng-select id="fullName" placeholder="Select Staff Name" (change)="getUserDetails($event.id)"
                             [ngClass]="{'is-submitted': (ff.fullName?.touched || uiState.submitted) && ff.fullName?.invalid}"
                             formControlName="fullName" [items]="(lookupData | async)?.ProducersList?.content!"
@@ -153,7 +153,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="userName">User Name</label>
                         <input id="userName" class="form-control form-control-sm" formControlName="userName"
-                            [ngClass]="{'is-submitted': (ff.userName?.touched || uiState.submitted) && ff.userName?.invalid}" />
+                            [ngClass]="{'is-invalid': (ff.userName?.touched || uiState.submitted) && ff.userName?.invalid}" />
                         <span *ngIf="(ff.userName?.touched || uiState.submitted) && ff.userName?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
@@ -164,7 +164,7 @@
                         <ng-select id="branch" placeholder="Select branch" formControlName="branch"
                             [ngClass]="{'is-submitted': (ff.branch?.touched || uiState.submitted) && ff.branch?.invalid}"
                             [items]="(lookupData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
-                            [loading]="lookupData ? false : true">
+                            [loading]="lookupData ? false : true" [readonly]="true">
                         </ng-select>
                         <span *ngIf="(ff.branch?.touched || uiState.submitted) && ff.branch?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
@@ -174,7 +174,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="phoneNo">Phone No</label>
                         <input id="phoneNo" class="form-control form-control-sm" formControlName="phoneNo"
-                            [ngClass]="{'is-submitted': (ff.phoneNo?.touched || uiState.submitted) && ff.phoneNo?.invalid}" />
+                            [ngClass]="{'is-invalid': (ff.phoneNo?.touched || uiState.submitted) && ff.phoneNo?.invalid}" />
                         <span *ngIf="(ff.phoneNo?.touched || uiState.submitted) && ff.phoneNo?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
@@ -183,7 +183,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                         <label for="email">Email</label>
                         <input id="email" class="form-control form-control-sm" formControlName="email"
-                            [ngClass]="{'is-submitted': (ff.email?.touched || uiState.submitted) && ff.email?.invalid}" />
+                            [ngClass]="{'is-invalid': (ff.email?.touched || uiState.submitted) && ff.email?.invalid}" />
                         <span *ngIf="(ff.email?.touched || uiState.submitted) && ff.email?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>

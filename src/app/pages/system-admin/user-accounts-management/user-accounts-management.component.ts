@@ -342,8 +342,9 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 	}
 
 	validationChecker(): boolean {
+		console.log(this.userForm);
 		if (this.userForm.invalid) {
-			this.message.popup("Attention!", "Please Fill Required Inputs", "warning");
+			if (this.userForm.value.securityRoles?.length == 0) this.message.popup("Attention!", "Please Add At Least Security Role", "warning");
 			return false;
 		}
 		return true;
