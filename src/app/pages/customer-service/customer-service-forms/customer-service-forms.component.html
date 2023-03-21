@@ -775,9 +775,9 @@
             <div class="row p-3">
                 <div class="col-lg-10 col-md-10 col-sm-12 row">
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <label for="clientNo">Client No</label>
+                        <label for="clientNo">Client Name</label>
                         <!-- <input id="clientNo" class="form-control form-control-sm" formControlName="clientNo" /> -->
-                        <ng-select id="clientNo" placeholder="Select Endors Type" formControlName="clientNo"
+                        <ng-select id="clientNo" placeholder="Select Client Name" formControlName="clientNo"
                             [items]="(formData | async)?.AllClients?.content!" bindLabel="name" bindValue="id"
                             [loading]="formData ? false : true">
                         </ng-select>
@@ -786,7 +786,7 @@
                         <label for="insuranceCompName">Insurance Company</label>
                         <!-- <input id="insuranceCompName" class="form-control form-control-sm"
                             formControlName="insuranceCompName" /> -->
-                        <ng-select id="insuranceCompName" placeholder="Select Endors Type"
+                        <ng-select id="insuranceCompName" placeholder="Select Insurance Company"
                             formControlName="insuranceCompName"
                             [items]="(formData | async)?.InsuranceCompanies?.content!" bindLabel="name" bindValue="name"
                             [loading]="formData ? false : true">
