@@ -195,6 +195,7 @@
                             <ng-select id="securityRole" placeholder="Select Security Role"
                                 class="form-control SCSelect p-0 border-0"
                                 [ngClass]="{'is-submitted': (ff.DDSecurityRole?.touched || uiState.submitted) && ff.DDSecurityRole?.invalid}"
+                                [clearable]="false" [hideSelected]="true"
                                 [items]="(lookupData | async)?.UserSecurityRoles?.content!" bindLabel="name"
                                 formControlName="DDSecurityRole" bindValue="name" [loading]="lookupData ? false : true">
                             </ng-select>

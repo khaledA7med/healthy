@@ -245,7 +245,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 			savedDate: new FormControl(null),
 			updateUser: new FormControl(null),
 			updateDate: new FormControl(null),
-			DDSecurityRole: new FormControl(null, Validators.required),
+			DDSecurityRole: new FormControl("", Validators.required),
 			securityRoles: new FormArray([], Validators.required),
 		});
 	}
@@ -292,17 +292,17 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 
 	addSecurityRole(value: string) {
 		if (this.ff.DDSecurityRole?.valid || this.uiState.editUserMode) {
-			let newVal = new FormControl();
-			newVal.patchValue(value);
-			let exitChecker = this.securityRolesArray.getRawValue() as Array<string>;
-			if (!exitChecker.includes(value)) this.securityRolesArray.push(newVal);
-			else this.message.popup("Oops!", "Security Role Already Added", "error");
+			if (value && value != null) {
+				let newVal = new FormControl();
+				newVal.patchValue(value);
+				let exitChecker = this.securityRolesArray.getRawValue() as Array<string>;
+				if (!exitChecker.includes(value)) this.securityRolesArray.push(newVal);
+				else this.message.popup("Oops!", "Security Role Already Added", "error");
 
-			if (this.securityRolesArray.length > 0) this.ff.DDSecurityRole?.clearValidators();
-			else this.ff.DDSecurityRole?.addValidators(Validators.required);
-		} else {
-			this.ff.DDSecurityRole?.markAsTouched();
-		}
+				if (this.securityRolesArray.length > 0) this.ff.DDSecurityRole?.clearValidators();
+				else this.ff.DDSecurityRole?.addValidators(Validators.required);
+			} else this.ff.DDSecurityRole?.markAsTouched();
+		} else this.ff.DDSecurityRole?.markAsTouched();
 	}
 
 	deleteSecurityRole(i: number) {
