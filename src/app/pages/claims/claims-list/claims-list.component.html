@@ -328,7 +328,7 @@
         <div class="col-12  my-2">
           <label class="form-label">Users:</label>
           <ng-select [items]="(formData | async)?.AllUsers?.content!" [loading]="formData ? false : true"
-            [clearable]="true" class="form-control-sm px-0 w-100" appendTo="body" [ngClass]="{
+            [clearable]="true" class="px-0 w-100" [ngClass]="{
                     'is-invalid':
                       followUpF.names?.touched && followUpF.names?.errors
                   }" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false" bindLabel="name" bindValue="name"
