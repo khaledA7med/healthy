@@ -71,6 +71,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     editId: "",
     date: new Date(),
     submitted: false as boolean,
+    financesValid: {
+      payments: true as boolean,
+      producer: true as boolean,
+    },
     policy: {
       searching: searchBy,
       issueType: issueType,
@@ -877,6 +881,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       this.f.endorsType?.value === "Refund" ||
       (this.f.fees?.value! === this.uiState.paymentTermsTotals.fees &&
         this.f.vatValue?.value! === this.uiState.paymentTermsTotals.vat &&
+        +this.f.totalPremium?.value! === 0 &&
+        this.uiState.paymentTermsTotals.percentage === 0) ||
+      (+this.f.totalPremium?.value! > 0 &&
         this.uiState.paymentTermsTotals.percentage === 100)
     );
   }
@@ -919,7 +926,10 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     if (!data) commission.reset();
     else commission.disable();
 
-    if (this.f.producersCommissionsList?.length === 0)
+    if (
+      this.f.producersCommissionsList?.length === 0 &&
+      !this.f.producer?.value?.startsWith("Direct Business")
+    )
       commission.controls.producer?.patchValue(this.f.producer?.value!);
 
     this.f.producersCommissionsList?.push(commission);
@@ -1011,7 +1021,9 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
-    if (!this.financeChecker()) return;
+    this.paymentTermChecker();
+    this.producerCommissionChecker();
+    if (!this.paymentTermChecker() || !this.producerCommissionChecker()) return;
     this.financeValueChecker();
   }
 
@@ -1027,16 +1039,13 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  financeChecker(): boolean {
+  paymentTermChecker(): boolean {
     let totals = this.uiState.paymentTermsTotals,
-      coms = this.uiState.producerCommission.commissionTotals,
       values = {
         net: +this.f.netPremium?.value!,
         fees: +this.f.fees?.value!,
         vat: +this.f.vatValue?.value!,
         total: +this.f.totalPremium?.value!,
-        producerCom: +this.f.producerComm?.value!,
-        producerComPerc: +this.f.producerCommPerc?.value!,
       };
 
     if (
@@ -1055,7 +1064,17 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
         );
         return false;
       }
+      return true;
     }
+    return true;
+  }
+
+  producerCommissionChecker(): boolean {
+    let values = {
+        producerCom: +this.f.producerComm?.value!,
+        producerComPerc: +this.f.producerCommPerc?.value!,
+      },
+      coms = this.uiState.producerCommission.commissionTotals;
     if (
       coms.amount !== values.producerCom ||
       coms.percentage !== values.producerComPerc

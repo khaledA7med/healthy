@@ -522,6 +522,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Claims.cities,
           name: BaseData.Cities,
         },
+        {
+          route: ApiRoutes.MasterTable.Claims.branch,
+          name: BaseData.Branch,
+        },
       ],
       SystemAdmin: [
         {
