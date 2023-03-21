@@ -110,6 +110,7 @@ export class ProductionService {
 	}
 
 	changeDeliveryStatus(data: { policyNo: string; deliveryStatus: string }): Observable<IBaseResponse<null>> {
+		// console.log("first");
 		return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Production.changeDeliveryStatus, { ...data });
 	}
 
