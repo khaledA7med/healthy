@@ -690,68 +690,72 @@
     </ngb-accordion>
 
     <!-- start Buttons -->
-    <div class=" my-2 d-lg-flex d-md-flex justify-content-end align-items-end">
+    <div class="card">
+        <div class="container-fluid">
+            <div class="card-body px-1">
+                <div class=" d-lg-flex d-md-flex justify-content-end align-items-end">
+                    <div class="col-lg-3 col-md-6">
+                        <!-- In Case Of Create Start -->
 
-        <div class="col-lg-3 col-md-6">
-            <!-- In Case Of Create Start -->
+                        <!-- Branch -->
+                        <div class="lables form-group row" *ngIf="!uiState.editMode">
+                            <label class="col-sm-2 col-form-label" for="branch">Branch</label>
+                            <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
+                                [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                                [loading]="formData ? false : true" placeholder="Branch">
+                            </ng-select>
+                        </div>
 
-            <!-- Branch -->
-            <div class="lables form-group row" *ngIf="!uiState.editMode">
-                <label class="col-sm-2 col-form-label" for="branch">Branch</label>
-                <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
-                    [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
-                    [loading]="formData ? false : true" placeholder="Branch">
-                </ng-select>
-            </div>
+                        <!-- In Case Of Create End -->
+                    </div>
 
-            <!-- In Case Of Create End -->
-        </div>
-
-
-        <!-- Buttons -->
-        <div class="col-md-6 mt-md-3 d-flex justify-content-end"
-            [ngClass]="{'col-lg-2':!uiState.editMode,'col-lg-3':!uiState.editMode}">
-            <!-- In Case Of Edit Start -->
-            <!-- Change Status -->
-            <div ngbDropdown class="d-inline-block mx-2" *ngIf="uiState.editMode">
-                <button type="button" class="btn btn-sm btn-info waves-effect" id="changeStatusDropdown"
-                    ngbDropdownToggle>
-                    Change status
-                </button>
-                <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-                    <li *ngIf="uiState.editRequestData?.status !== requestStatus.Pending">
-                        <a class="btn btn-sm dropdown-item">{{ requestStatus.Pending }} &nbsp; &nbsp;
-                            &raquo;</a>
-                        <ul class="dropdown-menu dropdown-submenu">
-                            <li *ngFor="let el of (formData | async)?.PendingReason?.content!">
-                                <button class="btn btn-sm dropdown-item" type="button"
-                                    (click)="changeRequestAlert(requestStatus.Pending, el.name)">{{
-                                    el.name }}</button>
-                            </li>
-                        </ul>
-                    </li>
-                    <li *ngIf="uiState.editRequestData?.status !== requestStatus.Close">
-                        <button class="btn btn-sm dropdown-item" type="button"
-                            (click)="changeRequestAlert(requestStatus.Close)">{{
-                            requestStatus.Close }}</button>
-                    </li>
-                    <li *ngIf="uiState.editRequestData?.status !== requestStatus.Cancel">
-                        <button class="btn btn-sm dropdown-item" type="button"
-                            (click)="rejectRequets(requestStatus.Cancel)">{{
-                            requestStatus.Cancel }}</button>
-                    </li>
+                    <!-- Buttons -->
+                    <div class="col-md-6 mt-md-3 d-flex justify-content-end"
+                        [ngClass]="{'col-lg-2':!uiState.editMode,'col-lg-3':!uiState.editMode}">
+                        <!-- In Case Of Edit Start -->
+                        <!-- Change Status -->
+                        <div ngbDropdown class="d-inline-block mx-2" *ngIf="uiState.editMode">
+                            <button type="button" class="btn btn-sm btn-info waves-effect" id="changeStatusDropdown"
+                                ngbDropdownToggle>
+                                Change status
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
+                                <li *ngIf="uiState.editRequestData?.status !== requestStatus.Pending">
+                                    <a class="btn btn-sm dropdown-item">{{ requestStatus.Pending }} &nbsp; &nbsp;
+                                        &raquo;</a>
+                                    <ul class="dropdown-menu dropdown-submenu">
+                                        <li *ngFor="let el of (formData | async)?.PendingReason?.content!">
+                                            <button class="btn btn-sm dropdown-item" type="button"
+                                                (click)="changeRequestAlert(requestStatus.Pending, el.name)">{{
+                                                el.name }}</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li *ngIf="uiState.editRequestData?.status !== requestStatus.Close">
+                                    <button class="btn btn-sm dropdown-item" type="button"
+                                        (click)="changeRequestAlert(requestStatus.Close)">{{
+                                        requestStatus.Close }}</button>
+                                </li>
+                                <li *ngIf="uiState.editRequestData?.status !== requestStatus.Cancel">
+                                    <button class="btn btn-sm dropdown-item" type="button"
+                                        (click)="rejectRequets(requestStatus.Cancel)">{{
+                                        requestStatus.Cancel }}</button>
+                                </li>
+                            </div>
+                        </div>
+                        <!-- In Case Of Edit End -->
+                        <button type="submit" class="btn btn-success btn-sm me-2 bg-gradient waves-effect waves-light ">
+                            <i class="  ri-save-2-fill"></i>
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-danger me-2 btn-sm bg-gradient waves-effect waves-light "
+                            onclick="resetForm()">
+                            <i class="ri-delete-bin-2-line"></i>
+                            Clear
+                        </button>
+                    </div>
                 </div>
             </div>
-            <!-- In Case Of Edit End -->
-            <button type="submit" class="btn btn-success btn-sm me-2 bg-gradient waves-effect waves-light ">
-                <i class="  ri-save-2-fill"></i>
-                Save
-            </button>
-            <button type="button" class="btn btn-danger me-2 btn-sm bg-gradient waves-effect waves-light "
-                onclick="resetForm()">
-                <i class="ri-delete-bin-2-line"></i>
-                Clear
-            </button>
         </div>
     </div>
     <!-- end Buttons -->
