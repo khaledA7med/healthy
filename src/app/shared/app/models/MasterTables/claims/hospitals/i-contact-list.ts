@@ -9,3 +9,13 @@ export interface IContactList {
   Phone?: FormControl<string | null>;
   SavedUser?: FormControl<string | null>;
 }
+
+export interface IContactListData {
+  sNo?: number;
+  HospitalId?: number;
+  Name?: string;
+  Position?: string;
+  Email?: string;
+  Phone?: string;
+  SavedUser?: string;
+}

@@ -139,12 +139,6 @@
                                                             </td>
 
                                                             <td>
-                                                                <button
-                                                                    *ngIf="uiState.editHospitalsMode && contactListArray.controls[i].disabled"
-                                                                    type="button" class="btn btn-sm btn-soft-info me-2"
-                                                                    (click)="enableEditingRow(i, 'contact')">
-                                                                    <i class="ri-edit-2-line"></i>
-                                                                </button>
                                                                 <button type="button" class="btn btn-sm btn-soft-danger"
                                                                     (click)="remove(i, 'contact')">
                                                                     <i class="ri-delete-bin-2-line"></i>
@@ -260,12 +254,6 @@
                                                     </td>
 
                                                     <td>
-                                                        <button
-                                                            *ngIf="uiState.editHospitalsMode && networkListArray.controls[i].disabled"
-                                                            type="button" class="btn btn-sm btn-soft-info me-2"
-                                                            (click)="enableEditingRow(i, 'network')">
-                                                            <i class="ri-edit-2-line"></i>
-                                                        </button>
                                                         <button type="button" class="btn btn-sm btn-soft-danger"
                                                             (click)="remove(i, 'network')">
                                                             <i class="ri-delete-bin-2-line"></i>

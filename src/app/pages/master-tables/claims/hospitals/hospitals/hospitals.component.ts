@@ -37,8 +37,15 @@ import {
   IHospitals,
   IHospitalsData,
 } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-hospitals";
-import { IContactList } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-contact-list";
-import { INetworkList } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-network-list";
+import {
+  IContactList,
+  IContactListData,
+} from "src/app/shared/app/models/MasterTables/claims/hospitals/i-contact-list";
+import {
+  INetworkList,
+  INetworkListData,
+} from "src/app/shared/app/models/MasterTables/claims/hospitals/i-network-list";
+import { IHospitalsPreview } from "src/app/shared/app/models/MasterTables/claims/hospitals/i-hospitals-preview";
 
 @Component({
   selector: "app-hospitals",
@@ -138,7 +145,6 @@ export class HospitalsComponent implements OnInit, OnDestroy {
   }
 
   openHospitalsDialoge(sno?: number) {
-    this.resetHospitalsForm();
     this.HospitalsModal = this.modalService.open(this.HospitalsContent, {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
@@ -148,7 +154,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     if (sno) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.HospitalsService.getEditHospitalsData(sno).subscribe(
-        (res: HttpResponse<IBaseResponse<IHospitalsData>>) => {
+        (res: HttpResponse<IBaseResponse<IHospitalsPreview>>) => {
           if (res.body?.status) {
             this.fillEditHospitalsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
@@ -181,7 +187,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     });
   }
 
-  get f(): IHospitals {
+  get f() {
     return this.HospitalsForm.controls;
   }
 
@@ -202,7 +208,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
   contactListControls(i: number, control: string): AbstractControl {
     return this.contactListArray.controls[i].get(control)!;
   }
-  addNetwork(data?: INetworkList): void {
+  addNetwork(data?: INetworkListData): void {
     if (this.f.networkList?.invalid) {
       this.f.networkList?.markAllAsTouched();
       return;
@@ -234,7 +240,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     this.networkListArray.updateValueAndValidity();
   }
 
-  addContact(data?: IContactList) {
+  addContact(data?: IContactListData) {
     if (this.f.contactList?.invalid) {
       this.f.contactList?.markAllAsTouched();
       return;
@@ -260,24 +266,26 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     else return;
   }
 
-  enableEditingRow(i: number, type: string) {
-    if (type === "network") this.networkListArray.at(i).enable();
-    else if (type === "contact") this.contactListArray.at(i).enable();
-    else return;
-  }
   //#endregion
 
-  fillEditHospitalsForm(data: IHospitalsData) {
-    this.f.name?.patchValue(data.name!);
-    this.f.city?.patchValue(data.city!);
-    this.f.address?.patchValue(data.address!);
-    this.f.email?.patchValue(data.email!);
-    this.f.tele?.patchValue(data.tele!);
-    this.f.fax?.patchValue(data.fax!);
-    this.f.specialties?.patchValue(data.specialties!);
-    this.f.region?.patchValue(data.region!);
-    data.networkList?.map((network: any) => this.addNetwork(network));
-    data.contactList?.map((con: any) => this.addContact(con));
+  fillEditHospitalsForm(data: IHospitalsPreview): void {
+    this.HospitalsForm.patchValue({
+      sno: data.sno,
+      name: data.name,
+      city: data.city,
+      tele: data.tele,
+      email: data.email,
+      address: data.address,
+      fax: data.fax,
+      specialties: data.specialties,
+      region: data.region,
+    });
+    if (data?.networkList!) {
+      data?.networkList!.forEach((el) => this.addNetwork(el));
+    }
+    if (data?.contactList!) {
+      data?.contactList!.forEach((el) => this.addContact(el));
+    }
     this.f.name?.disable();
     this.f.city?.disable();
     this.f.address?.disable();
@@ -286,6 +294,8 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     this.f.fax?.disable();
     this.f.specialties?.disable();
     this.f.region?.disable();
+
+    this.eventService.broadcast(reserved.isLoading, false);
   }
 
   validationChecker(): boolean {
@@ -319,6 +329,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     formData.append("fax", val.fax! ?? "");
     formData.append("specialties", val.specialties! ?? "");
     formData.append("region", val.region! ?? "");
+
     this.contactListArray.controls.forEach((el) => el.enable());
     let contact = val.contactList!;
     for (let i = 0; i < contact.length; i++) {
