@@ -190,8 +190,7 @@
         <div class="col-12 mb-3">
           <label for="form-label">Branch:</label>
           <input type="text" class="form-control form-control-sm"
-            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllUsersClaim)!"
-            formControlName="branch" />
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBrancheClaim)!" />
         </div>
         <!-- /col -->
         <!-- col insurance company -->
