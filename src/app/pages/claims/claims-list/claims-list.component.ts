@@ -56,6 +56,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 		},
 		privileges: ClaimsPermissions,
 	};
+	isLoading: boolean = false;
 
 	permissions$!: Observable<string[]>;
 
@@ -303,15 +304,16 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			this.followUpForm.markAllAsTouched();
 			return;
 		}
-		this.eventService.broadcast(reserved.isLoading, true);
+		this.isLoading = true;
+
 		let sub = this.claimService.saveFollowUp(form).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
 			if (res.body?.data) {
 				this.getFollowUp(form.no);
 				this.message.toast(res.body?.message!, "success");
-				this.eventService.broadcast(reserved.isLoading, false);
+				this.isLoading = false;
 			} else {
 				this.message.popup("Sorry!", res.body?.message!, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
+				this.isLoading = false;
 			}
 		});
 		this.subscribes.push(sub);

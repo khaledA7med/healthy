@@ -55,7 +55,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			leadNo: "",
 		},
 	};
-
+	isLoading: boolean = false;
 	cardLists = {
 		pending: [] as IBusinessDevelopment[],
 		waitingClient: [] as IBusinessDevelopment[],
@@ -404,7 +404,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
-			this.eventService.broadcast(reserved.isLoading, true);
+			this.isLoading = true;
 			let sub = this.businssDevelopmenService
 				.saveNote(this.followUpForm.value)
 				.subscribe((res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
@@ -412,8 +412,9 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 						this.message.toast(res.body!.message!, "success");
 						this.followUpForm.reset();
 						this.loadFollowUpData(this.uiState.followUpData.leadNo);
+						this.isLoading = false;
 					} else this.message.toast(res.body!.message!, "error");
-					this.eventService.broadcast(reserved.isLoading, false);
+					this.isLoading = false;
 				});
 			this.subscribes.push(sub);
 		}

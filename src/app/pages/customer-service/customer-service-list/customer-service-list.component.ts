@@ -45,6 +45,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 	@ViewChild("datePicker") datePicker!: ElementRef;
 
 	canvasRef!: NgbOffcanvasRef;
+	isLoading: boolean = false;
 
 	uiState = {
 		routerLink: { forms: AppRoutes.CustomerService.create },
@@ -304,16 +305,16 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
-			this.eventService.broadcast(reserved.isLoading, true);
+			this.isLoading = true;
 			let sub = this.customerService.saveNote(this.followUpForm.value).subscribe((res: IBaseResponse<ICustomerServiceFollowUp[]>) => {
 				if (res.status) {
 					this.message.toast(res.message!, "success");
 					this.followUpForm.reset();
 					this.loadFollowUpData(this.uiState.followUpData.requestNo);
-					this.eventService.broadcast(reserved.isLoading, false);
+					this.isLoading = false;
 				} else {
 					this.message.toast(res.message!, "error");
-					this.eventService.broadcast(reserved.isLoading, false);
+					this.isLoading = false;
 				}
 			});
 			this.subscribes.push(sub);
