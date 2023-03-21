@@ -14,7 +14,6 @@ import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelop
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { HttpResponse } from "@angular/common/http";
@@ -116,7 +115,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private router: Router,
 		private eventService: EventService
 	) {}
 

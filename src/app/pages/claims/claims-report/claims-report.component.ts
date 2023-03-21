@@ -97,7 +97,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 	initFilterForm() {
 		this.filterForm = new FormGroup<claimsReportForm>({
 			branch: new FormControl("Select All"),
-			clientData: new FormControl(null),
+			clientData: new FormControl("Select All"),
 			clientGroup: new FormControl("Select All"),
 			status: new FormControl([]),
 			subStatus: new FormControl([]),
@@ -243,6 +243,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		const data: claimsReportReq = {
 			...filterForm.getRawValue(),
 			clientData: this.uiState.clientDataContorl.getRawValue() === "Select All" ? null : filterForm.getRawValue().clientData,
+			clientGroup: this.filterForm.getRawValue().clientGroup === "Select All" ? null : filterForm.getRawValue().clientGroup,
 			branch: this.filterForm.getRawValue().branch === "Select All" ? null : filterForm.getRawValue().branch,
 			minDate: this.utils.dateFormater(filterForm.getRawValue().minDate) as any,
 			maxDate: this.utils.dateFormater(filterForm.getRawValue().maxDate) as any,
@@ -269,7 +270,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 	openReportsViewer(data?: string): void {
 		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
 		this.modalRef.componentInstance.data = {
-			reportName: "CRM Reports",
+			reportName: "Claims Reports",
 			url: data,
 		};
 	}
@@ -280,6 +281,11 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.filterForm.reset();
+		this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(false);
+		this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(false);
+		this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false);
+		this.uiState.checkAllControls.allStatusControl.patchValue(false);
+		this.uiState.checkAllControls.allSubStatusControl.patchValue(false);
 		this.submitted = false;
 	}
 }

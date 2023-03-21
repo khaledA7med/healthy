@@ -292,45 +292,45 @@
       <button type="button" class="btn-close" aria-label="Close"
         (click)="followOffcanvas.dismiss('Cross click')"></button>
     </div>
-    <div class="offcanvas-body followUpCanvas overflow-hidden">
+    <div class="offcanvas-body followUpCanvas chat-conversation p-3 p-lg-4">
       <div class="row justify-content-center">
-        <ngx-simplebar class="chat-conversation p-3 p-lg-4" id="chat-conversation">
-          <ul class="list-unstyled chat-conversation-list" id="conversation-list">
-            <li #followUpList class="chat-list left" *ngFor="let el of uiState.claims.followUpData">
-              <div class="conversation-list">
-                <div class="chat-avatar fs-20 text-muted">
-                  <i class="ri-user-voice-fill"></i>
+        <ul class="list-unstyled chat-conversation-list" id="conversation-list">
+          <li #followUpList class="chat-list left" *ngFor="let el of uiState.claims.followUpData">
+            <div class="conversation-list">
+              <div class="chat-avatar fs-20 text-muted">
+                <i class="ri-user-voice-fill"></i>
+              </div>
+              <div class="user-chat-content">
+                <div class="ctext-wrap">
+                  <div class="ctext-wrap-content">
+                    <p class="mb-0 ctext-content">{{ el.notes }}</p>
+                  </div>
                 </div>
-                <div class="user-chat-content">
-                  <div class="ctext-wrap">
-                    <div class="ctext-wrap-content">
-                      <p class="mb-0 ctext-content">{{ el.notes }}</p>
-                    </div>
-                  </div>
-                  <div class="conversation-name">
-                    <small class="text-muted time">{{ el.savedUser }}</small>
-                    <small class="text-muted time">
-                      {{ el.savedDate | date : "mediumDate" }} </small><br />
-                  </div>
+                <div class="conversation-name">
+                  <small class="text-muted time">{{ el.savedUser }}</small>
+                  <small class="text-muted time">
+                    {{ el.savedDate | date : "mediumDate" }} </small><br />
                 </div>
               </div>
-            </li>
-          </ul>
-        </ngx-simplebar>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
     <!--end offcanvas-body-->
 
     <!--offcanvas-footer -->
-    <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp(followUpForm.value)">
-      <div class="offcanvas-footer border-top row mb-3 mx-1">
+
+    <div class="offcanvas-footer border-top row mb-3 mx-1">
+
+      <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp(followUpForm.value)">
         <div class="col-12  my-2">
           <label class="form-label">Users:</label>
           <ng-select [items]="(formData | async)?.AllUsers?.content!" [loading]="formData ? false : true"
-            [clearable]="true" class="form-control-sm px-0 w-100" [ngClass]="{
-              'is-invalid':
-                followUpF.names?.touched && followUpF.names?.errors
-            }" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false" bindLabel="name" bindValue="name"
+            [clearable]="true" class="form-control-sm px-0 w-100" appendTo="body" [ngClass]="{
+                    'is-invalid':
+                      followUpF.names?.touched && followUpF.names?.errors
+                  }" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false" bindLabel="name" bindValue="name"
             formControlName="names" placeholder="Select User">
           </ng-select>
           <div *ngIf="followUpF.names?.touched && followUpF.names?.errors" class="invalid-feedback">
@@ -339,8 +339,8 @@
         </div>
         <div class="mb-2 col-12">
           <textarea class="form-control text-area" [ngClass]="{
-              'is-invalid': followUpF.msg?.touched && followUpF.msg?.errors
-            }" formControlName="msg" rows="3" placeholder="Type A Message"></textarea>
+                    'is-invalid': followUpF.msg?.touched && followUpF.msg?.errors
+                  }" formControlName="msg" rows="3" placeholder="Type A Message"></textarea>
           <div *ngIf="followUpF.msg?.touched && followUpF.msg?.errors" class="invalid-feedback">
             required
           </div>
@@ -350,8 +350,9 @@
             Send Emails
           </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
+
     <!--end offcanvas-footer -->
   </ng-template>
 </div>

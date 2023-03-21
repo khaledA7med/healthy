@@ -26,6 +26,8 @@ import { CustomerServicePermissions } from "src/app/core/roles/customer-service-
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
 RangePickerModule;
 
 @Component({
@@ -111,6 +113,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
+		private eventService: EventService,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -301,12 +304,17 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
+			this.eventService.broadcast(reserved.isLoading, true);
 			let sub = this.customerService.saveNote(this.followUpForm.value).subscribe((res: IBaseResponse<ICustomerServiceFollowUp[]>) => {
 				if (res.status) {
 					this.message.toast(res.message!, "success");
 					this.followUpForm.reset();
 					this.loadFollowUpData(this.uiState.followUpData.requestNo);
-				} else this.message.toast(res.message!, "error");
+					this.eventService.broadcast(reserved.isLoading, false);
+				} else {
+					this.message.toast(res.message!, "error");
+					this.eventService.broadcast(reserved.isLoading, false);
+				}
 			});
 			this.subscribes.push(sub);
 		}

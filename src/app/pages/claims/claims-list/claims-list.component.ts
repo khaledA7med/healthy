@@ -26,6 +26,8 @@ import { ClaimsPermissions } from "src/app/core/roles/claims-permissions";
 import { Roles } from "src/app/core/roles/Roles";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { AuthenticationService } from "src/app/core/services/auth.service";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
 	selector: "app-claims-list",
@@ -95,6 +97,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private util: AppUtils,
+		private eventService: EventService,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -272,7 +275,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 	//#region follow up
 
 	openFollowUpCanvas(sNo: number) {
-		this.offcanvasService.open(this.followUpCanvas, { position: "end" });
+		this.offcanvasService.open(this.followUpCanvas, { position: "end", scroll: false });
 		this.getFollowUp(sNo);
 		this.initFollowUpForm(sNo.toString());
 	}
@@ -300,11 +303,16 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			this.followUpForm.markAllAsTouched();
 			return;
 		}
+		this.eventService.broadcast(reserved.isLoading, true);
 		let sub = this.claimService.saveFollowUp(form).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
 			if (res.body?.data) {
 				this.getFollowUp(form.no);
 				this.message.toast(res.body?.message!, "success");
-			} else this.message.popup("Sorry!", res.body?.message!, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			} else {
+				this.message.popup("Sorry!", res.body?.message!, "error");
+				this.eventService.broadcast(reserved.isLoading, false);
+			}
 		});
 		this.subscribes.push(sub);
 	}

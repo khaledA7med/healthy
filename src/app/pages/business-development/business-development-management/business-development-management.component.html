@@ -304,11 +304,11 @@
       <button type="button" class="btn-close" aria-label="Close"
         (click)="followOffcanvas.dismiss('Cross click')"></button>
     </div>
-    <div class="offcanvas-body followUpCanvas overflow-hidden">
+    <div class="offcanvas-body followUpCanvas">
       <div class="row justify-content-center">
         <ngx-simplebar class="chat-conversation p-3 p-lg-4" id="chat-conversation">
           <ul class="list-unstyled chat-conversation-list" id="conversation-list">
-            <li class="chat-list left" *ngFor="let el of uiState.followUpData.list">
+            <li #followUpList class="chat-list left" *ngFor="let el of uiState.followUpData.list">
               <div class="conversation-list">
                 <div class="chat-avatar fs-20 text-muted">
                   <i class="ri-user-voice-fill"></i>
@@ -321,9 +321,8 @@
                   </div>
                   <div class="conversation-name">
                     <small class="text-muted time">{{ el.savedUser }}</small>
-                    <small class="text-muted time">{{
-                      el.savedDate | date : "mediumDate"
-                      }}</small><br />
+                    <small class="text-muted time">
+                      {{ el.savedDate | date : "mediumDate" }} </small><br />
                   </div>
                 </div>
               </div>
@@ -333,39 +332,38 @@
       </div>
     </div>
     <!--end offcanvas-body-->
-    <!-- submit and clear btn -->
+
+    <!--offcanvas-footer -->
     <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp()">
       <div class="offcanvas-footer border-top row mb-3 mx-1">
-        <div class="col-12 mb-2">
-          <label for="users" class="form-label">Users:</label>
+        <div class="col-12  my-2">
+          <label class="form-label">Users:</label>
           <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" [ngClass]="{
-              'is-invalid': ff.names?.touched && ff.names?.errors
+            [clearable]="true" class="form-control-sm px-0 w-100" [ngClass]="{
+              'is-invalid':
+                ff.names?.touched && ff.names?.errors
             }" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false" bindLabel="name" bindValue="name"
-            id="users" formControlName="names">
+            formControlName="names" placeholder="Select User">
           </ng-select>
           <div *ngIf="ff.names?.touched && ff.names?.errors" class="invalid-feedback">
-            <div *ngIf="ff.names?.touched && ff.names?.errors!['required']">
-              required
-            </div>
+            required
           </div>
         </div>
-        <div class="col-12 mb-2">
-          <textarea class="form-control text-area" id="Msg" [ngClass]="{
+        <div class="mb-2 col-12">
+          <textarea class="form-control text-area" [ngClass]="{
               'is-invalid': ff.msg?.touched && ff.msg?.errors
-            }" name="msg" formControlName="msg" rows="3" placeholder="Type A Message"></textarea>
+            }" formControlName="msg" rows="3" placeholder="Type A Message"></textarea>
           <div *ngIf="ff.msg?.touched && ff.msg?.errors" class="invalid-feedback">
-            <div *ngIf="ff.msg?.touched && ff.msg?.errors!['required']">
-              required
-            </div>
+            required
           </div>
         </div>
         <div class="col-12 mt-2">
-          <button class="btn btn-success btn-sm w-100" type="submit" [disabled]="!followUpForm.valid">
+          <button class="btn btn-success btn-sm w-100" type="submit">
             Send Emails
           </button>
         </div>
       </div>
     </form>
+    <!--end offcanvas-footer -->
   </ng-template>
 </div>
