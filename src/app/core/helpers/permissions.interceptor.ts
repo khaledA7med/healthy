@@ -18,6 +18,7 @@ import { EventService } from "../services/event.service";
 import { reserved } from "../models/reservedWord";
 import { Router } from "@angular/router";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class PermissionsInterceptor implements HttpInterceptor {
@@ -90,7 +91,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
     return request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
-        "ng-version": "1.3.0",
+        "ng-version": environment.appVersion,
       },
     });
   }
