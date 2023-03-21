@@ -110,6 +110,7 @@ export const ApiRoutes = {
       hospitals: LookUpTables + BaseData.Hospitals,
       carsModels: LookUpTables + BaseData.CarsModels,
       cities: LookUpTables + BaseData.Cities,
+      branch: LookUpTables + BaseData.Branch,
     },
     SystemAdmin: {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
