@@ -1,8 +1,7 @@
 <div class="row justify-content-between align-items-center mb-3">
-    <div class="col-2 form-group row align-items-center">
-        <label class="col-sm-2 col-form-label" for="pagingSizeSelect">Show: </label>
-
-        <div class="col-sm-4">
+    <div class="col-lg-2 col-md-3 col-sm-6 form-group row align-items-center">
+        <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
+        <div class="col-sm-8">
             <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
                 [(ngModel)]="uiState.filters.pageSize">
                 <ng-option [value]="25">25</ng-option>
@@ -11,20 +10,14 @@
                 <ng-option [value]="150">150</ng-option>
                 <ng-option [value]="200">200</ng-option>
             </ng-select>
-
         </div>
     </div>
-
-    <div class="col-3 d-flex justify-content-end">
-
-        <button type="button" class="btn btn-sm btn-info mx-2 d-flex align-items-center"
-            (click)="openFilterOffcanvas()">
-            <i class="ri-filter-3-line align-bottom me-1"></i>
-            Filters
+    <div class="col-lg-3 col-md-3 col-sm-6 mt-sm-3 d-flex justify-content-end">
+        <button class="btn btn-sm btn-info mx-2" (click)="openFilterOffcanvas()">
+            <i class="ri-filter-3-line me-1"></i> Filters
         </button>
     </div>
 </div>
-
 <!-- grid -->
 
 <div class="ag-theme-alpine" appTableView>
@@ -61,7 +54,7 @@
                     <label for="Client" class="form-label text-muted fw-bold fs-13">
                         Client Name:
                     </label>
-                    <ng-select id="clientName" class="is-invalid" placeholder="Select Producer"
+                    <ng-select id="clientName" class="is-invalid" placeholder="Select Client"
                         [items]="(lookupData | async)?.ClientsList?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="clientName" bindLabel="name"
                         bindValue="name">
@@ -182,13 +175,13 @@
                                         <div class="col-lg-3 col-md-6 col-sm-12  my-2">
                                             <label for="modalPeriodFrom">Period From</label>
                                             <app-gregorian-picker [model]="ff.periodFrom?.value" [required]="true"
-                                                [submitted]="submitted"
+                                                [submitted]="submitted" [disabled]="true"
                                                 (dateChange)="periodFrom($event)"></app-gregorian-picker>
                                         </div>
                                         <div class="col-lg-3 col-md-6 col-sm-12  my-2">
                                             <label for="modalPeriodTo">Period To</label>
                                             <app-gregorian-picker [model]="ff.periodTo?.value" [required]="true"
-                                                [submitted]="submitted"
+                                                [submitted]="submitted" [disabled]="true"
                                                 (dateChange)="periodTo($event)"></app-gregorian-picker>
                                         </div>
                                     </div>
@@ -226,91 +219,94 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row mt-4">
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
-                                                <label for="producersComissionDD" class="text-muted">Producer</label>
-                                                <ng-select id="producer" class="is-invalid"
-                                                    placeholder="Select Producer"
-                                                    [items]="(lookupData | async)?.Producers?.content!"
-                                                    [ngClass]="{'is-submitted': (ff.prodCommProduser?.touched) && ff.prodCommProduser?.invalid}"
-                                                    [loading]="lookupData ? false : true" [clearable]="true"
-                                                    [searchable]="true" formControlName="prodCommProduser"
-                                                    bindLabel="name" bindValue="name">
-                                                </ng-select>
-                                                <span class="invalid-feedback fw-bold"
-                                                    *ngIf="(ff.prodCommProduser?.touched || uiState.submitted) && ff.prodCommProduser?.invalid">
-                                                    Required
-                                                </span>
-                                            </div>
 
-                                            <div class="col-lg-3 col-md-12 col-sm-12 text-muted">
-                                                <label for="producerCommissionPerc">Percentage</label>
-                                                <div class="input-group input-group-sm">
-                                                    <input type="number" class="form-control"
-                                                        id="producerCommissionPerc" (input)="formListeners($event)"
-                                                        placeholder="0%"
-                                                        [ngClass]="{'is-invalid': (ff.prodCommPercentage?.touched) && ff.prodCommPercentage?.invalid}"
-                                                        formControlName="prodCommPercentage">
-                                                    <span class="input-group-text" id="perc">%</span>
-                                                    <span
-                                                        *ngIf="(ff.prodCommPercentage?.touched || uiState.submitted) && ff.prodCommPercentage?.invalid"
-                                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                        <div class="my-3 h-100">
+                                            <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+                                                <div class="card-body">
+                                                    <div class="ribbon-content my-4">
+                                                        <div class="row justify-content-center my-4">
+                                                            <div class="d-flex flex-column">
+                                                                <button type="button"
+                                                                    (click)="addProducersCommissions()"
+                                                                    class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light"
+                                                                    [disabled]="ff.producer?.value?.startsWith('Direct Business')">
+                                                                    <i class="ri-contacts-book-2-line"></i>
+                                                                    Add
+                                                                </button>
+
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-nowrap mb-0">
+                                                                        <thead class="table-light">
+                                                                            <tr>
+                                                                                <th scope="col">Producer</th>
+                                                                                <th scope="col">Percentage %</th>
+                                                                                <th scope="col"></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody formArrayName="producersCommissions">
+                                                                            <tr
+                                                                                *ngFor="let c of producersCommissionsArray.controls; index as i">
+                                                                                <ng-container [formGroupName]="i">
+
+                                                                                    <td scope="col">
+                                                                                        <ng-select id="producers"
+                                                                                            class="is-invalid"
+                                                                                            appendTo="table"
+                                                                                            placeholder="Select Producer"
+                                                                                            [items]="(lookupData | async)?.Producers?.content!"
+                                                                                            [ngClass]="{'is-submitted': (producersCommissionsControls(i, 'producer').touched || uiState.submitted) && producersCommissionsControls(i, 'producer').invalid}"
+                                                                                            [loading]="lookupData ? false : true"
+                                                                                            [clearable]="true"
+                                                                                            [searchable]="true"
+                                                                                            formControlName="producer"
+                                                                                            bindLabel="name"
+                                                                                            bindValue="name">
+                                                                                        </ng-select>
+                                                                                    </td>
+
+                                                                                    <td scope="col">
+                                                                                        <input type="number"
+                                                                                            class="form-control-sm"
+                                                                                            id="producerCommissionPerc"
+                                                                                            (input)="formListeners($event)"
+                                                                                            placeholder="0%"
+                                                                                            [ngClass]="{'is-invalid': (producersCommissionsControls(i, 'percentage').touched || uiState.submitted) && producersCommissionsControls(i, 'percentage').invalid}"
+                                                                                            formControlName="percentage">
+                                                                                    </td>
+
+                                                                                    <td>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-soft-danger"
+                                                                                            (click)="removeCommission(i)">
+                                                                                            <i
+                                                                                                class="ri-delete-bin-2-line"></i>
+                                                                                        </button>
+                                                                                    </td>
+
+                                                                                </ng-container>
+                                                                            </tr>
+                                                                            <tr *ngIf="producersCommissionsArray.controls.length === 0"
+                                                                                class="my-1 text-center text-dark fw-bold no-item-contact">
+                                                                                <td colspan="100">No items show</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                        <tfoot id="totalPaymentTermFooter"
+                                                                            class="text-danger">
+                                                                            <tr>
+                                                                                <th>Total</th>
+                                                                                <th>
+                                                                                    {{uiState.producerCommission.commissionTotals.percentage
+                                                                                    }}%
+                                                                                </th>
+                                                                                <th></th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-12 col-sm-12">
-                                                <button type="button" id="addCommissionBtn"
-                                                    (click)="addProducersCommissions()" [disabled]="subBtn"
-                                                    class="btn btn-info btn-sm w-100 d-flex align-items-center justify-content-center">
-                                                    Add
-                                                    <i class="ri-add-circle-line mx-2"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row my-3">
-                                            <div class="col-lg-12 table-responsive">
-                                                <table class="table align-middle table-nowrap mb-0"
-                                                    id="commissionsTable">
-                                                    <thead class="table-light">
-                                                        <tr>
-                                                            <th scope="col">Producer</th>
-                                                            <th scope="col">Percentage %</th>
-                                                            <th scope="col">Delete</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody formArrayName="producersCommissions">
-                                                        <tr
-                                                            *ngFor="let p of producersCommissionsArray.controls; index as i">
-                                                            <ng-container [formGroupName]="i">
-                                                                <td>{{ producersCommissionsControls(i, 'producer').value
-                                                                    }}
-                                                                </td>
-                                                                <td>{{ producersCommissionsControls(i,
-                                                                    'percentage').value
-                                                                    }}
-                                                                </td>
-                                                                <td>
-                                                                    <button class="btn btn-sm btn-danger" type="button"
-                                                                        (click)="deleteProducersCommissions(i)">
-                                                                        <i class="ri-delete-bin-line"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </ng-container>
-                                                        </tr>
-                                                        <tr *ngIf="producersCommissionsArray.controls.length === 0"
-                                                            class="my-1 text-center text-dark fw-bold no-item-contact">
-                                                            <td colspan="100">Add Commissions To show</td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot id="totalPaymentTermFooter" class="text-danger">
-                                                        <tr>
-                                                            <th>Total</th>
-                                                            <th>
-                                                                {{uiState.totalCommissions.prodCommPercentage }}%
-                                                            </th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
                                             </div>
                                         </div>
                                     </div>

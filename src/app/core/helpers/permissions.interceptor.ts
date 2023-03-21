@@ -76,7 +76,11 @@ export class PermissionsInterceptor implements HttpInterceptor {
   private nullableValues(request: HttpRequest<any>) {
     if (request.body !== null) {
       Object.keys(request.body).map((key) => {
-        if (!request.body[key] && typeof request.body[key] !== "number")
+        if (
+          !request.body[key] &&
+          typeof request.body[key] !== "number" &&
+          typeof request.body[key] !== "boolean"
+        )
           request.body[key] = "";
       });
     }
@@ -86,6 +90,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
     return request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
+        "ng-version": "1.3.0",
       },
     });
   }

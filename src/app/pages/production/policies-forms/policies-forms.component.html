@@ -644,7 +644,9 @@
                                                                 <td colspan="100">Add Payment Terms To show</td>
                                                             </tr>
                                                         </tbody>
-                                                        <tfoot id="totalPaymentTermFooter" class="alert">
+                                                        <tfoot class="alert"
+                                                            [ngClass]="{'alert-danger': 
+                                                            uiState.submitted && (!uiState.financesValid.payments || !paymentTermsListBool)}">
                                                             <tr>
                                                                 <th>Total</th>
                                                                 <th>{{uiState.paymentTermsTotals.percentage}}%</th>
@@ -782,7 +784,9 @@
                                                                 <td colspan="100">Add Commissions To show</td>
                                                             </tr>
                                                         </tbody>
-                                                        <tfoot>
+                                                        <tfoot class='alert'
+                                                            [ngClass]="{'alert-danger': 
+                                                        uiState.submitted && (!uiState.financesValid.producer || !commissionListBool)}">
                                                             <tr>
                                                                 <th>Total</th>
                                                                 <th>{{uiState.producerCommission.commissionTotals.percentage}}%

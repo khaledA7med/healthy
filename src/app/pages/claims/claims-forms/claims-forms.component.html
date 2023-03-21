@@ -187,10 +187,10 @@
                                                     id="claimNo" readonly>
                                             </div>
                                             <div class="mb-2">
-                                                <label for="previousClaimsNo">Previous Claims</label>
-                                                <input type="text" formControlName="previousClaimsNo"
+                                                <label for="previousClaimsCount">Previous Claims</label>
+                                                <input type="text" formControlName="previousClaimsCount"
                                                     class="form-control form-control-sm" placeholder="Previous Claims"
-                                                    id="previousClaimsNo" readonly>
+                                                    id="previousClaimsCount" readonly>
                                             </div>
                                             <div class="mb-2">
                                                 <label for="insurCompClaimNo">Insurance Claim No.</label>
@@ -631,18 +631,15 @@
 
                                             <!-- Bank Name -->
                                             <div class="my-1">
-                                                <label for="bankName" class="asterisk-input">Bank Name</label>
-                                                <ng-select formControlName="bankName" class="is-invalid"
-                                                    [items]="(formData | async)?.Banks?.content!"
-                                                    [ngClass]="{'is-submitted': (f.bankName?.touched || uiState.submitted) && f.bankName?.invalid}"
-                                                    bindLabel="name" bindValue="name" placeholder="Bank Name"
+                                                <label for="bankName">Bank Name</label>
+                                                <ng-select formControlName="bankName"
+                                                    [items]="(formData | async)?.Banks?.content!" bindLabel="name"
+                                                    bindValue="name" placeholder="Bank Name"
                                                     [loading]="formData ? false : true">
                                                     <ng-template ng-option-tmp let-item="item">
                                                         <div>{{ item.name }}</div>
                                                     </ng-template>
                                                 </ng-select>
-                                                <span class="invalid-feedback fw-bold mt-0"
-                                                    *ngIf="(f.bankName?.touched || uiState.submitted) && f.bankName?.invalid">Required</span>
                                             </div>
 
                                             <!-- Bank Branch -->
@@ -1150,8 +1147,8 @@
                                                 <div class="input-group input-group-sm">
                                                     <ng-select formControlName="hospital"
                                                         [items]="(formData | async)?.Hospitals?.content!"
-                                                        class="form-control p-0 border-0 is-invalid"
-                                                        [ngClass]="{'is-submitted': (medical.hospital?.touched || uiState.submitted) && medical.hospital?.invalid}"
+                                                        class="form-control p-0 border-0"
+                                                        [ngClass]="{'is-invalid is-submitted': (medical.hospital?.touched || uiState.submitted) && medical.hospital?.invalid}"
                                                         bindLabel="name" bindValue="name"
                                                         [loading]="formData ? false : true">
                                                         <ng-template ng-option-tmp let-item="item">
@@ -1282,7 +1279,7 @@
                                             <!-- City -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">City</label>
-                                                <ng-select formControlName="city" class="is-invalid" bindLabel="name"
+                                                <ng-select formControlName="city" bindLabel="name"
                                                     (change)="getInsurerWorkshops($event.name)"
                                                     [items]="(formData | async)?.Cities?.content!" bindValue="name"
                                                     [loading]="formData ? false : true">
@@ -1308,7 +1305,7 @@
                                             <!-- Type Of Repair -->
                                             <div class="col-lg-3 col-md-6 col-ms-12 my-1">
                                                 <label for="type">Type Of Repair</label>
-                                                <ng-select formControlName="typeOfrepair" class="is-invalid"
+                                                <ng-select formControlName="typeOfrepair"
                                                     [items]="(formData | async)?.TypesOfRepair?.content!"
                                                     bindLabel="name" bindValue="name"
                                                     [loading]="formData ? false : true">
@@ -1335,7 +1332,7 @@
                                                 <div class="input-group input-group-sm">
                                                     <!-- [items]="(formData | async)?.workshopAgencys?.content!"  -->
                                                     <ng-select formControlName="workshopAgency"
-                                                        class="form-control p-0 border-0 is-invalid" bindLabel="name"
+                                                        class="form-control p-0 border-0" bindLabel="name"
                                                         bindValue="name" [loading]="formData ? false : true">
                                                         <ng-template ng-option-tmp let-item="item">
                                                             <div>{{ item.name }}</div>
@@ -1601,16 +1598,30 @@
     <div class="card">
         <div class="container-fluid">
             <div class="card-body px-1 py-3">
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-sm btn-success me-2">
-                        <i class="ri-save-2-fill"></i>
-                        Save
-                    </button>
-                    <button type="button" id="sa-warning" *ngIf="!uiState.editMode" (click)="resetForm()"
-                        class="btn btn-sm btn-soft-danger">
-                        <i class="ri-delete-bin-2-line"></i>
-                        Clear
-                    </button>
+                <div class="row justify-content-end align-items-end">
+                    <!-- Branch -->
+                    <div class="col-lg-3 col-md-6">
+                        <label class="col-form-label asterisk-input" for="branch">Branch</label>
+                        <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
+                            [ngClass]="{'is-submitted': (f.branch?.touched || uiState.submitted) && f.branch?.invalid}"
+                            [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
+                            [loading]="formData ? false : true" placeholder="Branch">
+                        </ng-select>
+                        <span class="invalid-feedback fw-bold mt-0"
+                            *ngIf="(f.branch?.touched || uiState.submitted) && f.branch?.invalid">Required</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-12 mt-sm-3 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-sm btn-success me-2">
+                            <i class="ri-save-2-fill"></i>
+                            Save
+                        </button>
+                        <button type="button" id="sa-warning" (click)="resetForm()" class="btn btn-sm btn-soft-danger"
+                            *ngIf="!uiState.editMode">
+                            <i class="ri-delete-bin-2-line"></i>
+                            Clear
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
