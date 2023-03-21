@@ -1,4 +1,4 @@
-import { FormArray, FormControl } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 
 export interface UserModel {
 	sno?: FormControl<number | null>;
@@ -15,7 +15,7 @@ export interface UserModel {
 	updateUser?: FormControl<string | null>;
 	updateDate?: FormControl<Date | null>;
 	DDSecurityRole?: FormControl<string | null>;
-	securityRoles?: FormArray<FormControl<string | null>> | FormArray<never>;
+	securityRoles?: FormControl<string[] | null>;
 }
 
 export interface UserModelData {

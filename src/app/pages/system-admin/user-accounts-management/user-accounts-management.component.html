@@ -189,56 +189,20 @@
                     </div>
 
                     <!-- Security Role -->
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-                        <label for="securityRole" class="asterisk-input">Security Role</label>
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                        <label for="securityRole" class="asterisk-input">Security Roles</label>
                         <div class="input-group input-group-sm">
-                            <ng-select id="securityRole" placeholder="Select Security Role"
+                            <ng-select id="securityRole" placeholder="Select Security Roles"
                                 class="form-control SCSelect p-0 border-0"
                                 [ngClass]="{'is-submitted': (ff.DDSecurityRole?.touched || uiState.submitted) && ff.DDSecurityRole?.invalid}"
-                                [clearable]="false" [hideSelected]="true"
+                                [closeOnSelect]="false" [multiple]="true" [clearable]="false" [hideSelected]="true"
                                 [items]="(lookupData | async)?.UserSecurityRoles?.content!" bindLabel="name"
-                                formControlName="DDSecurityRole" bindValue="name" [loading]="lookupData ? false : true">
+                                formControlName="securityRoles" bindValue="name" [loading]="lookupData ? false : true">
                             </ng-select>
-                            <button class="btn btn-info btn-sm d-flex align-items-center" type="button"
-                                (click)="addSecurityRole(ff.DDSecurityRole?.value!)">
-                                <i class="ri-add-fill mx-1"></i>
-                            </button>
                         </div>
                         <span *ngIf="(ff.DDSecurityRole?.touched || uiState.submitted) && ff.DDSecurityRole?.invalid"
                             class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                     </div>
-                    <!-- Security Roles Table -->
-                    <div class="row col-12 justify-content-center">
-                        <div class="col-lg-6 col-md-8 col-sm-12 my-3 table-responsive">
-                            <table class="table align-middle table-nowrap mb-0" id="requiermentsTbl">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="text-center" scope="col">Security Roles</th>
-                                        <th class="text-center" scope="col">Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody formArrayName="securityRoles">
-                                    <tr *ngFor="let c of securityRolesArray.controls; index as i">
-                                        <ng-container>
-                                            <td class="text-center">{{ securityRolesControls(i).value }}
-                                            </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-danger" type="button"
-                                                    (click)="deleteSecurityRole(i)">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-                                            </td>
-                                        </ng-container>
-                                    </tr>
-                                    <tr *ngIf=" securityRolesArray.controls.length === 0 "
-                                        class="my-1 text-center text-dark fw-bold no-item-contact">
-                                        <td colspan="100">No Security Roles To Show</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
