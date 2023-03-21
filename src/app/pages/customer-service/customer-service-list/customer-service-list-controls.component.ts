@@ -119,6 +119,7 @@ export class CustomerServiceListControlsComponent {
 				btoa(this.params.data.policySerial),
 				btoa(this.params.data.clientPolicySno),
 				btoa(this.params.data.requestNo),
+				btoa(this.params.data.endorsType),
 			]);
 		} else {
 			this.message.popup("Warning", "Request must be closed before you can make an invoice", "warning");
