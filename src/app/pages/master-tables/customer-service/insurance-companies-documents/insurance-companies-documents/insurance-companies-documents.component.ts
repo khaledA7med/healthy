@@ -63,8 +63,8 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     totalPages: 0,
     editInsuranceCompaniesDocumentsMode: false as Boolean,
     editInsuranceCompaniesDocumentsData: {} as IInsuranceCompaniesDocumentsData,
-    company: "Wataniya Insurance Company",
-    type: "Motor",
+    company: "Al Ahlia for Cooperative Insurance Company",
+    type: "Medical",
     documentdetails: {} as IInsuranceCompdata,
   };
 
@@ -151,6 +151,8 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initInsuranceCompaniesDocumentsForm();
     this.getLookupData();
+    this.f.company?.patchValue(this.uiState.company);
+    this.f.type?.patchValue(this.uiState.type);
   }
 
   getLookupData() {

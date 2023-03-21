@@ -128,6 +128,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initLineOfBusinessForm();
     this.getLookupData();
+    this.f.className?.patchValue(this.uiState.className);
   }
 
   getLookupData() {
