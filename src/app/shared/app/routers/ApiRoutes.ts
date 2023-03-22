@@ -110,6 +110,7 @@ export const ApiRoutes = {
       hospitals: LookUpTables + BaseData.Hospitals,
       carsModels: LookUpTables + BaseData.CarsModels,
       cities: LookUpTables + BaseData.Cities,
+      branch: LookUpTables + BaseData.Branch,
     },
     SystemAdmin: {
       statusOfUsers: LookUpTables + BaseData.StatusOfUsers,
@@ -478,6 +479,7 @@ export const ApiRoutes = {
     edit: "/Production/Policy/Edit",
     checkEndorsNo: "/Production/Policy/CheckPolicyEnrodsNo",
     changeStatus: "/Production/Policy/ChangeStatus",
+    changeDeliveryStatus: "/Production/Policy/SaveDeliveryStatus",
     editCommissions: "/Production/Policy/SearchClientPoliciesFilter",
     editEditCommission: "/Production/Policy/EditPolicyCommission",
     updatePolicyCommission: "/Production/Policy/UpdatePolicyComissions",

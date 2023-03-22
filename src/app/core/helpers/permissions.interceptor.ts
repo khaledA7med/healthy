@@ -18,6 +18,7 @@ import { EventService } from "../services/event.service";
 import { reserved } from "../models/reservedWord";
 import { Router } from "@angular/router";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class PermissionsInterceptor implements HttpInterceptor {
@@ -50,7 +51,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
     if (request.method === "POST") this.nullableValues(request);
 
     let currentUser = this.auth.currentToken;
-    if (currentUser) request = this.addToken(request, currentUser);
+    if (currentUser) request = this.addHeaders(request, currentUser);
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error && error.status === Errors.TokenExpired)
@@ -63,6 +64,8 @@ export class PermissionsInterceptor implements HttpInterceptor {
             errorMessage = `Error: ${error.error.message}`;
           } else {
             // server-side error
+            console.log(error.error);
+            console.log(error.error.message);
             errorMessage = error.error.message || errorMessage;
           }
           this.eventService.broadcast(reserved.isLoading, false);
@@ -76,16 +79,21 @@ export class PermissionsInterceptor implements HttpInterceptor {
   private nullableValues(request: HttpRequest<any>) {
     if (request.body !== null) {
       Object.keys(request.body).map((key) => {
-        if (!request.body[key] && typeof request.body[key] !== "number")
+        if (
+          !request.body[key] &&
+          typeof request.body[key] !== "number" &&
+          typeof request.body[key] !== "boolean"
+        )
           request.body[key] = "";
       });
     }
   }
 
-  private addToken(request: HttpRequest<any>, token: string) {
+  private addHeaders(request: HttpRequest<any>, token: string) {
     return request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
+        "ng-version": environment.appVersion,
       },
     });
   }
@@ -99,7 +107,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
         switchMap((token: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.data.accessToken);
-          return next.handle(this.addToken(request, token.data.accessToken));
+          return next.handle(this.addHeaders(request, token.data.accessToken));
         }),
         catchError((err: any) => {
           this.isRefreshing = false;
@@ -111,7 +119,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
         filter((token) => token !== null),
         take(1),
         switchMap((token) => {
-          return next.handle(this.addToken(request, token));
+          return next.handle(this.addHeaders(request, token));
         })
       );
     }

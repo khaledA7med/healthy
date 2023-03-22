@@ -30,6 +30,7 @@ export interface IClaimsForms {
   insuredClaimNo?: FormControl<string | null>;
   membName?: FormControl<string | null>;
   bLAWBNo?: FormControl<string | null>;
+  previousClaimsCount?: FormControl<number | null>;
 
   //Claimant Details
   claimantMobile?: FormControl<string | null>;

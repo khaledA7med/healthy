@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
@@ -245,8 +245,8 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 			savedDate: new FormControl(null),
 			updateUser: new FormControl(null),
 			updateDate: new FormControl(null),
-			DDSecurityRole: new FormControl(null, Validators.required),
-			securityRoles: new FormArray([], Validators.required),
+			DDSecurityRole: new FormControl(""),
+			securityRoles: new FormControl([], Validators.required),
 		});
 	}
 
@@ -282,33 +282,6 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	get securityRolesArray() {
-		return this.userForm.get("securityRoles") as FormArray;
-	}
-
-	securityRolesControls(i: number): AbstractControl {
-		return this.securityRolesArray.controls[i];
-	}
-
-	addSecurityRole(value: string) {
-		if (this.ff.DDSecurityRole?.valid || this.uiState.editUserMode) {
-			let newVal = new FormControl();
-			newVal.patchValue(value);
-			let exitChecker = this.securityRolesArray.getRawValue() as Array<string>;
-			if (!exitChecker.includes(value)) this.securityRolesArray.push(newVal);
-			else this.message.popup("Oops!", "Security Role Already Added", "error");
-
-			if (this.securityRolesArray.length > 0) this.ff.DDSecurityRole?.clearValidators();
-			else this.ff.DDSecurityRole?.addValidators(Validators.required);
-		} else {
-			this.ff.DDSecurityRole?.markAsTouched();
-		}
-	}
-
-	deleteSecurityRole(i: number) {
-		this.securityRolesArray.removeAt(i);
-	}
-
 	getUserDetails(sno: number) {
 		let sub = this.systemAdminService.getUserDetails(sno).subscribe((res: HttpResponse<IBaseResponse<UserDetails>>) => {
 			if (res.body?.status) this.fillAddUserForm(res.body?.data!);
@@ -321,11 +294,11 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		this.ff.branch?.patchValue(data.branch!);
 		this.ff.email?.patchValue(data.email!);
 		this.ff.phoneNo?.patchValue(data.mobile!);
-		this.ff.branch?.patchValue(data.branch!);
 		this.ff.jobTitle?.patchValue(data.position!);
 	}
 
 	fillEditUserForm(data: UserModelData) {
+		this.ff.sno?.patchValue(data.sno!);
 		this.ff.staffId?.patchValue(data.staffId!);
 		this.ff.fullName?.patchValue(data.fullName!);
 		this.ff.userName?.patchValue(data.userName!);
@@ -334,11 +307,11 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 		this.ff.phoneNo?.patchValue(data.phoneNo!);
 		this.ff.branch?.patchValue(data.branch!);
 		this.ff.jobTitle?.patchValue(data.jobTitle!);
+		this.ff.securityRoles?.patchValue(data.securityRoles!);
 		this.ff.staffId?.disable();
 		this.ff.fullName?.disable();
 		this.ff.userName?.disable();
 		this.ff.jobTitle?.disable();
-		data.securityRoles?.forEach((sr: string) => this.addSecurityRole(sr));
 	}
 
 	validationChecker(): boolean {
@@ -380,7 +353,7 @@ export class UserAccountsManagementComponent implements OnInit, OnDestroy {
 
 	resetUserForm() {
 		this.userForm.reset();
-		this.securityRolesArray.clear();
+		// this.securityRolesArray.clear();
 	}
 
 	//#endregion

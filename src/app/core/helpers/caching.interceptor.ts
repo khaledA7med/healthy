@@ -10,6 +10,8 @@ import { Observable, of } from "rxjs";
 import { CachingService } from "../services/caching.service";
 import { tap } from "rxjs/operators";
 import { MODULE_NAME } from "src/app/core/models/MODULES";
+import { Caching } from "../models/masterTableModels";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 
 @Injectable()
 export class CachingInterceptor implements HttpInterceptor {
@@ -25,7 +27,8 @@ export class CachingInterceptor implements HttpInterceptor {
 
     const cachedResponse: HttpResponse<any> = this.cache.get(module)!;
 
-    if (cachedResponse) return of(cachedResponse);
+    if (cachedResponse && (cachedResponse as unknown as Caching<any>).cacheable)
+      return of(cachedResponse);
 
     return next.handle(request).pipe(
       tap((event: HttpEvent<any>) => {

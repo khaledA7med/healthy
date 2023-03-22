@@ -21,3 +21,8 @@ export interface IClaimRejectDeductForm {
   rejectionReason?: FormControl<string | null>;
   rejectionNote?: FormControl<string | null>;
 }
+
+export enum RejectDeduct {
+  Rejected = "Rejected",
+  Deducted = "Deducted",
+}

@@ -135,14 +135,15 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
     this.lookupData = this.table.getBaseData(MODULES.LineOfBusiness);
   }
 
-  DeleteLineOfBusiness(id: string) {
-    let sub = this.LineOfBusinessService.DeleteLineOfBusiness(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      }
-    );
+  DeleteLineOfBusiness(id: string, lineofBusiness: string) {
+    let sub = this.LineOfBusinessService.DeleteLineOfBusiness(
+      id,
+      lineofBusiness
+    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+      this.gridApi.setDatasource(this.dataSource);
+      if (res.body?.status) this.message.toast(res.body!.message!, "success");
+      else this.message.toast(res.body!.message!, "error");
+    });
     this.subscribes.push(sub);
   }
 

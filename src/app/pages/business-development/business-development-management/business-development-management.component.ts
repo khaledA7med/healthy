@@ -14,7 +14,6 @@ import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelop
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { HttpResponse } from "@angular/common/http";
@@ -56,7 +55,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			leadNo: "",
 		},
 	};
-
+	isLoading: boolean = false;
 	cardLists = {
 		pending: [] as IBusinessDevelopment[],
 		waitingClient: [] as IBusinessDevelopment[],
@@ -116,7 +115,6 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private router: Router,
 		private eventService: EventService
 	) {}
 
@@ -406,7 +404,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		if (!this.followUpForm.valid) {
 			return;
 		} else {
-			this.eventService.broadcast(reserved.isLoading, true);
+			this.isLoading = true;
 			let sub = this.businssDevelopmenService
 				.saveNote(this.followUpForm.value)
 				.subscribe((res: HttpResponse<IBaseResponse<ISalesLeadFollowUps[]>>) => {
@@ -414,8 +412,9 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 						this.message.toast(res.body!.message!, "success");
 						this.followUpForm.reset();
 						this.loadFollowUpData(this.uiState.followUpData.leadNo);
+						this.isLoading = false;
 					} else this.message.toast(res.body!.message!, "error");
-					this.eventService.broadcast(reserved.isLoading, false);
+					this.isLoading = false;
 				});
 			this.subscribes.push(sub);
 		}

@@ -1,6 +1,6 @@
 import { HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, from, Observable, of } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { IBaseMasterTable } from "../models/masterTableModels";
 
 @Injectable({
