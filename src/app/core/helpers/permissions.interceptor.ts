@@ -51,7 +51,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
     if (request.method === "POST") this.nullableValues(request);
 
     let currentUser = this.auth.currentToken;
-    if (currentUser) request = this.addToken(request, currentUser);
+    if (currentUser) request = this.addHeaders(request, currentUser);
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error && error.status === Errors.TokenExpired)
@@ -64,6 +64,8 @@ export class PermissionsInterceptor implements HttpInterceptor {
             errorMessage = `Error: ${error.error.message}`;
           } else {
             // server-side error
+            console.log(error.error);
+            console.log(error.error.message);
             errorMessage = error.error.message || errorMessage;
           }
           this.eventService.broadcast(reserved.isLoading, false);
@@ -87,7 +89,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
     }
   }
 
-  private addToken(request: HttpRequest<any>, token: string) {
+  private addHeaders(request: HttpRequest<any>, token: string) {
     return request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
@@ -105,7 +107,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
         switchMap((token: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.data.accessToken);
-          return next.handle(this.addToken(request, token.data.accessToken));
+          return next.handle(this.addHeaders(request, token.data.accessToken));
         }),
         catchError((err: any) => {
           this.isRefreshing = false;
@@ -117,7 +119,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
         filter((token) => token !== null),
         take(1),
         switchMap((token) => {
-          return next.handle(this.addToken(request, token));
+          return next.handle(this.addHeaders(request, token));
         })
       );
     }

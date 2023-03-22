@@ -698,12 +698,15 @@
                         <!-- In Case Of Create Start -->
 
                         <!-- Branch -->
-                        <div class="lables form-group row" *ngIf="!uiState.editMode">
-                            <label class="col-sm-2 col-form-label" for="branch">Branch</label>
+                        <div class="form-group row" *ngIf="!uiState.editMode">
+                            <label class="asterisk-input" for="branch">Branch</label>
                             <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
+                                [ngClass]="{'is-submitted': (f.branch?.touched || submitted) && f.branch?.invalid}"
                                 [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
                                 [loading]="formData ? false : true" placeholder="Branch">
                             </ng-select>
+                            <span class="invalid-feedback fw-bold mt-0"
+                                *ngIf="(f.branch?.touched || submitted) && f.branch?.invalid">Required</span>
                         </div>
 
                         <!-- In Case Of Create End -->
