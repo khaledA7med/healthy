@@ -39,7 +39,7 @@ export class HospitalsService {
   getEditHospitalsData(
     sno: number
   ): Observable<HttpResponse<IBaseResponse<IHospitalsPreview>>> {
-    return this.http.get<IBaseResponse<any>>(
+    return this.http.get<IBaseResponse<IHospitalsPreview>>(
       this.env + ApiRoutes.masterTables.Claims.hospitals.edit,
       { params: { sno }, observe: "response" }
     );

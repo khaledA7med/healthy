@@ -39,11 +39,11 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="!uiState.editComplaintsTypesMode"><i class="ri-add-line"></i>Add</button>
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="uiState.editComplaintsTypesMode"><i class="ri-edit-line mx-1"></i>Edit</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+            <button type="button" class="btn btn-soft-danger btn-sm" (click)="modal.close()">Close</button>
         </div>
     </form>
 </ng-template>

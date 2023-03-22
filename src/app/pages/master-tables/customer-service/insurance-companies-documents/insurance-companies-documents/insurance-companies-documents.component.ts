@@ -167,7 +167,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
 
   deleteFile(index: number, path: string) {
     let data: IDocumentReq = {
-      module: "Master Tables",
+      module: " MasterTables",
       path: "",
       sno: 0,
     };
@@ -181,7 +181,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
             next: (res) => {
               if (res.body?.status === true) {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.documentdetails.documentLists?.splice(index, 1);
+                this.uiState.documentdetails.documents?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");
             },
           });
@@ -192,7 +192,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
 
   downloadFile(path: string) {
     let data: IDocumentReq = {
-      module: "Production",
+      module: "MasterTables",
       path: "",
       sno: 0,
     };

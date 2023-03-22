@@ -30,3 +30,7 @@
 table.table tr td:not(:last-child) {
   min-width: 180px;
 }
+.modal {
+  max-height: 900px;
+  overflow-y: auto;
+}

@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { SweetAlertResult } from "sweetalert2";
 import { InsuranceCompaniesDocumentsComponent } from "./insurance-companies-documents.component";
 
 @Component({

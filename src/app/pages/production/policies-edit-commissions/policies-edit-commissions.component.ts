@@ -58,7 +58,6 @@ import { IEditCommissionsPreview } from "src/app/shared/app/models/Production/i-
 })
 export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
   submitted = false;
-  subBtn: boolean = false;
   uiState = {
     gridReady: false,
     submitted: false,

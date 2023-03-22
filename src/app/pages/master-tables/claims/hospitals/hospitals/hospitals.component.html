@@ -117,28 +117,34 @@
 
                                                             <td scope="col">
                                                                 <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Name" placeholder="contact Name" />
+                                                                    formControlName="name" placeholder="contact Name" />
                                                             </td>
 
                                                             <td scope="col">
                                                                 <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Position"
+                                                                    formControlName="position"
                                                                     placeholder="contact Position" />
                                                             </td>
 
                                                             <td scope="col">
                                                                 <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Email"
+                                                                    formControlName="email"
                                                                     placeholder="contact Email" />
                                                             </td>
 
                                                             <td scope="col">
                                                                 <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Phone"
+                                                                    formControlName="phone"
                                                                     placeholder="contact Tele" />
                                                             </td>
 
                                                             <td>
+                                                                <button
+                                                                    *ngIf="uiState.editHospitalsMode && contactListArray.controls[i].disabled"
+                                                                    type="button" class="btn btn-sm btn-soft-info me-2"
+                                                                    (click)="enableEditingRow(i, 'contact')">
+                                                                    <i class="ri-edit-2-line"></i>
+                                                                </button>
                                                                 <button type="button" class="btn btn-sm btn-soft-danger"
                                                                     (click)="remove(i, 'contact')">
                                                                     <i class="ri-delete-bin-2-line"></i>
@@ -199,7 +205,7 @@
                                                 <ng-container [formGroupName]="i">
 
                                                     <td>
-                                                        <ng-select formControlName="InsurCompany"
+                                                        <ng-select formControlName="insurCompany"
                                                             placeholder="Insurance Company"
                                                             [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                                                             bindLabel="name" bindValue="name" appendTo="table"
@@ -208,52 +214,58 @@
                                                     </td>
 
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassVvip">
+                                                        <input type="checkbox" formControlName="classVvip">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassVip">
+                                                        <input type="checkbox" formControlName="classVip">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassAp">
+                                                        <input type="checkbox" formControlName="classAp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassA">
+                                                        <input type="checkbox" formControlName="classA">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassAm">
+                                                        <input type="checkbox" formControlName="classAm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassBp">
+                                                        <input type="checkbox" formControlName="classBp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassB">
+                                                        <input type="checkbox" formControlName="classB">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassBm">
+                                                        <input type="checkbox" formControlName="classBm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCp">
+                                                        <input type="checkbox" formControlName="classCp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassC">
+                                                        <input type="checkbox" formControlName="classC">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCm">
+                                                        <input type="checkbox" formControlName="classCm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCa">
+                                                        <input type="checkbox" formControlName="classCa">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCae">
+                                                        <input type="checkbox" formControlName="classCae">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCD">
+                                                        <input type="checkbox" formControlName="classCD">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassE">
+                                                        <input type="checkbox" formControlName="classE">
                                                     </td>
 
                                                     <td>
+                                                        <button
+                                                            *ngIf="uiState.editHospitalsMode && networkListArray.controls[i].disabled"
+                                                            type="button" class="btn btn-sm btn-soft-info me-2"
+                                                            (click)="enableEditingRow(i, 'network')">
+                                                            <i class="ri-edit-2-line"></i>
+                                                        </button>
                                                         <button type="button" class="btn btn-sm btn-soft-danger"
                                                             (click)="remove(i, 'network')">
                                                             <i class="ri-delete-bin-2-line"></i>
@@ -277,11 +289,11 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="!uiState.editHospitalsMode"><i class="ri-add-line"></i>Add</button>
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="uiState.editHospitalsMode"><i class="ri-edit-line mx-1"></i>Edit</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+            <button type="button" class="btn btn-soft-danger btn-sm" (click)="modal.close()">Close</button>
         </div>
     </form>
 </ng-template>

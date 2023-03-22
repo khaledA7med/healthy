@@ -213,11 +213,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.LineOfBussinessForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;
