@@ -128,6 +128,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initClaimsStatusForm();
     this.getLookupData();
+    this.f.status?.patchValue(this.uiState.status);
   }
 
   getLookupData() {
@@ -190,11 +191,6 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
     return this.ClaimsStatusForm.controls;
   }
 
-  fillAddClaimsStatusForm(data: IClaimsStatusData) {
-    this.f.status?.patchValue(data.status!);
-    this.f.claimNotes?.patchValue(data.claimNotes!);
-  }
-
   fillEditClaimsStatusForm(data: IClaimsStatusData) {
     this.f.status?.patchValue(data.status!);
     this.f.claimNotes?.patchValue(data.claimNotes!);
@@ -203,11 +199,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.ClaimsStatusForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

@@ -131,6 +131,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initClaimsRejectionReasonsForm();
     this.getLookupData();
+    this.f.type?.patchValue(this.uiState.type);
   }
 
   getLookupData() {
@@ -199,11 +200,6 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
     return this.ClaimsRejectionReasonsForm.controls;
   }
 
-  fillAddClaimsRejectionReasonsForm(data: IClaimsRejectionReasonsData) {
-    this.f.type?.patchValue(data.type!);
-    this.f.rejectionReason?.patchValue(data.rejectionReason!);
-  }
-
   fillEditClaimsRejectionReasonsForm(data: IClaimsRejectionReasonsData) {
     this.f.type?.patchValue(data.type!);
     this.f.rejectionReason?.patchValue(data.rejectionReason!);
@@ -212,11 +208,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.ClaimsRejectionReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

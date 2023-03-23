@@ -313,24 +313,28 @@
                                                                     </td>
 
                                                                     <td scope="col">
-                                                                        <div class="input-group input-group-sm">
-                                                                            <span class="input-group-text">+966</span>
-                                                                            <input type="text"
-                                                                                class="form-control form-control-sm"
-                                                                                formControlName="contactMobileNo"
-                                                                                [ngClass]="{
+                                                                        <div class="asterisk-div">
+
+                                                                            <div class="input-group input-group-sm">
+                                                                                <span
+                                                                                    class="input-group-text">+966</span>
+                                                                                <input type="text"
+                                                                                    class="form-control form-control-sm"
+                                                                                    formControlName="contactMobileNo"
+                                                                                    [ngClass]="{
                                                                                 'is-invalid':
                                                                                 uiState.submitted &&
                                                                                 contactListControls(i, 'contactMobileNo').invalid
                                                                               }" placeholder="contact mobile number" />
-                                                                            <span class="invalid-feedback fw-bold"
-                                                                                *ngIf="contactListControls(i, 'contactMobileNo').invalid">
-                                                                                Invalid Phone Number
-                                                                            </span>
-                                                                            <span class="invalid-feedback fw-bold"
-                                                                                *ngIf="uiState.submitted && contactListControls(i, 'contactMobileNo')?.hasError('required')">
-                                                                                Required
-                                                                            </span>
+                                                                                <span class="invalid-feedback fw-bold"
+                                                                                    *ngIf="contactListControls(i, 'contactMobileNo').invalid">
+                                                                                    Invalid Phone Number
+                                                                                </span>
+                                                                                <span class="invalid-feedback fw-bold"
+                                                                                    *ngIf="uiState.submitted && contactListControls(i, 'contactMobileNo')?.hasError('required')">
+                                                                                    Required
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
                                                                     </td>
 

@@ -200,8 +200,8 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
         workshopName: new FormControl("", Validators.required),
         city: new FormControl("", Validators.required),
         address: new FormControl(""),
-        telephone: new FormControl(""),
-        email: new FormControl(""),
+        telephone: new FormControl("", [Validators.pattern("[0-9]{9}")]),
+        email: new FormControl("", Validators.email),
       });
   }
 

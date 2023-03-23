@@ -42,11 +42,27 @@
 
                     <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                         <label for="telephone">Tele</label>
-                        <input id="telephone" class="form-control form-control-sm" formControlName="telephone" />
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">+966</span>
+                            <input id="telephone" class="form-control form-control-sm" formControlName="telephone"
+                                [ngClass]="{'is-invalid': (f.telephone?.touched || uiState.submitted) && f.telephone?.invalid}" />
+                            <span class="invalid-feedback fw-bold"
+                                *ngIf="(f.telephone?.touched || uiState.submitted) && f.telephone?.invalid">
+                                Invalid Phone Number
+                            </span>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                         <label for="email">Email</label>
-                        <input id="email" class="form-control form-control-sm" formControlName="email" />
+                        <div class="input-group input-group-sm">
+
+                            <input id="email" class="form-control form-control-sm" formControlName="email"
+                                [ngClass]="{'is-invalid': (f.email?.touched || uiState.submitted) && f.email?.invalid}" />
+                            <span class="invalid-feedback fw-bold"
+                                *ngIf="(f.email?.touched || uiState.submitted) && f.email?.invalid">
+                                Invalid Email
+                            </span>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 my-1">
                         <label for="address">Address</label>

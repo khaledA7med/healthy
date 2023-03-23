@@ -143,7 +143,7 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editCancellationReasonsMode = true;
             this.uiState.editCancellationReasonsData = res.body?.data!;
-            this.fillAddCancellationReasonsForm(res.body?.data!);
+            this.fillEditCancellationReasonsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -169,21 +169,13 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
     return this.CancellationReasonsForm.controls;
   }
 
-  fillAddCancellationReasonsForm(data: ICancellationReasonsData) {
-    this.f.cancelReason?.patchValue(data.cancelReason!);
-  }
-
   fillEditCancellationReasonsForm(data: ICancellationReasonsData) {
     this.f.cancelReason?.patchValue(data.cancelReason!);
   }
 
   validationChecker(): boolean {
     if (this.CancellationReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

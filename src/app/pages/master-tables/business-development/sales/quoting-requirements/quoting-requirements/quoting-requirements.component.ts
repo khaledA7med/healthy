@@ -257,11 +257,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.QuotingRequirementsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

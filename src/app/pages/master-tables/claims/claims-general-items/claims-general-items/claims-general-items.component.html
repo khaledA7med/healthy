@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
-                        <label for="item">Item Name</label>
+                        <label for="item" class="asterisk-input">Item</label>
                         <input id="item" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
                             formControlName="item" />

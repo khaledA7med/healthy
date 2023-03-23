@@ -134,7 +134,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editLegalStatusMode = true;
             this.uiState.editLegalStatusData = res.body?.data!;
-            this.fillAddLegalStatusForm(res.body?.data!);
+            this.fillEditLegalStatusForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -160,21 +160,13 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
     return this.LegalStatusForm.controls;
   }
 
-  fillAddLegalStatusForm(data: ILegalStatusData) {
-    this.f.legalStatus?.patchValue(data.legalStatus!);
-  }
-
   fillEditLegalStatusForm(data: ILegalStatusData) {
     this.f.legalStatus?.patchValue(data.legalStatus!);
   }
 
   validationChecker(): boolean {
     if (this.LegalStatusForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

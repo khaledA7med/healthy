@@ -136,7 +136,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editVehiclesTypesMode = true;
             this.uiState.editVehiclesTypesData = res.body?.data!;
-            this.fillAddVehiclesTypesForm(res.body?.data!);
+            this.fillEditVehiclesTypesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -163,11 +163,6 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
     return this.VehiclesTypesForm.controls;
   }
 
-  fillAddVehiclesTypesForm(data: IVehiclesTypesData) {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-  }
-
   fillEditVehiclesTypesForm(data: IVehiclesTypesData) {
     this.f.vehicleType?.patchValue(data.vehicleType!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
@@ -175,11 +170,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.VehiclesTypesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

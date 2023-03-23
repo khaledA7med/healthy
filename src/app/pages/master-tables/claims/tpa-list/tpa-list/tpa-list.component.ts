@@ -140,17 +140,10 @@ export class TpaListComponent implements OnInit, OnDestroy {
     return this.TpaListForm.controls;
   }
 
-  fillAddTpaListForm(data: ITpaListData) {
-    this.f.tpaName?.patchValue(data.tpaName!);
-  }
-
   validationChecker(): boolean {
     if (this.TpaListForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
+
       return false;
     }
     return true;

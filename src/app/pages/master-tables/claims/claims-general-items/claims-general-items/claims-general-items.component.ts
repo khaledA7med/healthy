@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -142,6 +142,8 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initClaimsGeneralItemsForm();
     this.getLookupData();
+    this.f.classOfInsurance?.patchValue(this.uiState.classOfInsurance);
+    this.f.lineofBusiness?.patchValue(this.uiState.lineofBusiness);
   }
 
   getLookupData() {
@@ -226,13 +228,6 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
     return this.ClaimsGeneralItemsForm.controls;
   }
 
-  fillAddClaimsGeneralItemsForm(data: IClaimsGeneralItemsData) {
-    this.f.item?.patchValue(data.item!);
-    this.f.classOfInsurance?.patchValue(data.classOfInsurance!);
-    this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
-    this.f.mandatory?.patchValue(data.mandatory!);
-  }
-
   fillEditClaimsGeneralItemsForm(data: IClaimsGeneralItemsData) {
     this.f.classOfInsurance?.patchValue(data.classOfInsurance!);
     this.f.lineofBusiness?.patchValue(data.lineofBusiness!);
@@ -244,11 +239,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.ClaimsGeneralItemsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

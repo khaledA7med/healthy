@@ -139,7 +139,7 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
         if (res.body?.status) {
           this.uiState.editBusinessActivityMode = true;
           this.uiState.editBusinessActivityData = res.body?.data!;
-          this.fillAddBusinessActivityForm(res.body?.data!);
+          this.fillEditBusinessActivityForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.body!.message!, "error");
       });
@@ -164,21 +164,13 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
     return this.BusinessActivityForm.controls;
   }
 
-  fillAddBusinessActivityForm(data: IBusinessActivityData) {
-    this.f.businessActivity?.patchValue(data.businessActivity!);
-  }
-
   fillEditBusinessActivityForm(data: IBusinessActivityData) {
     this.f.businessActivity?.patchValue(data.businessActivity!);
   }
 
   validationChecker(): boolean {
     if (this.BusinessActivityForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

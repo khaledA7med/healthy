@@ -242,7 +242,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     this.InsuranceCompaniesDocumentsForm =
       new FormGroup<IInsuranceCompaniesDocumentsForm>({
         company: new FormControl("", Validators.required),
-        type: new FormControl(""),
+        type: new FormControl("", Validators.required),
       });
   }
 
@@ -274,6 +274,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     InsuranceCompaniesDocumentsForm: FormGroup<IInsuranceCompaniesDocumentsForm>
   ) {
     this.InsuranceCompaniesDocumentsFormSubmitted = true;
+    if (!this.validationChecker()) return;
     // Display Submitting Loader
     this.eventService.broadcast(reserved.isLoading, true);
     let val = InsuranceCompaniesDocumentsForm.getRawValue();

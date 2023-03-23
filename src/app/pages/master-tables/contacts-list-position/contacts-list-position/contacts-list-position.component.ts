@@ -143,7 +143,7 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editContactsListPositionMode = true;
             this.uiState.editContactsListPositionData = res.body?.data!;
-            this.fillAddContactsListPositionForm(res.body?.data!);
+            this.fillEditContactsListPositionForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -169,21 +169,13 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
     return this.ContactsListPositionForm.controls;
   }
 
-  fillAddContactsListPositionForm(data: IContactsListPositionData) {
-    this.f.position?.patchValue(data.position!);
-  }
-
   fillEditContactsListPositionForm(data: IContactsListPositionData) {
     this.f.position?.patchValue(data.position!);
   }
 
   validationChecker(): boolean {
     if (this.ContactsListPositionForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

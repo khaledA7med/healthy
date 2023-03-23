@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -163,13 +163,6 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
     return this.InsuranceForm.controls;
   }
 
-  fillAddIsnuranceForm(data: IInsuranceBrokersData) {
-    this.f.companyName?.patchValue(data.companyName!);
-    this.f.mobileNo?.patchValue(data.mobileNo!);
-    this.f.email?.patchValue(data.email!);
-    this.f.address?.patchValue(data.address!);
-  }
-
   fillEditInsuranceForm(data: IInsuranceBrokersData) {
     this.f.companyName?.patchValue(data.companyName!);
     this.f.mobileNo?.patchValue(data.mobileNo!);
@@ -179,11 +172,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.InsuranceForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

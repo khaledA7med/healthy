@@ -137,7 +137,7 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editComplaintsTypesMode = true;
             this.uiState.editComplaintsTypesData = res.body?.data!;
-            this.fillAddComplaintsTypesForm(res.body?.data!);
+            this.fillEditComplaintsTypesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -163,21 +163,13 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
     return this.ComplaintsTypesForm.controls;
   }
 
-  fillAddComplaintsTypesForm(data: IComplaintTypesData) {
-    this.f.type?.patchValue(data.type!);
-  }
-
   fillEditComplaintsTypesForm(data: IComplaintTypesData) {
     this.f.type?.patchValue(data.type!);
   }
 
   validationChecker(): boolean {
     if (this.ComplaintsTypesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

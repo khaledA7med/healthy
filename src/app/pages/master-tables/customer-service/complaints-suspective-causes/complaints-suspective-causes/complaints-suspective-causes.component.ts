@@ -146,7 +146,7 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
             if (res.body?.status) {
               this.uiState.editComplaintsSuspectiveCausesMode = true;
               this.uiState.editComplaintsSuspectiveCausesData = res.body?.data!;
-              this.fillAddComplaintsSuspectiveCausesForm(res.body?.data!);
+              this.fillEditComplaintsSuspectiveCausesForm(res.body?.data!);
               this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
@@ -173,21 +173,13 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
     return this.ComplaintsSuspectiveCausesForm.controls;
   }
 
-  fillAddComplaintsSuspectiveCausesForm(data: IComplaintSuspectiveCausesData) {
-    this.f.suspectiveCause?.patchValue(data.suspectiveCause!);
-  }
-
   fillEditComplaintsSuspectiveCausesForm(data: IComplaintSuspectiveCausesData) {
     this.f.suspectiveCause?.patchValue(data.suspectiveCause!);
   }
 
   validationChecker(): boolean {
     if (this.ComplaintsSuspectiveCausesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

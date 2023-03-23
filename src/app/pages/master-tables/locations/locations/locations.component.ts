@@ -133,7 +133,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editLocationsMode = true;
             this.uiState.editLocationsData = res.body?.data!;
-            this.fillAddLocationsForm(res.body?.data!);
+            this.fillEditLocationsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -159,21 +159,13 @@ export class LocationsComponent implements OnInit, OnDestroy {
     return this.LocationsForm.controls;
   }
 
-  fillAddLocationsForm(data: ILocationsData) {
-    this.f.locationName?.patchValue(data.locationName!);
-  }
-
   fillEditLocationsForm(data: ILocationsData) {
     this.f.locationName?.patchValue(data.locationName!);
   }
 
   validationChecker(): boolean {
     if (this.LocationsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

@@ -143,7 +143,7 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editProspectLossReasonsMode = true;
             this.uiState.editProspectLossReasonsData = res.body?.data!;
-            this.fillAddProspectLossReasonsForm(res.body?.data!);
+            this.fillEditProspectLossReasonsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
@@ -169,21 +169,13 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
     return this.ProspectLossReasonsForm.controls;
   }
 
-  fillAddProspectLossReasonsForm(data: IProspectLossReasonsData) {
-    this.f.reason?.patchValue(data.reason!);
-  }
-
   fillEditProspectLossReasonsForm(data: IProspectLossReasonsData) {
     this.f.reason?.patchValue(data.reason!);
   }
 
   validationChecker(): boolean {
     if (this.ProspectLossReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

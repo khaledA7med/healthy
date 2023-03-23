@@ -138,7 +138,7 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
         if (res.body?.status) {
           this.uiState.editClientCategoriesMode = true;
           this.uiState.editClientCategoriesData = res.body?.data!;
-          this.fillAddClientCategoriesForm(res.body?.data!);
+          this.fillEditClientCategoriesForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.body!.message!, "error");
       });
@@ -163,21 +163,13 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
     return this.ClientCategoriesForm.controls;
   }
 
-  fillAddClientCategoriesForm(data: IClientCategoriesData) {
-    this.f.category?.patchValue(data.category!);
-  }
-
   fillEditClientCategoriesForm(data: IClientCategoriesData) {
     this.f.category?.patchValue(data.category!);
   }
 
   validationChecker(): boolean {
     if (this.ClientCategoriesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

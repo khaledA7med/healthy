@@ -142,7 +142,7 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
             if (res.body?.status) {
               this.uiState.editClientRejectionReasonsMode = true;
               this.uiState.editClientRejectionReasonsData = res.body?.data!;
-              this.fillAddClientRejectionReasonsForm(res.body?.data!);
+              this.fillEditClientRejectionReasonsForm(res.body?.data!);
               this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
@@ -168,21 +168,13 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
     return this.ClientRejectionReasonsForm.controls;
   }
 
-  fillAddClientRejectionReasonsForm(data: IClientRejectionReasonsData) {
-    this.f.reason?.patchValue(data.reason!);
-  }
-
   fillEditClientRejectionReasonsForm(data: IClientRejectionReasonsData) {
     this.f.reason?.patchValue(data.reason!);
   }
 
   validationChecker(): boolean {
     if (this.ClientRejectionReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

@@ -144,7 +144,7 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
             if (res.body?.status) {
               this.uiState.editCompanyRejectionReasonsMode = true;
               this.uiState.editCompanyRejectionReasonsData = res.body?.data!;
-              this.fillAddCompanyRejectionReasonsForm(res.body?.data!);
+              this.fillEditCompanyRejectionReasonsForm(res.body?.data!);
               this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
@@ -170,21 +170,13 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
     return this.CompanyRejectionReasonsForm.controls;
   }
 
-  fillAddCompanyRejectionReasonsForm(data: ICompanyRejectionReasonsData) {
-    this.f.reason?.patchValue(data.reason!);
-  }
-
   fillEditCompanyRejectionReasonsForm(data: ICompanyRejectionReasonsData) {
     this.f.reason?.patchValue(data.reason!);
   }
 
   validationChecker(): boolean {
     if (this.CompanyRejectionReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

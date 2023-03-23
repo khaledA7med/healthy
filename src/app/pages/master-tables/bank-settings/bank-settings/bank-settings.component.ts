@@ -130,7 +130,7 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
         (res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
           this.uiState.editBankSettingsMode = true;
           this.uiState.editBankSettingsData = res.body?.data!;
-          this.fillAddBankSettingsForm(res.body?.data!);
+          this.fillEditBankSettingsForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         }
       );
@@ -156,11 +156,6 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
     return this.BankSettingsForm.controls;
   }
 
-  fillAddBankSettingsForm(data: IBankSettingsData) {
-    this.f.bankName?.patchValue(data.bankName!);
-    this.f.swift?.patchValue(data.swift!);
-  }
-
   fillEditBankSettingsForm(data: IBankSettingsData) {
     this.f.bankName?.patchValue(data.bankName!);
     this.f.swift?.patchValue(data.swift!);
@@ -168,11 +163,7 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.BankSettingsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

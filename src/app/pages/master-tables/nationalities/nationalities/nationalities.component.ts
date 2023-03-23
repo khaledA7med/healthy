@@ -136,7 +136,7 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editNationalitiesMode = true;
             this.uiState.editNationalitiesData = res.body?.data!;
-            this.fillAddNationalitiesForm(res.body?.data!);
+            this.fillEditNationalitiesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -162,21 +162,13 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
     return this.NationalitiesForm.controls;
   }
 
-  fillAddNationalitiesForm(data: INationaltiesData) {
-    this.f.nationality?.patchValue(data.nationality!);
-  }
-
   fillEditNationalitiesForm(data: INationaltiesData) {
     this.f.nationality?.patchValue(data.nationality!);
   }
 
   validationChecker(): boolean {
     if (this.NationalitiesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

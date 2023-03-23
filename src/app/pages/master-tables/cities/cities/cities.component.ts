@@ -133,7 +133,7 @@ export class CitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editCitiesMode = true;
             this.uiState.editCitiesData = res.body?.data!;
-            this.fillAddCitiesForm(res.body?.data!);
+            this.fillEditCitiesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
@@ -159,21 +159,13 @@ export class CitiesComponent implements OnInit, OnDestroy {
     return this.CitiesForm.controls;
   }
 
-  fillAddCitiesForm(data: ICitiesData) {
-    this.f.city?.patchValue(data.city!);
-  }
-
   fillEditCitiesForm(data: ICitiesData) {
     this.f.city?.patchValue(data.city!);
   }
 
   validationChecker(): boolean {
     if (this.CitiesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

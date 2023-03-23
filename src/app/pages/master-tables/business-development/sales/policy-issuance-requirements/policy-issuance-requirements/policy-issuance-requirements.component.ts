@@ -269,11 +269,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.PolicyIssuanceRequirementsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

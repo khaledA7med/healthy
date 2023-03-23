@@ -177,7 +177,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       sno: new FormControl(null),
       name: new FormControl("", Validators.required),
       city: new FormControl(""),
-      tele: new FormControl("", Validators.required),
+      tele: new FormControl("", Validators.pattern("[0-9]{9}")),
       email: new FormControl("", Validators.email),
       fax: new FormControl(""),
       address: new FormControl(""),
@@ -253,10 +253,16 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       sNo: new FormControl(data?.sNo || null),
       hospitalId: new FormControl(data?.hospitalId || null),
       savedUser: new FormControl(data?.savedUser || null),
-      name: new FormControl(data?.name || null),
-      position: new FormControl(data?.position || null),
-      email: new FormControl(data?.email || null),
-      phone: new FormControl(data?.phone || null),
+      name: new FormControl(data?.name || null, Validators.required),
+      position: new FormControl(data?.position || null, Validators.required),
+      email: new FormControl(data?.email || null, [
+        Validators.email,
+        Validators.required,
+      ]),
+      phone: new FormControl(data?.phone || null, [
+        Validators.pattern("[0-9]{9}"),
+        Validators.required,
+      ]),
     });
 
     if (!data) contact.reset();

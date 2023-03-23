@@ -133,7 +133,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editCarsMakeMode = true;
             this.uiState.editCarsMakeData = res.body?.data!;
-            this.fillAddCarsMakeForm(res.body?.data!);
+            this.fillEditCarsMakeForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -159,21 +159,13 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
     return this.CarsMakeForm.controls;
   }
 
-  fillAddCarsMakeForm(data: ICarsMakeData) {
-    this.f.carsMake?.patchValue(data.carsMake!);
-  }
-
   fillEditCarsMakeForm(data: ICarsMakeData) {
     this.f.carsMake?.patchValue(data.carsMake!);
   }
 
   validationChecker(): boolean {
     if (this.CarsMakeForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

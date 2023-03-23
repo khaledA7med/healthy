@@ -133,7 +133,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editPolicyTypesMode = true;
             this.uiState.editPolicyTypesData = res.body?.data!;
-            this.fillAddPolicyTypesForm(res.body?.data!);
+            this.fillEditPolicyTypesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -159,21 +159,13 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
     return this.PolicyTypesForm.controls;
   }
 
-  fillAddPolicyTypesForm(data: IPolicyTypesData) {
-    this.f.policyType?.patchValue(data.policyType!);
-  }
-
   fillEditPolicyTypesForm(data: IPolicyTypesData) {
     this.f.policyType?.patchValue(data.policyType!);
   }
 
   validationChecker(): boolean {
     if (this.PolicyTypesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;
