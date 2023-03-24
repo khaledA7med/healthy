@@ -37,22 +37,16 @@ export class ClientGroupListControlsComponent {
 	}
 
 	Delete() {
-		let sno = Number(this.params.data.sNo);
 		this.message.confirm("Delete", "Delete This Group ?", "Delete", "warning").then((e: SweetAlertResult) => {
 			if (e.isConfirmed) {
-				this.groupService.deleteGroup(sno).subscribe(
-					(res) => {
-						if (res.body?.status) {
-							this.message.popup(res.body?.message!, "success");
-							this.comp.gridApi.setDatasource(this.comp.dataSource);
-						} else {
-							this.message.popup(res.body?.message!, "error");
-						}
-					},
-					(err) => {
-						this.message.popup("Opps", err.message, "error");
+				this.groupService.deleteGroup(+this.params.data.sNo, this.params.data.groupName).subscribe((res) => {
+					if (res.body?.status) {
+						this.message.popup(res.body?.message!, "success");
+						this.comp.gridApi.setDatasource(this.comp.dataSource);
+					} else {
+						this.message.popup(res.body?.message!, "error");
 					}
-				);
+				});
 			}
 		});
 	}

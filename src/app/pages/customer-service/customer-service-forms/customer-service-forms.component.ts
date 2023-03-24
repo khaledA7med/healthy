@@ -118,6 +118,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 		this.f.clientName?.disable();
 		this.f.requestNo?.disable();
 		this.f.branch?.disable();
+		this.f.vatValue?.disable();
+		this.f.policyNo?.disable();
+		this.f.classOfBusiness?.disable();
+		this.f.lineOfBusiness?.disable();
+		this.f.insurComp?.disable();
+		this.f.totalPremium?.disable();
 		this.docs = data.documentLists!;
 		data.requiermentsList!.forEach((req) => this.addReq(req));
 		this.vatHandler();
@@ -218,18 +224,28 @@ export class CustomerServiceFormsComponent implements OnInit {
 			policyNo: new FormControl(null, Validators.required),
 			lineOfBusiness: new FormControl(null, Validators.required),
 			insurComp: new FormControl(null, Validators.required),
-			dateOfDeadline: new FormControl(null),
+			dateOfDeadline: new FormControl(null, Validators.required),
 			vatPerc: new FormControl(0),
 			existingPolExpDate: new FormControl(null, Validators.required),
 			requestDetails: new FormControl(null),
-			policyFees: new FormControl(0),
-			netPremium: new FormControl(0),
+			policyFees: new FormControl(0, Validators.required),
+			netPremium: new FormControl(0, Validators.required),
 			vatValue: new FormControl(0),
 			totalPremium: new FormControl(0),
 			cSSpecialConditions: new FormControl(null),
 			branch: new FormControl(null, Validators.required),
 			requiermentsList: new FormArray<FormGroup<RequiermentsList>>([]),
 		});
+
+		this.f.clientID?.disable();
+		this.f.clientName?.disable();
+		this.f.producer?.disable();
+		this.f.vatValue?.disable();
+		this.f.policyNo?.disable();
+		this.f.classOfBusiness?.disable();
+		this.f.lineOfBusiness?.disable();
+		this.f.insurComp?.disable();
+		this.f.totalPremium?.disable();
 	}
 
 	get f() {

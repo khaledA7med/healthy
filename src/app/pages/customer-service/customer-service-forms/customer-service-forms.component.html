@@ -117,8 +117,13 @@
                                 <label for="branch">Branch</label>
                                 <ng-select id="branch" class="is-invalid" [searchable]="false" formControlName="branch"
                                     [items]="(formData | async)?.Branch?.content!" bindLabel="name" bindValue="name"
-                                    [loading]="formData ? false : true" placeholder="Branch">
+                                    [loading]="formData ? false : true" placeholder="Branch"
+                                    [ngClass]="{'is-submitted':(f.branch?.touched || submitted) && f.branch?.invalid}">
                                 </ng-select>
+                                <span class="invalid-feedback fw-bold"
+                                    *ngIf=" (f.branch?.touched || submitted) && f.branch?.invalid">
+                                    Required
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -143,15 +148,15 @@
                                     <label for="endorsType" class="asterisk-input">Endors Type</label>
                                     <ng-select id="endorsType" placeholder="Select Endors Type"
                                         formControlName="endorsType" class="is-invalid"
-                                        [ngClass]="{'is-invalid': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
+                                        [ngClass]="{'is-submitted': (f.endorsType?.touched || submitted) && f.endorsType?.invalid}"
                                         [items]="(formData | async)?.PolicyEndorsTypes?.content!" bindLabel="name"
                                         bindValue="name" [loading]="formData ? false : true"
                                         (change)="getSimilarAndRequir($event)">
                                     </ng-select>
-                                    <div class="invalid-feedback fw-bold"
+                                    <span class="invalid-feedback fw-bold"
                                         *ngIf=" (f.endorsType?.touched || submitted) && f.endorsType?.invalid">
                                         Required
-                                    </div>
+                                    </span>
                                 </div>
 
                                 <!-- Policy No -->
@@ -161,10 +166,10 @@
                                         placeholder="Policy No." id="policyNo" aria-label="Policy No"
                                         formControlName="policyNo"
                                         [ngClass]="{'is-invalid':(f.policyNo?.touched || submitted) && f.policyNo?.invalid}">
-                                    <div class="invalid-feedback fw-bold"
+                                    <span class="invalid-feedback fw-bold"
                                         *ngIf=" (f.policyNo?.touched || submitted) && f.policyNo?.invalid">
                                         Required
-                                    </div>
+                                    </span>
                                 </div>
 
                                 <!-- Issued By -->
@@ -173,10 +178,10 @@
                                     <input type="text" class="form-control form-control-sm" name="issuedBy" readonly
                                         placeholder="Issued By." id="issuedBy" formControlName="insurComp"
                                         [ngClass]="{'is-invalid':(f.insurComp?.touched || submitted) && f.insurComp?.invalid}">
-                                    <div class="invalid-feedback fw-bold"
+                                    <span class="invalid-feedback fw-bold"
                                         *ngIf=" (f.insurComp?.touched || submitted) && f.insurComp?.invalid">
                                         Required
-                                    </div>
+                                    </span>
                                 </div>
 
                                 <!-- Expiry Date -->
@@ -234,22 +239,22 @@
                             <div class="col-lg-4 col-md-6 col-ms-12 my-1">
                                 <!-- Net Premium -->
                                 <div class="accordion-info mb-2">
-                                    <label for="netPremium">Net Premium</label>
+                                    <label for="netPremium" class="asterisk-input">Net Premium</label>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control form-control-sm input-text-right"
                                             placeholder="0.00" InputMask id="netPremium" formControlName="netPremium"
                                             [ngClass]="{'is-invalid': (f.netPremium?.touched || submitted) && f.netPremium?.invalid}"
                                             (input)="vatHandler()">
                                         <span class="input-group-text" id="SAR">SAR</span>
-                                        <div class="invalid-feedback fw-bold d-block"
+                                        <span class="invalid-feedback fw-bold d-block"
                                             *ngIf=" (f.netPremium?.touched || submitted) &&  f.netPremium?.invalid ">
                                             Required
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
                                 <!-- Policy Fees -->
                                 <div class="accordion-info mb-2">
-                                    <label for="policyFees">
+                                    <label for="policyFees" class="asterisk-input">
                                         Policy
                                         Fees
                                     </label>
@@ -261,10 +266,10 @@
                                             (input)="vatHandler()">
                                         <span class="input-group-text" id="">SAR</span>
                                     </div>
-                                    <div class="invalid-feedback fw-bold d-block"
+                                    <span class="invalid-feedback fw-bold d-block"
                                         *ngIf="(f.policyFees?.touched || submitted) &&  f.policyFees?.invalid">
                                         Required
-                                    </div>
+                                    </span>
                                 </div>
                                 <!-- VAT -->
                                 <div class="accordion-info mb-2">
@@ -289,7 +294,7 @@
                                 <!-- Total Premium -->
                                 <div class="accordion-info mb-2">
                                     <div class="lables">
-                                        <label for="totalPremium">Total Premium</label>
+                                        <label for="totalPremium" class="asterisk-input">Total Premium</label>
                                     </div>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control form-control-sm input-text-right"
@@ -298,10 +303,10 @@
                                             [ngClass]="{'is-invalid': (f.totalPremium?.touched || submitted) && f.totalPremium?.invalid}">
                                         <span class="input-group-text" id="SAR">SAR</span>
                                     </div>
-                                    <div class="invalid-feedback fw-bold d-block"
+                                    <span class="invalid-feedback fw-bold d-block"
                                         *ngIf="(f.totalPremium?.touched || submitted) &&  f.totalPremium?.invalid">
                                         Required
-                                    </div>
+                                    </span>
                                 </div>
 
                             </div>
@@ -421,7 +426,7 @@
                                             <div class="col-12 my-1">
                                                 <!-- Net Premium -->
                                                 <div class="accordion-info mb-2">
-                                                    <label for="netPremium">Net Premium</label>
+                                                    <label for="netPremium" class="asterisk-input">Net Premium</label>
                                                     <div class="input-group input-group-sm">
                                                         <input type="text"
                                                             class="form-control form-control-sm input-text-right"
@@ -439,7 +444,7 @@
 
                                                 <!-- Policy Fees -->
                                                 <div class="accordion-info mb-2">
-                                                    <label for="policyFees">
+                                                    <label for="policyFees" class="asterisk-input">
                                                         Policy
                                                         Fees
                                                     </label>
