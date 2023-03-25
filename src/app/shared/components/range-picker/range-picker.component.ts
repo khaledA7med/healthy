@@ -1,77 +1,124 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import {
-	NgbCalendar,
-	NgbDate,
-	NgbDateParserFormatter,
-	NgbDatepicker,
-	NgbInputDatepicker,
-	NgbInputDatepickerConfig,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from "@angular/core";
+import {
+  NgbCalendar,
+  NgbDate,
+  NgbDateParserFormatter,
+  NgbDateStruct,
+  NgbInputDatepicker,
 } from "@ng-bootstrap/ng-bootstrap";
-import { DatepickerServiceInputs } from "@ng-bootstrap/ng-bootstrap/datepicker/datepicker-service";
 
 @Component({
-	selector: "app-range-picker",
-	templateUrl: "./range-picker.component.html",
-	styleUrls: ["./range-picker.component.scss"],
+  selector: "app-range-picker",
+  templateUrl: "./range-picker.component.html",
+  styleUrls: ["./range-picker.component.scss"],
 })
-export class RangePickerComponent {
-	hoveredDate: NgbDate | null = null;
-	fromDate!: NgbDate | null;
-	toDate!: NgbDate | null;
-	viewValue: string = "";
-	@Input() monthCount: number = 1;
-	@ViewChild("datepicker") dp!: NgbInputDatepicker;
-	@Output() dateChange: EventEmitter<any> = new EventEmitter();
+export class RangePickerComponent implements OnChanges {
+  hoveredDate: NgbDate | null = null;
+  fromDate!: NgbDate | null;
+  toDate!: NgbDate | null;
+  isSelected: NgbDate | null = null;
+  viewValue: string = "";
+  @Input() monthCount: number = 1;
+  @ViewChild("datepicker") dp!: NgbInputDatepicker;
+  @Output() dateChange: EventEmitter<any> = new EventEmitter();
 
-	constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-		this.fromDate = calendar.getToday();
-	}
+  @Input() selected!: { from: Date; to: Date };
 
-	onDateSelection(date: NgbDate) {
-		if (!this.fromDate && !this.toDate) {
-			this.fromDate = date;
-		} else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-			this.toDate = date;
-		} else {
-			this.toDate = null;
-			this.fromDate = date;
-		}
-		if (this.fromDate && this.toDate) {
-			this.viewValue = `${this.formatter.format(this.fromDate)} To ${this.formatter.format(this.toDate)}`;
-			this.dp.close();
-		} else {
-			this.viewValue = `${this.formatter.format(this.fromDate)}`;
-		}
+  constructor(
+    private calendar: NgbCalendar,
+    public formatter: NgbDateParserFormatter
+  ) {
+    this.fromDate = calendar.getToday();
+  }
 
-		let dateToSubmit = {
-			// from: this.formatter.format(this.fromDate),
-			// to: this.formatter.format(this.toDate),
-			from: this.fromDate,
-			to: this.toDate,
-		};
-		this.dateChange.emit(dateToSubmit);
-	}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.selected) {
+      let from = this.selected.from,
+        to = this.selected.to;
 
-	isHovered(date: NgbDate) {
-		return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-	}
+      this.viewValue = `${from.getFullYear()}-${
+        from.getMonth() + 1
+      }-${from.getDate()} To ${to.getFullYear()}-${
+        to.getMonth() + 1
+      }-${to.getDate()}`;
+    }
+  }
 
-	isInside(date: NgbDate) {
-		return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-	}
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) this.fromDate = date;
+    else if (this.fromDate && !this.toDate && date && date.after(this.fromDate))
+      this.toDate = date;
+    else if (
+      this.fromDate &&
+      !this.toDate &&
+      date &&
+      date.equals(this.fromDate)
+    )
+      this.toDate = date;
+    else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
 
-	isRange(date: NgbDate) {
-		return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-	}
+    if (this.fromDate.equals(this.toDate)) {
+      this.viewValue = `${this.formatter.format(this.fromDate)}`;
+      this.dp.close();
+    } else if (this.fromDate && this.toDate) {
+      this.viewValue = `${this.formatter.format(
+        this.fromDate
+      )} To ${this.formatter.format(this.toDate)}`;
+      this.dp.close();
+    } else this.viewValue = `${this.formatter.format(this.fromDate)}`;
 
-	clearDateRange() {
-		this.fromDate = null;
-		this.toDate = null;
-		this.viewValue = "";
-	}
+    let dateToSubmit = {
+      from: this.fromDate,
+      to: this.toDate,
+      range: this.toDate?.after(this.fromDate),
+    };
+    this.dateChange.emit(dateToSubmit);
+  }
 
-	validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-		const parsed = this.formatter.parse(input);
-		return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-	}
+  isHovered(date: NgbDate) {
+    return (
+      this.fromDate &&
+      !this.toDate &&
+      this.hoveredDate &&
+      date.after(this.fromDate) &&
+      date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.fromDate) ||
+      (this.toDate && date.equals(this.toDate)) ||
+      this.isInside(date) ||
+      this.isHovered(date)
+    );
+  }
+
+  clearDateRange() {
+    this.fromDate = null;
+    this.toDate = null;
+    this.viewValue = "";
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed))
+      ? NgbDate.from(parsed)
+      : currentValue;
+  }
 }

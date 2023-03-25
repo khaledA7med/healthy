@@ -145,7 +145,7 @@
   --#{$prefix}list-group-hover-bg: #{lighten($gray-200, 2.5%)};
 
   // popover
-  --#{$prefix}popover-bg: #{lighten($gray-200, 1%)};
+  --#{$variable-prefix}popover-bg: #{lighten($gray-200, 1%)};
 
   // pagination
   --#{$prefix}pagination-hover-bg: #{lighten($gray-200, 4%)};

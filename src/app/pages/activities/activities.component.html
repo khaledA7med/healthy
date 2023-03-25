@@ -5,8 +5,11 @@
             <div class="card-body">
                 <full-calendar #calendar [options]="calendarOptions" [deepChangeDetection]="true">
                     <ng-template #eventContent let-arg>
-                        <b>{{ arg.timeText }}</b>
-                        <i>{{ arg.event.title }}</i>
+                        <div placement="top auto" [ngbTooltip]="arg.event.extendedProps.taskDetails || 'No Description'"
+                            container="body">
+                            <b>{{ arg.timeText }}</b>
+                            <i>{{ arg.event.title }}</i>
+                        </div>
                     </ng-template>
                 </full-calendar>
             </div>

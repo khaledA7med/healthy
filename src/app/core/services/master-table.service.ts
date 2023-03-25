@@ -18,6 +18,20 @@ export class MasterTableService {
 
   getBaseData(module: string) {
     let data = {
+      Activities: [
+        {
+          route: ApiRoutes.MasterTable.Activities.producers,
+          name: BaseData.Producers,
+        },
+        {
+          route: ApiRoutes.MasterTable.Activities.tasksTypes,
+          name: BaseData.TasksTypes,
+        },
+        {
+          route: ApiRoutes.MasterTable.Activities.IBSModules,
+          name: BaseData.IBSModules,
+        },
+      ],
       LineOfBusiness: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
@@ -707,6 +721,9 @@ export class MasterTableService {
         break;
       case MODULES.Reports:
         this.dataSrc = data.Reports;
+        break;
+      case MODULES.Activities:
+        this.dataSrc = data.Activities;
         break;
       default:
         break;

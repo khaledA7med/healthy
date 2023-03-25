@@ -65,6 +65,8 @@ export enum BaseData {
   TypeClaimsRejectionReason = "TypeClaimsRejectionReason",
   GetPolicyTypeIssue = "GetPolicyTypeIssue",
   CategoryOfDefaultEmail = "CategoryOfDefaultEmail",
+  TasksTypes = "TasksTypes",
+  IBSModules = "IBSModules",
 }
 
 export interface IBaseMasterTable {
@@ -134,6 +136,8 @@ export interface IBaseMasterTable {
   TypeClaimsRejectionReason?: Caching<IGenericResponseType[]>;
   GetPolicyTypeIssue?: Caching<IGenericResponseType[]>;
   CategoryOfDefaultEmail?: Caching<IGenericResponseType[]>;
+  TasksTypes?: Caching<IGenericResponseType[]>;
+  IBSModules?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

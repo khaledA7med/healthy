@@ -437,7 +437,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
           this.totalInvoicesAmount();
 
           this.uiState.claimLists.rejectDeduct = data?.claimsRejections!;
-          console.log(this.uiState.claimLists.rejectDeduct);
           this.totalRejectDeductAmount();
           this.totalUnderProcessing();
 
@@ -930,8 +929,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
       if (obj.type === RejectDeduct.Deducted) return +curr + +obj.amount!;
       return +curr;
     }, 0);
-    console.log(+reject);
-    console.log(deduct);
     this.amounts.rejected?.patchValue(+reject);
     this.amounts.deducted?.patchValue(deduct);
   }
@@ -1010,17 +1007,6 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.formGroup.invalid) {
-      const invalid = [];
-
-      for (let [key, val] of Object.entries(this.f)) {
-        type ObjectKey = keyof typeof this.f;
-        const con = key as ObjectKey;
-        if (this.f[con]?.invalid) {
-          console.log(val);
-          invalid.push(`${con}: ${val.value}`);
-        }
-      }
-      console.log(invalid);
       this.message.popup(
         "Attention!",
         "Please Fill Required Inputs",
