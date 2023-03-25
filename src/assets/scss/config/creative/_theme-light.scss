@@ -72,7 +72,7 @@
 
   // theme-color
   --#{$prefix}light: #{$gray-100};
-  --#{$prefix}light-rgb: #{to-rgb($gray-100)};
+  --#{$variable-prefix}light-rgb: #{to-rgb($gray-100)};
   --#{$prefix}dark: #{$gray-900};
   --#{$prefix}dark-rgb: #{to-rgb($gray-900)};
 

@@ -869,11 +869,17 @@ $table-striped-bg: rgba(var(--#{$prefix}dark-rgb), $table-striped-bg-factor);
 
 $table-active-color: $table-color;
 $table-active-bg-factor: 1;
-$table-active-bg: rgba(var(--#{$prefix}light-rgb), $table-active-bg-factor);
+$table-active-bg: rgba(
+  var(--#{$variable-prefix}light-rgb),
+  $table-active-bg-factor
+);
 
 $table-hover-color: $table-color;
 $table-hover-bg-factor: 1;
-$table-hover-bg: rgba(var(--#{$prefix}light-rgb), $table-hover-bg-factor);
+$table-hover-bg: rgba(
+  var(--#{$variable-prefix}light-rgb),
+  $table-hover-bg-factor
+);
 
 $table-border-factor: 0.1;
 $table-border-width: $border-width;

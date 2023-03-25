@@ -8,7 +8,7 @@ export interface ITasksForm {
   description?: FormControl<string | null>; // eventDescription,
   isAllDay?: FormControl<boolean | null>; // all_day,
   module?: FormControl<string | null>; // updatedModule,
-  moduleSNo?: FormControl<string | any | null>; // moduleSNo,
+  moduleSNo?: FormControl<number | null>; // moduleSNo,
   type?: FormControl<string | null>; // updatedType,
   dueDateFrom?: FormControl<string | null>; // start_date.toJSON(),
   dueDateTo?: FormControl<string | null>; // end_date?.toJSON(),
@@ -24,5 +24,5 @@ export interface ITasksForm {
   startTime?: FormControl<string | null>; // updatedClientName
   endTime?: FormControl<string | null>; // updatedClientName
 
-  sNo?: FormControl<string | null>; // eventid,
+  sNo?: FormControl<number | null>; // eventid,
 }

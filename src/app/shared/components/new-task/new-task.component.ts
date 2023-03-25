@@ -28,6 +28,7 @@ export class NewTaskComponent implements OnInit, OnDestroy {
     editMode: false as boolean,
     submitted: false as boolean,
     isRange: false as boolean,
+    isLoading: false as boolean,
     lists: {
       clients: [] as IGenericResponseType[],
       module: [] as any[],
@@ -40,6 +41,8 @@ export class NewTaskComponent implements OnInit, OnDestroy {
   subscribes: Subscription[] = [];
 
   @Input() clickedDate!: any;
+
+  @Input() task!: ITasks;
 
   constructor(
     public modal: NgbActiveModal,
@@ -85,6 +88,7 @@ export class NewTaskComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.Activities);
+    if (this.task?.sNo) this.fillTaskData();
     let sub = this.formData.subscribe(
       (res) =>
         (this.uiState.lists.assignTo = res.Producers?.content.filter(
@@ -94,12 +98,45 @@ export class NewTaskComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
     if (this.clickedDate) {
       this.uiState.isRange = true;
-      this.f.start?.patchValue(this.clickedDate.dueDateFrom);
-      this.f.end?.patchValue(this.clickedDate.dueDateTo);
+      this.f.start?.patchValue(this.clickedDate?.dueDateFrom);
+      this.f.end?.patchValue(this.clickedDate?.dueDateTo);
       this.f.startTime?.disable();
       this.f.endTime?.disable();
       this.f.isAllDay?.patchValue(true);
     }
+  }
+
+  fillTaskData() {
+    this.uiState.editMode = true;
+    this.clickedDate = {
+      dueDateFrom: new Date(this.task?.dueDateFrom!),
+      dueDateTo: new Date(this.task?.dueDateTo!),
+    };
+    if (!this.task.isAllDay) {
+      let startTime = new Date(this.task?.dueDateFrom!);
+      let endTime = new Date(this.task?.dueDateTo!);
+      this.f.startTime?.patchValue(
+        `${startTime?.getHours()}:${startTime?.getMinutes()}`
+      );
+      this.f.endTime?.patchValue(
+        `${endTime?.getHours()}:${endTime?.getMinutes()}`
+      );
+    }
+    this.formGroup.patchValue({
+      start: this.task.dueDateFrom,
+      end: this.task.dueDateTo,
+      assignedTo: this.task.assignedTo,
+      clientName: this.task.clientName,
+      module: this.task.module,
+      moduleSNo: +this.task.moduleSNo!,
+      taskName: this.task.taskName,
+      taskDetails: this.task.taskDetails,
+      sNo: +this.task.sNo!,
+      isAllDay: this.task.isAllDay,
+      type: this.task.type,
+    });
+    this.getModuleClients(this.task.module!);
+    this.searchModule(this.task.clientID!);
   }
 
   getModuleClients(module: string) {
@@ -114,12 +151,11 @@ export class NewTaskComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  searchModule() {
-    let client = this.f.clientName?.value! as unknown as IGenericResponseType;
+  searchModule(clientId?: number) {
     this.uiState.lists.module = [];
-    if (!client?.id || !this.f.module?.value!) return;
+    if (!clientId || !this.f.module?.value!) return;
     let sub = this.activityService
-      .searchModule(this.f.module?.value!, client?.id)
+      .searchModule(this.f.module?.value!, clientId)
       .subscribe((res: IBaseResponse<any>) => {
         if (this.f.module?.value === "Claims")
           this.uiState.lists.module = (res.data as IClaims[])?.map(
@@ -203,34 +239,35 @@ export class NewTaskComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.uiState.submitted = true;
-    // if (!this.validationChecker()) return;
     this.datesHandler();
+    if (!this.validationChecker()) return;
+    this.uiState.isLoading = true;
 
     let val = this.formGroup.getRawValue();
 
     let data: ITasks = {
       sNo: val.sNo ? +val.sNo! : 0,
       module: val.module!,
-      moduleSNo: +val.moduleSNo!.sNo,
+      moduleSNo: +val.moduleSNo!,
       taskName: val.taskName!,
       type: val.type!,
-      timeStampFrom: +val.timeStampFrom!,
-      timeStampTo: +val.timeStampTo!,
+      timeStampFrom: val.timeStampFrom!.toString(),
+      timeStampTo: val.timeStampTo!.toString(),
       isAllDay: val.isAllDay!,
       status: "Open",
-      taskDetails: val.description!,
+      taskDetails: val.taskDetails!,
       assignedTo: val.assignedTo!,
       clientName: val.clientName!,
-      leadProducer: "string",
-      // policyNo: val.,
-      leadNo: val.moduleSNo.mNo,
-      requestNo: val.moduleSNo.mNo,
-      claimNo: val.moduleSNo.mNo,
     };
 
     let sub = this.activityService.addTask(data).subscribe((res) => {
-      console.log(res);
+      if (res.status) {
+        this.modal.close();
+        this.message.toast(res.message, "success");
+      } else this.message.popup("Oops!", res.message, "warning");
+      this.uiState.isLoading = false;
     });
+    this.subscribes.push(sub);
   }
 
   validationChecker(): boolean {

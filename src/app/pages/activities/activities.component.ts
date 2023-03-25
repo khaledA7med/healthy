@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
@@ -26,13 +27,16 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 
-import { createEventId } from "./event-util";
 import { ActivitiesService } from "src/app/shared/services/activities/activities.service";
 import { ITaskParams } from "src/app/shared/app/models/Activities/itask-params";
 import { Observable, Subscription } from "rxjs";
 import { ITasks } from "src/app/shared/app/models/Activities/itasks";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbModal,
+  NgbModalRef,
+  NgbOffcanvas,
+} from "@ng-bootstrap/ng-bootstrap";
 import { NewTaskComponent } from "src/app/shared/components/new-task/new-task.component";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
@@ -50,6 +54,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   uiState = {};
   modalRef!: NgbModalRef;
   formData!: Observable<IBaseMasterTable>;
+  @ViewChild("filter") content!: TemplateRef<any>;
   subscribe: Subscription[] = [];
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -57,7 +62,8 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     private el: ElementRef,
     private activityService: ActivitiesService,
     private modalService: NgbModal,
-    private tables: MasterTableService
+    private tables: MasterTableService,
+    private offcanvas: NgbOffcanvas
   ) {}
 
   ngAfterViewInit(): void {
@@ -124,9 +130,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       filters: {
         text: `filter`,
-        click: () => {
-          console.log("filter");
-        },
+        click: () => this.openFilter(),
       },
     },
     eventTimeFormat: {
@@ -142,11 +146,9 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       center: "title",
       right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek addNewTask",
     },
-    windowResize: (view) => {
-      // var newView = getInitialView();
-      // calendar.changeView(newView);
-    },
-    dateClick: this.handleDateClick.bind(this),
+    windowResize: () =>
+      this.calendarComponent?.getApi().changeView(this.getInitialView()),
+    // dateClick: this.handleDateClick.bind(this),
     select: this.handleDateSelect.bind(this),
     eventDidMount: (info: EventMountArg) => this.eventTooltip(info),
     eventClick: this.handleEventClick.bind(this),
@@ -154,19 +156,20 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     eventDisplay: "block",
     events: ({ start, end }: EventInput, cb: (evt: EventInput[]) => void) =>
       this.getAllEvents({ start, end }, cb),
-    /* you can update a remote database when these fire:
-    eventAdd:
-    eventChange:
-    eventRemove:
-    */
   };
   currentEvents: EventApi[] = [];
+
+  getInitialView(): string {
+    if (window.innerWidth >= 768 && window.innerWidth < 1200)
+      return "timeGridWeek";
+    else if (window.innerWidth <= 768) return "listMonth";
+    else return "dayGridMonth";
+  }
+
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = 'prompt("Please enter a new title for your event")';
     const calendarApi = selectInfo.view.calendar;
 
     calendarApi.unselect(); // clear date selection
-
     let data = {
       startstr: selectInfo.startStr,
       endstr: selectInfo.endStr,
@@ -179,14 +182,18 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    console.log(clickInfo.event);
-    // if (
-    //   confirm(
-    //     `Are you sure you want to delete the event '${clickInfo.event.title}'`
-    //   )
-    // ) {
-    //   clickInfo.event.remove();
-    // }
+    this.modalRef = this.modalService.open(NewTaskComponent, {
+      backdrop: "static",
+      size: "lg",
+      centered: true,
+    });
+
+    let task = clickInfo.event.extendedProps as ITasks;
+    this.modalRef.componentInstance.task = task;
+    let sub = this.modalRef.closed.subscribe(() =>
+      this.calendarComponent?.getApi().refetchEvents()
+    );
+    this.subscribe.push(sub);
   }
 
   handleEvents(events: EventApi[]) {
@@ -194,23 +201,12 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  getRawCalendarAPI() {
-    let calendarApi = this.calendarComponent?.getApi();
-    console.log(calendarApi);
-    calendarApi?.next();
-  }
-  handleDateClick(arg: any) {
-    // alert("date click! " + arg.dateStr);
-    // this.getRawCalendarAPI();
-  }
+  eventTooltip(info: EventMountArg) {}
 
-  eventTooltip(info: EventMountArg) {
-    // var tooltip = new ngbtoo(info.el, {
-    //   title: info.event.extendedProps.description,
-    //   placement: 'top',
-    //   trigger: 'hover',
-    //   container: 'body'
-    // });
+  openFilter() {
+    this.offcanvas.open(this.content, {
+      position: "top",
+    });
   }
 
   getAllEvents(
@@ -269,6 +265,10 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       dueDateFrom: data?.start,
       dueDateTo: data?.end,
     } as ITasks;
+    let sub = this.modalRef.closed.subscribe(() =>
+      this.calendarComponent?.getApi().refetchEvents()
+    );
+    this.subscribe.push(sub);
   }
 
   ngOnInit(): void {

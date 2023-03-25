@@ -22,7 +22,7 @@ export interface ITasks {
   taskClosingNotes?: string;
   taskDetails?: string;
   taskName?: string;
-  timeStampFrom?: number;
-  timeStampTo?: number;
+  timeStampFrom?: string;
+  timeStampTo?: string;
   type?: string;
 }

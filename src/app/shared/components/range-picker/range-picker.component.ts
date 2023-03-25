@@ -40,15 +40,15 @@ export class RangePickerComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.selected) {
+    if (this.selected.from && this.selected.to) {
       let from = this.selected.from,
         to = this.selected.to;
 
-      this.viewValue = `${from.getFullYear()}-${
-        from.getMonth() + 1
-      }-${from.getDate()} To ${to.getFullYear()}-${
-        to.getMonth() + 1
-      }-${to.getDate()}`;
+      this.viewValue = `${from?.getFullYear()}-${
+        from?.getMonth() + 1
+      }-${from?.getDate()} To ${to?.getFullYear()}-${
+        to?.getMonth() + 1
+      }-${to?.getDate()}`;
     }
   }
 

@@ -1,13 +1,14 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
     <div class="modal-header">
         <h4 class="modal-title">{{uiState.editMode ? "Edit" : "New"}} Activity</h4>
         <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="module" class="asterisk-input">Section</label>
             <ng-select formControlName="module" id="module" class="is-invalid" placeholder="Select Section Name"
-                bindLabel="name" bindValue="name" (change)="getModuleClients($event.name); searchModule()"
+                bindLabel="name" bindValue="name" (change)="getModuleClients($event.name);"
                 [loading]="formData ? false : true" [items]="(formData| async)?.IBSModules?.content!" [ngClass]="{
                 'is-submitted': (f.module?.touched || uiState.submitted) && f.module?.invalid
               }">
@@ -21,7 +22,7 @@
                 Required
             </div>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="type" class="asterisk-input">Activity Type</label>
             <ng-select formControlName="type" class="is-invalid" [items]="(formData| async)?.TasksTypes?.content!"
                 bindLabel="name" bindValue="name" [loading]="formData ? false : true" placeholder="Select Activity Type"
@@ -34,16 +35,16 @@
                 Required
             </div>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="clientName">Client</label>
-            <ng-select formControlName="clientName" placeholder="Select Client" (change)="searchModule()"
-                bindLabel="name" [items]="uiState.lists.clients">
+            <ng-select formControlName="clientName" placeholder="Select Client" bindValue="name"
+                (change)="searchModule($event.id)" bindLabel="name" [items]="uiState.lists.clients">
                 <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.id }} | {{ item.name }}</div>
                 </ng-template>
             </ng-select>
         </div>
-        <div class="col-sm-12 my-1" *ngIf="f.module?.value">
+        <div class="col-sm-12 my-2" *ngIf="f.module?.value">
             <label for="moduleSNo">
                 <span *ngIf="f.module?.value === 'Claims'">Claims Details
                     <small style="font-size: 10px;">Claim No | Client ID | Client Name | Class Of Business | Line Of
@@ -61,16 +62,16 @@
                         Deadline</small>
                 </span>
             </label>
-            <ng-select formControlName="moduleSNo" bindLabel="label" [items]="uiState.lists.module">
+            <ng-select formControlName="moduleSNo" bindLabel="label" bindValue="no" [items]="uiState.lists.module">
                 <ng-template ng-option-tmp let-item="item">
                     <div style="white-space: pre-wrap; text-overflow: ellipsis">{{ item.label }}</div>
                 </ng-template>
             </ng-select>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="assignedTo" class="asterisk-input">Assign To</label>
             <ng-select formControlName="assignedTo" class="is-invalid" placeholder="Select Producer"
-                (change)="searchModule()" bindLabel="name" [items]="uiState.lists.assignTo"
+                (change)="searchModule()" bindLabel="name" bindValue="name" [items]="uiState.lists.assignTo"
                 [loading]="formData ? false : true" [ngClass]="{
                 'is-submitted': (f.assignedTo?.touched || uiState.submitted) && f.assignedTo?.invalid
               }">
@@ -84,29 +85,29 @@
                 Required
             </div>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="taskName" class="asterisk-input">Title</label>
             <input type="text" formControlName="taskName"
                 [ngClass]="{'is-invalid' : (f.taskName?.touched || uiState.submitted) && f.taskName?.invalid}"
                 class="form-control form-control-sm" placeholder="Type Task Name" id="taskName">
             <span class="invalid-feedback fw-bold mt-0">Required</span>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label for="taskDetails">Description</label>
             <textarea formControlName="taskDetails" id="taskDetails" class="form-control form-control-sm"
                 placeholder="Type Task Description" cols="30" rows="4"></textarea>
         </div>
-        <div class="col-sm-12 my-1">
+        <div class="col-sm-12 my-2">
             <label class="asterisk-input">Due Date</label>
             <div [ngClass]="{'is-invalid' : (f.start?.invalid || f.end?.invalid) && uiState.submitted}">
                 <app-range-picker [monthCount]="2" (dateChange)="setDate($event)"
-                    [selected]="{from: this.clickedDate.dueDateFrom, to: this.clickedDate.dueDateTo}"></app-range-picker>
+                    [selected]="{from: this.clickedDate?.dueDateFrom, to: this.clickedDate?.dueDateTo}"></app-range-picker>
             </div>
             <div class="invalid-feedback fw-bold">
                 Required
             </div>
         </div>
-        <div class="col-sm-12 my-1" *ngIf="!uiState.isRange">
+        <div class="col-sm-12 my-2" *ngIf="!uiState.isRange">
             <div class="row">
                 <div class="col-6 mb-2">
                     <label class="form-label asterisk-input">From</label>

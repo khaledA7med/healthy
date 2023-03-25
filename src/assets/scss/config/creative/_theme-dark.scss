@@ -99,7 +99,7 @@
 
   // component variable
   --#{$prefix}light: #{$gray-300};
-  --#{$prefix}light-rgb: #{to-rgb($gray-300)};
+  --#{$variable-prefix}light-rgb: #{to-rgb($gray-300)};
   --#{$prefix}dark: #{$gray-800};
   --#{$prefix}dark-rgb: #{to-rgb($gray-800)};
 
