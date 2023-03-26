@@ -16,8 +16,9 @@
 </div>
 <!-- [value]="formatter.format(fromDate)+' To '+formatter.format(toDate)" -->
 <div class="input-group input-group-sm">
-    <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate" (click)="datepicker.toggle()"
-        [value]="viewValue" readonly (input)="fromDate = validateInput(fromDate, dpFromDate.value)" />
+    <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd to yyyy-mm-dd" name="dpFromDate"
+        (click)="datepicker.toggle()" [value]="viewValue" readonly
+        (input)="fromDate = validateInput(fromDate, dpFromDate.value)" />
     <button class="btn btn-sm btn-outline-secondary ri-calendar-2-line" (click)="datepicker.toggle()"
         type="button"></button>
 </div>

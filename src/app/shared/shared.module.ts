@@ -4,6 +4,7 @@ import {
   NgbNavModule,
   NgbAccordionModule,
   NgbDropdownModule,
+  NgbTooltipModule,
 } from "@ng-bootstrap/ng-bootstrap";
 
 // Counter
@@ -30,6 +31,7 @@ import { SubLoaderModule } from "./components/sub-loader/sub-loader.module";
     ReactiveFormsModule,
     NgSelectModule,
     SubLoaderModule,
+    NgbTooltipModule,
   ],
   exports: [
     ScrollspyDirective,
@@ -42,6 +44,7 @@ import { SubLoaderModule } from "./components/sub-loader/sub-loader.module";
     NgbAccordionModule,
     InputMaskDirective,
     SubLoaderModule,
+    NgbTooltipModule,
   ],
 })
 export class SharedModule {}

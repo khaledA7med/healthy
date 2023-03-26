@@ -72,7 +72,7 @@
 
   // theme-color
   --#{$prefix}light: #{$gray-100};
-  --#{$prefix}light-rgb: #{to-rgb($gray-100)};
+  --#{$variable-prefix}light-rgb: #{to-rgb($gray-100)};
   --#{$prefix}dark: #{$gray-900};
   --#{$prefix}dark-rgb: #{to-rgb($gray-900)};
 
@@ -118,7 +118,7 @@
   --#{$prefix}list-group-hover-bg: #{$gray-100};
 
   // popover
-  --#{$prefix}popover-bg: #{$white};
+  --#{$variable-prefix}popover-bg: #{$white};
 
   // pagination
   --#{$prefix}pagination-hover-bg: #{$gray-200};

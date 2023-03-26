@@ -869,11 +869,17 @@ $table-striped-bg: rgba(var(--#{$prefix}dark-rgb), $table-striped-bg-factor);
 
 $table-active-color: $table-color;
 $table-active-bg-factor: 1;
-$table-active-bg: rgba(var(--#{$prefix}light-rgb), $table-active-bg-factor);
+$table-active-bg: rgba(
+  var(--#{$variable-prefix}light-rgb),
+  $table-active-bg-factor
+);
 
 $table-hover-color: $table-color;
 $table-hover-bg-factor: 1;
-$table-hover-bg: rgba(var(--#{$prefix}light-rgb), $table-hover-bg-factor);
+$table-hover-bg: rgba(
+  var(--#{$variable-prefix}light-rgb),
+  $table-hover-bg-factor
+);
 
 $table-border-factor: 0.1;
 $table-border-width: $border-width;
@@ -1527,10 +1533,10 @@ $form-feedback-tooltip-border-radius: $tooltip-border-radius;
 
 // scss-docs-start popover-variables
 $popover-font-size: $font-size-base;
-$popover-bg: var(--#{$prefix}popover-bg);
+$popover-bg: var(--#{$variable-prefix}popover-bg);
 $popover-max-width: 276px;
 $popover-border-width: $border-width;
-$popover-border-color: var(--#{$prefix}border-color);
+$popover-border-color: var(--#{$variable-prefix}border-color);
 $popover-border-radius: $border-radius;
 $popover-inner-border-radius: subtract(
   $popover-border-radius,
@@ -1543,7 +1549,7 @@ $popover-header-color: $headings-color;
 $popover-header-padding-y: 0.7rem;
 $popover-header-padding-x: $spacer;
 
-$popover-body-color: var(--#{$prefix}body-color);
+$popover-body-color: var(--#{$variable-prefix}body-color);
 $popover-body-padding-y: $spacer;
 $popover-body-padding-x: $spacer;
 
@@ -1551,7 +1557,7 @@ $popover-arrow-width: 1rem;
 $popover-arrow-height: 0.5rem;
 $popover-arrow-color: $popover-bg;
 
-$popover-arrow-outer-color: var(--#{$prefix}border-color);
+$popover-arrow-outer-color: var(--#{$variable-prefix}border-color);
 // scss-docs-end popover-variables
 
 // Toasts

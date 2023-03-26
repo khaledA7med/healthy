@@ -3,10 +3,112 @@
     <div class='demo-app-main'>
         <div class="card">
             <div class="card-body">
+                <ng-template #filter let-offcanvas>
+                    <div class="offcanvas-header">
+                        <h4 class="offcanvas-title">Task Filters</h4>
+                        <button type="button" class="btn-close" aria-label="Close"
+                            (click)="offcanvas.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="row g-3">
+                            <div class="col-xxl-3 col-sm-12">
+                                <label for="filter-task-name">Task Name</label>
+                                <div class="search-box">
+                                    <input type="text" id="filter-task-name" class="form-control form-control-sm"
+                                        placeholder="Search for task name...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-4">
+                                <label for="filter-section-name">Section Name</label>
+                                <div class="input-light">
+                                    <select class="form-control" id="filter-section-name">
+                                        <option value="" selected>All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-12 d-none" id="requestNoContainer">
+                                <label for="filter-request-no">Request No.</label>
+                                <div class="search-box">
+                                    <input type="text" id="filter-request-no" class="form-control form-control-sm"
+                                        placeholder="Search for request Number...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-12 d-none" id="LeadNoContainer">
+                                <label for="filter-lead-no">Lead No.</label>
+                                <div class="search-box">
+                                    <input type="text" id="filter-lead-no" class="form-control form-control-sm"
+                                        placeholder="Search for Lead Number...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-12 d-none" id="claimNoContainer">
+                                <label for="filter-claim-no">Claim No.</label>
+                                <div class="search-box">
+                                    <input type="text" id="filter-claim-no" class="form-control form-control-sm"
+                                        placeholder="Search for claim Number...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-4">
+                                <label for="filter-assigned-to">Assigned To</label>
+                                <div class="input-light">
+                                    <select class="form-control" id="filter-assigned-to">
+                                        <option value="" selected>All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-4">
+                                <label for="filter-assigned-by">Assigned By</label>
+                                <div class="input-light">
+                                    <select class="form-control" id="filter-assigned-by">
+                                        <option value="" selected>All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-4">
+                                <label for="filter-status">Status</label>
+                                <div class="input-light">
+                                    <select class="form-control" id="filter-status">
+                                        <option value="" selected>All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-sm-4">
+                                <label for="filter-type">Type</label>
+                                <div class="input-light">
+                                    <select class="form-control" id="filter-type">
+                                        <option value="" selected>All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+
+                        <div class="text-end">
+                            <button type="button" class="btn btn-outline-dark"
+                                (click)="offcanvas.dismiss('Close click')">Close</button>
+                        </div>
+                    </div>
+                </ng-template>
                 <full-calendar #calendar [options]="calendarOptions" [deepChangeDetection]="true">
                     <ng-template #eventContent let-arg>
-                        <b>{{ arg.timeText }}</b>
-                        <i>{{ arg.event.title }}</i>
+                        <div placement="top auto" [ngbTooltip]="arg.event.extendedProps.taskDetails || 'No Description'"
+                            container="body">
+                            <b>{{ arg.timeText }}</b>
+                            <i>{{ arg.event.title }}</i>
+                        </div>
                     </ng-template>
                 </full-calendar>
             </div>

@@ -6,6 +6,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ActivitiesComponent } from "./activities.component";
+import { NewTaskModule } from "src/app/shared/components/new-task/new-task.module";
 
 export const routes: Routes = [
   { path: AppRoutes.Activities.taskboard, component: ActivitiesComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     FullCalendarModule,
+    NewTaskModule,
   ],
 })
 export class ActivitiesModule {}

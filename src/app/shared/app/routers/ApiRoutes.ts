@@ -6,7 +6,18 @@ export const ApiRoutes = {
     login: "/Account/login",
     refesh: "/Account/RefreshToken",
   },
+  Activities: {
+    allTasks: "/Activity/Activities/AllTasks",
+    moduleClients: "/Activity/Activities/ModuleClients",
+    searchModule: "/Activity/Activities/SearchModule",
+    addTask: "/Activity/Activities/AddTask",
+  },
   MasterTable: {
+    Activities: {
+      producers: LookUpTables + BaseData.Producers,
+      tasksTypes: LookUpTables + BaseData.TasksTypes,
+      IBSModules: LookUpTables + BaseData.IBSModules,
+    },
     MasterTables: {
       insurClasses: LookUpTables + BaseData.InsurClasses,
       lineOfBusiness: LookUpTables + BaseData.LineOfBusiness,
