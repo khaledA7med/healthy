@@ -5,6 +5,7 @@ export const MODULE_NAME = new HttpContextToken<string | undefined>(
 );
 
 export enum MODULES {
+  Activities = "Activities",
   Client = "Client",
   ClientForm = "ClientForm",
   BusinessDevelopmentForm = "BusinessDevelopmentForm",

@@ -64,9 +64,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
             errorMessage = `Error: ${error.error.message}`;
           } else {
             // server-side error
-            console.log(error.error);
-            console.log(error.error.message);
-            errorMessage = error.error.message || errorMessage;
+            errorMessage = error?.error?.message || errorMessage;
           }
           this.eventService.broadcast(reserved.isLoading, false);
           this.message.popup("Oops!", errorMessage, "error");
