@@ -21,12 +21,10 @@
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-4">
-                                <label for="filter-section-name">Section Name</label>
-                                <div class="input-light">
-                                    <select class="form-control" id="filter-section-name">
-                                        <option value="" selected>All</option>
-                                    </select>
-                                </div>
+                                <label>Section Name</label>
+                                <ng-select>
+                                    <option value="" selected>All</option>
+                                </ng-select>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-12 d-none" id="requestNoContainer">
@@ -59,46 +57,40 @@
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-4">
                                 <label for="filter-assigned-to">Assigned To</label>
-                                <div class="input-light">
-                                    <select class="form-control" id="filter-assigned-to">
-                                        <option value="" selected>All</option>
-                                    </select>
-                                </div>
+                                <ng-select>
+                                    <option value="" selected>All</option>
+                                </ng-select>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-4">
                                 <label for="filter-assigned-by">Assigned By</label>
-                                <div class="input-light">
-                                    <select class="form-control" id="filter-assigned-by">
-                                        <option value="" selected>All</option>
-                                    </select>
-                                </div>
+                                <ng-select>
+                                    <option value="" selected>All</option>
+                                </ng-select>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-4">
                                 <label for="filter-status">Status</label>
-                                <div class="input-light">
-                                    <select class="form-control" id="filter-status">
-                                        <option value="" selected>All</option>
-                                    </select>
-                                </div>
+                                <ng-select>
+                                    <option value="" selected>All</option>
+                                </ng-select>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-sm-4">
                                 <label for="filter-type">Type</label>
-                                <div class="input-light">
-                                    <select class="form-control" id="filter-type">
-                                        <option value="" selected>All</option>
-                                    </select>
-                                </div>
+                                <ng-select>
+                                    <option value="" selected>All</option>
+                                </ng-select>
                             </div>
                             <!--end col-->
                         </div>
                         <!--end row-->
 
                         <div class="text-end">
-                            <button type="button" class="btn btn-outline-dark"
-                                (click)="offcanvas.dismiss('Close click')">Close</button>
+                            <button type="button" class="btn btn-info btn-sm" id="filter-btn"> <i
+                                    class="ri-equalizer-fill me-1 align-bottom"></i>
+                                Filters
+                            </button>
                         </div>
                     </div>
                 </ng-template>
