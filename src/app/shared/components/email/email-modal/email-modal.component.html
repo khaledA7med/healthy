@@ -3,12 +3,16 @@
     <h4 class="modal-title">New Message</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
-  <ngx-simplebar>
-    <div class="modal-body">
+
+
+  <div class="modal-body">
+    <!-- Main Email Body -->
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.email">
       <!-- btn for email-List  -->
       <div class="row justify-content-end g-1" *ngIf="buttons">
         <div class="col-auto">
-          <button class="btn btn-sm btn-info">
+          <button class="btn btn-sm btn-info"
+            (click)="uiState.modalBody.clientContact = true;uiState.modalBody.email = false">
             + Add Prospects / Clients Contacts
           </button>
         </div>
@@ -59,7 +63,58 @@
       </form>
       <!-- / -->
     </div>
-  </ngx-simplebar>
+    <!-- / -->
+    <!-- Add Clients Contacts Body -->
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.clientContact">
+      <!-- btn for email-List  -->
+      <div class="row justify-content-end g-1" *ngIf="buttons">
+        <div class="col-auto">
+          <button class="btn btn-sm btn-info"
+            (click)="uiState.modalBody.email = true;uiState.modalBody.clientContact = false">
+            Back
+          </button>
+        </div>
+      </div>
+      <!-- / -->
+      <!--email inputs-->
+      <form [formGroup]="formGroup">
+        <div class="row">
+          <div class="col-12 mb-2 position-relative">
+            <label for="to" class="form-label"> To: </label>
+            <input type="text" id="to" class="form-control" placeholder="Type To Emails" formControlName="to" />
+            <div class="position-absolute top-0 end-0">
+              <button class="btn btn-link text-dark px-0 fw-bold" type="button" (click)="toggleCc()">
+                Cc
+              </button>
+              <button class="btn btn-link text-dark fw-bold" type="button" (click)="toggleBcc()">
+                Bcc
+              </button>
+            </div>
+          </div>
+          <div class="col-12 mb-2 tra" *ngIf="uiState.isCc">
+            <label for="cc" class="form-label"> Cc: </label>
+            <input type="text" id="cc" class="form-control" placeholder="Type Cc Emails" formControlName="cc" />
+          </div>
+          <div class="col-12 mb-3" *ngIf="uiState.isBcc">
+            <label for="bcc" class="form-label"> Bcc: </label>
+            <input type="text" id="bcc" class="form-control" placeholder="Type BCc Emails" formControlName="bcc" />
+          </div>
+          <div class="col-12 mb-3">
+            <div class="input-group input-group-sm">
+              <input id="sub" type="text" class="form-control form-control-sm" placeholder="Subject"
+                formControlName="subject" />
+              <ng-select [items]="subject" bindLabel="name" bindValue="name" [clearable]="true">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- / -->
+    </div>
+    <!-- / -->
+
+  </div>
+
   <div class="modal-footer">
     <button type="button" class="btn btn-sm btn-danger" (click)="modal.close('Close click')">
       Discard
