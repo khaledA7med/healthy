@@ -5,9 +5,11 @@
   </div>
 
 
-  <div class="modal-body">
+  <div class="modal-body newEmailModalBody" #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.email">
+
     <!-- Main Email Body -->
-    <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.email">
+    <div>
+
       <!-- btn for email-List  -->
       <div class="row justify-content-end g-1" *ngIf="buttons">
         <div class="col-auto">
@@ -24,7 +26,7 @@
       </div>
       <!-- / -->
       <!--email inputs-->
-      <form [formGroup]="formGroup">
+      <form [formGroup]="mailFormGroup">
         <div class="row">
           <div class="col-12 mb-2 position-relative">
             <label for="to" class="form-label"> To: </label>
@@ -58,67 +60,35 @@
             <ckeditor [editor]="editorData" (change)="getEditorData($event)" formControlName="body"></ckeditor>
           </div>
 
-          <app-dropzone (files)="documentsList($event)" [UploadedFiles]="docs"></app-dropzone>
+          <app-dropzone class="p-0" (files)="documentsList($event)" [UploadedFiles]="docs"></app-dropzone>
         </div>
       </form>
-      <!-- / -->
-    </div>
-    <!-- / -->
-    <!-- Add Clients Contacts Body -->
-    <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.clientContact">
-      <!-- btn for email-List  -->
-      <div class="row justify-content-end g-1" *ngIf="buttons">
-        <div class="col-auto">
-          <button class="btn btn-sm btn-info"
-            (click)="uiState.modalBody.email = true;uiState.modalBody.clientContact = false">
-            Back
-          </button>
-        </div>
-      </div>
-      <!-- / -->
-      <!--email inputs-->
-      <form [formGroup]="formGroup">
-        <div class="row">
-          <div class="col-12 mb-2 position-relative">
-            <label for="to" class="form-label"> To: </label>
-            <input type="text" id="to" class="form-control" placeholder="Type To Emails" formControlName="to" />
-            <div class="position-absolute top-0 end-0">
-              <button class="btn btn-link text-dark px-0 fw-bold" type="button" (click)="toggleCc()">
-                Cc
-              </button>
-              <button class="btn btn-link text-dark fw-bold" type="button" (click)="toggleBcc()">
-                Bcc
-              </button>
-            </div>
-          </div>
-          <div class="col-12 mb-2 tra" *ngIf="uiState.isCc">
-            <label for="cc" class="form-label"> Cc: </label>
-            <input type="text" id="cc" class="form-control" placeholder="Type Cc Emails" formControlName="cc" />
-          </div>
-          <div class="col-12 mb-3" *ngIf="uiState.isBcc">
-            <label for="bcc" class="form-label"> Bcc: </label>
-            <input type="text" id="bcc" class="form-control" placeholder="Type BCc Emails" formControlName="bcc" />
-          </div>
-          <div class="col-12 mb-3">
-            <div class="input-group input-group-sm">
-              <input id="sub" type="text" class="form-control form-control-sm" placeholder="Subject"
-                formControlName="subject" />
-              <ng-select [items]="subject" bindLabel="name" bindValue="name" [clearable]="true">
-              </ng-select>
-            </div>
-          </div>
-        </div>
-      </form>
-      <!-- / -->
-    </div>
-    <!-- / -->
 
+      <!-- / -->
+    </div>
+    <!-- / -->
+  </div>
+  <div class="modal-body" #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.clientContact">
+    <!-- Add Clients Contacts Body -->
+    <div>
+      <!-- btn for email-List  -->
+      <h5 class="modal-title d-flex align-items-center me-2 mb-2">
+        <button class="btn p-0 fs-20 me-2 d-flex backward-btn"
+          (click)="uiState.modalBody.email = true;uiState.modalBody.clientContact = false"><i
+            class="ri-arrow-left-line"></i></button>
+        Prospects / Client Contacts
+      </h5>
+      <!-- / -->
+
+      <app-client-contacts *ngIf="uiState.modalBody.clientContact"></app-client-contacts>
+    </div>
+    <!-- / -->
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-sm btn-danger" (click)="modal.close('Close click')">
       Discard
     </button>
-    <button type="submit" class="btn btn-sm btn-success">Send</button>
+    <button type="submit" class="btn btn-sm btn-success" *ngIf="uiState.modalBody.email">Send</button>
   </div>
 </ng-template>
