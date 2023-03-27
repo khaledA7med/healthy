@@ -10,7 +10,7 @@ export const ApiRoutes = {
     allTasks: "/Activity/Activities/AllTasks",
     moduleClients: "/Activity/Activities/ModuleClients",
     searchModule: "/Activity/Activities/SearchModule",
-    addTask: "/Activity/Activities/AddTask",
+    addTask: "/Activity/Activities/saveTask",
   },
   MasterTable: {
     Activities: {

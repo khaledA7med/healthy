@@ -19,7 +19,6 @@ import {
   EventClickArg,
   EventApi,
   EventInput,
-  EventMountArg,
 } from "@fullcalendar/core"; // useful for typechecking
 import bootstrap5Plugin from "@fullcalendar/bootstrap5";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -37,10 +36,11 @@ import {
   NgbModalRef,
   NgbOffcanvas,
 } from "@ng-bootstrap/ng-bootstrap";
-import { NewTaskComponent } from "src/app/shared/components/new-task/new-task.component";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
+import { FormControl, FormGroup } from "@angular/forms";
+import { TaskPreviewComponent } from "src/app/shared/components/task-preview/task-preview.component";
 
 @Component({
   selector: "app-activities",
@@ -51,9 +51,13 @@ import { MODULES } from "src/app/core/models/MODULES";
 })
 export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild("calendar") calendarComponent?: FullCalendarComponent;
-  uiState = {};
+  uiState = {
+    lists: { assign: [] as any },
+    isLoading: false as boolean,
+  };
   modalRef!: NgbModalRef;
   formData!: Observable<IBaseMasterTable>;
+  formGroup!: FormGroup;
   @ViewChild("filter") content!: TemplateRef<any>;
   subscribe: Subscription[] = [];
   constructor(
@@ -65,6 +69,24 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     private tables: MasterTableService,
     private offcanvas: NgbOffcanvas
   ) {}
+
+  initForm() {
+    this.formGroup = new FormGroup({
+      leadNo: new FormControl(null),
+      requestNo: new FormControl(null),
+      claimNo: new FormControl(null),
+      taskName: new FormControl(null),
+      assignedTo: new FormControl(null),
+      assignedBy: new FormControl(null),
+      status: new FormControl(null),
+      type: new FormControl(null),
+      module: new FormControl(null),
+    });
+  }
+
+  get f() {
+    return this.formGroup.controls;
+  }
 
   ngAfterViewInit(): void {
     let filter = this.el.nativeElement.querySelector(".fc-filters-button");
@@ -148,9 +170,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     windowResize: () =>
       this.calendarComponent?.getApi().changeView(this.getInitialView()),
-    // dateClick: this.handleDateClick.bind(this),
     select: this.handleDateSelect.bind(this),
-    eventDidMount: (info: EventMountArg) => this.eventTooltip(info),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     eventDisplay: "block",
@@ -182,7 +202,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    this.modalRef = this.modalService.open(NewTaskComponent, {
+    this.modalRef = this.modalService.open(TaskPreviewComponent, {
       backdrop: "static",
       size: "lg",
       centered: true,
@@ -201,27 +221,30 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  eventTooltip(info: EventMountArg) {}
-
   openFilter() {
     this.offcanvas.open(this.content, {
       position: "top",
     });
   }
 
-  getAllEvents(
-    { start, end }: EventInput,
-    cb: (evt: EventInput[]) => void,
-    formData?: ITaskParams
-  ) {
+  submitFilter() {
+    this.calendarComponent?.getApi().refetchEvents();
+  }
+
+  getAllEvents({ start, end }: EventInput, cb: (evt: EventInput[]) => void) {
+    this.uiState.isLoading = true;
     const from = ((start as Date).getTime() / 1000).toString();
     const to = ((end as Date).getTime() / 1000).toString();
-
+    let formData = this.formGroup.getRawValue();
     let data: ITaskParams = {
       ...formData,
       timeStampFrom: from,
       timeStampTo: to,
-      module: formData?.module || "All",
+      module: formData.module || "All",
+      assignedBy:
+        formData.assignedBy === "@Me" ? "_Current" : formData.assignedBy,
+      assignedTo:
+        formData.assignedTo === "@Me" ? "_Current" : formData.assignedTo,
     };
 
     let sub = this.activityService
@@ -250,12 +273,14 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
           };
         });
         cb(events!);
+        this.offcanvas.dismiss();
+        this.uiState.isLoading = false;
       });
     this.subscribe.push(sub);
   }
 
   addNewTask(data?: { start?: Date; end?: Date; allDay?: boolean }) {
-    this.modalRef = this.modalService.open(NewTaskComponent, {
+    this.modalRef = this.modalService.open(TaskPreviewComponent, {
       backdrop: "static",
       size: "lg",
       centered: true,
@@ -272,7 +297,15 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initForm();
     this.formData = this.tables.getBaseData(MODULES.Activities);
+    let sub = this.formData.subscribe((res) => {
+      this.uiState.lists.assign = res.Producers?.content.filter(
+        (el) => !el.name.startsWith("Direct Business")
+      );
+      this.uiState.lists.assign?.unshift({ id: Date.now(), name: "@Me" });
+    });
+    this.subscribe.push(sub);
   }
 
   ngOnDestroy(): void {
