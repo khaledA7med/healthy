@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { ICellRendererParams } from "ag-grid-community";
+import { EmailModalComponent } from "../email-modal/email-modal.component";
 import { ClientContactsComponent } from "./client-contacts.component";
 
 @Component({
@@ -11,9 +12,9 @@ import { ClientContactsComponent } from "./client-contacts.component";
 					<i class="ri-more-2-fill"></i>
 				</button>
 				<div ngbDropdownMenu aria-labelledby="actionDropdown">
-					<button ngbDropdownItem (click)="toFunc()" class="btn btn-sm" #to>To</button>
-					<button ngbDropdownItem (click)="ccFunc()" class="btn btn-sm" #cc>CC</button>
-					<button ngbDropdownItem (click)="bccFunc()" class="btn btn-sm" #bcc>BCC</button>
+					<button ngbDropdownItem (click)="toFunc(params.data)" class="btn btn-sm" #to>To</button>
+					<button ngbDropdownItem (click)="ccFunc(params.data)" class="btn btn-sm" #cc>CC</button>
+					<button ngbDropdownItem (click)="bccFunc(params.data)" class="btn btn-sm" #bcc>BCC</button>
 				</div>
 			</div>
 		</div>
@@ -21,8 +22,8 @@ import { ClientContactsComponent } from "./client-contacts.component";
 	styles: ["#actionDropdown::after {display: none}"],
 })
 export class EmailContactListControlsComponent {
-	private params!: ICellRendererParams;
-	public comp!: ClientContactsComponent;
+	public params!: ICellRendererParams;
+	public comp!: EmailModalComponent;
 
 	@ViewChild("to") to!: ElementRef;
 	@ViewChild("cc") cc!: ElementRef;
@@ -35,15 +36,16 @@ export class EmailContactListControlsComponent {
 		this.comp = this.params.context.comp;
 	}
 
-	toFunc() {
+	toFunc(item: any) {
 		console.log(this.to.nativeElement);
+		this.comp.patchToList(item);
 	}
 
-	ccFunc() {
+	ccFunc(item: any) {
 		console.log(this.cc.nativeElement);
 	}
 
-	bccFunc() {
+	bccFunc(item: any) {
 		console.log(this.bcc.nativeElement);
 	}
 }

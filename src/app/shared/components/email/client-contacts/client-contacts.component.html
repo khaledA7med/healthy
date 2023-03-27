@@ -6,7 +6,7 @@
     <input type="text" id="clientInfo" name="clientInfo" readonly aria-label="Client Info"
         class="form-control form-control-sm" placeholder="Client Details" [formControl]="clientInfo">
     <button class="btn btn-info btn-sm d-flex align-items-center" type="button" id="searchProspectClientCollapseBtn"
-        (click)="uiState.showClientSearch = false">
+        (click)="uiState.showClientSearch = false;uiState.showAddContact = false;uiState.showSelectContact = false">
         <i class="ri-user-search-fill mx-1"></i>
         Search
     </button>

@@ -39,7 +39,6 @@ export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
 	) {}
 	ngOnChanges(): void {
 		this.clientContactFormGroup ? this.f.clientID?.patchValue(+this.clientID) : "";
-		console.log(this.clientID);
 	}
 	ngOnInit(): void {
 		this.getLookupData();
@@ -75,7 +74,6 @@ export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
 
 	submitClientContact() {
 		this.uiState.submitted = true;
-		console.log(this.clientContactFormGroup);
 		if (!this.validationChecker()) return;
 		this.eventService.broadcast(reserved.isLoading, true);
 

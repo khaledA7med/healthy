@@ -13,7 +13,11 @@ import { ChangeEvent } from "@ckeditor/ckeditor5-angular/ckeditor.component";
 	encapsulation: ViewEncapsulation.None,
 })
 export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
+	emailModalInstance = this;
 	uiState = {
+		toList: [],
+		ccList: [],
+		bccList: [],
 		isCc: true,
 		isBcc: true,
 		modalBody: {
@@ -32,16 +36,15 @@ export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input() buttons: boolean = false;
 	@Input() modalData!: IEmailResponse;
+
 	@ViewChild("emailContent") emailContent!: ElementRef;
 
 	constructor(private modalService: NgbModal) {}
-	ngOnDestroy(): void {
-		throw new Error("Method not implemented.");
-	}
 
 	ngOnInit(): void {
 		this.initMailForm();
 	}
+
 	openModal() {
 		this.modalService.open(this.emailContent, {
 			size: "lg",
@@ -52,19 +55,25 @@ export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 			animation: true,
 		});
 	}
+
 	toggleCc() {
 		this.uiState.isCc = !this.uiState.isCc;
 	}
+
 	toggleBcc() {
 		this.uiState.isBcc = !this.uiState.isBcc;
+	}
+
+	patchToList(e: any) {
+		console.log(e);
 	}
 
 	//#region Mail form
 	initMailForm() {
 		this.mailFormGroup = new FormGroup({
-			to: new FormControl(null),
-			cc: new FormControl(null),
-			bcc: new FormControl(null),
+			to: new FormControl([]),
+			cc: new FormControl([]),
+			bcc: new FormControl([]),
 			subject: new FormControl(null),
 			body: new FormControl(null),
 			document: new FormControl(null),
@@ -87,4 +96,8 @@ export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 		this.documentsToUpload = evt;
 	}
 	//#endregion
+
+	ngOnDestroy(): void {
+		console.log("Destroied");
+	}
 }
