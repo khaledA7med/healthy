@@ -6,13 +6,13 @@
     <input type="text" id="clientInfo" name="clientInfo" readonly aria-label="Client Info"
         class="form-control form-control-sm" placeholder="Client Details" [formControl]="clientInfo">
     <button class="btn btn-info btn-sm d-flex align-items-center" type="button" id="searchProspectClientCollapseBtn"
-        (click)="uiState.showSelectContact = false">
+        (click)="uiState.showClientSearch = false">
         <i class="ri-user-search-fill mx-1"></i>
         Search
     </button>
 </div>
 
-<div #collapse="ngbCollapse" [(ngbCollapse)]="uiState.showSelectContact">
+<div #collapse="ngbCollapse" [(ngbCollapse)]="uiState.showClientSearch">
     <div class="row my-3">
         <div class="col-lg-5">
             <label for="prospectClientIDSearch">Client ID</label>
@@ -41,7 +41,8 @@
 
 <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showSelectContact" *ngIf="uiState.showSelectContact">
     <div class="d-flex justify-content-end align-items-center my-3">
-        <button class="btn btn-soft-primary btn-sm d-flex align-items-center" id="addNewClientContactBtn" type="button">
+        <button class="btn btn-soft-primary btn-sm d-flex align-items-center" id="addNewClientContactBtn" type="button"
+            (click)="uiState.showAddContact = true;uiState.showSelectContact = false">
             <i class="ri-add-line mx-1"></i>
             Add New Contact
         </button>
@@ -53,7 +54,7 @@
 </div>
 
 
-<!-- 
-<form [formGroup]="clientContactFormGroup">
-</form>
- -->
+<div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showAddContact">
+    <app-add-client-form [clientID]="clientIDFilter.value"
+        (contactAdded)="contactAddedSuccess($event)"></app-add-client-form>
+</div>

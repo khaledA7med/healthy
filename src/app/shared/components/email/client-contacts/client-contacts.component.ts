@@ -2,12 +2,9 @@ import { HttpResponse } from "@angular/common/http";
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
-import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
-import { MODULES } from "src/app/core/models/MODULES";
+import { Subscription } from "rxjs";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
-import { MasterTableService } from "src/app/core/services/master-table.service";
 import { emailClientContactsCols } from "src/app/shared/app/grid/emailClientContactCols";
 import { emailClientsCols } from "src/app/shared/app/grid/emailClientsCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -26,7 +23,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 	clientIDFilter: FormControl = new FormControl();
 	clientNameFilter: FormControl = new FormControl();
 	clientContactFormGroup!: FormGroup<any>;
-	lookupData!: Observable<IBaseMasterTable>;
+
 	uiState = {
 		filters: {
 			sNo: 0,
@@ -40,7 +37,9 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 		} as IEmailClientContact,
 		gridReady: false,
 		submitted: false,
+		showClientSearch: false,
 		showSelectContact: false,
+		showAddContact: false,
 		selectedClientSno: 0,
 		clients: {
 			list: [] as IEmailClient[],
@@ -49,9 +48,12 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 			list: [] as IEmailClientContact[],
 		},
 	};
+
 	subscribes: Subscription[] = [];
+
 	gridApi: GridApi = <GridApi>{};
 	contactsGridApi: GridApi = <GridApi>{};
+
 	gridOpts: GridOptions = {
 		pagination: true,
 		rowModelType: "infinite",
@@ -69,12 +71,14 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 		onCellClicked: (e) => this.onCellClicked(e),
 		onSortChanged: (e) => this.onSort(e),
 	};
+
 	contactsGridOpts: GridOptions = {
 		pagination: true,
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
 		columnDefs: emailClientContactsCols,
+		context: { comp: this },
 		suppressCsvExport: true,
 		defaultColDef: {
 			flex: 1,
@@ -86,17 +90,11 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 		onCellClicked: (e) => this.onCellClickedContacts(e),
 		onSortChanged: (e) => this.onSortContacts(e),
 	};
-	constructor(
-		private table: MasterTableService,
-		private eventService: EventService,
-		private emailService: EmailService,
-		private message: MessagesService
-	) {}
+
+	constructor(private eventService: EventService, private emailService: EmailService, private message: MessagesService) {}
 
 	ngOnInit(): void {
 		this.clientInfo.disable();
-		this.initClientForm();
-		this.getLookupData();
 	}
 	//#region Clients / Prospects Grid
 	dataSource: IDatasource = {
@@ -129,8 +127,11 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 	}
 
 	onCellClicked(params: CellEvent) {
+		this.uiState.showClientSearch = true;
 		this.uiState.showSelectContact = true;
 		this.uiState.selectedClientSno = params.data.sNo;
+		this.clientIDFilter.patchValue(params.data.sNo);
+		this.clientNameFilter.patchValue(params.data.fullName);
 		this.clientInfo.patchValue(`${params.data.sNo} | ${params.data.fullName}`);
 	}
 
@@ -172,7 +173,12 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 	}
 
 	onCellClickedContacts(params: CellEvent) {
-		console.log(params.data);
+		if (params.column.getColId() == "action") {
+			params.api.getCellRendererInstances({
+				rowNodes: [params.node],
+				columns: [params.column],
+			});
+		}
 	}
 
 	onGridReadyContacts(param: GridReadyEvent) {
@@ -182,25 +188,14 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 	}
 	//#endregion
 
-	getLookupData() {
-		this.lookupData = this.table.getBaseData(MODULES.SystemAdmin);
-	}
-	//#region CLient Contacts form
-	initClientForm() {
-		this.clientContactFormGroup = new FormGroup({
-			to: new FormControl(null),
-			cc: new FormControl(null),
-			bcc: new FormControl(null),
-			subject: new FormControl(null),
-			body: new FormControl(null),
-			document: new FormControl(null),
-		});
-	}
-	get ff() {
-		return this.clientContactFormGroup.controls;
+	contactAddedSuccess(e: boolean) {
+		console.log(e);
+		this.uiState.showAddContact = false;
+		this.uiState.showSelectContact = true;
+		this.contactsGridApi.setDatasource(this.contactsDataSource);
 	}
 
-	ngOnDestroy(): void {}
-
-	//#endregion
+	ngOnDestroy(): void {
+		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }
