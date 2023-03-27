@@ -5,12 +5,12 @@ export interface IClaimsGeneralItems {
   item?: FormControl<string | null>;
   classOfInsurance?: FormControl<string | null>;
   lineofBusiness?: FormControl<string | null>;
-  mandatory?: FormControl<string | null>;
+  mandatory?: FormControl<number | null>;
 }
 export interface IClaimsGeneralItemsData {
   sno?: number;
   item?: string;
   classOfInsurance?: string;
   lineofBusiness?: string;
-  mandatory?: string;
+  mandatory?: number;
 }

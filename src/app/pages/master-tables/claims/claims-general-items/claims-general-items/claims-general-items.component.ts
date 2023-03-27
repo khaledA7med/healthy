@@ -220,7 +220,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
       item: new FormControl("", Validators.required),
       classOfInsurance: new FormControl("", Validators.required),
       lineofBusiness: new FormControl("", Validators.required),
-      mandatory: new FormControl(""),
+      mandatory: new FormControl(null),
     });
   }
 
@@ -264,7 +264,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
       item: formData.item,
       classOfInsurance: formData.classOfInsurance,
       lineofBusiness: formData.lineofBusiness,
-      mandatory: formData.mandatory,
+      mandatory: this.uiState.mandatory,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);

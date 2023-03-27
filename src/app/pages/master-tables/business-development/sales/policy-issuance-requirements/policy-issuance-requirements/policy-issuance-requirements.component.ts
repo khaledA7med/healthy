@@ -92,11 +92,11 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       const data: {
-        insurClass: string;
+        class: string;
         lineOfBusiness: string;
         insuranceCopmany: string;
       } = {
-        insurClass: this.f.insurClass?.value!,
+        class: this.f.class?.value!,
         lineOfBusiness: this.f.lineOfBusiness?.value!,
         insuranceCopmany: this.f.insuranceCopmany?.value!,
       };
@@ -209,7 +209,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
                 ? true
                 : false,
           });
-          this.f.insurClass?.disable();
+          this.f.class?.disable();
           this.f.lineOfBusiness?.disable();
           this.f.insuranceCopmany?.disable();
           this.openPolicyIssuanceRequirementsDialoge();
@@ -231,7 +231,14 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     );
 
     this.PolicyIssuanceRequirementsModal.hidden.subscribe(() => {
-      this.resetPolicyIssuanceRequirementsForm();
+      this.f.item?.reset();
+      this.f.itemArabic?.reset();
+      this.f.description?.reset();
+      this.f.descriptionArabic?.reset();
+      this.f.defaultTick?.reset();
+      this.f.class?.enable();
+      this.f.lineOfBusiness?.enable();
+      this.f.insuranceCopmany?.enable();
     });
   }
 
@@ -244,7 +251,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
         description: new FormControl(null),
         descriptionArabic: new FormControl(null),
         defaultTick: new FormControl(false),
-        insurClass: new FormControl(null, Validators.required),
+        class: new FormControl(null, Validators.required),
         lineOfBusiness: new FormControl(null, Validators.required),
         insuranceCopmany: new FormControl(null, Validators.required),
       });
@@ -302,8 +309,12 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
   }
 
   resetPolicyIssuanceRequirementsForm() {
-    this.PolicyIssuanceRequirementsForm.reset();
-    this.f.insurClass?.enable();
+    this.f.item?.reset();
+    this.f.itemArabic?.reset();
+    this.f.description?.reset();
+    this.f.descriptionArabic?.reset();
+    this.f.defaultTick?.reset();
+    this.f.class?.enable();
     this.f.lineOfBusiness?.enable();
     this.f.insuranceCopmany?.enable();
     this.uiState.submitted = false;

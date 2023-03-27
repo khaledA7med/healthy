@@ -19,7 +19,7 @@ export class QuotingRequirementsService {
   constructor(private http: HttpClient) {}
 
   getQuotingRequirements(data: {
-    insurClass: string;
+    class: string;
     lineOfBusiness: string;
     insuranceCopmany: string;
   }): Observable<HttpResponse<IBaseResponse<IQuotingRequirementsFilter[]>>> {
@@ -41,7 +41,7 @@ export class QuotingRequirementsService {
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements
           .save,
-      data
+      { ...data }
     );
   }
 

@@ -3,17 +3,9 @@ import {
   IAddCompanyRequirements,
   IAddCompanyRequirementsData,
 } from "./../../../../../shared/app/models/MasterTables/customer-service/i-company-requirements-form";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  OnDestroy,
-} from "@angular/core";
+import { HttpResponse } from "@angular/common/http";
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import {
   CellEvent,
   GridApi,
@@ -49,21 +41,21 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
   subscribes: Subscription[] = [];
   lineOfBussArr: IGenericResponseType[] = [];
   CompanyRequirementsFormSubmitted = false as boolean;
-  CompanyRequirementsModal!: NgbModalRef;
   CompanyRequirementsForm!: FormGroup<IAddCompanyRequirements>;
-
-  @ViewChild("CompanyRequirementsContent")
-  CompanyRequirementsContent!: ElementRef;
 
   uiState = {
     gridReady: false,
     submitted: false,
-    lists: {
+    list: {
       itemsList: [] as ICompanyRequirementsFilter[],
     },
     totalPages: 0,
     editCompanyRequirementsMode: false as Boolean,
     editCompanyRequirementsData: {} as IAddCompanyRequirementsData,
+    insuranceCompanyID: 3,
+    endorsType: "Addition",
+    classofInsurance: "Accident",
+    lineOfBusiness: "Family Compensation",
   };
 
   gridApi: GridApi = <GridApi>{};
@@ -91,13 +83,16 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     private message: MessagesService,
     private CompanyRequirementsService: CompanyRequirementsService,
     private eventService: EventService,
-    private modalService: NgbModal,
     private table: MasterTableService
   ) {}
 
   ngOnInit(): void {
     this.initCompanyRequirementsForm();
     this.getLookupData();
+    this.f.classofInsurance?.patchValue(this.uiState.classofInsurance);
+    this.f.insuranceCompanyID?.patchValue(this.uiState.insuranceCompanyID);
+    this.f.endorsType?.patchValue(this.uiState.endorsType);
+    this.f.lineOfBusiness?.patchValue(this.uiState.lineOfBusiness);
   }
 
   getLookupData() {
@@ -109,29 +104,30 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
-      let sub = this.CompanyRequirementsService.getCompanyRequirements({
-        endorsType: this.f.endorsType?.value!,
-        classofInsurance: this.f.classofInsurance?.value!,
-        insuranceCompanyID: this.f.insuranceCompanyID?.value!,
-        lineOfBusiness: this.f.lineOfBusiness?.value!,
-      }).subscribe(
+      const data: IAddCompanyRequirementsData = {
+        endorsType: this.uiState.endorsType,
+        classofInsurance: this.uiState.classofInsurance,
+        insuranceCompanyID: this.uiState.insuranceCompanyID,
+        lineOfBusiness: this.uiState.lineOfBusiness,
+      };
+
+      let sub = this.CompanyRequirementsService.getCompanyRequirements(
+        data
+      ).subscribe(
         (res: HttpResponse<IBaseResponse<ICompanyRequirementsFilter[]>>) => {
           if (res.body?.status) {
-            this.uiState.lists.itemsList = res.body?.data!;
+            this.uiState.list.itemsList = res.body?.data!;
             params.successCallback(
-              this.uiState.lists.itemsList,
-              this.uiState.lists.itemsList.length
+              this.uiState.list.itemsList,
+              this.uiState.list.itemsList.length
             );
-            if (this.uiState.lists.itemsList.length === 0)
+            if (this.uiState.list.itemsList.length === 0)
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else {
             this.uiState.gridReady = true;
             this.gridApi.hideOverlay();
           }
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
         }
       );
       this.subscribes.push(sub);
@@ -154,7 +150,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
 
   onGridReady(param: GridReadyEvent) {
     this.gridApi = param.api;
-    // this.gridApi.setDatasource(this.dataSource);
+    this.gridApi.setDatasource(this.dataSource);
     this.gridApi.sizeColumnsToFit();
   }
 
@@ -169,32 +165,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
         }
       );
     this.subscribes.push(sub);
-  }
-
-  openCompanyRequirementsDialoge() {
-    if (
-      this.f.classofInsurance?.valid &&
-      this.f.lineOfBusiness?.valid &&
-      this.f.endorsType?.valid &&
-      this.f.insuranceCompanyID?.valid
-    ) {
-      this.uiState.submitted = false;
-      this.CompanyRequirementsModal = this.modalService.open(
-        this.CompanyRequirementsContent,
-        {
-          ariaLabelledBy: "modal-basic-title",
-          centered: true,
-          backdrop: "static",
-          size: "lg",
-        }
-      );
-
-      this.CompanyRequirementsModal.hidden.subscribe(() => {
-        this.resetCompanyRequirementsForm();
-      });
-    } else {
-      this.uiState.submitted = true;
-    }
   }
 
   initCompanyRequirementsForm() {
@@ -221,7 +191,22 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  submitCompanyRequirementsData(form: FormGroup<IAddCompanyRequirements>) {
+  changeCompany(e: any) {
+    this.uiState.insuranceCompanyID = e?.id;
+  }
+  changeClass(e: any) {
+    this.uiState.classofInsurance = e?.name;
+  }
+  changeEndors(e: any) {
+    this.uiState.endorsType = e?.name;
+  }
+
+  filter(e: any) {
+    this.uiState.lineOfBusiness = e?.name;
+    this.gridApi.setDatasource(this.dataSource);
+  }
+
+  submitCompanyRequirementsData(form: FormGroup) {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
@@ -230,11 +215,11 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(
       data
-    ).subscribe((res: IBaseResponse<any>) => {
+    ).subscribe((res: IBaseResponse<number>) => {
       if (res?.status) {
-        this.CompanyRequirementsModal.dismiss();
         this.eventService.broadcast(reserved.isLoading, false);
         this.message.toast(res.message!, "success");
+        this.resetCompanyRequirementsForm();
         this.gridApi.setDatasource(this.dataSource);
       } else this.message.popup("Sorry!", res.message!, "warning");
       // Hide Loader
@@ -244,7 +229,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
   }
 
   resetCompanyRequirementsForm() {
-    this.f.sno?.patchValue(0);
     this.f.item?.reset();
     this.uiState.editCompanyRequirementsMode = false;
     this.uiState.submitted = false;

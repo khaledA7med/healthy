@@ -64,7 +64,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
     editQuotingRequirementsMode: false as Boolean,
     editQuotingRequirementsData: {} as IQuotingRequirementsData,
   };
-  isChecked!: number;
   subscribes: Subscription[] = [];
 
   gridApi: GridApi = <GridApi>{};
@@ -91,11 +90,11 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       const data: {
-        insurClass: string;
+        class: string;
         lineOfBusiness: string;
         insuranceCopmany: string;
       } = {
-        insurClass: this.f.insurClass?.value!,
+        class: this.f.class?.value!,
         lineOfBusiness: this.f.lineOfBusiness?.value!,
         insuranceCopmany: this.f.insuranceCopmany?.value!,
       };
@@ -199,7 +198,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
               ? true
               : false,
         });
-        this.f.insurClass?.disable();
+        this.f.class?.disable();
         this.f.lineOfBusiness?.disable();
         this.f.insuranceCopmany?.disable();
         this.openQuotingRequirementsDialoge();
@@ -235,7 +234,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
       description: new FormControl(null),
       descriptionArabic: new FormControl(null),
       defaultTick: new FormControl(false),
-      insurClass: new FormControl(null, Validators.required),
+      class: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
       insuranceCopmany: new FormControl(null, Validators.required),
     });
@@ -256,16 +255,13 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   submitQuotingRequirementsData(form: FormGroup<IQuotingRequirements>) {
     this.uiState.submitted = true;
 
-    const formData = form.getRawValue();
+    // const formData = form.getRawValue();
     const data: IQuotingRequirementsData = {
-      defaultTick: formData.defaultTick === true ? 1 : 0,
+      ...form.getRawValue(),
+      defaultTick: form.getRawValue().defaultTick === true ? 1 : 0,
       sNo: this.uiState.editQuotingRequirementsMode
         ? this.uiState.editQuotingRequirementsData.sNo
         : 0,
-      item: formData.item,
-      itemArabic: formData.itemArabic,
-      description: formData.description,
-      descriptionArabic: formData.descriptionArabic,
     };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
@@ -274,10 +270,11 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
       data
     ).subscribe((res: IBaseResponse<any>) => {
       if (res?.status) {
-        this.QuotingRequirementsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetQuotingRequirementsForm();
+        if (this.uiState.editQuotingRequirementsMode) {
+          this.QuotingRequirementsModal?.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+        } else this.resetQuotingRequirementsForm();
+
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res?.message!, "success");
       } else this.message.popup("Sorry!", res.message!, "warning");
@@ -287,8 +284,12 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   }
 
   resetQuotingRequirementsForm() {
-    this.QuotingRequirementsForm.reset();
-    this.f.insurClass?.enable();
+    this.f.item?.reset();
+    this.f.itemArabic?.reset();
+    this.f.description?.reset();
+    this.f.descriptionArabic?.reset();
+    this.f.defaultTick?.reset();
+    this.f.class?.enable();
     this.f.lineOfBusiness?.enable();
     this.f.insuranceCopmany?.enable();
     this.uiState.submitted = false;

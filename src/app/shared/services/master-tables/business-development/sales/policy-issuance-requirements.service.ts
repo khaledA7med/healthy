@@ -19,7 +19,7 @@ export class PolicyIssuanceRequirementsService {
   constructor(private http: HttpClient) {}
 
   getPolicyIssuanceRequirements(data: {
-    insurClass: string;
+    class: string;
     lineOfBusiness: string;
     insuranceCopmany: string;
   }): Observable<

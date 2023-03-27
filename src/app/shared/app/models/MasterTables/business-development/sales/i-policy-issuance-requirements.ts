@@ -5,7 +5,7 @@ export interface IPolicyIssuanceRequirements {
   identity?: FormControl<string | null>;
   type?: FormControl<string | null>;
   defaultTick?: FormControl<boolean | null>;
-  insurClass?: FormControl<string | null>;
+  class?: FormControl<string | null>;
   lineOfBusiness?: FormControl<string | null>;
   insuranceCopmany?: FormControl<string | null>;
   item?: FormControl<string | null>;
@@ -18,7 +18,7 @@ export interface IPolicyIssuanceRequirementsData {
   identity?: string | null;
   type?: string | null;
   defaultTick?: number | null;
-  insurClass?: string | null;
+  class?: string | null;
   lineOfBusiness?: string | null;
   insuranceCopmany?: string | null;
   item?: string | null;
@@ -31,7 +31,7 @@ export interface IPolicyIssuanceRequirementsFilter {
   identity?: string | null;
   type?: string | null;
   defaultTick?: number | null;
-  insurClass?: string | null;
+  class?: string | null;
   lineOfBusiness?: string | null;
   insuranceCopmany?: string | null;
   item?: string | null;
