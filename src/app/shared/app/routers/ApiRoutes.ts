@@ -14,6 +14,7 @@ export const ApiRoutes = {
 	},
 	Emails: {
 		allActiveClients: LookUpTables + "ActiveClient",
+		createClientContact: "/ClientRegistry/Clients/CreateClientContact",
 	},
 	MasterTable: {
 		Activities: {

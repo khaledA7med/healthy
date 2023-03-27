@@ -6,19 +6,21 @@ export interface IEmailClient {
 	fullName?: string;
 	producer?: string;
 }
-export interface IEmailClientContact extends IBaseFilters {
-	sNo?: number;
-	branch?: string;
-	clientID?: number;
-	contactName?: string;
-	mobile?: string;
-	lineOfBusiness?: string;
-	department?: string;
-	extension?: string;
-	position?: string;
-	mainContact?: number;
-	tele?: string;
-	email?: string;
-	savedUser?: string;
-	address?: string;
+export interface IClientContact {
+	sNo?: number | null;
+	branch?: string | null;
+	clientID?: number | null;
+	contactName?: string | null;
+	mobile?: string | null;
+	lineOfBusiness?: string | null;
+	department?: string | null;
+	extension?: string | null;
+	position?: string | null;
+	mainContact?: number | null;
+	tele?: string | null;
+	email?: string | null;
+	savedUser?: string | null;
+	address?: string | null;
 }
+
+export interface IEmailClientContact extends IBaseFilters, IClientContact {}

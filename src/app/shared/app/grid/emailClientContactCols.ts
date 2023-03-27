@@ -1,13 +1,14 @@
 import { ColDef } from "ag-grid-community";
+import { EmailContactListControlsComponent } from "../../components/email/client-contacts/client-list-controls.component";
 
 export const emailClientContactsCols: ColDef[] = [
-	// {
-	// 	colId: "action",
-	// 	cellRenderer: ClientListControlsComponent,
-	// 	pinned: "left",
-	// 	maxWidth: 80,
-	// 	sortable: false,
-	// },
+	{
+		colId: "action",
+		cellRenderer: EmailContactListControlsComponent,
+		pinned: "left",
+		maxWidth: 80,
+		sortable: false,
+	},
 	{
 		headerName: "Name",
 		field: "contactName",

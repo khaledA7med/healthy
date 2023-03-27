@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { IEmailClient, IEmailClientContact } from "../../app/models/Email/email-utils";
+import { IEmailClient, IEmailClientContact, IClientContact } from "../../app/models/Email/email-utils";
 
 @Injectable({
 	providedIn: "root",
@@ -26,6 +26,16 @@ export class EmailService {
 			{},
 			{
 				params: { clientId },
+				observe: "response",
+			}
+		);
+	}
+
+	saveClientContacts(contactData: IClientContact): Observable<HttpResponse<IBaseResponse<any>>> {
+		return this.http.post<IBaseResponse<any>>(
+			this.env + ApiRoutes.Emails.createClientContact,
+			{ ...contactData },
+			{
 				observe: "response",
 			}
 		);

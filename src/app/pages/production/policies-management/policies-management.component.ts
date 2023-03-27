@@ -117,7 +117,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			}
 		});
 		let sub2 = this.permissions$.subscribe((res: string[]) => {
-			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) this.f.producer?.patchValue(this.auth.getUser().Branch!);
+			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) this.f.branch?.patchValue(this.auth.getUser().Branch!);
 			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
 			if (!res.includes(this.uiState.privileges.ChProductionAccessAllUsers)) this.f.producer?.patchValue(this.auth.getUser().name!);
 		});
@@ -200,7 +200,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			branch: new FormControl(""),
 			ourRef: new FormControl(""),
 			clientName: new FormControl(""),
-			producer: new FormControl(""),
+			producer: new FormControl([]),
 			insurCompany: new FormControl(""),
 			classOfInsurance: new FormControl(""),
 			lineOfBusiness: new FormControl(""),
