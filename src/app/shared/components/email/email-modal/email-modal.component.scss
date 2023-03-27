@@ -1,3 +1,9 @@
+.ng-select .ng-select-container {
+	min-height: 28px !important;
+	height: fit-content !important;
+	max-height: fit-content !important;
+}
+
 .newEmailModalBody::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 	border-radius: 10px;

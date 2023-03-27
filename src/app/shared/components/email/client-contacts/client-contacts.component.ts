@@ -1,5 +1,5 @@
 import { HttpResponse } from "@angular/common/http";
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
@@ -11,6 +11,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IEmailClient, IEmailClientContact } from "src/app/shared/app/models/Email/email-utils";
 import { EmailService } from "src/app/shared/services/emails/email.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { EmailModalComponent } from "../email-modal/email-modal.component";
 
 @Component({
 	selector: "app-client-contacts",
@@ -18,11 +19,15 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 	styleUrls: ["./client-contacts.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class ClientContactsComponent implements OnInit, OnDestroy {
+export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 	clientInfo: FormControl = new FormControl();
 	clientIDFilter: FormControl = new FormControl();
 	clientNameFilter: FormControl = new FormControl();
 	clientContactFormGroup!: FormGroup<any>;
+
+	// ------------------------------------------------------------------------------------------------------------
+	@Input() emailModalInstance!: EmailModalComponent;
+	// ------------------------------------------------------------------------------------------------------------
 
 	uiState = {
 		filters: {
@@ -78,7 +83,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 		editType: "fullRow",
 		animateRows: true,
 		columnDefs: emailClientContactsCols,
-		context: { comp: this },
+		context: { comp: this.emailModalInstance },
 		suppressCsvExport: true,
 		defaultColDef: {
 			flex: 1,
@@ -91,9 +96,15 @@ export class ClientContactsComponent implements OnInit, OnDestroy {
 		onSortChanged: (e) => this.onSortContacts(e),
 	};
 
+	ngOnChanges(changes: SimpleChanges): void {
+		console.log("Form ngOnChanges", this.emailModalInstance);
+	}
+
 	constructor(private eventService: EventService, private emailService: EmailService, private message: MessagesService) {}
 
 	ngOnInit(): void {
+		console.log("Form ngOnInit", this.emailModalInstance);
+		this.contactsGridOpts.context = { comp: this.emailModalInstance };
 		this.clientInfo.disable();
 	}
 	//#region Clients / Prospects Grid
