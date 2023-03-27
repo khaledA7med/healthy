@@ -36,11 +36,10 @@ export class ClientsGroupsService {
 			}
 		);
 	}
-	deleteGroup(id: number): Observable<HttpResponse<IBaseResponse<any>>> {
-		console.log(id);
+	deleteGroup(id: number, groupName: string): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.get(this.env + ApiRoutes.ClientsGroups.delete + `?id=${id}`, {
 			observe: "response",
-			params: { id },
+			params: { id, groupName },
 		});
 	}
 	getGroupClients(groupName: string): Observable<HttpResponse<IBaseResponse<IClient[]>>> {

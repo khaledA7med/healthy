@@ -16,10 +16,10 @@ import { UserAccountsManagementComponent } from "./user-accounts-management.comp
 					<i class="ri-more-2-fill"></i>
 				</button>
 				<div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
-					<button ngbDropdownItem (click)="Enable(adminStatus.Active)" class="btn btn-sm">
+					<button ngbDropdownItem (click)="Enable(adminStatus.Active)" class="btn btn-sm" *ngIf="params.data?.status === 'Disable'">
 						{{ adminStatus.Active }}
 					</button>
-					<button ngbDropdownItem (click)="Disable(adminStatus.Disable)" class="btn btn-sm">
+					<button ngbDropdownItem (click)="Disable(adminStatus.Disable)" class="btn btn-sm" *ngIf="params.data?.status === 'Active'">
 						{{ adminStatus.Disable }}
 					</button>
 					<button ngbDropdownItem (click)="ResetPassword()" class="btn btn-sm">Reset Password</button>
@@ -53,7 +53,7 @@ import { UserAccountsManagementComponent } from "./user-accounts-management.comp
 	],
 })
 export class UserAccountsManagementControlsComponent {
-	private params!: ICellRendererParams;
+	public params!: ICellRendererParams;
 	private comp!: UserAccountsManagementComponent;
 
 	route: string = AppRoutes.Production.details;

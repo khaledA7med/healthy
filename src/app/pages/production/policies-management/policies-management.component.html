@@ -47,12 +47,25 @@
             <form class="row justify-content-center" [formGroup]="filterForm">
                 <!-- Policy Status -->
                 <div class="col-12 mb-3">
-                    <label for="policyStatus" class="form-label">Policy Status:</label>
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="policyStatus" class="form-label">Policy Status:</label>
+                        <div>
+                            <label for="checkall1" class="mx-2">Select All</label>
+                            <input type="checkbox" id="checkall1" [formControl]="allStatusControl"
+                                (change)="checkAllToggler(allStatusControl.value!,'policyStatus')">
+                        </div>
+                    </div>
+
                     <ng-select [items]="(lookupData | async)?.PolicyStatus?.content!"
-                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        [loading]="lookupData ? false : true" [clearable]="false" [searchable]="true" bindLabel="name"
                         [closeOnSelect]="false" [hideSelected]="true" [multiple]="true" bindValue="name"
-                        id="policyStatus" formControlName="status">
+                        id="policyStatus" formControlName="status"
+                        [ngClass]="{'is-submitted': (f.status?.touched || uiState.submitted) && f.status?.invalid}">
                     </ng-select>
+                    <span class="invalid-feedback fw-bold mt-0"
+                        *ngIf="(f.status?.touched || uiState.submitted) && f.status?.invalid">Required</span>
                 </div>
                 <!-- Branch -->
                 <div class="col-12 mb-3">

@@ -10,7 +10,6 @@ export const CustomerServiceGuard = (permissions: string[]): Observable<boolean 
 	const router = inject(Router);
 	return permission.hasCustomerPrivilege(permissions).pipe(
 		map((hasAccess: boolean) => {
-			console.log(hasAccess);
 			if (!hasAccess) router.navigate([AppRoutes.Error.notAuth]);
 			return hasAccess;
 		})
@@ -22,7 +21,6 @@ export const CustomerServiceFormGuard = (permissions: string[]): Observable<bool
 	const router = inject(Router);
 	return permission.hasCustomerPrivilege(permissions).pipe(
 		map((hasAccess: boolean) => {
-			console.log(hasAccess);
 			if (hasAccess) router.navigate([AppRoutes.Error.notAuth]);
 			return !hasAccess;
 		})

@@ -29,6 +29,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	uiState = {
 		sno: "",
 		policyDetails: {} as IPolicyPreview,
+		loadedData: false,
 		updatedState: false,
 		documentList: [],
 		privileges: ProductionPermissions,
@@ -58,13 +59,17 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 
 	getPolicyDetails(id: string): void {
 		let sub = this.productinService.getPolicyById(id).subscribe({
-			next: (res: HttpResponse<IBaseResponse<IPolicyPreview>>) => {
-				this.uiState.policyDetails = res.body?.data!;
-				this.uiState.policyDetails.issueDate = String(this.uiState.policyDetails.issueDate) == "-" ? undefined : this.uiState.policyDetails.issueDate;
-				this.uiState.policyDetails.periodFrom =
-					String(this.uiState.policyDetails.periodFrom) == "-" ? undefined : this.uiState.policyDetails.periodFrom;
-				this.uiState.policyDetails.periodTo = String(this.uiState.policyDetails.periodTo) == "-" ? undefined : this.uiState.policyDetails.periodTo;
-				this.customizeClientDocuments();
+			next: (res: IBaseResponse<IPolicyPreview>) => {
+				if (res.status) {
+					this.uiState.loadedData = true;
+					this.uiState.policyDetails = res.data!;
+					this.uiState.policyDetails.issueDate =
+						String(this.uiState.policyDetails.issueDate) == "-" ? undefined : this.uiState.policyDetails.issueDate;
+					this.uiState.policyDetails.periodFrom =
+						String(this.uiState.policyDetails.periodFrom) == "-" ? undefined : this.uiState.policyDetails.periodFrom;
+					this.uiState.policyDetails.periodTo = String(this.uiState.policyDetails.periodTo) == "-" ? undefined : this.uiState.policyDetails.periodTo;
+					this.customizeClientDocuments();
+				} else this.message.popup("Oops!", res.message!, "error");
 			},
 		});
 		this.subscribes.push(sub);
@@ -122,9 +127,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 							this.uiState.policyDetails.documentLists?.splice(index, 1);
 						} else this.message.popup("Sorry", res.body?.message!, "warning");
 					},
-					error: (error) => {
-						this.message.popup("Oops!", error.message, "error");
-					},
 				});
 				this.subscribes.push(sub);
 			}
@@ -151,9 +153,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 				a.click();
 				document.body.removeChild(a);
 			},
-			error: (error) => {
-				this.message.popup("Oops!", error.message, "error");
-			},
 		});
 		this.subscribes.push(sub);
 	}
@@ -171,7 +170,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 			fees: this.uiState.policyDetails.fees,
 			totalPremium: this.uiState.policyDetails.totalPremium,
 			compComm: this.uiState.policyDetails.compComm,
-			compCommVat: this.uiState.policyDetails.compCommVat,
+			compCommVat: this.uiState.policyDetails.compCommVAT,
 			producerComm: this.uiState.policyDetails.producerComm,
 			mgrAprovedUser: this.uiState.policyDetails.mgrAprovedUser,
 			prodRejectInfo: this.uiState.policyDetails.prodRejectInfo,
@@ -184,7 +183,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 			periodTo: this.uiState.policyDetails.periodTo,
 			producersCommissionsList: this.uiState.policyDetails.producersCommissionsList,
 		};
-
 		if (newStatus === "Approve") {
 			this.message.confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning").then((result: any) => {
 				if (result.isConfirmed) {

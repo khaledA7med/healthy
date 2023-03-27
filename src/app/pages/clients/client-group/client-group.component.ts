@@ -98,8 +98,6 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 			});
 		} else if (params.column.getColId() == "groupName") {
 			this.selectedGroup = params.data;
-		} else {
-			console.log(params);
 		}
 	}
 
