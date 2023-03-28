@@ -15,9 +15,9 @@ import { ChangeEvent } from "@ckeditor/ckeditor5-angular/ckeditor.component";
 export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 	emailModalInstance = this;
 	uiState = {
-		toList: [],
-		ccList: [],
-		bccList: [],
+		toList: [] as string[],
+		ccList: [] as string[],
+		bccList: [] as string[],
 		isCc: true,
 		isBcc: true,
 		modalBody: {
@@ -29,7 +29,7 @@ export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 	editorData = ClassicEditor;
 	subject = [{ name: "hight" }, { name: "medium" }, { name: "low" }];
 
-	mailFormGroup!: FormGroup<any>;
+	mailFormGroup!: FormGroup<IEmailResponse>;
 
 	documentsToUpload: File[] = [];
 	docs: any[] = [];
@@ -64,19 +64,35 @@ export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 		this.uiState.isBcc = !this.uiState.isBcc;
 	}
 
-	patchToList(e: any) {
-		console.log(e);
+	patchToList(e: string) {
+		if (this.uiState.toList.includes(e)) {
+			this.uiState.toList = this.uiState.toList.filter((item: string) => item !== e);
+		} else this.uiState.toList.push(e);
+		this.f.MailToList?.patchValue(this.uiState.toList);
+	}
+	patchCCList(e: string) {
+		if (this.uiState.ccList.includes(e)) {
+			this.uiState.ccList = this.uiState.ccList.filter((item: string) => item !== e);
+		} else this.uiState.ccList.push(e);
+		this.f.EmailCC?.patchValue(this.uiState.ccList);
+	}
+	patchBCCList(e: string) {
+		if (this.uiState.bccList.includes(e)) {
+			this.uiState.bccList = this.uiState.bccList.filter((item: string) => item !== e);
+		} else this.uiState.bccList.push(e);
+		this.f.EmailBCC?.patchValue(this.uiState.bccList);
 	}
 
 	//#region Mail form
 	initMailForm() {
-		this.mailFormGroup = new FormGroup({
-			to: new FormControl([]),
-			cc: new FormControl([]),
-			bcc: new FormControl([]),
-			subject: new FormControl(null),
-			body: new FormControl(null),
-			document: new FormControl(null),
+		this.mailFormGroup = new FormGroup<IEmailResponse>({
+			MailToList: new FormControl([]),
+			EmailCC: new FormControl([]),
+			EmailBCC: new FormControl([]),
+			Subject: new FormControl(null),
+			Body: new FormControl(null),
+			Attachments: new FormControl(null),
+			Priority: new FormControl(""),
 		});
 	}
 	get f() {

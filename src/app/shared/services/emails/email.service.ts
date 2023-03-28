@@ -4,7 +4,8 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { IEmailClient, IEmailClientContact, IClientContact } from "../../app/models/Email/email-utils";
+import { IEmailClient, IEmailClientContact, IClientContact, ICompanyContact } from "../../app/models/Email/email-utils";
+import { Caching, IGenericResponseType } from "src/app/core/models/masterTableModels";
 
 @Injectable({
 	providedIn: "root",
@@ -20,6 +21,10 @@ export class EmailService {
 		});
 	}
 
+	getAllCompanies(): Observable<IBaseResponse<Caching<IGenericResponseType[]>>> {
+		return this.http.get<IBaseResponse<Caching<IGenericResponseType[]>>>(this.env + ApiRoutes.MasterTable.MasterTables.insuranceComapnies);
+	}
+
 	getAllClientContacts(clientId: number): Observable<HttpResponse<IBaseResponse<IEmailClientContact[]>>> {
 		return this.http.post<IBaseResponse<IEmailClientContact[]>>(
 			this.env + ApiRoutes.Clients.clientContacts,
@@ -31,13 +36,22 @@ export class EmailService {
 		);
 	}
 
-	saveClientContacts(contactData: IClientContact): Observable<HttpResponse<IBaseResponse<any>>> {
-		return this.http.post<IBaseResponse<any>>(
-			this.env + ApiRoutes.Emails.createClientContact,
-			{ ...contactData },
+	getAllCompanyContacts(CompanyID: number): Observable<HttpResponse<IBaseResponse<IEmailClientContact[]>>> {
+		return this.http.post<IBaseResponse<IEmailClientContact[]>>(
+			this.env + ApiRoutes.MasterTable.Emails.insuranceCompaniesContact,
+			{},
 			{
+				params: { CompanyID },
 				observe: "response",
 			}
 		);
+	}
+
+	saveClientContacts(contactData: IClientContact): Observable<IBaseResponse<any>> {
+		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Emails.createClientContact, { ...contactData });
+	}
+
+	saveCompnayContacts(contactData: ICompanyContact): Observable<IBaseResponse<any>> {
+		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Emails.createCompanyContact, { ...contactData });
 	}
 }

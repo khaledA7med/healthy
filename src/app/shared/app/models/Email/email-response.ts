@@ -1,14 +1,11 @@
+import { FormControl } from "@angular/forms";
 import { IDocumentList } from "./../App/IDocument";
 export interface IEmailResponse {
-  mailTo?: string;
-  subject?: string;
-  body?: string;
-  attachments: IDocumentList[];
-  mailToList?: [];
-  emailCC?: [];
-  emailBCC?: [];
-  mailListString?: string;
-  emailCCString?: string;
-  emailBCCString?: string;
-  priority?: string;
+	MailToList?: FormControl<string[] | null>;
+	EmailCC?: FormControl<string[] | null>;
+	EmailBCC?: FormControl<string[] | null>;
+	Subject?: FormControl<string | null>;
+	Body?: FormControl<string | null>;
+	Attachments?: FormControl<IDocumentList[] | null>;
+	Priority?: FormControl<string | null>;
 }

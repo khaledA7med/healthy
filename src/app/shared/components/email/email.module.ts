@@ -7,11 +7,12 @@ import { NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "../../shared.module";
 import { AgGridModule } from "ag-grid-angular";
 import { ClientContactsComponent } from "./client-contacts/client-contacts.component";
-import { AddClientFormComponent } from "./add-client-form/add-client-form.component";
+import { AddContactFormComponent } from "./add-client-form/add-contact-form.component";
 import { EmailContactListControlsComponent } from "./client-contacts/client-list-controls.component";
+import { CompanyContactsComponent } from "./company-contacts/company-contacts.component";
 
 @NgModule({
-	declarations: [EmailModalComponent, ClientContactsComponent, AddClientFormComponent, EmailContactListControlsComponent],
+	declarations: [EmailModalComponent, ClientContactsComponent, AddContactFormComponent, EmailContactListControlsComponent, CompanyContactsComponent],
 	imports: [CommonModule, SharedModule, CKEditorModule, DropzoneModule, NgbCollapseModule, AgGridModule],
 	exports: [EmailModalComponent],
 })
