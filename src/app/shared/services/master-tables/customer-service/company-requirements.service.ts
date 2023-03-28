@@ -30,8 +30,8 @@ export class CompanyRequirementsService {
 
   saveCompanyRequirements(
     data: IAddCompanyRequirementsData
-  ): Observable<IBaseResponse<number>> {
-    return this.http.post<IBaseResponse<number>>(
+  ): Observable<IBaseResponse<any>> {
+    return this.http.post<IBaseResponse<any>>(
       this.env +
         ApiRoutes.masterTables.customerService.customerServiceRequirements.save,
       { ...data }

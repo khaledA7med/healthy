@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -84,6 +84,8 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -112,7 +114,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
                 this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else {
-              this.uiState.gridReady = true;
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
             }
           }

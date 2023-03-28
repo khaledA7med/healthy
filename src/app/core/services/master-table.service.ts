@@ -114,6 +114,16 @@ export class MasterTableService {
           name: BaseData.Regions,
         },
       ],
+      InsuranceWorkshopDetails: [
+        {
+          route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
+          name: BaseData.InsuranceCompanies,
+        },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.cities,
+          name: BaseData.Cities,
+        },
+      ],
       ClaimsGeneralItems: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
@@ -720,6 +730,9 @@ export class MasterTableService {
         break;
       case MODULES.Hospitals:
         this.dataSrc = data.Hospitals;
+        break;
+      case MODULES.InsuranceWorkshopDetails:
+        this.dataSrc = data.InsuranceWorkshopDetails;
         break;
       case MODULES.ClaimsGeneralItems:
         this.dataSrc = data.ClaimsGeneralItems;

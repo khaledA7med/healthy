@@ -73,6 +73,8 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -95,7 +97,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
                 this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else {
-              this.uiState.gridReady = true;
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
             }
           }
@@ -135,6 +137,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initInsuranceWorkshopDetailsForm();
     this.getLookupData();
+    this.f.insuranceCompany?.patchValue(this.uiState.insuranceCompany);
   }
 
   getLookupData() {
@@ -278,7 +281,11 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
   }
 
   resetInsuranceWorkshopDetailsForm() {
-    this.InsuranceWorkshopDetailsForm.reset();
+    this.f.workshopName?.reset();
+    this.f.telephone?.reset();
+    this.f.email?.reset();
+    this.f.address?.reset();
+    this.f.city?.reset();
     this.f.insuranceCompany?.enable();
     this.f.city?.enable();
   }

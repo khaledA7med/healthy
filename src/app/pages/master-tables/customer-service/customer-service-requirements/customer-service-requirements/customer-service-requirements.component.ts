@@ -125,7 +125,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else {
-            this.uiState.gridReady = true;
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
           }
         }
@@ -206,7 +206,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     this.gridApi.setDatasource(this.dataSource);
   }
 
-  submitCompanyRequirementsData(form: FormGroup) {
+  submitCompanyRequirementsData(form: FormGroup<IAddCompanyRequirements>) {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
@@ -215,7 +215,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(
       data
-    ).subscribe((res: IBaseResponse<number>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       if (res?.status) {
         this.eventService.broadcast(reserved.isLoading, false);
         this.message.toast(res.message!, "success");

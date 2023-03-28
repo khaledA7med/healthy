@@ -5,7 +5,6 @@ import { environment } from "src/environments/environment";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import {
-  IPolicyIssuanceRequirements,
   IPolicyIssuanceRequirementsData,
   IPolicyIssuanceRequirementsFilter,
 } from "src/app/shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements";

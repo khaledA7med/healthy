@@ -73,6 +73,8 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -89,7 +91,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
           if (this.uiState.list.length === 0) this.gridApi.showNoRowsOverlay();
           else this.gridApi.hideOverlay();
         } else {
-          this.uiState.gridReady = true;
+          this.message.popup("Oops!", res.body?.message!, "warning");
           this.gridApi.hideOverlay();
         }
       });

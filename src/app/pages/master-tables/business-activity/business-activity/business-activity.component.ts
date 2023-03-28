@@ -1,7 +1,6 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -68,6 +67,8 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -91,9 +92,13 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
             params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.toast(res.body!.message!, "error");
             this.gridApi.hideOverlay();
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);

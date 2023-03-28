@@ -112,7 +112,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else {
-            this.uiState.gridReady = true;
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
           }
         }

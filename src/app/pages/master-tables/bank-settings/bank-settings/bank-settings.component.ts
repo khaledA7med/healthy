@@ -66,6 +66,8 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -86,10 +88,16 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       this.gridApi.showLoadingOverlay();
       let sub = this.BankSettingsService.getBankSettings().subscribe(
         (res: HttpResponse<IBaseResponse<IBankSettings[]>>) => {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
+            this.gridApi.hideOverlay();
+          }
         }
       );
       this.subscribes.push(sub);

@@ -1,5 +1,5 @@
 import { IPolicyIssuanceRequirementsFilter } from "./../../../../../../shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -119,7 +119,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
                 this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else {
-              this.uiState.gridReady = true;
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
             }
           }
