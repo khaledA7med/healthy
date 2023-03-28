@@ -164,7 +164,7 @@
                 </div>
                 <!-- createdBy -->
                 <div class="col-12 mb-3">
-                    <label for="created" class="form-label">created By</label>
+                    <label for="created" class="form-label">Created By</label>
                     <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="created"
                         [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChProductionAccessAllUsers)!"

@@ -1,0 +1,60 @@
+<!-- Client Info -->
+<div class="lables">
+    <label for="clientInfo">Client Info</label>
+</div>
+<div class="input-group input-group-sm">
+    <input type="text" id="clientInfo" name="clientInfo" readonly aria-label="Client Info"
+        class="form-control form-control-sm" placeholder="Client Details" [formControl]="clientInfo">
+    <button class="btn btn-info btn-sm d-flex align-items-center" type="button" id="searchProspectClientCollapseBtn"
+        (click)="uiState.showClientSearch = false">
+        <i class="ri-user-search-fill mx-1"></i>
+        Search
+    </button>
+</div>
+
+<div #collapse="ngbCollapse" [(ngbCollapse)]="uiState.showClientSearch">
+    <div class="row my-3">
+        <div class="col-lg-5">
+            <label for="prospectClientIDSearch">Client ID</label>
+            <input type="text" name="prospectClientIDSearch" class="form-control form-control-sm clientSearchInputs"
+                placeholder="Search By Client ID" id="prospectClientIDSearch" [formControl]="clientIDFilter">
+        </div>
+        <div class="col-lg-5">
+            <label for="prospectClientNameSearch">Client Name</label>
+            <input type="text" name="prospectClientNameSearch" class="form-control form-control-sm clientSearchInputs"
+                placeholder="Search By Client Name" id="prospectClientNameSearch" [formControl]="clientNameFilter">
+        </div>
+
+        <div class="col-lg-2 d-flex align-items-end">
+            <button type="button" class="btn btn-primary btn-sm d-flex justify-content-center w-100"
+                id="searchClientActionbtn" (click)="gridApi.setDatasource(dataSource)">
+                <i class="ri-search-line mx-1"></i> Search
+            </button>
+        </div>
+    </div>
+
+    <div class="ag-theme-alpine" appTableView [class]="uiState.clients.list.length > 0 ? '': 'd-none'">
+        <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="gridOpts">
+        </ag-grid-angular>
+    </div>
+</div>
+
+<div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showSelectContact" *ngIf="uiState.showSelectContact">
+    <div class="d-flex justify-content-end align-items-center my-3">
+        <button class="btn btn-soft-primary btn-sm d-flex align-items-center" id="addNewClientContactBtn" type="button"
+            (click)="uiState.showAddContact = true;uiState.showSelectContact = false">
+            <i class="ri-add-line mx-1"></i>
+            Add New Contact
+        </button>
+    </div>
+    <div class="ag-theme-alpine" appTableView>
+        <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="contactsGridOpts">
+        </ag-grid-angular>
+    </div>
+</div>
+
+
+<div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showAddContact">
+    <app-add-client-form [clientID]="clientIDFilter.value"
+        (contactAdded)="contactAddedSuccess($event)"></app-add-client-form>
+</div>

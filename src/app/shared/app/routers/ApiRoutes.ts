@@ -10,13 +10,23 @@ export const ApiRoutes = {
     allTasks: "/Activity/Activities/AllTasks",
     moduleClients: "/Activity/Activities/ModuleClients",
     searchModule: "/Activity/Activities/SearchModule",
-    addTask: "/Activity/Activities/AddTask",
+    addTask: "/Activity/Activities/saveTask",
+  },
+  Emails: {
+    allActiveClients: LookUpTables + "ActiveClient",
+    createClientContact: "/ClientRegistry/Clients/CreateClientContact",
   },
   MasterTable: {
     Activities: {
       producers: LookUpTables + BaseData.Producers,
       tasksTypes: LookUpTables + BaseData.TasksTypes,
       IBSModules: LookUpTables + BaseData.IBSModules,
+    },
+    Emails: {
+      branch: LookUpTables + BaseData.Branch,
+      contactDepartment: LookUpTables + BaseData.ContactDepartment,
+      contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
+      positions: LookUpTables + BaseData.Positions,
     },
     MasterTables: {
       insurClasses: LookUpTables + BaseData.InsurClasses,
@@ -453,6 +463,7 @@ export const ApiRoutes = {
     save: "/ClientRegistry/Clients/Save",
     edit: "/ClientRegistry/Clients/Edit",
     changeStatus: "/ClientRegistry/Clients/ChangeStatus",
+    clientContacts: "/ClientRegistry/Clients/ClientContacts",
     deleteDocument: "/ClientRegistry/Clients/DeleteFile",
     downloadDocument: "/ClientRegistry/Clients/DownloadFile",
     report: "/ClientRegistry/Clients/Report",

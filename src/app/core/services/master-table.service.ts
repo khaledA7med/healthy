@@ -32,6 +32,24 @@ export class MasterTableService {
           name: BaseData.IBSModules,
         },
       ],
+      Emails: [
+        {
+          route: ApiRoutes.MasterTable.Emails.branch,
+          name: BaseData.Branch,
+        },
+        {
+          route: ApiRoutes.MasterTable.Emails.contactDepartment,
+          name: BaseData.ContactDepartment,
+        },
+        {
+          route: ApiRoutes.MasterTable.Emails.contactLineOfBusiness,
+          name: BaseData.ContactLineOfBusiness,
+        },
+        {
+          route: ApiRoutes.MasterTable.Emails.positions,
+          name: BaseData.Positions,
+        },
+      ],
       LineOfBusiness: [
         {
           route: ApiRoutes.MasterTable.MasterTables.insurClasses,
@@ -720,6 +738,9 @@ export class MasterTableService {
         break;
       case MODULES.Activities:
         this.dataSrc = data.Activities;
+        break;
+      case MODULES.Emails:
+        this.dataSrc = data.Emails;
         break;
       default:
         break;

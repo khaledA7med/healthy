@@ -19,11 +19,11 @@ import { ActivitiesService } from "../../services/activities/activities.service"
 import { MessagesService } from "../../services/messages.service";
 
 @Component({
-  selector: "app-new-task",
-  templateUrl: "./new-task.component.html",
-  styleUrls: ["./new-task.component.scss"],
+  selector: "app-task-preview",
+  templateUrl: "./task-preview.component.html",
+  styleUrls: ["./task-preview.component.scss"],
 })
-export class NewTaskComponent implements OnInit, OnDestroy {
+export class TaskPreviewComponent implements OnInit, OnDestroy {
   uiState = {
     editMode: false as boolean,
     submitted: false as boolean,
@@ -88,7 +88,7 @@ export class NewTaskComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.Activities);
-    if (this.task?.sNo) this.fillTaskData();
+    // if (this.task?.sNo) this.fillTaskData();
     let sub = this.formData.subscribe(
       (res) =>
         (this.uiState.lists.assignTo = res.Producers?.content.filter(
@@ -105,6 +105,8 @@ export class NewTaskComponent implements OnInit, OnDestroy {
       this.f.isAllDay?.patchValue(true);
     }
   }
+
+  taskPreview() {}
 
   fillTaskData() {
     this.uiState.editMode = true;

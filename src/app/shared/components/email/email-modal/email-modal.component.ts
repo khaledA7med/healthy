@@ -1,7 +1,7 @@
 import { IEmailResponse } from "src/app/shared/app/models/Email/email-response";
 import { FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import * as ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ChangeEvent } from "@ckeditor/ckeditor5-angular/ckeditor.component";
@@ -10,8 +10,9 @@ import { ChangeEvent } from "@ckeditor/ckeditor5-angular/ckeditor.component";
 	selector: "app-email-modal",
 	templateUrl: "./email-modal.component.html",
 	styleUrls: ["./email-modal.component.scss"],
+	encapsulation: ViewEncapsulation.None,
 })
-export class EmailModalComponent implements OnInit, OnChanges {
+export class EmailModalComponent implements OnInit, OnChanges, OnDestroy {
 	uiState = {
 		isCc: true,
 		isBcc: true,
@@ -24,17 +25,22 @@ export class EmailModalComponent implements OnInit, OnChanges {
 	editorData = ClassicEditor;
 	subject = [{ name: "hight" }, { name: "medium" }, { name: "low" }];
 
-	formGroup!: FormGroup;
+	mailFormGroup!: FormGroup<any>;
+
 	documentsToUpload: File[] = [];
 	docs: any[] = [];
 
 	@Input() buttons: boolean = false;
 	@Input() modalData!: IEmailResponse;
 	@ViewChild("emailContent") emailContent!: ElementRef;
+
 	constructor(private modalService: NgbModal) {}
+	ngOnDestroy(): void {
+		throw new Error("Method not implemented.");
+	}
 
 	ngOnInit(): void {
-		this.initForm();
+		this.initMailForm();
 	}
 	openModal() {
 		this.modalService.open(this.emailContent, {
@@ -53,9 +59,9 @@ export class EmailModalComponent implements OnInit, OnChanges {
 		this.uiState.isBcc = !this.uiState.isBcc;
 	}
 
-	//#region form
-	initForm() {
-		this.formGroup = new FormGroup({
+	//#region Mail form
+	initMailForm() {
+		this.mailFormGroup = new FormGroup({
 			to: new FormControl(null),
 			cc: new FormControl(null),
 			bcc: new FormControl(null),
@@ -65,7 +71,7 @@ export class EmailModalComponent implements OnInit, OnChanges {
 		});
 	}
 	get f() {
-		return this.formGroup.controls;
+		return this.mailFormGroup.controls;
 	}
 	ngOnChanges(changes: SimpleChanges): void {
 		if (this.modalData) this.patchValues(this.modalData);

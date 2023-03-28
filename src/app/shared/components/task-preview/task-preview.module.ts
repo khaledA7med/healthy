@@ -1,18 +1,18 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { NewTaskComponent } from "./new-task.component";
 import { SharedModule } from "../../shared.module";
 import { RangePickerModule } from "../range-picker/range-picker.module";
 import { FlatpickrModule } from "angularx-flatpickr";
+import { TaskPreviewComponent } from "./task-preview.component";
 
 @NgModule({
-  declarations: [NewTaskComponent],
+  declarations: [TaskPreviewComponent],
   imports: [
     CommonModule,
     SharedModule,
     RangePickerModule,
     FlatpickrModule.forRoot(),
   ],
-  exports: [NewTaskComponent],
+  exports: [TaskPreviewComponent],
 })
-export class NewTaskModule {}
+export class TaskPreviewModule {}

@@ -484,21 +484,15 @@ export class CustomerServiceFormsComponent implements OnInit {
 		formData.append("pending", "false");
 		formData.append("docSNo", "0");
 
-		let sub = this.customerService.saveRequest(formData).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				if (res.body?.status) {
-					this.message.toast(res.body.message!, "success");
-					if (this.uiState.editId) this.router.navigate([AppRoutes.CustomerService.base]);
-					this.resetForm();
-				} else this.message.popup("Sorry!", res.body?.message!, "warning");
-				// Hide Loader
-				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err) => {
-				this.message.popup("Sorry!", err.message!, "warning");
-				this.eventService.broadcast(reserved.isLoading, false);
-			}
-		);
+		let sub = this.customerService.saveRequest(formData).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			if (res.body?.status) {
+				this.message.toast(res.body.message!, "success");
+				if (this.uiState.editId) this.router.navigate([AppRoutes.CustomerService.base]);
+				this.resetForm();
+			} else this.message.popup("Sorry!", res.body?.message!, "warning");
+			// Hide Loader
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 	}
 

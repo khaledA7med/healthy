@@ -6,7 +6,7 @@ export interface IProductionFiltersForm {
 	branch?: FormControl<string | null>;
 	ourRef?: FormControl<string | null>;
 	clientName?: FormControl<string | null>;
-	producer?: FormControl<string | null>;
+	producer?: FormControl<string[] | string | null>;
 	insurCompany?: FormControl<string | null>;
 	classOfInsurance?: FormControl<string | null>;
 	lineOfBusiness?: FormControl<string | null>;
@@ -36,7 +36,7 @@ export interface IProductionFilters extends IBaseFilters {
 	branch?: string | null;
 	ourRef?: string | null;
 	clientName?: string | null;
-	producer?: string | null;
+	producer?: string[] | string | null;
 	insurCompany?: string | null;
 	classOfInsurance?: string | null;
 	lineOfBusiness?: string | null;

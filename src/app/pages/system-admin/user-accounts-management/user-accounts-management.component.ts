@@ -11,7 +11,6 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import AppUtils from "src/app/shared/app/util";
 import { ISystemAdminFilters, ISystemAdminFiltersForm } from "src/app/shared/app/models/SystemAdmin/isystem-admin-filters";
 import { ISystemAdmin } from "src/app/shared/app/models/SystemAdmin/isystem-admin";
 import { systemAdminCols } from "src/app/shared/app/grid/systemAdminCols";
@@ -26,7 +25,6 @@ import { reserved } from "src/app/core/models/reservedWord";
 	selector: "app-user-accounts-management",
 	templateUrl: "./user-accounts-management.component.html",
 	styleUrls: ["./user-accounts-management.component.scss"],
-	providers: [AppUtils],
 	encapsulation: ViewEncapsulation.None,
 })
 export class UserAccountsManagementComponent implements OnInit, OnDestroy {
