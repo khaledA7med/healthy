@@ -211,6 +211,9 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     const data: IAddCompanyRequirementsData = {
+      sno: this.uiState.editCompanyRequirementsMode
+        ? this.uiState.editCompanyRequirementsData.sno
+        : 0,
       ...form.getRawValue(),
     };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(
