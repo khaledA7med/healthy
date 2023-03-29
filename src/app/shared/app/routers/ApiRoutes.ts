@@ -16,6 +16,7 @@ export const ApiRoutes = {
 		allActiveClients: LookUpTables + "ActiveClient",
 		createClientContact: "/ClientRegistry/Clients/CreateClientContact",
 		createCompanyContact: "/MasterTables/InsuranceCompanies/CreateCompanyContact",
+		sendEmail: "/Emails/Send",
 	},
 	MasterTable: {
 		Activities: {
@@ -29,6 +30,7 @@ export const ApiRoutes = {
 			contactLineOfBusiness: LookUpTables + BaseData.ContactLineOfBusiness,
 			positions: LookUpTables + BaseData.Positions,
 			insuranceCompaniesContact: LookUpTables + "InsuranceCompaniesContact",
+			emailsPriorityList: LookUpTables + "EmailsPriorityList",
 		},
 		MasterTables: {
 			insurClasses: LookUpTables + BaseData.InsurClasses,

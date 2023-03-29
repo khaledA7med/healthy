@@ -82,18 +82,12 @@ export class CustomerServiceFormsComponent implements OnInit {
 	}
 
 	getRequest(id: string): void {
-		this.customerService.getRequest(id).subscribe(
-			(res: HttpResponse<IBaseResponse<ICustomerService>>) => {
-				if (res.body?.status) {
-					this.uiState.editRequestData = res.body.data!;
-					this.setRequestDataToForm(res.body?.data!);
-				} else this.message.popup("Oops!", res.body?.message!, "warning");
-			},
-			(err) => {
-				this.message.popup("Oops!", err?.message, "error");
-				this.eventService.broadcast(reserved.isLoading, false);
-			}
-		);
+		this.customerService.getRequest(id).subscribe((res: HttpResponse<IBaseResponse<ICustomerService>>) => {
+			if (res.body?.status) {
+				this.uiState.editRequestData = res.body.data!;
+				this.setRequestDataToForm(res.body?.data!);
+			} else this.message.popup("Oops!", res.body?.message!, "warning");
+		});
 	}
 
 	setRequestDataToForm(data: ICustomerService) {

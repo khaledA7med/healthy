@@ -42,32 +42,50 @@
               </div>
             </div>
             <ng-select [addTag]="true" [items]="uiState.toList" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
-              formControlName="MailToList">
+              placeholder="To" formControlName="MailToList" [ngClass]="{
+                    'is-submitted': (f.MailToList?.touched || uiState.submitted) && f.MailToList?.invalid
+                  }">
             </ng-select>
+            <span class="invalid-feedback d-inline-block fw-bold" *ngIf="
+                    (f.MailToList?.touched ||  uiState.submitted) && f.MailToList?.invalid
+                  ">
+              Required
+            </span>
           </div>
           <div class="col-12 mb-2 tra" *ngIf="uiState.isCc">
             <label for="cc" class="form-label"> Cc: </label>
             <ng-select [items]="uiState.ccList" [addTag]="true" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
-              formControlName="EmailCC">
+              placeholder="CC" formControlName="EmailCC">
             </ng-select>
           </div>
           <div class="col-12 mb-3" *ngIf="uiState.isBcc">
             <label for="bcc" class="form-label"> Bcc: </label>
             <ng-select [items]="uiState.bccList" [addTag]="true" [multiple]="true" bindLabel="name" [selectOnTab]="true"
-              [isOpen]="false" formControlName="EmailBCC">
+              placeholder="BCC" [isOpen]="false" formControlName="EmailBCC">
             </ng-select>
           </div>
           <div class="col-12 mb-3">
             <div class="input-group input-group-sm">
               <input id="sub" type="text" class="form-control form-control-sm" placeholder="Subject"
-                formControlName="Subject" />
-              <ng-select [items]="subject" bindLabel="name" bindValue="name" [clearable]="true"
-                formControlName="Priority" class="col-2">
+                formControlName="Subject" [ngClass]="{
+                    'is-invalid': (f.Subject?.touched || uiState.submitted) && f.Subject?.invalid
+                  }" />
+              <span class="invalid-feedback d-inline-block fw-bold"
+                *ngIf="(f.Subject?.touched ||  uiState.submitted) && f.Subject?.invalid">
+                Required
+              </span>
+              <ng-select [items]="uiState.priorityList" bindLabel="name" bindValue="name" placeholder="Priority"
+                [clearable]="false" formControlName="Priority" class="col-2">
               </ng-select>
             </div>
           </div>
           <div class="col-12 mb-2">
-            <ckeditor [editor]="editorData" (change)="getEditorData($event)" formControlName="Body"></ckeditor>
+            <ckeditor [editor]="editorData" (change)="getEditorData($event)" formControlName="Body">
+            </ckeditor>
+            <span class="invalid-feedback d-inline-block fw-bold"
+              *ngIf="(f.Body?.touched ||  uiState.submitted) && f.Body?.invalid">
+              Required
+            </span>
           </div>
 
           <app-dropzone class="p-0" (files)="documentsList($event)" [UploadedFiles]="docs"></app-dropzone>
@@ -111,6 +129,7 @@
     <button type="button" class="btn btn-sm btn-danger" (click)="modal.close('Close click')">
       Discard
     </button>
-    <button type="submit" class="btn btn-sm btn-success" *ngIf="uiState.modalBody.email">Send</button>
+    <button type="submit" class="btn btn-sm btn-success" *ngIf="uiState.modalBody.email"
+      (click)="sendEmail()">Send</button>
   </div>
 </ng-template>

@@ -159,21 +159,15 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		};
 		// Display Submitting Loader
 		this.eventService.broadcast(reserved.isLoading, true);
-		let sub = this.ClientsService.viewReport(data).subscribe(
-			(res: HttpResponse<IBaseResponse<any>>) => {
-				if (res.body?.status) {
-					this.eventService.broadcast(reserved.isLoading, false);
-					this.message.toast(res.body.message!, "success");
-					this.openReportsViewer(res.body.data);
-				} else this.message.popup("Sorry!", res.body?.message!, "warning");
-				// Hide Loader
+		let sub = this.ClientsService.viewReport(data).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			if (res.body?.status) {
 				this.eventService.broadcast(reserved.isLoading, false);
-			},
-			(err) => {
-				this.eventService.broadcast(reserved.isLoading, false);
-				this.message.popup("Sorry!", err.message!, "error");
-			}
-		);
+				this.message.toast(res.body.message!, "success");
+				this.openReportsViewer(res.body.data);
+			} else this.message.popup("Sorry!", res.body?.message!, "warning");
+			// Hide Loader
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
 		this.subscribes.push(sub);
 	}
 

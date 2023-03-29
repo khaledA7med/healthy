@@ -145,14 +145,9 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
 	//#region insurance Details
 	getLineOfBusiness(className: string) {
-		let sub = this.masterService.getLineOfBusiness(className).subscribe(
-			(res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
-				this.lineOfBussArr = res.body?.data?.content!;
-			},
-			(err) => {
-				this.message.popup("Sorry!", err.message!, "warning");
-			}
-		);
+		let sub = this.masterService.getLineOfBusiness(className).subscribe((res: HttpResponse<IBaseResponse<Caching<IGenericResponseType[]>>>) => {
+			this.lineOfBussArr = res.body?.data?.content!;
+		});
 		this.subscribes.push(sub);
 	}
 
@@ -489,25 +484,19 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
 
 	//#region save Sales Lead
 	saveSalesLead(data: FormData): void {
-		let sub = this.businessDevService.saveSalesLead(data).subscribe(
-			(res: HttpResponse<IBaseResponse<number>>) => {
-				if (res.body?.status) {
-					this.message.toast(res.body.message!, "success");
-					if (this.uiState.editMode) {
-						this.router.navigate([AppRoutes.BusinessDevelopment.base]);
-					}
-					this.resetForm();
-					this.eventService.broadcast(reserved.isLoading, false);
-				} else {
-					this.eventService.broadcast(reserved.isLoading, false);
-					this.message.popup("Sorry!", res.body?.message!, "warning");
+		let sub = this.businessDevService.saveSalesLead(data).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
+			if (res.body?.status) {
+				this.message.toast(res.body.message!, "success");
+				if (this.uiState.editMode) {
+					this.router.navigate([AppRoutes.BusinessDevelopment.base]);
 				}
-			},
-			(err) => {
-				this.message.popup("Error", err.message, "error");
+				this.resetForm();
 				this.eventService.broadcast(reserved.isLoading, false);
+			} else {
+				this.eventService.broadcast(reserved.isLoading, false);
+				this.message.popup("Sorry!", res.body?.message!, "warning");
 			}
-		);
+		});
 		this.subscribes.push(sub);
 	}
 
