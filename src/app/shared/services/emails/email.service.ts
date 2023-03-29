@@ -15,6 +15,10 @@ export class EmailService {
 
 	constructor(private http: HttpClient) {}
 
+	getEmailsPriorityList(): Observable<IBaseResponse<Caching<IGenericResponseType[]>>> {
+		return this.http.get<IBaseResponse<Caching<IGenericResponseType[]>>>(this.env + ApiRoutes.MasterTable.Emails.emailsPriorityList);
+	}
+
 	getAllActiveClients(clientFilters: { sNo: number; fullName: string }): Observable<HttpResponse<IBaseResponse<IEmailClient[]>>> {
 		return this.http.post<IBaseResponse<IEmailClient[]>>(this.env + ApiRoutes.Emails.allActiveClients, clientFilters, {
 			observe: "response",
@@ -53,5 +57,9 @@ export class EmailService {
 
 	saveCompnayContacts(contactData: ICompanyContact): Observable<IBaseResponse<any>> {
 		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Emails.createCompanyContact, { ...contactData });
+	}
+
+	sendEmail(data: FormData): Observable<IBaseResponse<any>> {
+		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Emails.sendEmail, data);
 	}
 }
