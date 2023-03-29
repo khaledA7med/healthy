@@ -15,6 +15,7 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
+  NgbDate,
   NgbModal,
   NgbModalOptions,
   NgbModalRef,
@@ -289,25 +290,46 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.uiState.requestSearch.dateTo = this.appUtils.dateFormater(e.to);
   }
 
+  expiryDateCalc(e: any) {
+    let date = new Date(e.gon.year, e.gon.month, e.gon.day),
+      month = date.getMonth(),
+      days = date.getDate(),
+      year = date.getFullYear();
+
+    if (e.gon.day === 1) {
+      month = date.getMonth() - 1;
+      days = this.getDaysInMonth(year, month);
+    } else days = days - 1;
+
+    if (month === 0) month = 12;
+
+    date.setDate(days);
+    date.setMonth(month);
+    if (month !== 0) year + 1;
+
+    e.gon = {
+      day: days,
+      month: month,
+      year: year,
+    };
+    return e;
+  }
+
+  getDaysInMonth(year: number, month: number): number {
+    return new Date(year, month, 0).getDate();
+  }
+
   issueDate(e: any) {
     this.f.issueDate?.patchValue(e.gon);
     this.f.periodFrom?.patchValue(e.gon);
-    e.gon = {
-      day: e.gon.day - 1,
-      month: e.gon.month,
-      year: e.gon.year + 1,
-    };
-    if (this.f.periodTo?.enabled) this.f.periodTo?.patchValue(e.gon);
+    if (this.f.periodTo?.enabled)
+      this.f.periodTo?.patchValue(this.expiryDateCalc(e).gon);
   }
 
   inceptionDate(e: any) {
     this.f.periodFrom?.patchValue(e.gon);
-    e.gon = {
-      day: e.gon.day - 1,
-      month: e.gon.month,
-      year: e.gon.year + 1,
-    };
-    if (this.f.periodTo?.enabled) this.f.periodTo?.patchValue(e.gon);
+    if (this.f.periodTo?.enabled)
+      this.f.periodTo?.patchValue(this.expiryDateCalc(e).gon);
   }
 
   expiryDate(e: any) {
