@@ -1,83 +1,71 @@
 <form class="mb-4" [formGroup]="ClaimsGeneralItemsForm"
     (ngSubmit)="submitClaimsGeneralItemsData(ClaimsGeneralItemsForm)" autocomplete="off">
-    <ngb-accordion #acc="ngbAccordion" activeIds="1">
-        <!-- Line Of Business -->
-        <ngb-panel id="1" title="Insurance Workshop Details" cardClass="open my-4">
-            <ng-template ngbPanelContent="1">
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                    <div class="container-fluid mb-3">
-                        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-                            <div class="card-body">
-                                <div class="ribbon ribbon-info round-shape">
-                                    Claims General Items
-                                </div>
-                                <div class="row my-4">
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
-                                        <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
-                                            placeholder="Select Class Of Insurance" formControlName="classOfInsurance"
-                                            bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [items]="(lookupData | async)?.InsurClasses?.content!"
-                                            (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
-                                        </ng-select>
-                                        <span
-                                            *ngIf="(f.classOfInsurance?.touched || uiState.submitted) && f.classOfInsurance?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+    <div class="container-fluid mb-3">
+        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+            <div class="card-body">
+                <div class="ribbon ribbon-info round-shape">
+                    Claims General Items
+                </div>
+                <div class="row my-4">
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
+                        <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
+                            placeholder="Select Class Of Insurance" formControlName="classOfInsurance" bindValue="name"
+                            bindLabel="name" [loading]="lookupData ? false : true"
+                            [items]="(lookupData | async)?.InsurClasses?.content!" (change)="changeClass($event)"
+                            (change)="getLineOfBusiness($event?.name)">
+                        </ng-select>
+                        <span *ngIf="(f.classOfInsurance?.touched || uiState.submitted) && f.classOfInsurance?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
-                                        <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
-                                            placeholder="Select Lien Of Business" formControlName="lineofBusiness"
-                                            bindValue="name" bindLabel="name" (change)="filter($event)"
-                                            [loading]="lookupData ? false : true" [items]="lineOfBussArr">
-                                        </ng-select>
-                                        <span
-                                            *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
+                        <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
+                            placeholder="Select Lien Of Business" formControlName="lineofBusiness" bindValue="name"
+                            bindLabel="name" (change)="filter($event)" [loading]="lookupData ? false : true"
+                            [items]="lineOfBussArr">
+                        </ng-select>
+                        <span *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
-                                        <label for="item">Item Name</label>
-                                        <input id="item" class="form-control form-control-sm"
-                                            [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
-                                            formControlName="item" />
-                                        <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
+                        <label for="item" class="asterisk-input">Item</label>
+                        <input id="item" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
+                            formControlName="item" />
+                        <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="form-check mx-3">
-                                        <label class="form-check-label" for="mandatory">Default</label>
-                                        <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked"
-                                            (change)="checkValue(isChecked? 1 : 0)" formControlName="mandatory">
-                                    </div>
-                                </div>
+                    <div class="form-check mx-3 mt-3">
+                        <label class="form-check-label" for="mandatory">Default</label>
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked"
+                            (change)="checkValue(isChecked? 1 : 0)" formControlName="mandatory">
+                    </div>
+                </div>
 
-                                <div class="card">
-                                    <div class="container-fluid">
-                                        <div class="card-body px-1 py-3">
-                                            <div class="d-flex justify-content-end">
-                                                <button type="submit" class="btn btn-sm btn-success me-2">
-                                                    <i class="ri-add-line"></i>
-                                                    Add
-                                                </button>
-                                                <button type="button" id="sa-warning"
-                                                    (click)="resetClaimsGeneralItemsForm();"
-                                                    class="btn btn-sm btn-soft-danger">
-                                                    <i class="ri-delete-bin-2-line"></i>
-                                                    Clear
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="card">
+                    <div class="container-fluid">
+                        <div class="card-body px-1 py-3">
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-sm btn-soft-success me-2">
+                                    <i class="ri-add-line"></i>
+                                    Add
+                                </button>
+                                <button type="button" id="sa-warning" (click)="resetClaimsGeneralItemsForm();"
+                                    class="btn btn-sm btn-soft-danger">
+                                    <i class="ri-delete-bin-2-line"></i>
+                                    Clear
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </ng-template>
-        </ngb-panel>
-    </ngb-accordion>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div class="ag-theme-alpine" appTableView>
@@ -94,53 +82,65 @@
     <form [formGroup]="ClaimsGeneralItemsForm" (ngSubmit)="submitClaimsGeneralItemsData(ClaimsGeneralItemsForm)">
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
-                <div class="col-12 row">
+                <div class="mt-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape"><span>Claims
+                                    General Items</span></span>
+                            <div class="col-12 row mt-4">
 
-                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
-                        <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
-                        <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
-                            placeholder="Select Class Of Insurance" formControlName="classOfInsurance" bindValue="name"
-                            bindLabel="name" [loading]="lookupData ? false : true"
-                            [items]="(lookupData | async)?.InsurClasses?.content!" (change)="changeClass($event)"
-                            (change)="getLineOfBusiness($event?.name)">
-                        </ng-select>
-                        <span *ngIf="(f.classOfInsurance?.touched || uiState.submitted) && f.classOfInsurance?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                                    <label for="classOfInsurance" class="asterisk-input">Class Of Insurance</label>
+                                    <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
+                                        placeholder="Select Class Of Insurance" formControlName="classOfInsurance"
+                                        bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
+                                        [items]="(lookupData | async)?.InsurClasses?.content!"
+                                        (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
+                                    </ng-select>
+                                    <span
+                                        *ngIf="(f.classOfInsurance?.touched || uiState.submitted) && f.classOfInsurance?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                                    <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
+                                    <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
+                                        placeholder="Select Lien Of Business" formControlName="lineofBusiness"
+                                        bindValue="name" bindLabel="name" (change)="filter($event)"
+                                        [loading]="lookupData ? false : true" [items]="lineOfBussArr">
+                                    </ng-select>
+                                    <span
+                                        *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 my-1">
+                                    <label for="item">Item Name</label>
+                                    <input id="item" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
+                                        formControlName="item" />
+                                    <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+
+                                <div class="form-check mx-3 mt-3">
+                                    <label class="form-check-label" for="mandatory">Default</label>
+                                    <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked"
+                                        (change)="checkValue(isChecked? 1 : 0)" formControlName="mandatory">
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
-                        <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
-                        <ng-select id="lineofBusiness" class="form-control-sm is-invalid"
-                            placeholder="Select Lien Of Business" formControlName="lineofBusiness" bindValue="name"
-                            bindLabel="name" (change)="filter($event)" [loading]="lookupData ? false : true"
-                            [items]="lineOfBussArr">
-                        </ng-select>
-                        <span *ngIf="(f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
-
-                    <div class="col-lg-12 col-md-12 col-sm-12 my-1">
-                        <label for="item">Item Name</label>
-                        <input id="item" class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
-                            formControlName="item" />
-                        <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
-
-                    <div class="form-check mx-3">
-                        <label class="form-check-label" for="mandatory">Default</label>
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked"
-                            (change)="checkValue(isChecked? 1 : 0)" formControlName="mandatory">
-                    </div>
-
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" *ngIf="uiState.editClaimsGeneralItemsMode"
-                    class="btn btn-sm btn-success mx-2 d-flex align-items-center"><i
+                    class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"><i
                         class="ri-edit-line mx-1"></i>Edit</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+                <button type="button" class="btn btn-soft-danger btn-sm d-flex align-items-center"
+                    (click)="modal.close()">
+                    <i class="ri-close-fill"></i> Close</button>
             </div>
         </div>
     </form>

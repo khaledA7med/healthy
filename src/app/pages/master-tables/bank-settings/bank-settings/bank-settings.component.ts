@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -66,6 +66,8 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -86,10 +88,16 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       this.gridApi.showLoadingOverlay();
       let sub = this.BankSettingsService.getBankSettings().subscribe(
         (res: HttpResponse<IBaseResponse<IBankSettings[]>>) => {
-          this.uiState.list = res.body?.data!;
-          params.successCallback(this.uiState.list, this.uiState.list.length);
-          this.uiState.gridReady = true;
-          this.gridApi.hideOverlay();
+          if (res.body?.status) {
+            this.uiState.list = res.body?.data!;
+            params.successCallback(this.uiState.list, this.uiState.list.length);
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
+            this.gridApi.hideOverlay();
+          }
         }
       );
       this.subscribes.push(sub);
@@ -130,7 +138,7 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
         (res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
           this.uiState.editBankSettingsMode = true;
           this.uiState.editBankSettingsData = res.body?.data!;
-          this.fillAddBankSettingsForm(res.body?.data!);
+          this.fillEditBankSettingsForm(res.body?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
         }
       );
@@ -156,11 +164,6 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
     return this.BankSettingsForm.controls;
   }
 
-  fillAddBankSettingsForm(data: IBankSettingsData) {
-    this.f.bankName?.patchValue(data.bankName!);
-    this.f.swift?.patchValue(data.swift!);
-  }
-
   fillEditBankSettingsForm(data: IBankSettingsData) {
     this.f.bankName?.patchValue(data.bankName!);
     this.f.swift?.patchValue(data.swift!);
@@ -168,11 +171,7 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.BankSettingsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

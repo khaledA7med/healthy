@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -67,6 +67,8 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -94,9 +96,13 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
                 this.uiState.list,
                 this.uiState.list.length
               );
-              this.uiState.gridReady = true;
+              if (this.uiState.list.length === 0)
+                this.gridApi.showNoRowsOverlay();
+              else this.gridApi.hideOverlay();
+            } else {
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
-            } else this.message.popup("Sorry!", res.body?.message!, "warning");
+            }
           }
         );
       this.subscribes.push(sub);
@@ -143,7 +149,7 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editProspectLossReasonsMode = true;
             this.uiState.editProspectLossReasonsData = res.body?.data!;
-            this.fillAddProspectLossReasonsForm(res.body?.data!);
+            this.fillEditProspectLossReasonsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
@@ -169,21 +175,13 @@ export class ProspectLossReasonsComponent implements OnInit, OnDestroy {
     return this.ProspectLossReasonsForm.controls;
   }
 
-  fillAddProspectLossReasonsForm(data: IProspectLossReasonsData) {
-    this.f.reason?.patchValue(data.reason!);
-  }
-
   fillEditProspectLossReasonsForm(data: IProspectLossReasonsData) {
     this.f.reason?.patchValue(data.reason!);
   }
 
   validationChecker(): boolean {
     if (this.ProspectLossReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

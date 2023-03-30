@@ -34,6 +34,7 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy {
   subscribes: Subscription[] = [];
 
   getDefaultEmails(category: string): void {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.DefaultEmailsService.getDefaultEmails(category).subscribe(
       (res: HttpResponse<IBaseResponse<IDefaultEmailsData>>) => {
         if (res.body?.status) {
@@ -43,6 +44,7 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy {
             this.uiState.getDefaultEmailsData.category!
           );
           this.f.item?.patchValue(this.uiState.getDefaultEmailsData.item!);
+          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.body?.message!, "error");
         this.eventService.broadcast(reserved.isLoading, false);
       }

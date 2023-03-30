@@ -67,6 +67,8 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -88,13 +90,19 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
       let sub =
         this.ClientRejectionReasonsService.getClientRejectionReasons().subscribe(
           (res: HttpResponse<IBaseResponse<IClientRejectionReasons[]>>) => {
-            this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
-            this.gridApi.hideOverlay();
-          },
-          (err: HttpErrorResponse) => {
-            this.message.popup("Oops!", err.message, "error");
+            if (res.body?.status) {
+              this.uiState.list = res.body?.data!;
+              params.successCallback(
+                this.uiState.list,
+                this.uiState.list.length
+              );
+              if (this.uiState.list.length === 0)
+                this.gridApi.showNoRowsOverlay();
+              else this.gridApi.hideOverlay();
+            } else {
+              this.message.popup("Oops!", res.body?.message!, "warning");
+              this.gridApi.hideOverlay();
+            }
           }
         );
       this.subscribes.push(sub);
@@ -142,7 +150,7 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
             if (res.body?.status) {
               this.uiState.editClientRejectionReasonsMode = true;
               this.uiState.editClientRejectionReasonsData = res.body?.data!;
-              this.fillAddClientRejectionReasonsForm(res.body?.data!);
+              this.fillEditClientRejectionReasonsForm(res.body?.data!);
               this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
@@ -168,21 +176,13 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
     return this.ClientRejectionReasonsForm.controls;
   }
 
-  fillAddClientRejectionReasonsForm(data: IClientRejectionReasonsData) {
-    this.f.reason?.patchValue(data.reason!);
-  }
-
   fillEditClientRejectionReasonsForm(data: IClientRejectionReasonsData) {
     this.f.reason?.patchValue(data.reason!);
   }
 
   validationChecker(): boolean {
     if (this.ClientRejectionReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

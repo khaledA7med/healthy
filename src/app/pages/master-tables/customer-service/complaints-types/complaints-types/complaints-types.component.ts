@@ -2,7 +2,7 @@ import {
   IComplaintTypes,
   IComplaintTypesData,
 } from "src/app/shared/app/models/MasterTables/customer-service/i-complaint-types";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -67,6 +67,8 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -90,9 +92,13 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
             params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -137,7 +143,7 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editComplaintsTypesMode = true;
             this.uiState.editComplaintsTypesData = res.body?.data!;
-            this.fillAddComplaintsTypesForm(res.body?.data!);
+            this.fillEditComplaintsTypesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -163,21 +169,13 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
     return this.ComplaintsTypesForm.controls;
   }
 
-  fillAddComplaintsTypesForm(data: IComplaintTypesData) {
-    this.f.type?.patchValue(data.type!);
-  }
-
   fillEditComplaintsTypesForm(data: IComplaintTypesData) {
     this.f.type?.patchValue(data.type!);
   }
 
   validationChecker(): boolean {
     if (this.ComplaintsTypesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

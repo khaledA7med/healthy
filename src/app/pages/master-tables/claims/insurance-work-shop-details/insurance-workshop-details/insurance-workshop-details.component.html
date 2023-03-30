@@ -1,94 +1,94 @@
 <form class="mb-4" [formGroup]="InsuranceWorkshopDetailsForm"
     (ngSubmit)="submitInsuranceWorkshopDetailsData(InsuranceWorkshopDetailsForm)" autocomplete="off">
-    <ngb-accordion #acc="ngbAccordion" activeIds="1">
-        <!-- Line Of Business -->
-        <ngb-panel id="1" title="Insurance Workshop Details" cardClass="open my-4">
-            <ng-template ngbPanelContent="1">
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                    <div class="container-fluid mb-3">
-                        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-                            <div class="card-body">
-                                <div class="ribbon ribbon-info round-shape">
-                                    Insurance Workshop Details
-                                </div>
-                                <div class="row my-4">
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
-                                        <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
-                                            placeholder="Select Insurance Company" formControlName="insuranceCompany"
-                                            bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
-                                            (change)="filter($event)"
-                                            [items]="(lookupData | async)?.InsuranceCompanies?.content!">
-                                        </ng-select>
-                                        <span
-                                            *ngIf="(f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+    <div class="container-fluid mb-3">
+        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
+            <div class="card-body">
+                <div class="ribbon ribbon-info round-shape">
+                    Insurance Workshop Details
+                </div>
+                <div class="row my-4">
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
+                        <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
+                            placeholder="Select Insurance Company" formControlName="insuranceCompany" bindValue="name"
+                            bindLabel="name" [loading]="lookupData ? false : true"
+                            [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
+                            (change)="filter($event)" [items]="(lookupData | async)?.InsuranceCompanies?.content!">
+                        </ng-select>
+                        <span *ngIf="(f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="city" class="asterisk-input">City</label>
-                                        <ng-select id="city" class="form-control-sm is-invalid"
-                                            placeholder="Select Insurance Company" formControlName="city"
-                                            bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
-                                            [ngClass]="{'is-submitted': (f.city?.touched || uiState.submitted) && f.city?.invalid}"
-                                            [items]="(lookupData | async)?.Cities?.content!">
-                                        </ng-select>
-                                        <span *ngIf="(f.city?.touched || uiState.submitted) && f.city?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="city" class="asterisk-input">City</label>
+                        <ng-select id="city" class="form-control-sm is-invalid" placeholder="Select Insurance Company"
+                            formControlName="city" bindValue="name" bindLabel="name"
+                            [loading]="lookupData ? false : true"
+                            [ngClass]="{'is-submitted': (f.city?.touched || uiState.submitted) && f.city?.invalid}"
+                            [items]="(lookupData | async)?.Cities?.content!">
+                        </ng-select>
+                        <span *ngIf="(f.city?.touched || uiState.submitted) && f.city?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
-                                        <label for="workshopName">Workshop Name</label>
-                                        <input id="workshopName" class="form-control form-control-sm"
-                                            [ngClass]="{'is-invalid': (f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid}"
-                                            formControlName="workshopName" />
-                                        <span
-                                            *ngIf="(f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mt-2">
+                        <label for="workshopName">Workshop Name</label>
+                        <input id="workshopName" class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': (f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid}"
+                            formControlName="workshopName" />
+                        <span *ngIf="(f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid"
+                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                    </div>
 
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="telephone">Tele</label>
-                                        <input id="telephone" class="form-control form-control-sm"
-                                            formControlName="telephone" />
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="email">Email</label>
-                                        <input id="email" class="form-control form-control-sm"
-                                            formControlName="email" />
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                                        <label for="address">Address</label>
-                                        <input id="address" class="form-control form-control-sm"
-                                            formControlName="address" />
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="container-fluid">
-                                        <div class="card-body px-1 py-3">
-                                            <div class="d-flex justify-content-end">
-                                                <button type="submit" class="btn btn-sm btn-success me-2">
-                                                    <i class="ri-add-line"></i>
-                                                    Add
-                                                </button>
-                                                <button type="button" id="sa-warning"
-                                                    (click)="resetInsuranceWorkshopDetailsForm();"
-                                                    class="btn btn-sm btn-soft-danger">
-                                                    <i class="ri-delete-bin-2-line"></i>
-                                                    Clear
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="telephone">Tele</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">+966</span>
+                            <input id="telephone" class="form-control form-control-sm" formControlName="telephone"
+                                [ngClass]="{'is-invalid': (f.telephone?.touched || uiState.submitted) && f.telephone?.invalid}" />
+                            <span class="invalid-feedback fw-bold"
+                                *ngIf="(f.telephone?.touched || uiState.submitted) && f.telephone?.invalid">
+                                Invalid Phone Number
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="email">Email</label>
+                        <div class="input-group input-group-sm">
+
+                            <input id="email" class="form-control form-control-sm" formControlName="email"
+                                [ngClass]="{'is-invalid': (f.email?.touched || uiState.submitted) && f.email?.invalid}" />
+                            <span class="invalid-feedback fw-bold"
+                                *ngIf="(f.email?.touched || uiState.submitted) && f.email?.invalid">
+                                Invalid Email
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 my-1">
+                        <label for="address">Address</label>
+                        <input id="address" class="form-control form-control-sm" formControlName="address" />
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="container-fluid">
+                        <div class="card-body px-1 py-3">
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-sm btn-soft-success me-2">
+                                    <i class="ri-add-line"></i>
+                                    Add
+                                </button>
+                                <button type="button" id="sa-warning" (click)="resetInsuranceWorkshopDetailsForm();"
+                                    class="btn btn-sm btn-soft-danger">
+                                    <i class="ri-delete-bin-2-line"></i>
+                                    Clear
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </ng-template>
-        </ngb-panel>
-    </ngb-accordion>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div class="ag-theme-alpine" appTableView>
@@ -106,61 +106,76 @@
         (ngSubmit)="submitInsuranceWorkshopDetailsData(InsuranceWorkshopDetailsForm)">
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
-                <div class="col-12 row">
+                <div class="mt-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape"><span>Insurance
+                                    Workshop Details</span></span>
+                            <div class="col-12 row mt-4">
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
-                        <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
-                            placeholder="Select Insurance Company" formControlName="insuranceCompany" bindValue="name"
-                            bindLabel="name" [loading]="lookupData ? false : true"
-                            [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
-                            (change)="filter($event)" [items]="(lookupData | async)?.InsuranceCompanies?.content!">
-                        </ng-select>
-                        <span *ngIf="(f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="insuranceCompany" class="asterisk-input">Insurance Company</label>
+                                    <ng-select id="insuranceCompany" class="form-control-sm is-invalid"
+                                        placeholder="Select Insurance Company" formControlName="insuranceCompany"
+                                        bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
+                                        [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
+                                        (change)="filter($event)"
+                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!">
+                                    </ng-select>
+                                    <span
+                                        *ngIf="(f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="city" class="asterisk-input">City</label>
-                        <ng-select id="city" class="form-control-sm is-invalid" placeholder="Select Insurance Company"
-                            formControlName="city" bindValue="name" bindLabel="name"
-                            [loading]="lookupData ? false : true"
-                            [ngClass]="{'is-submitted': (f.city?.touched || uiState.submitted) && f.city?.invalid}"
-                            [items]="(lookupData | async)?.Cities?.content!">
-                        </ng-select>
-                        <span *ngIf="(f.city?.touched || uiState.submitted) && f.city?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="city" class="asterisk-input">City</label>
+                                    <ng-select id="city" class="form-control-sm is-invalid"
+                                        placeholder="Select Insurance Company" formControlName="city" bindValue="name"
+                                        bindLabel="name" [loading]="lookupData ? false : true"
+                                        [ngClass]="{'is-submitted': (f.city?.touched || uiState.submitted) && f.city?.invalid}"
+                                        [items]="(lookupData | async)?.Cities?.content!">
+                                    </ng-select>
+                                    <span *ngIf="(f.city?.touched || uiState.submitted) && f.city?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="workshopName">Workshop Name</label>
-                        <input id="workshopName" class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': (f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid}"
-                            formControlName="workshopName" />
-                        <span *ngIf="(f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="workshopName">Workshop Name</label>
+                                    <input id="workshopName" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid}"
+                                        formControlName="workshopName" />
+                                    <span
+                                        *ngIf="(f.workshopName?.touched || uiState.submitted) && f.workshopName?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="telephone">Tele</label>
-                        <input id="telephone" class="form-control form-control-sm" formControlName="telephone" />
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="email">Email</label>
-                        <input id="email" class="form-control form-control-sm" formControlName="email" />
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                        <label for="address">Address</label>
-                        <input id="address" class="form-control form-control-sm" formControlName="address" />
-                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="telephone">Tele</label>
+                                    <input id="telephone" class="form-control form-control-sm"
+                                        formControlName="telephone" />
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="email">Email</label>
+                                    <input id="email" class="form-control form-control-sm" formControlName="email" />
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 my-1">
+                                    <label for="address">Address</label>
+                                    <input id="address" class="form-control form-control-sm"
+                                        formControlName="address" />
+                                </div>
 
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" *ngIf="uiState.editInsuranceWorkshopDetailsMode"
-                    class="btn btn-sm btn-success mx-2 d-flex align-items-center"><i
+                    class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"><i
                         class="ri-edit-line mx-1"></i>Edit</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+                <button type="button" class="btn btn-soft-danger btn-sm d-flex align-items-center"
+                    (click)="modal.close()">
+                    <i class="ri-close-fill"></i> Close</button>
             </div>
         </div>
     </form>

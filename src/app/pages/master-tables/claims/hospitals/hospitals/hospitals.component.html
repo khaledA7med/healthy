@@ -46,11 +46,18 @@
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                     <label for="tele" class="asterisk-input">Tele</label>
-                                    <input id="abbreviation" class="form-control form-control-sm"
-                                        [ngClass]="{'is-invalid': (f.tele?.touched || uiState.submitted) && f.tele?.invalid}"
-                                        formControlName="tele" />
-                                    <span *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid"
-                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">+966</span>
+                                        <input id="abbreviation" class="form-control form-control-sm"
+                                            [ngClass]="{'is-invalid': (f.tele?.touched || uiState.submitted) && f.tele?.invalid}"
+                                            formControlName="tele" />
+                                        <span *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid"
+                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                    </div>
+                                    <span class="invalid-feedback fw-bold"
+                                        *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid">
+                                        Invalid Phone Number
+                                    </span>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
@@ -60,7 +67,14 @@
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                     <label for="email">Email</label>
-                                    <input id="email" class="form-control form-control-sm" formControlName="email" />
+                                    <div class="input-group input-group-sm"></div>
+                                    <input id="email" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.email?.touched || uiState.submitted) && f.email?.invalid}"
+                                        formControlName="email" />
+                                    <span class="invalid-feedback fw-bold"
+                                        *ngIf="(f.email?.touched || uiState.submitted) && f.email?.invalid">
+                                        Invalid Email
+                                    </span>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
@@ -116,26 +130,83 @@
                                                         <ng-container [formGroupName]="i">
 
                                                             <td scope="col">
-                                                                <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Name" placeholder="contact Name" />
+                                                                <div class="asterisk-div">
+                                                                    <input type="text"
+                                                                        class="form-control form-control-sm"
+                                                                        formControlName="name"
+                                                                        placeholder="contact Name" [ngClass]="{
+                                                                        'is-invalid':
+                                                                          (contactListControls(i, 'name').touched ||
+                                                                          uiState.submitted) &&
+                                                                          contactListControls(i, 'name').invalid
+                                                                      }" />
+                                                                    <div class="invalid-feedback fw-bold">
+                                                                        Required
+                                                                    </div>
+                                                                </div>
                                                             </td>
 
                                                             <td scope="col">
-                                                                <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Position"
-                                                                    placeholder="contact Position" />
+                                                                <div class="asterisk-div">
+                                                                    <input type="text"
+                                                                        class="form-control form-control-sm"
+                                                                        formControlName="position"
+                                                                        placeholder="contact Position" [ngClass]="{
+                                                                        'is-invalid':
+                                                                          (contactListControls(i, 'position').touched ||
+                                                                          uiState.submitted) &&
+                                                                          contactListControls(i, 'position').invalid
+                                                                      }" />
+                                                                    <div class="invalid-feedback fw-bold">
+                                                                        Required
+                                                                    </div>
+                                                                </div>
                                                             </td>
 
                                                             <td scope="col">
-                                                                <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Email"
-                                                                    placeholder="contact Email" />
+                                                                <div class="asterisk-div">
+                                                                    <input type="text"
+                                                                        class="form-control form-control-sm"
+                                                                        formControlName="email"
+                                                                        placeholder="contact Email" [ngClass]="{
+                                                                        'is-invalid':
+                                                                        uiState.submitted &&
+                                                                        contactListControls(i, 'email').invalid
+                                                                      }" />
+                                                                    <span class="invalid-feedback fw-bold"
+                                                                        *ngIf="contactListControls(i, 'email').invalid">
+                                                                        Invalid Email
+                                                                    </span>
+                                                                    <span class="invalid-feedback fw-bold" *ngIf="(contactListControls(i, 'email').touched ||
+                                                                                uiState.submitted) &&
+                                                                              contactListControls(i, 'email').invalid">
+                                                                        Required
+                                                                    </span>
+                                                                </div>
                                                             </td>
 
                                                             <td scope="col">
-                                                                <input type="text" class="form-control form-control-sm"
-                                                                    formControlName="Phone"
-                                                                    placeholder="contact Tele" />
+                                                                <div class="asterisk-div">
+                                                                    <div class="input-group input-group-sm">
+                                                                        <span class="input-group-text">+966</span>
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm"
+                                                                            formControlName="phone"
+                                                                            placeholder="contact Tele" [ngClass]="{
+                                                                        'is-invalid':
+                                                                        uiState.submitted &&
+                                                                        contactListControls(i, 'phone').invalid
+                                                                      }" />
+                                                                        <span class="invalid-feedback fw-bold"
+                                                                            *ngIf="contactListControls(i, 'phone').invalid">
+                                                                            Invalid Phone Number
+                                                                        </span>
+                                                                        <span class="invalid-feedback fw-bold"
+                                                                            *ngIf="uiState.submitted && contactListControls(i, 'phone')?.hasError('required')">
+                                                                            Required
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
                                                             </td>
 
                                                             <td>
@@ -205,7 +276,7 @@
                                                 <ng-container [formGroupName]="i">
 
                                                     <td>
-                                                        <ng-select formControlName="InsurCompany"
+                                                        <ng-select formControlName="insurCompany"
                                                             placeholder="Insurance Company"
                                                             [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                                                             bindLabel="name" bindValue="name" appendTo="table"
@@ -214,49 +285,49 @@
                                                     </td>
 
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassVvip">
+                                                        <input type="checkbox" formControlName="classVvip">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassVip">
+                                                        <input type="checkbox" formControlName="classVip">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassAp">
+                                                        <input type="checkbox" formControlName="classAp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassA">
+                                                        <input type="checkbox" formControlName="classA">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassAm">
+                                                        <input type="checkbox" formControlName="classAm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassBp">
+                                                        <input type="checkbox" formControlName="classBp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassB">
+                                                        <input type="checkbox" formControlName="classB">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassBm">
+                                                        <input type="checkbox" formControlName="classBm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCp">
+                                                        <input type="checkbox" formControlName="classCp">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassC">
+                                                        <input type="checkbox" formControlName="classC">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCm">
+                                                        <input type="checkbox" formControlName="classCm">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCa">
+                                                        <input type="checkbox" formControlName="classCa">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCae">
+                                                        <input type="checkbox" formControlName="classCae">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassCD">
+                                                        <input type="checkbox" formControlName="classCD">
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" formControlName="ClassE">
+                                                        <input type="checkbox" formControlName="classE">
                                                     </td>
 
                                                     <td>
@@ -289,11 +360,12 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="!uiState.editHospitalsMode"><i class="ri-add-line"></i>Add</button>
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
+            <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
                 *ngIf="uiState.editHospitalsMode"><i class="ri-edit-line mx-1"></i>Edit</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+            <button type="button" class="btn btn-soft-danger btn-sm d-flex align-items-center" (click)="modal.close()">
+                <i class="ri-close-fill"></i> Close</button>
         </div>
     </form>
 </ng-template>

@@ -1,5 +1,5 @@
 import { IPolicyIssuanceRequirementsFilter } from "./../../../../../../shared/app/models/MasterTables/business-development/sales/i-policy-issuance-requirements";
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -49,7 +49,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
   PolicyIssuanceRequirementsFormSubmitted = false as boolean;
   PolicyIssuanceRequirementsModal!: NgbModalRef;
   PolicyIssuanceRequirementsForm!: FormGroup<IPolicyIssuanceRequirements>;
-  EditPolicyIssuanceRequirementsForm!: FormGroup<IPolicyIssuanceRequirements>;
   lineOfBussArr: IGenericResponseType[] = [];
 
   @ViewChild("PolicyIssuanceRequirementsContent")
@@ -120,7 +119,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
                 this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else {
-              this.uiState.gridReady = true;
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
             }
           }
@@ -159,7 +158,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.initEditPolicyIssuanceForm();
     this.initPolicyIssuanceRequirementsForm();
     this.getLookupData();
   }
@@ -204,14 +202,18 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
         if (res?.status) {
           this.uiState.editPolicyIssuanceRequirementsMode = true;
           this.uiState.editPolicyIssuanceRequirementsData = res.data!;
-          this.EditPolicyIssuanceRequirementsForm.patchValue({
+          this.PolicyIssuanceRequirementsForm.patchValue({
             ...this.uiState.editPolicyIssuanceRequirementsData,
             defaultTick:
               this.uiState.editPolicyIssuanceRequirementsData.defaultTick === 1
                 ? true
                 : false,
           });
+          this.f.class?.disable();
+          this.f.lineOfBusiness?.disable();
+          this.f.insuranceCopmany?.disable();
           this.openPolicyIssuanceRequirementsDialoge();
+          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.message!, "error");
       });
     this.subscribes.push(sub);
@@ -229,7 +231,14 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     );
 
     this.PolicyIssuanceRequirementsModal.hidden.subscribe(() => {
-      this.resetEditPolicyIssuanceRequirementsForm();
+      this.f.item?.reset();
+      this.f.itemArabic?.reset();
+      this.f.description?.reset();
+      this.f.descriptionArabic?.reset();
+      this.f.defaultTick?.reset();
+      this.f.class?.enable();
+      this.f.lineOfBusiness?.enable();
+      this.f.insuranceCopmany?.enable();
     });
   }
 
@@ -252,28 +261,9 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     return this.PolicyIssuanceRequirementsForm.controls;
   }
 
-  initEditPolicyIssuanceForm() {
-    this.EditPolicyIssuanceRequirementsForm =
-      new FormGroup<IPolicyIssuanceRequirements>({
-        sNo: new FormControl(null),
-        defaultTick: new FormControl(null),
-        class: new FormControl(null),
-        lineOfBusiness: new FormControl(null),
-        insuranceCopmany: new FormControl(null),
-        item: new FormControl(null, Validators.required),
-        itemArabic: new FormControl(null, Validators.required),
-        description: new FormControl(null),
-        descriptionArabic: new FormControl(null),
-      });
-  }
-
   validationChecker(): boolean {
     if (this.PolicyIssuanceRequirementsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;
@@ -283,14 +273,18 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     form: FormGroup<IPolicyIssuanceRequirements>
   ) {
     this.uiState.submitted = true;
-    if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
-
     // const formData = form.getRawValue();
     const data: IPolicyIssuanceRequirementsData = {
       ...form.getRawValue(),
       defaultTick: form.getRawValue().defaultTick === true ? 1 : 0,
+      sNo: this.uiState.editPolicyIssuanceRequirementsMode
+        ? this.uiState.editPolicyIssuanceRequirementsData.sNo
+        : 0,
     };
+
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
+
     let sub =
       this.PolicyIssuanceRequirementsService.savePolicyIssuanceRequirements(
         data
@@ -314,12 +308,15 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  resetEditPolicyIssuanceRequirementsForm() {
-    this.EditPolicyIssuanceRequirementsForm.reset();
-  }
-
   resetPolicyIssuanceRequirementsForm() {
-    this.PolicyIssuanceRequirementsForm.reset();
+    this.f.item?.reset();
+    this.f.itemArabic?.reset();
+    this.f.description?.reset();
+    this.f.descriptionArabic?.reset();
+    this.f.defaultTick?.reset();
+    this.f.class?.enable();
+    this.f.lineOfBusiness?.enable();
+    this.f.insuranceCopmany?.enable();
     this.uiState.submitted = false;
   }
 
