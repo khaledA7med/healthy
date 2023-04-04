@@ -109,6 +109,7 @@ export const AppRoutes = {
       renewalsNotice: "production/renewal-notice-report",
       archive: { dcNote: "production/archives/debit-credit-notes" },
     },
+    MedicalActive: "production/medical-active",
   },
   CustomerService: {
     base: "customer-service",
