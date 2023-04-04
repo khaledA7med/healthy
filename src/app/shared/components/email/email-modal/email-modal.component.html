@@ -19,7 +19,8 @@
           </button>
         </div>
         <div class="col-auto">
-          <button class="btn btn-sm btn-success">
+          <button class="btn btn-sm btn-success"
+            (click)="uiState.modalBody.insuranceCompanyContact = true;uiState.modalBody.email = false">
             + Add Insurance Companies Contacts
           </button>
         </div>
@@ -29,58 +30,97 @@
       <form [formGroup]="mailFormGroup">
         <div class="row">
           <div class="col-12 mb-2 position-relative">
-            <label for="to" class="form-label"> To: </label>
-            <input type="text" id="to" class="form-control" placeholder="Type To Emails" formControlName="to" />
-            <div class="position-absolute top-0 end-0">
-              <button class="btn btn-link text-dark px-0 fw-bold" type="button" (click)="toggleCc()">
-                Cc
-              </button>
-              <button class="btn btn-link text-dark fw-bold" type="button" (click)="toggleBcc()">
-                Bcc
-              </button>
+            <div class="d-flex justify-content-between align-items-center">
+              <label for="to" class="form-label"> To: </label>
+              <div>
+                <button class="btn btn-link text-dark py-0 px-1 fw-bold" type="button" (click)="toggleCc()">
+                  Cc
+                </button>
+                <button class="btn btn-link text-dark py-0 px-1 fw-bold" type="button" (click)="toggleBcc()">
+                  Bcc
+                </button>
+              </div>
             </div>
+            <ng-select [addTag]="true" [items]="uiState.toList" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
+              placeholder="To" formControlName="MailToList" [ngClass]="{
+                    'is-submitted': (f.MailToList?.touched || uiState.submitted) && f.MailToList?.invalid
+                  }">
+            </ng-select>
+            <span class="invalid-feedback d-inline-block fw-bold" *ngIf="
+                    (f.MailToList?.touched ||  uiState.submitted) && f.MailToList?.invalid
+                  ">
+              Required
+            </span>
           </div>
           <div class="col-12 mb-2 tra" *ngIf="uiState.isCc">
             <label for="cc" class="form-label"> Cc: </label>
-            <input type="text" id="cc" class="form-control" placeholder="Type Cc Emails" formControlName="cc" />
+            <ng-select [items]="uiState.ccList" [addTag]="true" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
+              placeholder="CC" formControlName="EmailCC">
+            </ng-select>
           </div>
           <div class="col-12 mb-3" *ngIf="uiState.isBcc">
             <label for="bcc" class="form-label"> Bcc: </label>
-            <input type="text" id="bcc" class="form-control" placeholder="Type BCc Emails" formControlName="bcc" />
+            <ng-select [items]="uiState.bccList" [addTag]="true" [multiple]="true" bindLabel="name" [selectOnTab]="true"
+              placeholder="BCC" [isOpen]="false" formControlName="EmailBCC">
+            </ng-select>
           </div>
           <div class="col-12 mb-3">
             <div class="input-group input-group-sm">
               <input id="sub" type="text" class="form-control form-control-sm" placeholder="Subject"
-                formControlName="subject" />
-              <ng-select [items]="subject" bindLabel="name" bindValue="name" [clearable]="true">
+                formControlName="Subject" [ngClass]="{
+                    'is-invalid': (f.Subject?.touched || uiState.submitted) && f.Subject?.invalid
+                  }" />
+              <span class="invalid-feedback d-inline-block fw-bold"
+                *ngIf="(f.Subject?.touched ||  uiState.submitted) && f.Subject?.invalid">
+                Required
+              </span>
+              <ng-select [items]="uiState.priorityList" bindLabel="name" bindValue="name" placeholder="Priority"
+                [clearable]="false" formControlName="Priority" class="col-2">
               </ng-select>
             </div>
           </div>
           <div class="col-12 mb-2">
-            <ckeditor [editor]="editorData" (change)="getEditorData($event)" formControlName="body"></ckeditor>
+            <ckeditor [editor]="editorData" (change)="getEditorData($event)" formControlName="Body">
+            </ckeditor>
+            <span class="invalid-feedback d-inline-block fw-bold"
+              *ngIf="(f.Body?.touched ||  uiState.submitted) && f.Body?.invalid">
+              Required
+            </span>
           </div>
 
           <app-dropzone class="p-0" (files)="documentsList($event)" [UploadedFiles]="docs"></app-dropzone>
         </div>
       </form>
-
       <!-- / -->
     </div>
     <!-- / -->
   </div>
+
   <div class="modal-body" #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.clientContact">
     <!-- Add Clients Contacts Body -->
     <div>
-      <!-- btn for email-List  -->
-      <h5 class="modal-title d-flex align-items-center me-2 mb-2">
-        <button class="btn p-0 fs-20 me-2 d-flex backward-btn"
-          (click)="uiState.modalBody.email = true;uiState.modalBody.clientContact = false"><i
-            class="ri-arrow-left-line"></i></button>
-        Prospects / Client Contacts
-      </h5>
-      <!-- / -->
-
-      <app-client-contacts *ngIf="uiState.modalBody.clientContact"></app-client-contacts>
+      <!-- 
+        If We wanted To persist the state we should use the follwing condition
+        [class]=" uiState.modalBody.clientContact ? '': 'd-none'"
+        -------------------------------------------------------------------------
+        *ngIf="uiState.modalBody.clientContact"
+      -->
+      <app-client-contacts *ngIf="uiState.modalBody.clientContact"
+        [emailModalInstance]="emailModalInstance"></app-client-contacts>
+    </div>
+    <!-- / -->
+  </div>
+  <div class="modal-body" #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.modalBody.insuranceCompanyContact">
+    <!-- Add Clients Contacts Body -->
+    <div>
+      <!-- 
+        If We wanted To persist the state we should use the follwing condition
+        [class]=" uiState.modalBody.clientContact ? '': 'd-none'"
+        --------------------------------------------------------------------------
+        *ngIf="uiState.modalBody.insuranceCompanyContact"
+      -->
+      <app-company-contacts *ngIf="uiState.modalBody.insuranceCompanyContact"
+        [emailModalInstance]="emailModalInstance"></app-company-contacts>
     </div>
     <!-- / -->
   </div>
@@ -89,6 +129,7 @@
     <button type="button" class="btn btn-sm btn-danger" (click)="modal.close('Close click')">
       Discard
     </button>
-    <button type="submit" class="btn btn-sm btn-success" *ngIf="uiState.modalBody.email">Send</button>
+    <button type="submit" class="btn btn-sm btn-success" *ngIf="uiState.modalBody.email"
+      (click)="sendEmail()">Send</button>
   </div>
 </ng-template>

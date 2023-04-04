@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { ICellRendererParams } from "ag-grid-community";
-import { ClientContactsComponent } from "./client-contacts.component";
+import { EmailModalComponent } from "../email-modal/email-modal.component";
 
 @Component({
 	selector: "app-email-contact-list-controls",
@@ -21,8 +21,9 @@ import { ClientContactsComponent } from "./client-contacts.component";
 	styles: ["#actionDropdown::after {display: none}"],
 })
 export class EmailContactListControlsComponent {
-	private params!: ICellRendererParams;
-	public comp!: ClientContactsComponent;
+	public params!: ICellRendererParams;
+	public comp!: EmailModalComponent;
+	private email!: string;
 
 	@ViewChild("to") to!: ElementRef;
 	@ViewChild("cc") cc!: ElementRef;
@@ -33,17 +34,25 @@ export class EmailContactListControlsComponent {
 	agInit(params: ICellRendererParams) {
 		this.params = params;
 		this.comp = this.params.context.comp;
+		this.email = this.params.data?.email || this.params.data?.contactEmail;
 	}
 
 	toFunc() {
-		console.log(this.to.nativeElement);
+		console.log(this.email);
+		this.comp.patchToList(this.email);
+		if (!this.comp.uiState.toList.includes(this.email)) this.to.nativeElement.classList.remove("bg-soft-dark");
+		else this.to.nativeElement.classList.add("bg-soft-dark");
 	}
 
 	ccFunc() {
-		console.log(this.cc.nativeElement);
+		this.comp.patchCCList(this.email);
+		if (!this.comp.uiState.ccList.includes(this.email)) this.cc.nativeElement.classList.remove("bg-soft-dark");
+		else this.cc.nativeElement.classList.add("bg-soft-dark");
 	}
 
 	bccFunc() {
-		console.log(this.bcc.nativeElement);
+		this.comp.patchBCCList(this.email);
+		if (!this.comp.uiState.bccList.includes(this.email)) this.bcc.nativeElement.classList.remove("bg-soft-dark");
+		else this.bcc.nativeElement.classList.add("bg-soft-dark");
 	}
 }

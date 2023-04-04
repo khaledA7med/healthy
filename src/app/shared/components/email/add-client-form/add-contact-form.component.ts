@@ -9,20 +9,23 @@ import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClientContact } from "src/app/shared/app/models/Clients/iclientContactForm";
+import { ICompanyContact } from "src/app/shared/app/models/Email/email-utils";
 import { EmailService } from "src/app/shared/services/emails/email.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
-	selector: "app-add-client-form",
-	templateUrl: "./add-client-form.component.html",
-	styleUrls: ["./add-client-form.component.scss"],
+	selector: "app-add-contact-form",
+	templateUrl: "./add-contact-form.component.html",
+	styleUrls: ["./add-contact-form.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
-	@Input() clientID!: number;
+export class AddContactFormComponent implements OnInit, OnDestroy, OnChanges {
+	@Input() ID!: number;
+	@Input() contactType!: string;
+
 	@Output() contactAdded: EventEmitter<any> = new EventEmitter();
 
-	clientContactFormGroup!: FormGroup<IClientContact>;
+	contactFormGroup!: FormGroup<IClientContact>;
 	lookupData!: Observable<IBaseMasterTable>;
 	subscribes: Subscription[] = [];
 
@@ -38,8 +41,7 @@ export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
 		private message: MessagesService
 	) {}
 	ngOnChanges(): void {
-		this.clientContactFormGroup ? this.f.clientID?.patchValue(+this.clientID) : "";
-		console.log(this.clientID);
+		this.contactFormGroup ? this.f.clientID?.patchValue(+this.ID) : "";
 	}
 	ngOnInit(): void {
 		this.getLookupData();
@@ -52,7 +54,7 @@ export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
 
 	//#region CLient Contacts form
 	initClientForm() {
-		this.clientContactFormGroup = new FormGroup<IClientContact>({
+		this.contactFormGroup = new FormGroup<IClientContact>({
 			branch: new FormControl(""),
 			clientID: new FormControl(0),
 			contactName: new FormControl("", Validators.required),
@@ -65,27 +67,55 @@ export class AddClientFormComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 	get f() {
-		return this.clientContactFormGroup.controls;
+		return this.contactFormGroup.controls;
 	}
 
 	validationChecker(): boolean {
-		if (this.clientContactFormGroup.invalid) return false;
+		if (this.contactFormGroup.invalid) return false;
 		return true;
 	}
 
 	submitClientContact() {
 		this.uiState.submitted = true;
-		console.log(this.clientContactFormGroup);
 		if (!this.validationChecker()) return;
 		this.eventService.broadcast(reserved.isLoading, true);
+		if (this.contactType === "client") this.saveClientContact();
+		else this.saveCompanyContact();
+	}
 
-		let sub = this.emailService.saveClientContacts(this.clientContactFormGroup.getRawValue()).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
-			if (res.body?.status) {
-				this.message.toast(res.body.message!, "success");
+	saveClientContact() {
+		let sub = this.emailService.saveClientContacts(this.contactFormGroup.getRawValue()).subscribe((res: IBaseResponse<any>) => {
+			if (res.status) {
+				this.message.toast(res.message!, "success");
 				this.resetForm();
 				// Output to Collapse
 				this.contactAdded.emit(true);
-			} else this.message.popup("Sorry!", res.body?.message!, "warning");
+			} else this.message.popup("Sorry!", res.message!, "warning");
+			// Hide Loader
+			this.eventService.broadcast(reserved.isLoading, false);
+		});
+		this.subscribes.push(sub);
+	}
+
+	saveCompanyContact() {
+		let data: ICompanyContact = {
+			companyID: this.ID,
+			branch: this.f.branch?.value,
+			contactPosition: this.f.position?.value,
+			lineOfBusiness: this.f.lineOfBusiness?.value,
+			department: this.f.department?.value,
+			contactEmail: this.f.email?.value,
+			contactName: this.f.contactName?.value,
+			contactMobileNo: this.f.mobile?.value,
+			contactTele: this.f.tele?.value,
+		};
+		let sub = this.emailService.saveCompnayContacts(data).subscribe((res: IBaseResponse<any>) => {
+			if (res.status) {
+				this.message.toast(res.message!, "success");
+				this.resetForm();
+				// Output to Collapse
+				this.contactAdded.emit(true);
+			} else this.message.popup("Sorry!", res.message!, "warning");
 			// Hide Loader
 			this.eventService.broadcast(reserved.isLoading, false);
 		});

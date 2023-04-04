@@ -1,30 +1,25 @@
 import { HttpResponse } from "@angular/common/http";
-import { Component, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
+import { Caching, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
-import { emailClientContactsCols } from "src/app/shared/app/grid/emailClientContactCols";
-import { emailClientsCols } from "src/app/shared/app/grid/emailClientsCols";
+import { emailCompanyCols } from "src/app/shared/app/grid/emailCompanyCols";
+import { emailCompanyContactsCols } from "src/app/shared/app/grid/emailCompanyContactCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IEmailClient, IEmailClientContact } from "src/app/shared/app/models/Email/email-utils";
+import { IEmailClientContact, IEmailCompanyContact } from "src/app/shared/app/models/Email/email-utils";
 import { EmailService } from "src/app/shared/services/emails/email.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { EmailModalComponent } from "../email-modal/email-modal.component";
 
 @Component({
-	selector: "app-client-contacts",
-	templateUrl: "./client-contacts.component.html",
-	styleUrls: ["./client-contacts.component.scss"],
+	selector: "app-company-contacts",
+	templateUrl: "./company-contacts.component.html",
+	styleUrls: ["./company-contacts.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
-	clientInfo: FormControl = new FormControl();
-	clientIDFilter: FormControl = new FormControl();
-	clientNameFilter: FormControl = new FormControl();
-	clientContactFormGroup!: FormGroup<any>;
-
+export class CompanyContactsComponent implements OnInit, OnDestroy {
 	// ------------------------------------------------------------------------------------------------------------
 	@Input() emailModalInstance!: EmailModalComponent;
 	// ------------------------------------------------------------------------------------------------------------
@@ -42,15 +37,15 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 		} as IEmailClientContact,
 		gridReady: false,
 		submitted: false,
-		showClientSearch: false,
+		showCopmanies: false,
 		showSelectContact: false,
 		showAddContact: false,
-		selectedClientSno: 0,
-		clients: {
-			list: [] as IEmailClient[],
+		selectedCompanySno: 0,
+		companies: {
+			list: [] as any[],
 		},
 		contacts: {
-			list: [] as IEmailClientContact[],
+			list: [] as IEmailCompanyContact[],
 		},
 	};
 
@@ -64,7 +59,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: emailClientsCols,
+		columnDefs: emailCompanyCols,
 		suppressCsvExport: true,
 		defaultColDef: {
 			flex: 1,
@@ -82,7 +77,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: emailClientContactsCols,
+		columnDefs: emailCompanyContactsCols,
 		context: { comp: this.emailModalInstance },
 		suppressCsvExport: true,
 		defaultColDef: {
@@ -96,35 +91,27 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 		onSortChanged: (e) => this.onSortContacts(e),
 	};
 
-	ngOnChanges(): void {
-		console.log("Form ngOnChanges", this.emailModalInstance);
-	}
-
 	constructor(private eventService: EventService, private emailService: EmailService, private message: MessagesService) {}
 
 	ngOnInit(): void {
-		console.log("Form ngOnInit", this.emailModalInstance);
 		this.contactsGridOpts.context = { comp: this.emailModalInstance };
-		this.clientInfo.disable();
 	}
 
 	goBack() {
 		this.emailModalInstance.uiState.modalBody.email = true;
-		this.emailModalInstance.uiState.modalBody.clientContact = false;
+		this.emailModalInstance.uiState.modalBody.insuranceCompanyContact = false;
 	}
 
-	//#region Clients / Prospects Grid
+	//#region Insurance companies Grid
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
-			if (this.uiState.clients.list.length == 0) this.eventService.broadcast(reserved.isLoading, true);
+			if (this.uiState.companies.list.length == 0) this.eventService.broadcast(reserved.isLoading, true);
 			else this.gridApi.showLoadingOverlay();
-			this.uiState.filters.sNo = this.clientIDFilter.value || 0;
-			this.uiState.filters.fullName = this.clientNameFilter.value;
-			let sub = this.emailService.getAllActiveClients(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IEmailClient[]>>) => {
-				if (res.body?.status) {
-					this.uiState.clients.list = res.body?.data!;
-					params.successCallback(this.uiState.clients.list, this.uiState.clients.list.length);
-				} else this.message.popup("Oops!", res.body?.message!, "error");
+			let sub = this.emailService.getAllCompanies().subscribe((res: IBaseResponse<Caching<IGenericResponseType[]>>) => {
+				if (res.status) {
+					this.uiState.companies.list = res.data!.content;
+					params.successCallback(this.uiState.companies.list, this.uiState.companies.list.length);
+				} else this.message.popup("Oops!", res.message!, "error");
 				this.uiState.gridReady = true;
 				this.eventService.broadcast(reserved.isLoading, false);
 				this.gridApi.hideOverlay();
@@ -144,17 +131,15 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onCellClicked(params: CellEvent) {
-		this.uiState.showClientSearch = true;
+		this.uiState.showCopmanies = true;
 		this.uiState.showSelectContact = true;
-		this.uiState.selectedClientSno = params.data.sNo;
-		this.clientIDFilter.patchValue(params.data.sNo);
-		this.clientNameFilter.patchValue(params.data.fullName);
-		this.clientInfo.patchValue(`${params.data.sNo} | ${params.data.fullName}`);
+		this.uiState.selectedCompanySno = params.data.id;
 	}
 
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
-		if ((this, this.uiState.clients.list.length > 0)) this.gridApi.sizeColumnsToFit();
+		this.gridApi.setDatasource(this.dataSource);
+		if (this.uiState.companies.list.length > 0) this.gridApi.sizeColumnsToFit();
 	}
 	//#endregion
 
@@ -163,10 +148,10 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 		getRows: (params: IGetRowsParams) => {
 			if (this.uiState.contacts.list.length == 0) this.eventService.broadcast(reserved.isLoading, true);
 			else this.gridApi.showLoadingOverlay();
-			console.log(this.uiState.selectedClientSno);
+			console.log(this.uiState.selectedCompanySno);
 			let sub = this.emailService
-				.getAllClientContacts(this.uiState.selectedClientSno)
-				.subscribe((res: HttpResponse<IBaseResponse<IEmailClientContact[]>>) => {
+				.getAllCompanyContacts(this.uiState.selectedCompanySno)
+				.subscribe((res: HttpResponse<IBaseResponse<IEmailCompanyContact[]>>) => {
 					if (res.body?.status) {
 						this.uiState.contacts.list = res.body?.data!;
 						params.successCallback(this.uiState.contacts.list, this.uiState.contacts.list.length);
@@ -201,7 +186,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 	onGridReadyContacts(param: GridReadyEvent) {
 		this.contactsGridApi = param.api;
 		this.contactsGridApi.setDatasource(this.contactsDataSource);
-		if ((this, this.uiState.contacts.list.length > 0)) this.contactsGridApi.sizeColumnsToFit();
+		if (this.uiState.contacts.list.length > 0) this.contactsGridApi.sizeColumnsToFit();
 	}
 	//#endregion
 

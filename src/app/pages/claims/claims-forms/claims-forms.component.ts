@@ -414,14 +414,9 @@ export class ClaimsFormsComponent implements OnInit, OnDestroy {
 	}
 
 	getInsurerWorkshops(city: string): void {
-		let sub = this.claimService.getInsurerWorkshops(this.f.insuranceCompany?.value!, city).subscribe(
-			(res) => {
-				console.log(res);
-			}
-			// (err) => {
-			// 	this.message.popup("Look Up!", "Under Testing Call Customer Service, No data At All", "error");
-			// }
-		);
+		let sub = this.claimService.getInsurerWorkshops(this.f.insuranceCompany?.value!, city).subscribe((res) => {
+			console.log(res);
+		});
 		this.subscribes.push(sub);
 	}
 

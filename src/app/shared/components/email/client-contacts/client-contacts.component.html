@@ -1,3 +1,8 @@
+<h5 class="modal-title d-flex align-items-center me-2 mb-2">
+    <button class="btn p-0 fs-20 me-2 d-flex backward-btn" (click)="goBack()"><i
+            class="ri-arrow-left-line"></i></button>
+    Prospects / Client Contacts
+</h5>
 <!-- Client Info -->
 <div class="lables">
     <label for="clientInfo">Client Info</label>
@@ -6,7 +11,7 @@
     <input type="text" id="clientInfo" name="clientInfo" readonly aria-label="Client Info"
         class="form-control form-control-sm" placeholder="Client Details" [formControl]="clientInfo">
     <button class="btn btn-info btn-sm d-flex align-items-center" type="button" id="searchProspectClientCollapseBtn"
-        (click)="uiState.showClientSearch = false">
+        (click)="uiState.showClientSearch = false;uiState.showAddContact = false;uiState.showSelectContact = false">
         <i class="ri-user-search-fill mx-1"></i>
         Search
     </button>
@@ -55,6 +60,6 @@
 
 
 <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showAddContact">
-    <app-add-client-form [clientID]="clientIDFilter.value"
-        (contactAdded)="contactAddedSuccess($event)"></app-add-client-form>
+    <app-add-contact-form [ID]="clientIDFilter.value" [contactType]="'client'"
+        (contactAdded)="contactAddedSuccess($event)"></app-add-contact-form>
 </div>

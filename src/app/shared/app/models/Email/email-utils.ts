@@ -22,5 +22,22 @@ export interface IClientContact {
 	savedUser?: string | null;
 	address?: string | null;
 }
+export interface ICompanyContact {
+	sNo?: number | null;
+	branch?: string | null;
+	companyID?: number | null;
+	contactName?: string | null;
+	contactMobileNo?: string | null;
+	lineOfBusiness?: string | null;
+	department?: string | null;
+	extension?: string | null;
+	contactPosition?: string | null;
+	mainContact?: number | null;
+	contactTele?: string | null;
+	contactEmail?: string | null;
+	savedUser?: string | null;
+	address?: string | null;
+}
 
 export interface IEmailClientContact extends IBaseFilters, IClientContact {}
+export interface IEmailCompanyContact extends IBaseFilters, ICompanyContact {}
