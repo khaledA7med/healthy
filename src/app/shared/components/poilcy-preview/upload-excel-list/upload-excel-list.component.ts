@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import readXlsxFile from "read-excel-file";
@@ -7,20 +7,28 @@ import { motorExcelListCols } from "src/app/shared/app/grid/motorExcelListCols";
 import { Subscription } from "rxjs";
 import { HttpResponse } from "@angular/common/http";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IMotorData } from "src/app/shared/app/models/Production/i-motor-active-list";
+import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
 
 @Component({
 	selector: "app-upload-excel-list",
 	templateUrl: "./upload-excel-list.component.html",
 	styleUrls: ["./upload-excel-list.component.scss"],
 })
-export class UploadExcelListComponent implements OnInit {
+export class UploadExcelListComponent implements OnInit,OnDestroy {
+	@Input() data!: {
+		id: string;
+		endorsType: string;
+	};
+
 	uiState = {
 		sno: "" as string,
 		loadedData: false as boolean,
 		updatedState: false as boolean,
 		gridReady: false,
 		submitted: false,
-		data: [] as any[],
+		motorData: [] as IMotorData[],
+		medicalData: [] as IMedicalData[],
 		filters: {
 			pageNumber: 1,
 			pageSize: 50,
@@ -55,11 +63,13 @@ export class UploadExcelListComponent implements OnInit {
 	};
 	constructor(public modal: NgbActiveModal, private message: MessagesService) {}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		console.log(this.data);
+	}
 
 	uploadExeceFile(e: any) {
 		const schema = {
-			Name: {
+			"Name": {
 				prop: "name",
 				type: String,
 				required: true,
@@ -71,10 +81,11 @@ export class UploadExcelListComponent implements OnInit {
 			},
 		};
 
-		readXlsxFile(e.target.files[0], { schema }).then(({ rows, errors }) => {
+		readXlsxFile(e.target.files[0],  this.data.endorsType === 'Motor' ?{ schema }: {schema}).then(({ rows, errors }) => {
 			if (errors.length == 0) {
 				console.log(rows);
-				this.uiState.data = rows;
+				if(this.data.endorsType === 'Motor') this.uiState.motorData = rows;
+				else this.uiState.medicalData = rows
 			} else {
 				console.log(errors);
 				this.message.popup(
@@ -92,7 +103,11 @@ export class UploadExcelListComponent implements OnInit {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			params.successCallback(this.uiState.data, this.uiState.data.length);
+			if(this.data.endorsType === "Motor")
+			params.successCallback(this.uiState.motorData, this.uiState.motorData.length);
+			else
+			params.successCallback(this.uiState.medicalData, this.uiState.medicalData.length);
+
 			this.gridApi.hideOverlay();
 			this.uiState.gridReady = true;
 		},
@@ -133,9 +148,14 @@ export class UploadExcelListComponent implements OnInit {
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
-		if (this.uiState.data.length > 0) this.gridApi.sizeColumnsToFit();
+		if (this.uiState.motorData.length > 0 || this.uiState.medicalData.length > 0) this.gridApi.sizeColumnsToFit();
 	}
 	//#endregion
 
 	submitData() {}
+
+
+	ngOnDestroy() {
+		this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }

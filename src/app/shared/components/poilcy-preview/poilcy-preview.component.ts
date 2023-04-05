@@ -31,6 +31,8 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	uiState = {
 		sno: "" as string,
 		activateUploadBtns: false as boolean,
+		showMotorBtn: false as boolean,
+		showMedicalBtn: false as boolean,
 		policyDetails: {} as IPolicyPreview,
 		loadedData: false as boolean,
 		updatedState: false as boolean,
@@ -57,13 +59,12 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 		public modal: NgbActiveModal,
 		private privileges: PermissionsService,
 		private modalService: NgbModal
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.permissions$ = this.privileges.getPrivileges(Roles.Production);
 		this.uiState.sno = this.data.id;
 		this.uiState.activateUploadBtns = this.data.activateUploadBtns;
-		console.log(this.data);
 		this.getPolicyDetails(this.uiState.sno);
 	}
 
@@ -79,6 +80,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 						String(this.uiState.policyDetails.periodFrom) == "-" ? undefined : this.uiState.policyDetails.periodFrom;
 					this.uiState.policyDetails.periodTo = String(this.uiState.policyDetails.periodTo) == "-" ? undefined : this.uiState.policyDetails.periodTo;
 					this.customizeClientDocuments();
+					this.checkPolicyType();
 				} else this.message.popup("Oops!", res.message!, "error");
 			},
 		});
@@ -120,6 +122,19 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 
 			el.size = this.util.formatBytes(+el?.size!);
 		});
+	}
+
+	checkPolicyType() {
+		if (this.uiState.policyDetails.className === "Motor" && this.uiState.activateUploadBtns) {
+			this.uiState.showMotorBtn = true;
+			this.uiState.showMedicalBtn = false;
+		} else if (this.uiState.policyDetails.className === "Medical" && this.uiState.activateUploadBtns) {
+			this.uiState.showMotorBtn = false;
+			this.uiState.showMedicalBtn = true;
+		} else {
+			this.uiState.showMotorBtn = false;
+			this.uiState.showMedicalBtn = false;
+		}
 	}
 
 	deleteFile(index: number, path: string) {
@@ -285,7 +300,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 
 		this.modalRef.componentInstance.data = {
 			id,
-			activateUploadBtns: true,
+			endorsType: this.uiState.policyDetails.className
 		};
 	}
 

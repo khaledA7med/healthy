@@ -288,7 +288,7 @@
         </div>
         <div class="col-12  my-2">
             <!-- Start Documents  -->
-            <div class="card my-3">
+            <div class="card my-3" *ngIf="!uiState.activateUploadBtns">
                 <div class="card-header">
                     <h6 class="card-title text-muted text-uppercase mb-0">Documents</h6>
                 </div>
@@ -369,9 +369,8 @@
     </div>
 </div>
 <div class="modal-footer pt-0">
-    <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex"
-        [ngClass]="!uiState.activateUploadBtns ? 'justify-content-between' : 'justify-content-end'">
-        <div class="row col-7 align-items-end" *ngIf="!uiState.activateUploadBtns">
+    <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex justify-content-between">
+        <div class="row col-7 align-items-end">
             <div class="col-10">
                 <label class="col-form-label" for="deliveryStatus">Delivery Status</label>
                 <ng-select id="deliveryStatus" [searchable]="false" [formControl]="deliveryStatus" bindLabel="name"
@@ -390,7 +389,7 @@
         </div>
         <div class="col-4 d-flex justify-content-end align-items-end">
             <ng-container
-                *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChProdEntryApproval) && !uiState.activateUploadBtns">
+                *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChProdEntryApproval)">
                 <button
                     *ngIf="uiState.loadedData && !(uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1)"
                     class="btn btn-sm btn-info mx-2" (click)="changeStatus('Approve')">
@@ -403,8 +402,12 @@
                 </button>
             </ng-container>
             <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
-                (click)="openUploadFromExcelModal(uiState.sno)">
-                Upload Beneficiaries List
+                (click)="openUploadFromExcelModal(uiState.sno)" *ngIf="uiState.activateUploadBtns && uiState.showMotorBtn">
+                Upload Vehicles Details
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
+                (click)="openUploadFromExcelModal(uiState.sno)" *ngIf="uiState.activateUploadBtns && uiState.showMedicalBtn">
+                Upload Medical Details
             </button>
             <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="modal.close('Close click')">
                 Close

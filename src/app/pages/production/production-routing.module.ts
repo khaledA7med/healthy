@@ -15,21 +15,6 @@ const routes: Routes = [
 		loadChildren: () => import("./policies-management/policies-management.module").then((m) => m.PoliciesManagementModule),
 		canActivate: [() => ProductionGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProdPolicies])],
 	},
-	// {
-	//   path: AppRoutes.Production.details + "/:sno",
-	//   outlet: "details",
-	//   loadChildren: () =>
-	//     import(
-	//       "./../../shared/components/poilcy-preview/poilcy-preview.module"
-	//     ).then((m) => m.PoilcyPreviewModule),
-	//   canActivate: [
-	//     () =>
-	//       ProductionGuard([
-	//         ProductionPermissions.ChProduction,
-	//         ProductionPermissions.ChProdPolicies,
-	//       ]),
-	//   ],
-	// },
 	{
 		path: AppRoutes.Production.create,
 		data: {
@@ -41,7 +26,7 @@ const routes: Routes = [
 	{
 		path: AppRoutes.Production.activeList,
 		data: {
-			title: "Motor Policy Active List",
+			title: "Active Policies List",
 		},
 		loadChildren: () => import("./active-list-management/active-list-management.module").then((m) => m.ActiveListManagementModule),
 		canActivate: [() => ProductionFormGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProductionReadOnly])],
