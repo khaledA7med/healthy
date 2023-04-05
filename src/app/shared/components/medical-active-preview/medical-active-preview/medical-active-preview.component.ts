@@ -295,7 +295,11 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
   }
 
   Upload(content: any) {
-    this.modalService.open(content, { size: "xl", centered: true });
+    this.modalService.open(content, {
+      size: "xl",
+      scrollable: true,
+      centered: true,
+    });
   }
 
   ReadExcel(event: any) {
@@ -309,6 +313,19 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
       this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]]);
       console.log(this.ExcelData);
     };
+  }
+
+  selectedRow: any;
+  edit(row: any) {
+    this.selectedRow = row;
+    // Code to open a modal dialog or a form to edit the selected row
+  }
+
+  delete(row: any) {
+    const index = this.ExcelData.indexOf(row);
+    if (index > -1) {
+      this.ExcelData.splice(index, 1);
+    }
   }
   // To Do back to main route when close modal
   backToMainRoute() {

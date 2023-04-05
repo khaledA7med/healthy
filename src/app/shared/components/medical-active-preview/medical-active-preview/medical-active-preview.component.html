@@ -389,6 +389,11 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
+        <div class="col-12 my-2">
+            <p>download Medical Active File <a class="btn btn-sm btn-info" href="/src/Medical Members List Template.xls"
+                    download><i class="ri-file-download-fill"></i>
+                    File</a></p>
+        </div>
         <div class="col-12  my-2">
             <div class="mb-3">
                 <label for="formFile" class="form-label">Excel File</label>
@@ -401,34 +406,67 @@
                     <h6 class="card-title text-muted text-uppercase mb-0">Table Data</h6>
                 </div>
                 <div class="excelTabel">
-                    <table class="table table-responsive table-borderless align-middle mb-0">
+                    <table class="table table-striped table-bordered table-responsive p-5 mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="table-header">Id\Iqama No.</th>
-                                <th class="table-header">Membership No</th>
-                                <th class="table-header">Member Name</th>
-                                <th class="table-header">DOB</th>
-                                <th class="table-header">Relation</th>
-                                <th class="table-header">Marital Status</th>
-                                <th class="table-header">Gender</th>
-                                <th class="table-header">Sponsor No</th>
-                                <th class="table-header">Endt No</th>
-                                <th class="table-header">policy number</th>
-                                <th class="table-header">Class</th>
-                                <th class="table-header">City</th>
-                                <th class="table-header">Staff No</th>
-                                <th class="table-header">Premium</th>
-                                <th class="table-header">Mobile No</th>
-                                <th class="table-header">Nationality</th>
-                                <th class="table-header">CCHI Status</th>
+                                <th scope="col">Id\Iqama No.</th>
+                                <th scope="col">Membership No</th>
+                                <th scope="col">Member Name</th>
+                                <th scope="col">DOB</th>
+                                <th scope="col">Relation</th>
+                                <th scope="col">Marital Status</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Sponsor No</th>
+                                <th scope="col">Endt No</th>
+                                <th scope="col">policy number</th>
+                                <th scope="col">Class</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Staff No</th>
+                                <th scope="col">Premium</th>
+                                <th scope="col">Mobile No</th>
+                                <th scope="col">Nationality</th>
+                                <th scope="col">CCHI Status</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody id="policy-documents-table">
                             <ng-container>
                                 <tr *ngFor="let data of ExcelData">
-                                    <td>{{data.Age}}</td>
-                                    <td>{{data.Type}}</td>
-                                    <td>{{data.DOB}}</td>
+                                    <td>{{data['Id\Iqama No.']}}</td>
+                                    <td>{{data['Membership No']}}</td>
+                                    <td>{{data['Member Name']}}</td>
+                                    <td>{{data['DOB']}}</td>
+                                    <td>{{data['Relation']}}</td>
+                                    <td>{{data['Marital Status']}}</td>
+                                    <td>{{data['Gender']}}</td>
+                                    <td>{{data['Sponsor No']}}</td>
+                                    <td>{{data['Endt No']}}</td>
+                                    <td>{{data['policy number']}}</td>
+                                    <td>{{data['Class']}}</td>
+                                    <td>{{data['City']}}</td>
+                                    <td>{{data['Staff No']}}</td>
+                                    <td>{{data['Premium']}}</td>
+                                    <td>{{data['Mobile No']}}</td>
+                                    <td>{{data['Nationality']}}</td>
+                                    <td>{{data['CCHI Status']}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-soft-info me-2"
+                                            (click)="edit(data)"><i class="ri-edit-2-line"></i></button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-soft-danger"
+                                            (click)="delete(data)"><i class="ri-delete-bin-2-line"></i></button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="ExcelData?.length == 0">
+                                <tr>
+                                    <td colspan="100">
+                                        <div class="alert my-3 alert-danger text-center" role="alert">
+                                            No Data Found
+                                        </div>
+                                    </td>
                                 </tr>
                             </ng-container>
                         </tbody>
