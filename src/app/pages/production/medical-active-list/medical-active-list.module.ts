@@ -5,6 +5,8 @@ import { MedicalActiveListControlsComponent } from "./medical-active-list/medica
 import { RouterModule, Routes } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
+import { MedicalActivePreviewModule } from "src/app/shared/components/medical-active-preview/medical-active-preview.module";
+import { PoilcyPreviewModule } from "src/app/shared/components/poilcy-preview/poilcy-preview.module";
 
 export const routes: Routes = [
   { path: "", component: MedicalActiveListComponent },
@@ -20,6 +22,8 @@ export const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     AgGridModule,
+    MedicalActivePreviewModule,
+    PoilcyPreviewModule,
   ],
 })
 export class MedicalActiveListModule {}

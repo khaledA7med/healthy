@@ -188,13 +188,13 @@ const routes: Routes = [
       import("./medical-active-list/medical-active-list.module").then(
         (m) => m.MedicalActiveListModule
       ),
-    canActivate: [
-      () =>
-        ProductionGuard([
-          ProductionPermissions.ChProduction,
-          ProductionPermissions.ChProdPolicies,
-        ]),
-    ],
+    // canActivate: [
+    //   () =>
+    //     ProductionGuard([
+    //       ProductionPermissions.ChProduction,
+    //       ProductionPermissions.ChProdMedicalActive,
+    //     ]),
+    // ],
   },
 ];
 

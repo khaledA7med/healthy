@@ -704,6 +704,15 @@ export class MenuService {
               },
             ],
           },
+          {
+            id: 405,
+            label: "MENUITEMS.PRODUCTION.LIST.MEDICALACTIVE",
+            link: AppRoutes.Production.MedicalActive,
+            parentId: 4,
+            auth: privileges.Production?.includes(
+              ProductionPermissions.ChProduction
+            ),
+          },
         ],
       },
       {

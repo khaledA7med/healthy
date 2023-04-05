@@ -4,6 +4,7 @@ export enum ProductionPermissions {
   ChEntryCorrection = "ChEntryCorrection",
   ChProdEntryApproval = "ChProdEntryApproval",
   ChProdReports = "ChProdReports",
+  ChProdMedicalActive = "ChProdMedicalActive",
   ChProductionReadOnly = "ChProductionReadOnly",
   ViewAllBranchs = "ViewAllBranchs",
   ChAccessAllProducersProduction = "ChAccessAllProducersProduction",
