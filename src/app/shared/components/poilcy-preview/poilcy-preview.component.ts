@@ -1,7 +1,7 @@
 import { HttpResponse } from "@angular/common/http";
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal, NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
@@ -16,6 +16,7 @@ import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
 import AppUtils from "../../app/util";
 import { MessagesService } from "../../services/messages.service";
 import { ProductionService } from "../../services/production/production.service";
+import { UploadExcelListComponent } from "./upload-excel-list/upload-excel-list.component";
 
 @Component({
 	selector: "app-poilcy-preview",
@@ -25,15 +26,19 @@ import { ProductionService } from "../../services/production/production.service"
 export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	@Input() data!: {
 		id: string;
+		activateUploadBtns: boolean;
 	};
 	uiState = {
-		sno: "",
+		sno: "" as string,
+		activateUploadBtns: false as boolean,
 		policyDetails: {} as IPolicyPreview,
-		loadedData: false,
-		updatedState: false,
+		loadedData: false as boolean,
+		updatedState: false as boolean,
 		documentList: [],
 		privileges: ProductionPermissions,
 	};
+
+	modalRef!: NgbModalRef;
 
 	deliveryStatus: FormControl = new FormControl(null, Validators.required);
 
@@ -44,16 +49,21 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	lookupData!: Observable<IBaseMasterTable>;
 
 	@ViewChild("details") detailsModal!: TemplateRef<any>;
+
 	constructor(
 		private message: MessagesService,
 		private productinService: ProductionService,
 		public util: AppUtils,
 		public modal: NgbActiveModal,
-		private privileges: PermissionsService
+		private privileges: PermissionsService,
+		private modalService: NgbModal
 	) {}
+
 	ngOnInit(): void {
 		this.permissions$ = this.privileges.getPrivileges(Roles.Production);
 		this.uiState.sno = this.data.id;
+		this.uiState.activateUploadBtns = this.data.activateUploadBtns;
+		console.log(this.data);
 		this.getPolicyDetails(this.uiState.sno);
 	}
 
@@ -263,6 +273,20 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	// To Do back to main route when close modal
 	backToMainRoute() {
 		this.modal.dismiss();
+	}
+
+	// Open Excel Uploading Modal
+	openUploadFromExcelModal(id: string) {
+		this.modalRef = this.modalService.open(UploadExcelListComponent, {
+			size: "xl",
+			scrollable: true,
+			centered: true,
+		});
+
+		this.modalRef.componentInstance.data = {
+			id,
+			activateUploadBtns: true,
+		};
 	}
 
 	ngOnDestroy() {

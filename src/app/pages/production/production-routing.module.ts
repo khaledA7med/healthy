@@ -39,6 +39,14 @@ const routes: Routes = [
 		canActivate: [() => ProductionFormGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProductionReadOnly])],
 	},
 	{
+		path: AppRoutes.Production.activeList,
+		data: {
+			title: "Motor Policy Active List",
+		},
+		loadChildren: () => import("./active-list-management/active-list-management.module").then((m) => m.ActiveListManagementModule),
+		canActivate: [() => ProductionFormGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProductionReadOnly])],
+	},
+	{
 		path: AppRoutes.Production.edit + ":id",
 		data: {
 			title: "Update Policy",

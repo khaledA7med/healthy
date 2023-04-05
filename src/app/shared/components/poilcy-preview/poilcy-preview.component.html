@@ -2,7 +2,7 @@
     <h4 class="modal-title">Policy Details</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 </div>
-<div class="modal-body bg-light p-3">
+<div class="modal-body p-3">
     <div class="row">
         <div class="col-lg-4  my-2">
             <!-- Start Client Details Table -->
@@ -369,10 +369,11 @@
     </div>
 </div>
 <div class="modal-footer pt-0">
-    <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex justify-content-between">
-        <div class="row col-7 align-items-end">
+    <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex"
+        [ngClass]="!uiState.activateUploadBtns ? 'justify-content-between' : 'justify-content-end'">
+        <div class="row col-7 align-items-end" *ngIf="!uiState.activateUploadBtns">
             <div class="col-10">
-                <label class="col-form-label" for="deliveryStatus">Delivry Status</label>
+                <label class="col-form-label" for="deliveryStatus">Delivery Status</label>
                 <ng-select id="deliveryStatus" [searchable]="false" [formControl]="deliveryStatus" bindLabel="name"
                     bindValue="name" placeholder="Delivry Status">
                     <ng-option [value]="'Delivered'">Delivered</ng-option>
@@ -388,7 +389,8 @@
             </div>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-end">
-            <ng-container *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChProdEntryApproval)">
+            <ng-container
+                *ngIf="(permissions$ | async)?.includes(uiState.privileges.ChProdEntryApproval) && !uiState.activateUploadBtns">
                 <button
                     *ngIf="uiState.loadedData && !(uiState.policyDetails.done == 1 || uiState.policyDetails.reject == 1)"
                     class="btn btn-sm btn-info mx-2" (click)="changeStatus('Approve')">
@@ -400,6 +402,10 @@
                     Reject
                 </button>
             </ng-container>
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
+                (click)="openUploadFromExcelModal(uiState.sno)">
+                Upload Beneficiaries List
+            </button>
             <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="modal.close('Close click')">
                 Close
             </button>

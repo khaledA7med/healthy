@@ -1,22 +1,21 @@
 import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import { NavigationStart, Router } from "@angular/router";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
-import { ProductionPermissions } from "src/app/core/roles/production-permissions";
+import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { Roles } from "src/app/core/roles/Roles";
+import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
-import { productionCols } from "src/app/shared/app/grid/productionCols";
+import { motorActiveListCols } from "src/app/shared/app/grid/motorActiveListCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
 import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
-import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
 import { PoilcyPreviewComponent } from "src/app/shared/components/poilcy-preview/poilcy-preview.component";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
@@ -24,16 +23,13 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 
 @Component({
-	selector: "app-policies-management",
-	templateUrl: "./policies-management.component.html",
-	styleUrls: ["./policies-management.component.scss"],
+	selector: "app-active-list-management",
+	templateUrl: "./active-list-management.component.html",
+	styleUrls: ["./active-list-management.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class PoliciesManagementComponent implements OnInit, OnDestroy {
+export class ActiveListManagementComponent implements OnInit, OnDestroy {
 	uiState = {
-		routerLink: {
-			forms: AppRoutes.Production.create,
-		},
 		filters: {
 			pageNumber: 1,
 			pageSize: 50,
@@ -47,15 +43,8 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			list: [] as IPolicy[],
 			totalPages: 0,
 		},
-		lineOfBusinessList: [] as IGenericResponseType[],
-		filterByAmount: false,
 		privileges: ProductionPermissions,
-		lists: {
-			policyStatus: [] as IGenericResponseType[],
-		},
 	};
-
-	allStatusControl: FormControl = new FormControl(false);
 
 	permissions$!: Observable<string[]>;
 
@@ -71,7 +60,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: productionCols,
+		columnDefs: motorActiveListCols,
 		suppressCsvExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
@@ -107,35 +96,25 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 		this.initFilterForm();
 		this.getLookupData();
-		this.disableAmountFilter();
+		// this.disableAmountFilter();
 
-		// let sub = this.router.events.subscribe((evt) => {
-		// 	if (evt instanceof NavigationEnd) {
-		// 		if (!evt.url.includes("details")) {
-		// 			if (this.router.getCurrentNavigation()?.extras.state!["updated"]) this.gridApi.setDatasource(this.dataSource);
-		// 		}
-		// 	}
-		// });
-		let sub2 = this.permissions$.subscribe((res: string[]) => {
+		let sub = this.permissions$.subscribe((res: string[]) => {
 			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) this.f.branch?.patchValue(this.auth.getUser().Branch!);
 			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
 			if (!res.includes(this.uiState.privileges.ChProductionAccessAllUsers)) this.f.producer?.patchValue(this.auth.getUser().name!);
 		});
-		let sub3 = this.router.events.subscribe((event) => {
+		let sub2 = this.router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
 				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
 			}
 		});
-		let sub4 = this.lookupData.subscribe((res) => {
-			this.uiState.lists.policyStatus = res.PolicyStatus?.content!;
-		});
-		this.subscribes.push(sub2, sub3, sub4);
+		this.subscribes.push(sub, sub2);
 	}
-
+	//#region Grid Functions
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
+			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<any[]>>) => {
 				if (res.status) {
 					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 					this.uiState.policies.list = res.body?.data!;
@@ -189,13 +168,15 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.gridApi.setDatasource(this.dataSource);
 		if ((this, this.uiState.policies.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
+	//#endregion
+
 	//#region Filter INIT and Functions
 	openPoliciesFilter() {
 		this.offcanvasService.open(this.policiesFilter, { position: "end" });
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup<IProductionFiltersForm>({
+		this.filterForm = new FormGroup<any>({
 			status: new FormControl(["Active"], Validators.required),
 			branch: new FormControl(""),
 			ourRef: new FormControl(""),
@@ -203,7 +184,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			producer: new FormControl([]),
 			insurCompany: new FormControl(""),
 			classOfInsurance: new FormControl(""),
-			lineOfBusiness: new FormControl(""),
 			policyNo: new FormControl(""),
 			endorsNo: new FormControl(""),
 			policyEndorsType: new FormControl(""),
@@ -211,15 +191,15 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			companyCommisionDNCNNo: new FormControl(""),
 			ourDNCNNo: new FormControl(""),
 			createdBy: new FormControl(""),
-			issueFrom: new FormControl(null),
-			issueTo: new FormControl(null),
-			financeApproveFrom: new FormControl(null),
-			financeApproveTo: new FormControl(null),
-			inceptionFrom: new FormControl(null),
-			inceptionTo: new FormControl(null),
-			financeEntryFrom: new FormControl(null),
-			financeEntryTo: new FormControl(null),
-			amount: new FormControl(this.uiState.filterByAmount),
+			issueFrom: new FormControl(""),
+			issueTo: new FormControl(""),
+			financeApproveFrom: new FormControl(""),
+			financeApproveTo: new FormControl(""),
+			inceptionFrom: new FormControl(""),
+			inceptionTo: new FormControl(""),
+			financeEntryFrom: new FormControl(""),
+			financeEntryTo: new FormControl(""),
+			amount: new FormControl(""),
 			field: new FormControl(""),
 			operatordList: new FormControl(""),
 			amountNo: new FormControl(""),
@@ -233,24 +213,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 	getLookupData() {
 		this.lookupData = this.table.getBaseData(MODULES.Production);
-	}
-
-	getLineOfBusiness(e: IGenericResponseType) {
-		let sub = this.masterService.getLineOfBusiness(e.name).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
-			this.uiState.lineOfBusinessList = res.body?.data!.content;
-		});
-		this.subscribes.push(sub);
-	}
-
-	checkAllToggler(check: boolean, controlName: string) {
-		switch (controlName) {
-			case "policyStatus":
-				if (check) this.f.status?.patchValue(this.uiState.lists.policyStatus.map((e) => e.name));
-				else this.f.status?.patchValue(["Active"]);
-				break;
-			default:
-				break;
-		}
 	}
 
 	modifyFilterReq() {
@@ -316,6 +278,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		});
 		this.modalRef.componentInstance.data = {
 			id,
+			activateUploadBtns: true,
 		};
 	}
 
@@ -326,7 +289,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 
 	clearFilter() {
 		this.filterForm.reset();
-		this.f.status?.patchValue(["Active"]);
 	}
 	//#endregion
 
