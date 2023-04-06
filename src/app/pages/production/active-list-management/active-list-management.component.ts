@@ -12,7 +12,7 @@ import { ProductionPermissions } from "src/app/core/roles/production-permissions
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
-import { motorActiveListCols } from "src/app/shared/app/grid/motorActiveListCols";
+import { ActiveListCols } from "src/app/shared/app/grid/ActiveListCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
 import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
@@ -60,7 +60,7 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 		rowModelType: "infinite",
 		editType: "fullRow",
 		animateRows: true,
-		columnDefs: motorActiveListCols,
+		columnDefs: ActiveListCols,
 		suppressCsvExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,

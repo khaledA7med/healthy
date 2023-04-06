@@ -59,7 +59,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 		public modal: NgbActiveModal,
 		private privileges: PermissionsService,
 		private modalService: NgbModal
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.permissions$ = this.privileges.getPrivileges(Roles.Production);
@@ -300,7 +300,7 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 
 		this.modalRef.componentInstance.data = {
 			id,
-			endorsType: this.uiState.policyDetails.className
+			className: this.uiState.policyDetails.className,
 		};
 	}
 

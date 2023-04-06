@@ -7,7 +7,7 @@ import { CellEvent } from "ag-grid-community";
 import { formatCurrency } from "@angular/common";
 import { ActiveListManagementControlsComponent } from "src/app/pages/production/active-list-management/active-list-management-controls.component";
 
-export const motorActiveListCols: ColDef[] = [
+export const ActiveListCols: ColDef[] = [
 	{
 		colId: "action",
 		cellRenderer: ActiveListManagementControlsComponent,
