@@ -37,7 +37,7 @@ import { productionActiveCols } from "src/app/shared/app/grid/medicalActiveListC
 // import { medicalActiveListCols } from "src/app/shared/app/grid/medicalActiveListCols";
 import { productionCols } from "src/app/shared/app/grid/productionCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IMedicalActiveList } from "src/app/shared/app/models/Production/i-medical-active-list";
+import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
 import {
   IMedicalActiveFilters,
   IMedicalActiveFiltersForm,

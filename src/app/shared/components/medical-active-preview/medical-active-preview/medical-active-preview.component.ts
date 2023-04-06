@@ -1,13 +1,14 @@
 import { HttpResponse } from "@angular/common/http";
 import {
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
@@ -27,6 +28,13 @@ import Swal from "sweetalert2";
 import { ViewEncapsulation } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import * as XLSX from "xlsx";
+import readXlsxFile from "read-excel-file";
+
+import {
+  Data,
+  DataForm,
+} from "src/app/shared/app/models/Production/production-util";
+import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
 
 @Component({
   selector: "app-medical-active-preview",
@@ -37,12 +45,15 @@ import * as XLSX from "xlsx";
 export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
   @Input() data!: {
     id: string;
+    className: string;
   };
   uiState = {
     sno: "",
     policyDetails: {} as IPolicyPreview,
     loadedData: false,
     updatedState: false,
+    data: [] as any[],
+    medicalData: [] as IMedicalData[],
     documentList: [],
     privileges: ProductionPermissions,
   };
@@ -57,8 +68,34 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
 
   @ViewChild("details") detailsModal!: TemplateRef<any>;
+  @ViewChild("fileInput") fileInput!: ElementRef;
 
   modalRef!: NgbModalRef;
+
+  DataFormArr: FormArray<FormGroup<DataForm>> = new FormArray<
+    FormGroup<DataForm>
+  >([]);
+
+  addPerson(data?: Data) {
+    let newData = new FormGroup<DataForm>({
+      Name: new FormControl(data?.Name || null),
+      Age: new FormControl(data?.Age || null),
+      Type: new FormControl(data?.Type || null),
+    });
+    this.DataFormArr?.push(newData);
+  }
+  removePerson(i: number) {
+    this.DataFormArr.removeAt(i);
+  }
+  resetFormArr() {
+    this.DataFormArr.clear();
+    this.uiState.data.forEach((newData: any) => this.addPerson(newData));
+  }
+  clearFromArr() {
+    this.DataFormArr.reset();
+    this.DataFormArr.clear();
+    this.fileInput.nativeElement.value = "";
+  }
 
   constructor(
     private message: MessagesService,
@@ -302,30 +339,94 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  ReadExcel(event: any) {
-    let file = event.target.files[0];
+  // ReadExcel(event: any) {
+  //   let file = event.target.files[0];
+  //   const target: DataTransfer = <DataTransfer>event.target;
+  //   if (target.files.length == 1 && event.target.accept === ".xlsx, .xls") {
+  //     let fileReader = new FileReader();
+  //     fileReader.readAsBinaryString(file);
+  //     fileReader.onload = (e) => {
+  //       let excelData = fileReader.result;
+  //       let excelRecordsArray = (<any>excelData).trim().split(/\r\n|\n/);
+  //       let header = excelRecordsArray[0].split(",");
+  //       let headerdata = header.length;
+  //       console.log(headerdata);
+  //       for (var i = 1; i <= excelRecordsArray.length; i++) {
+  //         var data = excelRecordsArray[i].split(",");
+  //         var dataCount = data.length;
+  //         if (headerdata !== dataCount) {
+  //           this.message.popup(
+  //             "Missing column or Invalid  excel file.",
+  //             "error"
+  //           );
+  //           this.fileInput.nativeElement.value = "";
+  //         } else {
+  //           var workBook = XLSX.read(fileReader.result, { type: "binary" });
+  //           var sheetNames = workBook.SheetNames;
+  //           this.ExcelData = XLSX.utils.sheet_to_json(
+  //             workBook.Sheets[sheetNames[0]]
+  //           );
+  //           console.log(this.ExcelData);
+  //         }
+  //       }
+  //     };
+  //   }
+  // }
 
-    let fileReader = new FileReader();
-    fileReader.readAsBinaryString(file);
-    fileReader.onload = (e) => {
-      var workBook = XLSX.read(fileReader.result, { type: "binary" });
-      var sheetNames = workBook.SheetNames;
-      this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]]);
-      console.log(this.ExcelData);
+  // selectedRow: any;
+  // edit(row: any) {
+  //   this.selectedRow = row;
+  //   // Code to open a modal dialog or a form to edit the selected row
+  // }
+
+  // delete(row: any) {
+  //   const index = this.ExcelData.indexOf(row);
+  //   if (index > -1) {
+  //     this.ExcelData.splice(index, 1);
+  //   }
+  // }
+
+  uploadExeceFile(e: any) {
+    const schema = {
+      Name: {
+        prop: "Name",
+        type: String,
+        required: true,
+      },
+      Age: {
+        prop: "Age",
+        type: Number,
+        required: true,
+      },
+      Type: {
+        prop: "Type",
+        type: String,
+        required: true,
+      },
     };
-  }
 
-  selectedRow: any;
-  edit(row: any) {
-    this.selectedRow = row;
-    // Code to open a modal dialog or a form to edit the selected row
-  }
-
-  delete(row: any) {
-    const index = this.ExcelData.indexOf(row);
-    if (index > -1) {
-      this.ExcelData.splice(index, 1);
-    }
+    readXlsxFile(
+      e.target.files[0],
+      this.data.className === "Medical" ? { schema } : { schema }
+    ).then(({ rows, errors }) => {
+      if (errors.length == 0) {
+        this.uiState.data = [...rows];
+        rows.forEach((person: any) => this.addPerson(person));
+      } else {
+        console.log(errors);
+        this.message.popup(
+          "Error",
+          `Invalid File : ${errors[0].column} is ${
+            errors[0].error === "required"
+              ? "not match columns"
+              : errors[0].error + " in"
+          } ${
+            errors.length < 1 && errors[0].row ? "row " + errors[0].row : ""
+          }`,
+          "error"
+        );
+      }
+    });
   }
   // To Do back to main route when close modal
   backToMainRoute() {
