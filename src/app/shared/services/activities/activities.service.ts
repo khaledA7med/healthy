@@ -6,10 +6,6 @@ import { environment } from "src/environments/environment";
 import { ITaskParams } from "../../app/models/Activities/itask-params";
 import { ITasks } from "../../app/models/Activities/itasks";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
-import { ISalesLeadDetails } from "../../app/models/BusinessDevelopment/isalesLeadDetails";
-import { IClaims } from "../../app/models/Claims/iclaims";
-import { IClient } from "../../app/models/Clients/iclient";
-import { ICustomerService } from "../../app/models/CustomerService/icustomer-service";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 
 @Injectable({
