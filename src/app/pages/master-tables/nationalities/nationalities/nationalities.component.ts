@@ -66,6 +66,8 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -89,9 +91,13 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
             params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -136,7 +142,7 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editNationalitiesMode = true;
             this.uiState.editNationalitiesData = res.body?.data!;
-            this.fillAddNationalitiesForm(res.body?.data!);
+            this.fillEditNationalitiesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -162,21 +168,13 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
     return this.NationalitiesForm.controls;
   }
 
-  fillAddNationalitiesForm(data: INationaltiesData) {
-    this.f.nationality?.patchValue(data.nationality!);
-  }
-
   fillEditNationalitiesForm(data: INationaltiesData) {
     this.f.nationality?.patchValue(data.nationality!);
   }
 
   validationChecker(): boolean {
     if (this.NationalitiesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

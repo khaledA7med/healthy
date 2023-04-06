@@ -1,0 +1,61 @@
+import { FormControl } from "@angular/forms";
+
+export interface IMotorData {
+    SNo?: Number | null;
+    OasisPolRef?: string | null;
+    PoliciesSNo?: Number | null;
+    PolicyNo?: string | null;
+    ClientID?: Number | null;
+    OwnerDriver?: string | null;
+    PlateNo?: string | null;
+    PlateChar1?: string | null;
+    PlateChar2?: string | null;
+    PlateChar3?: string | null;
+    CustomCardNo?: string | null;
+    SequenceNo?: string | null;
+    CustomID?: string | null;
+    BrandName?: string | null;
+    Model?: string | null;
+    Inception?: string | null;
+    Expiry?: Date | null;
+    KCLDate?: Date | null;
+    Seats?: string | null;
+    BodyType?: string | null;
+    ChassisNo?: string | null;
+    MarketValue?: string | null;
+    RepairType?: string | null;
+    VehicleOwnerID?: string | null;
+    ProjectName?: string | null;
+    SavedUser?: string | null;
+    SavedOn?: Date | null;
+}
+
+export interface IMotorFormData {
+    SNo?: FormControl<Number | null>;
+    OasisPolRef?: FormControl<string | null>;
+    PoliciesSNo?: FormControl<Number | null>;
+    PolicyNo?: FormControl<string | null>;
+    ClientID?: FormControl<Number | null>;
+    OwnerDriver?: FormControl<string | null>;
+    PlateNo?: FormControl<string | null>;
+    PlateChar1?: FormControl<string | null>;
+    PlateChar2?: FormControl<string | null>;
+    PlateChar3?: FormControl<string | null>;
+    CustomCardNo?: FormControl<string | null>;
+    SequenceNo?: FormControl<string | null>;
+    CustomID?: FormControl<string | null>;
+    BrandName?: FormControl<string | null>;
+    Model?: FormControl<string | null>;
+    Inception?: FormControl<string | null>;
+    Expiry?: FormControl<Date | null>;
+    KCLDate?: FormControl<Date | null>;
+    Seats?: FormControl<string | null>;
+    BodyType?: FormControl<string | null>;
+    ChassisNo?: FormControl<string | null>;
+    MarketValue?: FormControl<string | null>;
+    RepairType?: FormControl<string | null>;
+    VehicleOwnerID?: FormControl<string | null>;
+    ProjectName?: FormControl<string | null>;
+    SavedUser?: FormControl<string | null>;
+    SavedOn?: FormControl<Date | null>;
+}

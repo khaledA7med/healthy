@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -49,7 +49,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   QuotingRequirementsFormSubmitted = false as boolean;
   QuotingRequirementsModal!: NgbModalRef;
   QuotingRequirementsForm!: FormGroup<IQuotingRequirements>;
-  EditQuotingRequirementsForm!: FormGroup<IQuotingRequirements>;
   lineOfBussArr: IGenericResponseType[] = [];
 
   @ViewChild("QuotingRequirementsContent")
@@ -65,7 +64,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
     editQuotingRequirementsMode: false as Boolean,
     editQuotingRequirementsData: {} as IQuotingRequirementsData,
   };
-  isChecked!: number;
   subscribes: Subscription[] = [];
 
   gridApi: GridApi = <GridApi>{};
@@ -114,7 +112,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();
           } else {
-            this.uiState.gridReady = true;
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
           }
         }
@@ -154,7 +152,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initQuotingRequirementsForm();
-    this.initEditQuotingRequirementsForm();
     this.getLookupData();
   }
 
@@ -194,14 +191,18 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
       if (res?.status) {
         this.uiState.editQuotingRequirementsMode = true;
         this.uiState.editQuotingRequirementsData = res.data!;
-        this.EditQuotingRequirementsForm.patchValue({
+        this.QuotingRequirementsForm.patchValue({
           ...this.uiState.editQuotingRequirementsData,
           defaultTick:
             this.uiState.editQuotingRequirementsData.defaultTick === 1
               ? true
               : false,
         });
+        this.f.class?.disable();
+        this.f.lineOfBusiness?.disable();
+        this.f.insuranceCopmany?.disable();
         this.openQuotingRequirementsDialoge();
+        this.eventService.broadcast(reserved.isLoading, false);
       } else this.message.toast(res.message!, "error");
     });
     this.subscribes.push(sub);
@@ -219,7 +220,9 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
     );
 
     this.QuotingRequirementsModal.hidden.subscribe(() => {
-      this.resetEditQuotingRequirementsForm();
+      this.resetQuotingRequirementsForm();
+      this.QuotingRequirementsFormSubmitted = false;
+      this.uiState.editQuotingRequirementsMode = false;
     });
   }
 
@@ -241,27 +244,9 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
     return this.QuotingRequirementsForm.controls;
   }
 
-  initEditQuotingRequirementsForm() {
-    this.EditQuotingRequirementsForm = new FormGroup<IQuotingRequirements>({
-      sNo: new FormControl(null),
-      defaultTick: new FormControl(null),
-      class: new FormControl(null),
-      lineOfBusiness: new FormControl(null),
-      insuranceCopmany: new FormControl(null),
-      item: new FormControl(null, Validators.required),
-      itemArabic: new FormControl(null, Validators.required),
-      description: new FormControl(null),
-      descriptionArabic: new FormControl(null),
-    });
-  }
-
   validationChecker(): boolean {
     if (this.QuotingRequirementsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;
@@ -269,42 +254,44 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
 
   submitQuotingRequirementsData(form: FormGroup<IQuotingRequirements>) {
     this.uiState.submitted = true;
-    if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
 
     // const formData = form.getRawValue();
     const data: IQuotingRequirementsData = {
       ...form.getRawValue(),
       defaultTick: form.getRawValue().defaultTick === true ? 1 : 0,
+      sNo: this.uiState.editQuotingRequirementsMode
+        ? this.uiState.editQuotingRequirementsData.sNo
+        : 0,
     };
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
+
     let sub = this.QuotingRequirementsService.saveQuotingRequirements(
       data
     ).subscribe((res: IBaseResponse<any>) => {
-      if (res.status) {
+      if (res?.status) {
         if (this.uiState.editQuotingRequirementsMode) {
-          this.QuotingRequirementsModal.dismiss();
+          this.QuotingRequirementsModal?.dismiss();
           this.eventService.broadcast(reserved.isLoading, false);
-        } else {
-          this.f.item?.reset();
-          this.f.itemArabic?.reset();
-          this.f.description?.reset();
-          this.f.descriptionArabic?.reset();
-          this.f.defaultTick?.reset();
-        }
-        this.message.toast(res.message!, "success");
+        } else this.resetQuotingRequirementsForm();
+
         this.gridApi.setDatasource(this.dataSource);
+        this.message.toast(res?.message!, "success");
       } else this.message.popup("Sorry!", res.message!, "warning");
       this.eventService.broadcast(reserved.isLoading, false);
     });
     this.subscribes.push(sub);
   }
 
-  resetEditQuotingRequirementsForm() {
-    this.EditQuotingRequirementsForm.reset();
-  }
-
   resetQuotingRequirementsForm() {
-    this.QuotingRequirementsForm.reset();
+    this.f.item?.reset();
+    this.f.itemArabic?.reset();
+    this.f.description?.reset();
+    this.f.descriptionArabic?.reset();
+    this.f.defaultTick?.reset();
+    this.f.class?.enable();
+    this.f.lineOfBusiness?.enable();
+    this.f.insuranceCopmany?.enable();
     this.uiState.submitted = false;
   }
 

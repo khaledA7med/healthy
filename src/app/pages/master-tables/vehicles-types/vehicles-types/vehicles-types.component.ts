@@ -66,6 +66,8 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -89,9 +91,13 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
             params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -136,7 +142,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editVehiclesTypesMode = true;
             this.uiState.editVehiclesTypesData = res.body?.data!;
-            this.fillAddVehiclesTypesForm(res.body?.data!);
+            this.fillEditVehiclesTypesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -163,11 +169,6 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
     return this.VehiclesTypesForm.controls;
   }
 
-  fillAddVehiclesTypesForm(data: IVehiclesTypesData) {
-    this.f.vehicleType?.patchValue(data.vehicleType!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-  }
-
   fillEditVehiclesTypesForm(data: IVehiclesTypesData) {
     this.f.vehicleType?.patchValue(data.vehicleType!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
@@ -175,11 +176,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
 
   validationChecker(): boolean {
     if (this.VehiclesTypesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

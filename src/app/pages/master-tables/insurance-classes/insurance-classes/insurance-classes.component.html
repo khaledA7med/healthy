@@ -23,42 +23,55 @@
     <form [formGroup]="InsuranceForm" (ngSubmit)="submitInsuranceData(InsuranceForm)">
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
-                <div class="col-12 row">
+                <div class="mt-3 h-100">
+                    <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
+                        <div class="card-body">
+                            <span class="ribbon ribbon-info round-shape"><span>Insurance
+                                    Class</span></span>
+                            <div class="col-12 row mt-4">
 
-                    <!-- Class Of Insurance -->
-                    <div class="col-12 mb-2">
-                        <label for="className" class="asterisk-input">Class Of Insurance</label>
-                        <input id="classNameAr" class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
-                            formControlName="className" />
-                        <span *ngIf="(f.className?.touched || uiState.submitted) && f.className?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
+                                <!-- Class Of Insurance -->
+                                <div class="col-12 mb-2">
+                                    <label for="className" class="asterisk-input">Class Of Insurance</label>
+                                    <input id="classNameAr" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
+                                        formControlName="className" />
+                                    <span *ngIf="(f.className?.touched || uiState.submitted) && f.className?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
 
-                    <!-- Class Of Insurance (Ar) -->
-                    <div class="col-12 mb-2">
-                        <label for="classNameAr">Class Of Insurance (Ar)</label>
-                        <input id="classNameAr" class="form-control form-control-sm" formControlName="classNameAr" />
+                                <!-- Class Of Insurance (Ar) -->
+                                <div class="col-12 mb-2">
+                                    <label for="classNameAr">Class Of Insurance (Ar)</label>
+                                    <input id="classNameAr" class="form-control form-control-sm"
+                                        formControlName="classNameAr" />
 
-                    </div>
+                                </div>
 
-                    <!-- abbreviation -->
-                    <div class="col-12 mb-2">
-                        <label for="abbreviation" class="asterisk-input">Abbreviation</label>
-                        <input id="abbreviation" class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
-                            formControlName="abbreviation" />
-
+                                <!-- abbreviation -->
+                                <div class="col-12 mb-2">
+                                    <label for="abbreviation" class="asterisk-input">Abbreviation</label>
+                                    <input id="abbreviation" class="form-control form-control-sm"
+                                        [ngClass]="{'is-invalid': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
+                                        formControlName="abbreviation" />
+                                    <span
+                                        *ngIf="(f.abbreviation?.touched || uiState.submitted) && f.abbreviation?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
-                *ngIf="!uiState.editInsuranceMode"><i class="ri-add-line"></i>Add</button>
-            <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"
-                *ngIf="uiState.editInsuranceMode"><i class="ri-edit-line mx-1"></i>Edit</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
+                    *ngIf="!uiState.editInsuranceMode"><i class="ri-add-line"></i>Add</button>
+                <button type="submit" class="btn btn-sm btn-soft-success mx-2 d-flex align-items-center"
+                    *ngIf="uiState.editInsuranceMode"><i class="ri-edit-line mx-1"></i>Edit</button>
+                <button type="button" class="btn btn-soft-danger btn-sm d-flex align-items-center"
+                    (click)="modal.close()">
+                    <i class="ri-close-fill"></i> Close</button>
+            </div>
         </div>
     </form>
 </ng-template>

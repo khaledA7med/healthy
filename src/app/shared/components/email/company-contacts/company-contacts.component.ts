@@ -41,6 +41,7 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 		showSelectContact: false,
 		showAddContact: false,
 		selectedCompanySno: 0,
+		selectedCompanyName: "",
 		companies: {
 			list: [] as any[],
 		},
@@ -67,6 +68,7 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
 		onSortChanged: (e) => this.onSort(e),
@@ -86,6 +88,7 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReadyContacts(e),
 		onCellClicked: (e) => this.onCellClickedContacts(e),
 		onSortChanged: (e) => this.onSortContacts(e),
@@ -111,10 +114,14 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 				if (res.status) {
 					this.uiState.companies.list = res.data!.content;
 					params.successCallback(this.uiState.companies.list, this.uiState.companies.list.length);
-				} else this.message.popup("Oops!", res.message!, "error");
-				this.uiState.gridReady = true;
+					if (this.uiState.companies.list.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.message!, "error");
+					this.uiState.gridReady = true;
+					this.gridApi.hideOverlay();
+				}
 				this.eventService.broadcast(reserved.isLoading, false);
-				this.gridApi.hideOverlay();
 			});
 			this.subscribes.push(sub);
 		},
@@ -134,6 +141,7 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 		this.uiState.showCopmanies = true;
 		this.uiState.showSelectContact = true;
 		this.uiState.selectedCompanySno = params.data.id;
+		this.uiState.selectedCompanyName = params.data.name;
 	}
 
 	onGridReady(param: GridReadyEvent) {
@@ -147,18 +155,21 @@ export class CompanyContactsComponent implements OnInit, OnDestroy {
 	contactsDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			if (this.uiState.contacts.list.length == 0) this.eventService.broadcast(reserved.isLoading, true);
-			else this.gridApi.showLoadingOverlay();
-			console.log(this.uiState.selectedCompanySno);
+			else this.contactsGridApi.showLoadingOverlay();
 			let sub = this.emailService
 				.getAllCompanyContacts(this.uiState.selectedCompanySno)
 				.subscribe((res: HttpResponse<IBaseResponse<IEmailCompanyContact[]>>) => {
 					if (res.body?.status) {
 						this.uiState.contacts.list = res.body?.data!;
 						params.successCallback(this.uiState.contacts.list, this.uiState.contacts.list.length);
-					} else this.message.popup("Oops!", res.body?.message!, "error");
+						if (this.uiState.contacts.list.length === 0) this.contactsGridApi.showNoRowsOverlay();
+						else this.contactsGridApi.hideOverlay();
+					} else {
+						this.message.popup("Oops!", res.body?.message!, "error");
+						this.contactsGridApi.hideOverlay();
+					}
 					this.uiState.gridReady = true;
 					this.eventService.broadcast(reserved.isLoading, false);
-					this.gridApi.hideOverlay();
 				});
 			this.subscribes.push(sub);
 		},

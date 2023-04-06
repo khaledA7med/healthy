@@ -39,10 +39,17 @@ import { MasterMethodsService } from "src/app/shared/services/master-methods.ser
 import { InsuranceCompaniesService } from "src/app/shared/services/master-tables/insurance-companies.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { reserved } from "src/app/core/models/reservedWord";
-import { IContactList } from "src/app/shared/app/models/MasterTables/insurance-companies/i-contact-list";
+import {
+  IContactList,
+  IContactListData,
+} from "src/app/shared/app/models/MasterTables/insurance-companies/i-contact-list";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
-import { IProductsList } from "src/app/shared/app/models/MasterTables/insurance-companies/i-products-list";
+import {
+  IProductsList,
+  IProductsListData,
+} from "src/app/shared/app/models/MasterTables/insurance-companies/i-products-list";
+import { IInsuranceCompaniesPreview } from "src/app/shared/app/models/MasterTables/insurance-companies/i-insurance-companies-preview";
 
 @Component({
   selector: "app-insurance-companies",
@@ -83,6 +90,8 @@ export class InsuranceCompaniesComponent implements OnInit {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -116,9 +125,13 @@ export class InsuranceCompaniesComponent implements OnInit {
                 this.uiState.list,
                 this.uiState.list.length
               );
-              this.uiState.gridReady = true;
+              if (this.uiState.list.length === 0)
+                this.gridApi.showNoRowsOverlay();
+              else this.gridApi.hideOverlay();
+            } else {
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
-            } else this.message.toast(res.body!.message!, "error");
+            }
           }
         );
       this.subscribes.push(sub);
@@ -161,7 +174,6 @@ export class InsuranceCompaniesComponent implements OnInit {
   openInsuranceDialoge(id?: string) {
     this.resetInsuranceForm();
     this.InsuranceModal = this.modalService.open(this.insuranceContent, {
-      ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
       size: "xl",
@@ -171,7 +183,7 @@ export class InsuranceCompaniesComponent implements OnInit {
       let sub = this.InsuranceCompaniesService.getEditInsuranceCompanies(
         id
       ).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceCompaniesData>>) => {
+        (res: HttpResponse<IBaseResponse<IInsuranceCompaniesPreview>>) => {
           if (res.body?.status) {
             this.uiState.editInsuranceMode = true;
             this.uiState.editInsuranceData = res.body?.data!;
@@ -198,7 +210,7 @@ export class InsuranceCompaniesComponent implements OnInit {
       abbreviation: new FormControl(null, Validators.required),
       vatNo: new FormControl(null, Validators.required),
       crNo: new FormControl(null, Validators.required),
-      tele1: new FormControl(null),
+      tele1: new FormControl(null, Validators.pattern("[0-9]{9}")),
       fax: new FormControl(null),
       unifiedNo: new FormControl(null),
       email: new FormControl(null, Validators.email),
@@ -220,7 +232,7 @@ export class InsuranceCompaniesComponent implements OnInit {
   }
 
   //get products List Controls
-  productsLisControls(i: number, control: string): AbstractControl {
+  productsListControls(i: number, control: string): AbstractControl {
     return this.productsListArray.controls[i].get(control)!;
   }
   //#contact List Array
@@ -233,14 +245,20 @@ export class InsuranceCompaniesComponent implements OnInit {
     return this.contactListArray.controls[i].get(control)!;
   }
 
-  addProduct(data?: IProductsList) {
+  addProduct(data?: IProductsListData) {
     if (this.f.productsList?.invalid) {
       this.f.productsList?.markAllAsTouched();
       return;
     }
     let product = new FormGroup<IProductsList>({
-      classOfBusiness: new FormControl(data?.classOfBusiness || null),
-      lineOfBusiness: new FormControl(data?.lineOfBusiness || null),
+      classOfBusiness: new FormControl(
+        data?.classOfBusiness || null,
+        Validators.required
+      ),
+      lineOfBusiness: new FormControl(
+        data?.lineOfBusiness || null,
+        Validators.required
+      ),
     });
 
     if (!data) product.reset();
@@ -250,17 +268,32 @@ export class InsuranceCompaniesComponent implements OnInit {
     this.productsListArray.updateValueAndValidity();
   }
 
-  addContact(data?: IContactList) {
+  addContact(data?: IContactListData) {
     if (this.f.contactList?.invalid) {
       this.f.contactList?.markAllAsTouched();
       return;
     }
     let contact = new FormGroup<IContactList>({
-      contactName: new FormControl(data?.contactName || null),
-      contactPosition: new FormControl(data?.contactPosition || null),
-      contactEmail: new FormControl(data?.contactEmail || null),
-      contactMobileNo: new FormControl(data?.contactMobileNo || null),
-      contactTele: new FormControl(data?.contactTele || null),
+      contactName: new FormControl(
+        data?.contactName || null,
+        Validators.required
+      ),
+      contactPosition: new FormControl(
+        data?.contactPosition || null,
+        Validators.required
+      ),
+      contactEmail: new FormControl(data?.contactEmail || null, [
+        Validators.email,
+        Validators.required,
+      ]),
+      contactMobileNo: new FormControl(data?.contactMobileNo || null, [
+        Validators.pattern("[0-9]{9}"),
+        Validators.required,
+      ]),
+      contactTele: new FormControl(
+        data?.contactTele || null,
+        Validators.pattern("[0-9]{9}")
+      ),
       LineOfBusiness: new FormControl(data?.LineOfBusiness || null),
       department: new FormControl(data?.department || null),
       address: new FormControl(data?.address || null),
@@ -286,7 +319,7 @@ export class InsuranceCompaniesComponent implements OnInit {
   }
   //#endregion
 
-  fillAddIsnuranceForm(data: IInsuranceCompaniesData) {
+  fillEditInsuranceForm(data: IInsuranceCompaniesPreview) {
     this.f.companyName?.patchValue(data.companyName!);
     this.f.companyNameAr?.patchValue(data.companyNameAr!);
     this.f.abbreviation?.patchValue(data.abbreviation!);
@@ -298,63 +331,60 @@ export class InsuranceCompaniesComponent implements OnInit {
     this.f.email?.patchValue(data.email!);
     this.f.address?.patchValue(data.address!);
     this.f.otherDetails?.patchValue(data.otherDetails!);
-    data.productsList?.forEach((sr: any) => this.addProduct(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
-  }
-
-  fillEditInsuranceForm(data: IInsuranceCompaniesData) {
-    this.f.companyName?.patchValue(data.companyName!);
-    this.f.companyNameAr?.patchValue(data.companyNameAr!);
-    this.f.abbreviation?.patchValue(data.abbreviation!);
-    this.f.vatNo?.patchValue(data.vatNo!);
-    this.f.crNo?.patchValue(data.crNo!);
-    this.f.tele1?.patchValue(data.tele1!);
-    this.f.fax?.patchValue(data.fax!);
-    this.f.unifiedNo?.patchValue(data.unifiedNo!);
-    this.f.email?.patchValue(data.email!);
-    this.f.address?.patchValue(data.address!);
-    this.f.otherDetails?.patchValue(data.otherDetails!);
-    data.productsList?.forEach((sr: any) => this.addProduct(sr));
-    data.contactList?.forEach((sr: any) => this.addContact(sr));
+    data.productsList?.forEach((pro) => this.addProduct(pro));
+    data.contactList?.forEach((con) => this.addContact(con));
   }
 
   validationChecker(): boolean {
     if (this.InsuranceForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;
   }
 
-  submitInsuranceData(form: FormGroup) {
+  submitInsuranceData(InsuranceForm: FormGroup<IInsuranceCompanies>) {
     this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IInsuranceCompaniesData = {
-      sNo: this.uiState.editInsuranceMode
-        ? this.uiState.editInsuranceData.sNo
-        : 0,
-      companyName: formData.companyName,
-      companyNameAr: formData.companyNameAr,
-      abbreviation: formData.abbreviation,
-      vatNo: formData.vatNo,
-      crNo: formData.crNo,
-      tele1: formData.tele1,
-      fax: formData.fax,
-      unifiedNo: formData.unifiedNo,
-      email: formData.email,
-      address: formData.address,
-      otherDetails: formData.otherDetails,
-      productsList: formData.productsList,
-      contactList: formData.contactList,
-    };
+    if (!this.validationChecker()) return;
+
+    const formData = new FormData();
+    let val = InsuranceForm.getRawValue();
+    formData.append("sNo", val.sNo?.toString()! ?? 0);
+    formData.append("companyName", val.companyName!);
+    formData.append("companyNameAr", val.companyNameAr! ?? "");
+    formData.append("abbreviation", val.abbreviation!);
+    formData.append("vatNo", val.vatNo!);
+    formData.append("crNo", val.crNo!);
+    formData.append("tele1", val.tele1! ?? "");
+    formData.append("fax", val.fax! ?? "");
+    formData.append("unifiedNo", val.unifiedNo! ?? "");
+    formData.append("email", val.email! ?? "");
+    formData.append("address", val.address! ?? "");
+    formData.append("otherDetails", val.otherDetails! ?? "");
+
+    let contact = val.contactList!;
+    for (let i = 0; i < contact.length; i++) {
+      formData.append(`contactList[${i}]`, contact[i].contactName! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].contactPosition! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].contactEmail! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].contactMobileNo! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].contactTele! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].LineOfBusiness! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].department! ?? "");
+      formData.append(`contactList[${i}]`, contact[i].address! ?? "");
+    }
+
+    let product = val.productsList!;
+    for (let i = 0; i < product.length; i++) {
+      formData.append(`productsList[${i}]`, product[i].classOfBusiness! ?? "");
+      formData.append(`productsList[${i}]`, product[i].lineOfBusiness! ?? "");
+    }
+
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
+
     let sub = this.InsuranceCompaniesService.saveInsuranceCompanies(
-      data
+      formData
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.InsuranceModal.dismiss();

@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -66,6 +66,8 @@ export class CitiesComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -89,9 +91,13 @@ export class CitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
             params.successCallback(this.uiState.list, this.uiState.list.length);
-            this.uiState.gridReady = true;
+            if (this.uiState.list.length === 0)
+              this.gridApi.showNoRowsOverlay();
+            else this.gridApi.hideOverlay();
+          } else {
+            this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
-          } else this.message.popup("Sorry!", res.body?.message!, "warning");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -133,7 +139,7 @@ export class CitiesComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editCitiesMode = true;
             this.uiState.editCitiesData = res.body?.data!;
-            this.fillAddCitiesForm(res.body?.data!);
+            this.fillEditCitiesForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
@@ -159,21 +165,13 @@ export class CitiesComponent implements OnInit, OnDestroy {
     return this.CitiesForm.controls;
   }
 
-  fillAddCitiesForm(data: ICitiesData) {
-    this.f.city?.patchValue(data.city!);
-  }
-
   fillEditCitiesForm(data: ICitiesData) {
     this.f.city?.patchValue(data.city!);
   }
 
   validationChecker(): boolean {
     if (this.CitiesForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

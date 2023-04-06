@@ -1,128 +1,128 @@
-<form [formGroup]="CompanyRequirementsForm">
-    <div class="container-fluid mb-3">
-        <div class="card ribbon-box border shadow-none mb-lg-0 h-100">
-            <div class="card-body">
-                <div class="ribbon ribbon-info round-shape">
-                    Company Requirments
-                </div>
-                <div class="row my-3">
+<form [formGroup]="CompanyRequirementsForm" (ngSubmit)="submitCompanyRequirementsData(CompanyRequirementsForm)">
+    <div class="container-fluid mx-auto">
+        <div class="row card">
+            <div class="col-12 card-body">
+                <div class=" ribbon-box border shadow-none">
+                    <div>
+                        <span class="ribbon ribbon-info round-shape"><span>Company Requirements
+                            </span></span>
+                        <div class="row mt-5 mx-2">
 
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="status">Insurance Company
-                            </label>
-                        </div>
-                        <ng-select id="insuranceCompanyID" class="form-control-sm is-invalid"
-                            placeholder="Select Insurance Company" formControlName="insuranceCompanyID" bindValue="id"
-                            bindLabel="name" [loading]="lookupData ? false : true"
-                            [ngClass]="{'is-submitted': (f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid}"
-                            [items]="(lookupData | async)?.InsuranceCompanies?.content!">
-                        </ng-select>
-                        <div>
-                            <span
-                                *ngIf="(f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid"
-                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                        </div>
-                    </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="asterisk-input">Insurance Company
+                                    </label>
+                                </div>
+                                <ng-select id="insuranceCompanyID" class="form-control-sm is-invalid"
+                                    placeholder="Select Insurance Company" formControlName="insuranceCompanyID"
+                                    (change)="changeCompany($event)" bindValue="id" bindLabel="name"
+                                    [loading]="lookupData ? false : true"
+                                    [ngClass]="{'is-submitted': (f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid}"
+                                    [items]="(lookupData | async)?.InsuranceCompanies?.content!">
+                                </ng-select>
+                                <div>
+                                    <span
+                                        *ngIf="(f.insuranceCompanyID?.touched || uiState.submitted) && f.insuranceCompanyID?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+                            </div>
 
-                    <div class="col-lg-3 col-md-6 col-sm-12 mt-sm-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="status">Endors type
-                            </label>
-                        </div>
-                        <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
-                            class="form-control-sm is-invalid" [loading]="lookupData ? false : true" [clearable]="true"
-                            [searchable]="true" bindLabel="name"
-                            [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
-                            bindValue="name" id="endorsType" formControlName="endorsType">
-                        </ng-select>
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="asterisk-input">Endors type
+                                    </label>
+                                </div>
+                                <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
+                                    class="form-control-sm is-invalid" [loading]="lookupData ? false : true"
+                                    (change)="changeEndors($event)" [clearable]="true" [searchable]="true"
+                                    bindLabel="name"
+                                    [ngClass]="{'is-submitted': (f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid}"
+                                    bindValue="name" id="endorsType" formControlName="endorsType">
+                                </ng-select>
 
-                        <div>
-                            <span *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid"
-                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                        </div>
-                    </div>
+                                <div>
+                                    <span *ngIf="(f.endorsType?.touched || uiState.submitted) && f.endorsType?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+                            </div>
 
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="status">Class Of Insurance
-                            </label>
-                        </div>
-                        <ng-select id="classofInsurance" class="form-control-sm is-invalid"
-                            placeholder="Select Class Of Insurance" formControlName="classofInsurance" bindValue="name"
-                            bindLabel="name" [loading]="lookupData ? false : true" [hideSelected]="true"
-                            [ngClass]="{'is-submitted': (f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid}"
-                            [items]="(lookupData | async)?.InsurClasses?.content!"
-                            (change)="getLineOfBusiness($event?.name)">
-                        </ng-select>
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="asterisk-input">Class Of Insurance
+                                    </label>
+                                </div>
+                                <ng-select id="classofInsurance" class="form-control-sm is-invalid"
+                                    placeholder="Select Class Of Insurance" formControlName="classofInsurance"
+                                    bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
+                                    [hideSelected]="true" (change)="changeClass($event)"
+                                    [ngClass]="{'is-submitted': (f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid}"
+                                    [items]="(lookupData | async)?.InsurClasses?.content!"
+                                    (change)="getLineOfBusiness($event?.name)">
+                                </ng-select>
 
-                        <div>
-                            <span
-                                *ngIf="(f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid"
-                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="status">Line Of Business
-                            </label>
-                        </div>
-                        <ng-select id="lineOfBusiness" class="form-control-sm is-invalid"
-                            placeholder="Select Lien Of Business" formControlName="lineOfBusiness" bindValue="name"
-                            bindLabel="name" [loading]="lookupData ? false : true" [hideSelected]="true"
-                            [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
-                            (change)="gridApi.setDatasource(dataSource);" [items]="lineOfBussArr">
-                        </ng-select>
+                                <div>
+                                    <span
+                                        *ngIf="(f.classofInsurance?.touched || uiState.submitted) && f.classofInsurance?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="asterisk-input">Line Of Business
+                                    </label>
+                                </div>
+                                <ng-select id="lineOfBusiness" class="form-control-sm is-invalid"
+                                    placeholder="Select Lien Of Business" formControlName="lineOfBusiness"
+                                    bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
+                                    [hideSelected]="true" (change)="filter($event)"
+                                    [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
+                                    (change)="gridApi.setDatasource(dataSource);" [items]="lineOfBussArr">
+                                </ng-select>
 
 
-                        <div>
-                            <span *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
-                                class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                <div>
+                                    <span
+                                        *ngIf="(f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid"
+                                        class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                                <label class="asterisk-input">Item
+                                </label>
+                                <input id="item" class="form-control form-control-sm"
+                                    [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
+                                    formControlName="item" />
+                                <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
+                                    class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="col-12 my-3 d-flex justify-content-end align-items-end">
-                        <div class="d-flex">
-                            <a type="button" class="btn btn-sm btn-info" (click)="openCompanyRequirementsDialoge()"><i
-                                    class="ri-add-line"></i> Add
-                                Company Requirment </a>
+                        <div class="container-fluid">
+                            <div class="card-body px-1 py-3">
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-sm btn-soft-success me-2">
+                                        <i class="ri-add-line"></i>
+                                        Add
+                                    </button>
+                                    <button type="button" id="sa-warning" (click)="resetCompanyRequirementsForm();"
+                                        class="btn btn-sm btn-soft-danger">
+                                        <i class="ri-delete-bin-2-line"></i>
+                                        Clear
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="ag-theme-alpine" appTableView>
-        <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 70vh" [gridOptions]="gridOpts">
-        </ag-grid-angular>
-    </div>
-    <ng-template #CompanyRequirementsContent let-modal>
-        <div class="modal-header mb-0">
-            <h4 class="modal-title" id="modal-basic-title">Add
-                Company Requirment</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-
-        <div class="modal-body p-1" style="overflow-y: unset !important;">
-            <div class="p-3">
-                <div class="row mb-2">
-                    <!-- Doc Name -->
-                    <div class="col-12 my-1">
-                        <label for="item" class="asterisk-input">Item</label>
-                        <input id="item" class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': (f.item?.touched || uiState.submitted) && f.item?.invalid}"
-                            formControlName="item" />
-                        <span *ngIf="(f.item?.touched || uiState.submitted) && f.item?.invalid"
-                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                    </div>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-success mx-2 d-flex align-items-center"><i
-                        class="ri-edit-line mx-1"
-                        (click)="submitCompanyRequirementsData(CompanyRequirementsForm)"></i>Add</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
-            </div>
-        </div>
-    </ng-template>
 </form>
+
+<div class="ag-theme-alpine" appTableView>
+    <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 40vh" [gridOptions]="gridOpts">
+    </ag-grid-angular>
+</div>

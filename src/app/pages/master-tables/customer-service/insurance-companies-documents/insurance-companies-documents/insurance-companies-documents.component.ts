@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -84,6 +84,8 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -112,7 +114,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
                 this.gridApi.showNoRowsOverlay();
               else this.gridApi.hideOverlay();
             } else {
-              this.uiState.gridReady = true;
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
             }
           }
@@ -167,7 +169,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
 
   deleteFile(index: number, path: string) {
     let data: IDocumentReq = {
-      module: "Master Tables",
+      module: " MasterTables",
       path: "",
       sno: 0,
     };
@@ -181,7 +183,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
             next: (res) => {
               if (res.body?.status === true) {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.documentdetails.documentLists?.splice(index, 1);
+                this.uiState.documentdetails.documents?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");
             },
           });
@@ -192,7 +194,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
 
   downloadFile(path: string) {
     let data: IDocumentReq = {
-      module: "Production",
+      module: "MasterTables",
       path: "",
       sno: 0,
     };
@@ -242,7 +244,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     this.InsuranceCompaniesDocumentsForm =
       new FormGroup<IInsuranceCompaniesDocumentsForm>({
         company: new FormControl("", Validators.required),
-        type: new FormControl(""),
+        type: new FormControl("", Validators.required),
       });
   }
 
@@ -274,6 +276,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     InsuranceCompaniesDocumentsForm: FormGroup<IInsuranceCompaniesDocumentsForm>
   ) {
     this.InsuranceCompaniesDocumentsFormSubmitted = true;
+    if (!this.validationChecker()) return;
     // Display Submitting Loader
     this.eventService.broadcast(reserved.isLoading, true);
     let val = InsuranceCompaniesDocumentsForm.getRawValue();

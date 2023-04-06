@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   OnDestroy,
@@ -67,6 +67,8 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
       sortable: true,
       resizable: true,
     },
+    overlayNoRowsTemplate:
+      "<alert class='alert alert-secondary'>No Data To Show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -94,9 +96,13 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
                 this.uiState.list,
                 this.uiState.list.length
               );
-              this.uiState.gridReady = true;
+              if (this.uiState.list.length === 0)
+                this.gridApi.showNoRowsOverlay();
+              else this.gridApi.hideOverlay();
+            } else {
+              this.message.popup("Oops!", res.body?.message!, "warning");
               this.gridApi.hideOverlay();
-            } else this.message.toast(res.body!.message!, "error");
+            }
           }
         );
       this.subscribes.push(sub);
@@ -143,7 +149,7 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
           if (res.body?.status) {
             this.uiState.editCancellationReasonsMode = true;
             this.uiState.editCancellationReasonsData = res.body?.data!;
-            this.fillAddCancellationReasonsForm(res.body?.data!);
+            this.fillEditCancellationReasonsForm(res.body?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
@@ -169,21 +175,13 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
     return this.CancellationReasonsForm.controls;
   }
 
-  fillAddCancellationReasonsForm(data: ICancellationReasonsData) {
-    this.f.cancelReason?.patchValue(data.cancelReason!);
-  }
-
   fillEditCancellationReasonsForm(data: ICancellationReasonsData) {
     this.f.cancelReason?.patchValue(data.cancelReason!);
   }
 
   validationChecker(): boolean {
     if (this.CancellationReasonsForm.invalid) {
-      this.message.popup(
-        "Attention!",
-        "Please Fill Required Inputs",
-        "warning"
-      );
+      this.message.toast("Please Fill Required Inputs");
       return false;
     }
     return true;

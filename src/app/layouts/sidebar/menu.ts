@@ -378,12 +378,18 @@ export const MENU: MenuItem[] = [
 			},
 			{
 				id: 402,
+				label: "MENUITEMS.PRODUCTION.LIST.ACTIVELISTMANAGEMENT",
+				link: AppRoutes.Production.activeList,
+				parentId: 4,
+			},
+			{
+				id: 403,
 				label: "MENUITEMS.PRODUCTION.LIST.EDITCOMMISSIONS",
 				link: AppRoutes.Production.editCommissions,
 				parentId: 4,
 			},
 			{
-				id: 403,
+				id: 404,
 				label: "MENUITEMS.PRODUCTION.LIST.REPORTS",
 				parentId: 4,
 				subItems: [
@@ -391,24 +397,24 @@ export const MENU: MenuItem[] = [
 						id: 4001,
 						label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.PRODUCTION",
 						link: AppRoutes.Production.reports.production,
-						parentId: 403,
+						parentId: 404,
 					},
 					{
 						id: 4002,
 						label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWAL",
 						link: AppRoutes.Production.reports.renewal,
-						parentId: 403,
+						parentId: 404,
 					},
 					{
 						id: 4003,
 						label: "MENUITEMS.PRODUCTION.LIST.REPORTLIST.RENEWALNOTICE",
 						link: AppRoutes.Production.reports.renewalsNotice,
-						parentId: 403,
+						parentId: 404,
 					},
 				],
 			},
 			{
-				id: 404,
+				id: 405,
 				label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
 				parentId: 4,
 				subItems: [
@@ -416,20 +422,7 @@ export const MENU: MenuItem[] = [
 						id: 4001,
 						label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
 						link: AppRoutes.Production.reports.archive.dcNote,
-						parentId: 403,
-					},
-				],
-			},
-			{
-				id: 404,
-				label: "MENUITEMS.PRODUCTION.LIST.ARCHIVES",
-				parentId: 4,
-				subItems: [
-					{
-						id: 4001,
-						label: "MENUITEMS.PRODUCTION.LIST.ARCHIVESLIST.DCNOTES",
-						link: AppRoutes.Production.reports.archive.dcNote,
-						parentId: 403,
+						parentId: 405,
 					},
 				],
 			},

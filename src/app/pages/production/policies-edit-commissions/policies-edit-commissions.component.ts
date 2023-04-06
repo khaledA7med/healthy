@@ -58,7 +58,6 @@ import { IEditCommissionsPreview } from "src/app/shared/app/models/Production/i-
 })
 export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
   submitted = false;
-  subBtn: boolean = false;
   uiState = {
     gridReady: false,
     submitted: false,
@@ -257,10 +256,8 @@ export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
           this.fillEditForm(res.body?.data!);
           if (res.body?.data?.producer?.startsWith("Direct Business")) {
             this.ff.producerCommPerc?.disable();
-            this.subBtn = true;
           } else {
             this.ff.producerCommPerc?.enable();
-            this.subBtn = false;
           }
           this.eventService.broadcast(reserved.isLoading, false);
         }
