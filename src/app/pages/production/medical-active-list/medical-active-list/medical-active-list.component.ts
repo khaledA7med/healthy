@@ -33,24 +33,15 @@ import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
-import { productionActiveCols } from "src/app/shared/app/grid/medicalActiveListCols";
-// import { medicalActiveListCols } from "src/app/shared/app/grid/medicalActiveListCols";
-import { productionCols } from "src/app/shared/app/grid/productionCols";
+import { MedicalActiveCols } from "src/app/shared/app/grid/medicalActiveListCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
+import { IMedicalActive } from "src/app/shared/app/models/Production/i-medical-active-list";
 import {
   IMedicalActiveFilters,
   IMedicalActiveFiltersForm,
 } from "src/app/shared/app/models/Production/i-medical-active-list-filter";
-import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
-import {
-  IProductionFilters,
-  IProductionFiltersForm,
-} from "src/app/shared/app/models/Production/iproduction-filters";
-import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import AppUtils from "src/app/shared/app/util";
 import { MedicalActivePreviewComponent } from "src/app/shared/components/medical-active-preview/medical-active-preview/medical-active-preview.component";
-import { PoilcyPreviewComponent } from "src/app/shared/components/poilcy-preview/poilcy-preview.component";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
@@ -69,11 +60,11 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
       orderBy: "sNo",
       orderDir: "asc",
       status: ["Active"],
-    } as IProductionFilters,
+    } as IMedicalActiveFilters,
     gridReady: false,
     submitted: false,
     policies: {
-      list: [] as IPolicy[],
+      list: [] as IMedicalActive[],
       totalPages: 0,
     },
     lineOfBusinessList: [] as IGenericResponseType[],
@@ -88,7 +79,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
 
   permissions$!: Observable<string[]>;
 
-  filterForm!: FormGroup<IProductionFiltersForm>;
+  filterForm!: FormGroup<IMedicalActiveFiltersForm>;
   lookupData!: Observable<IBaseMasterTable>;
   @ViewChild("filter") policiesFilter!: ElementRef;
   modalRef!: NgbModalRef;
@@ -100,7 +91,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: productionActiveCols,
+    columnDefs: MedicalActiveCols,
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
@@ -137,7 +128,6 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
 
     this.initFilterForm();
     this.getLookupData();
-    this.disableAmountFilter();
 
     let sub = this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
@@ -148,8 +138,6 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
       }
     });
     let sub2 = this.permissions$.subscribe((res: string[]) => {
-      if (!res.includes(this.uiState.privileges.ViewAllBranchs))
-        this.f.branch?.patchValue(this.auth.getUser().Branch!);
       if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction))
         this.f.producer?.patchValue(this.auth.getUser().name!);
       if (!res.includes(this.uiState.privileges.ChProductionAccessAllUsers))
@@ -170,8 +158,8 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub = this.productionService
-        .getAllPolicies(this.uiState.filters)
-        .subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
+        .getAllClientsPolicies(this.uiState.filters)
+        .subscribe((res: HttpResponse<IBaseResponse<IMedicalActive[]>>) => {
           if (res.status) {
             this.uiState.policies.totalPages = JSON.parse(
               res.headers.get("x-pagination")!
@@ -239,35 +227,20 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
   }
 
   private initFilterForm(): void {
-    this.filterForm = new FormGroup<IProductionFiltersForm>({
+    this.filterForm = new FormGroup<IMedicalActiveFiltersForm>({
       status: new FormControl(["Active"], Validators.required),
-      branch: new FormControl(""),
+      producer: new FormControl([]),
       ourRef: new FormControl(""),
       clientName: new FormControl(""),
-      producer: new FormControl([]),
       insurCompany: new FormControl(""),
       classOfInsurance: new FormControl(""),
       lineOfBusiness: new FormControl(""),
       policyNo: new FormControl(""),
-      endorsNo: new FormControl(""),
-      policyEndorsType: new FormControl(""),
-      clientDNCNNo: new FormControl(""),
-      companyCommisionDNCNNo: new FormControl(""),
-      ourDNCNNo: new FormControl(""),
       createdBy: new FormControl(""),
-      issueFrom: new FormControl(null),
-      issueTo: new FormControl(null),
-      financeApproveFrom: new FormControl(null),
-      financeApproveTo: new FormControl(null),
       inceptionFrom: new FormControl(null),
       inceptionTo: new FormControl(null),
-      financeEntryFrom: new FormControl(null),
-      financeEntryTo: new FormControl(null),
-      amount: new FormControl(this.uiState.filterByAmount),
-      field: new FormControl(""),
-      operatordList: new FormControl(""),
-      amountNo: new FormControl(""),
-      amountNo2: new FormControl(""),
+      expiryFrom: new FormControl(null),
+      expiryTo: new FormControl(null),
     });
   }
 
@@ -288,60 +261,22 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  checkAllToggler(check: boolean, controlName: string) {
-    switch (controlName) {
-      case "policyStatus":
-        if (check)
-          this.f.status?.patchValue(
-            this.uiState.lists.policyStatus.map((e) => e.name)
-          );
-        else this.f.status?.patchValue(["Active"]);
-        break;
-      default:
-        break;
-    }
-  }
-
   modifyFilterReq() {
     this.uiState.filters = {
       ...this.uiState.filters,
       ...this.filterForm.value,
-      issueFrom: this.appUtils.dateFormater(this.f.issueFrom?.value) as any,
-      issueTo: this.appUtils.dateFormater(this.f.issueTo?.value) as any,
-      financeApproveFrom: this.appUtils.dateFormater(
-        this.f.financeApproveFrom?.value
-      ) as any,
-      financeApproveTo: this.appUtils.dateFormater(
-        this.f.financeApproveTo?.value
-      ) as any,
+      expiryFrom: this.appUtils.dateFormater(this.f.expiryFrom?.value) as any,
+      expiryTo: this.appUtils.dateFormater(this.f.expiryTo?.value) as any,
       inceptionFrom: this.appUtils.dateFormater(
         this.f.inceptionFrom?.value
       ) as any,
       inceptionTo: this.appUtils.dateFormater(this.f.inceptionTo?.value) as any,
-      financeEntryFrom: this.appUtils.dateFormater(
-        this.f.financeEntryFrom?.value
-      ) as any,
-      financeEntryTo: this.appUtils.dateFormater(
-        this.f.financeEntryTo?.value
-      ) as any,
-      amount: JSON.stringify(this.f.amount?.value) as any,
-      amountNo: this.f.amountNo2?.value
-        ? JSON.stringify(this.f.amountNo?.value)
-        : "",
-      amountNo2: this.f.amountNo2?.value
-        ? JSON.stringify(this.f.amountNo2?.value)
-        : "",
     };
   }
 
-  setIssueRangeFilter(e: any) {
-    this.f.issueFrom?.patchValue(e.from);
-    this.f.issueTo?.patchValue(e.to);
-  }
-
-  setFinApprovedRangeFilter(e: any) {
-    this.f.financeApproveFrom?.patchValue(e.from);
-    this.f.financeApproveTo?.patchValue(e.to);
+  setExpiryRangeFilter(e: any) {
+    this.f.expiryFrom?.patchValue(e.from);
+    this.f.expiryTo?.patchValue(e.to);
   }
 
   setInceptionRangeFilter(e: any) {
@@ -349,36 +284,13 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
     this.f.inceptionTo?.patchValue(e.to);
   }
 
-  setFinEntryRangeFilter(e: any) {
-    this.f.financeEntryFrom?.patchValue(e.from);
-    this.f.financeEntryTo?.patchValue(e.to);
-  }
-
-  disableAmountFilter() {
-    if (this.f.amount?.value === false) {
-      this.f.field?.reset();
-      this.f.operatordList?.reset();
-      this.f.amountNo?.reset();
-      this.f.amountNo2?.reset();
-      this.f.field?.disable();
-      this.f.operatordList?.disable();
-      this.f.amountNo?.disable();
-      this.f.amountNo2?.disable();
-    } else {
-      this.f.field?.enable();
-      this.f.operatordList?.enable();
-      this.f.amountNo?.enable();
-      this.f.amountNo2?.enable();
-    }
-  }
-
-  openMedicalActivePreview(id: string) {
+  openMedicalActivePreview(policiesSNo: string) {
     this.modalRef = this.modalService.open(MedicalActivePreviewComponent, {
       fullscreen: true,
       scrollable: true,
     });
     this.modalRef.componentInstance.data = {
-      id,
+      policiesSNo,
     };
   }
 

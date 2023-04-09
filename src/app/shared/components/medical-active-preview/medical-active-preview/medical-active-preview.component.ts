@@ -1,4 +1,3 @@
-import { HttpResponse } from "@angular/common/http";
 import {
   Component,
   ElementRef,
@@ -16,15 +15,10 @@ import { ProductionPermissions } from "src/app/core/roles/production-permissions
 import { Roles } from "src/app/core/roles/Roles";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IDocumentList } from "src/app/shared/app/models/App/IDocument";
 import { IDocumentReq } from "src/app/shared/app/models/App/IDocumentReq";
-import { IMedicalAcivePreview } from "src/app/shared/app/models/Production/i-medical-active-list-preview";
-import { IChangePolicyStatusRequest } from "src/app/shared/app/models/Production/i-policy-change-status-req";
-import { IPolicyPreview } from "src/app/shared/app/models/Production/ipolicy-preview";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import Swal from "sweetalert2";
 import { ViewEncapsulation } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import * as XLSX from "xlsx";
@@ -34,7 +28,10 @@ import {
   Data,
   DataForm,
 } from "src/app/shared/app/models/Production/production-util";
-import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
+import {
+  IMedicalActive,
+  IMedicalActivePreview,
+} from "src/app/shared/app/models/Production/i-medical-active-list";
 
 @Component({
   selector: "app-medical-active-preview",
@@ -44,16 +41,16 @@ import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-act
 })
 export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
   @Input() data!: {
-    id: string;
+    policiesSNo: string;
     className: string;
   };
   uiState = {
     sno: "",
-    policyDetails: {} as IPolicyPreview,
+    policyDetails: {} as IMedicalActivePreview,
     loadedData: false,
     updatedState: false,
     data: [] as any[],
-    medicalData: [] as IMedicalData[],
+    medicalData: [] as IMedicalActive[],
     documentList: [],
     privileges: ProductionPermissions,
   };
@@ -107,13 +104,13 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.permissions$ = this.privileges.getPrivileges(Roles.Production);
-    this.uiState.sno = this.data.id;
+    this.uiState.sno = this.data.policiesSNo;
     this.getPolicyDetails(this.uiState.sno);
   }
 
-  getPolicyDetails(id: string): void {
-    let sub = this.productinService.getPolicyById(id).subscribe({
-      next: (res: IBaseResponse<IPolicyPreview>) => {
+  getPolicyDetails(policiesSNo: string): void {
+    let sub = this.productinService.getClientPolicyById(policiesSNo).subscribe({
+      next: (res: IBaseResponse<IMedicalActive>) => {
         if (res.status) {
           this.uiState.loadedData = true;
           this.uiState.policyDetails = res.data!;
@@ -129,48 +126,10 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
             String(this.uiState.policyDetails.periodTo) == "-"
               ? undefined
               : this.uiState.policyDetails.periodTo;
-          this.customizeClientDocuments();
         } else this.message.popup("Oops!", res.message!, "error");
       },
     });
     this.subscribes.push(sub);
-  }
-
-  customizeClientDocuments() {
-    this.uiState.policyDetails.documentLists?.forEach((el: IDocumentList) => {
-      switch (el.type) {
-        case "zip":
-          (el.className = "zip-fill"), (el.colorName = "text-success");
-          break;
-        case "pdf":
-          (el.className = "pdf-line"), (el.colorName = "text-danger");
-          break;
-        case "csv":
-          (el.className = "code-fill"), (el.colorName = "text-primary");
-          break;
-        case "txt":
-          (el.className = "text-fill"), (el.colorName = "text-dark");
-          break;
-        case "docx":
-        case "doc":
-          (el.className = "word-2-fill"), (el.colorName = "text-primary");
-          break;
-        case "xls":
-        case "xlsx":
-          (el.className = "excel-2-fill"), (el.colorName = "text-success");
-          break;
-        case "ppt":
-        case "pptx":
-          (el.className = "ppt-2-fill"), (el.colorName = "text-danger");
-          break;
-        case "image":
-          break;
-        default:
-          (el.className = "warning-fill"), (el.colorName = "text-warning");
-      }
-
-      el.size = this.util.formatBytes(+el?.size!);
-    });
   }
 
   deleteFile(index: number, path: string) {
@@ -187,7 +146,6 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
             next: (res) => {
               if (res.body?.status === true) {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.policyDetails.documentLists?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");
             },
           });
@@ -217,117 +175,6 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
         document.body.removeChild(a);
       },
     });
-    this.subscribes.push(sub);
-  }
-
-  changeStatus(newStatus: string): void {
-    let reqBody: IChangePolicyStatusRequest = {
-      status: newStatus,
-      sno: Number(this.uiState.policyDetails.sNo),
-      done: this.uiState.policyDetails.done,
-      reject: this.uiState.policyDetails.reject,
-      endorsType: this.uiState.policyDetails.endorsType,
-      sumInsur: this.uiState.policyDetails.sumInsur,
-      netPremium: this.uiState.policyDetails.netPremium,
-      vatValue: this.uiState.policyDetails.vatValue,
-      fees: this.uiState.policyDetails.fees,
-      totalPremium: this.uiState.policyDetails.totalPremium,
-      compComm: this.uiState.policyDetails.compComm,
-      compCommVat: this.uiState.policyDetails.compCommVAT,
-      producerComm: this.uiState.policyDetails.producerComm,
-      mgrAprovedUser: this.uiState.policyDetails.mgrAprovedUser,
-      prodRejectInfo: this.uiState.policyDetails.prodRejectInfo,
-      prodRejecType: this.uiState.policyDetails.prodRejecType,
-      savedUser: this.uiState.policyDetails.savedUser,
-      policyNo: this.uiState.policyDetails.policyNo,
-      clientName: this.uiState.policyDetails.clientName,
-      className: this.uiState.policyDetails.className,
-      issueDate: this.uiState.policyDetails.issueDate,
-      periodTo: this.uiState.policyDetails.periodTo,
-      producersCommissionsList:
-        this.uiState.policyDetails.producersCommissionsList,
-    };
-    if (newStatus === "Approve") {
-      this.message
-        .confirm(`${newStatus} it !`, `${newStatus} it`, "success", "warning")
-        .then((result: any) => {
-          if (result.isConfirmed) {
-            let sub = this.productinService.changeStatus(reqBody).subscribe({
-              next: (res: HttpResponse<IBaseResponse<null>>) => {
-                if (res.body?.status) {
-                  this.message.toast(res.body?.message!, "success");
-                  this.uiState.updatedState = true;
-                  this.backToMainRoute();
-                }
-              },
-            });
-            this.subscribes.push(sub);
-          }
-        });
-    } else {
-      this.changeStatusWithMsg(reqBody);
-    }
-  }
-
-  changeStatusWithMsg(reqBody: IChangePolicyStatusRequest) {
-    return Swal.fire({
-      title: "Type Rejection Reason",
-      input: "text",
-      inputAttributes: {
-        required: "true",
-      },
-      validationMessage: "Required",
-      showCancelButton: true,
-      background: "var(--vz-modal-bg)",
-      customClass: {
-        confirmButton: "btn btn-success btn-sm w-xs me-2 mt-2",
-        cancelButton: "btn btn-ghost-danger btn-sm w-xs mt-2",
-        input: "customize-swlInput",
-        validationMessage: "fs-6 bg-transparent  m-1 p-1",
-      },
-      confirmButtonText: `Reject`,
-      buttonsStyling: false,
-      showCloseButton: true,
-      showLoaderOnConfirm: true,
-      allowOutsideClick: false,
-      preConfirm: (inputValue: string) => {
-        reqBody = {
-          ...reqBody,
-          prodRejectInfo: inputValue,
-        };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        let sub = this.productinService.changeStatus(reqBody).subscribe({
-          next: (res: HttpResponse<IBaseResponse<null>>) => {
-            if (res.body?.status) {
-              this.message.toast(res.body?.message!, "success");
-              this.uiState.updatedState = true;
-              this.backToMainRoute();
-            }
-          },
-        });
-        this.subscribes.push(sub);
-      }
-    });
-  }
-
-  changeDeliveryStatus(status: string) {
-    let data: {
-      policyNo: string;
-      deliveryStatus: string;
-    } = {
-      policyNo: this.uiState.policyDetails.sNo!.toString(),
-      deliveryStatus: status,
-    };
-
-    let sub = this.productinService
-      .changeDeliveryStatus(data)
-      .subscribe((res: IBaseResponse<null>) => {
-        this.message.toast(res?.message!, "success");
-        this.uiState.updatedState = true;
-        this.backToMainRoute();
-      });
     this.subscribes.push(sub);
   }
 
@@ -388,18 +235,88 @@ export class MedicalActivePreviewComponent implements OnInit, OnDestroy {
 
   uploadExeceFile(e: any) {
     const schema = {
-      Name: {
-        prop: "Name",
+      Id_Iqama_No: {
+        prop: "IdIqama No.",
         type: String,
         required: true,
       },
-      Age: {
-        prop: "Age",
+      Membership_No: {
+        prop: "Membership No",
         type: Number,
         required: true,
       },
-      Type: {
-        prop: "Type",
+      Member_Name: {
+        prop: "Member Name",
+        type: String,
+        required: true,
+      },
+      DOB: {
+        prop: "DOB",
+        type: String,
+        required: true,
+      },
+      Relation: {
+        prop: "Relation",
+        type: String,
+        required: true,
+      },
+      Marital_Status: {
+        prop: "Marital Status",
+        type: String,
+        required: true,
+      },
+      Gender: {
+        prop: "Gender",
+        type: String,
+        required: true,
+      },
+      Sponsor_No: {
+        prop: "Sponsor No",
+        type: String,
+        required: true,
+      },
+      Endt_No: {
+        prop: "Endt No",
+        type: String,
+        required: true,
+      },
+      policy_number: {
+        prop: "policy number",
+        type: String,
+        required: true,
+      },
+      Class: {
+        prop: "Class",
+        type: String,
+        required: true,
+      },
+      City: {
+        prop: "City",
+        type: String,
+        required: true,
+      },
+      Staff_No: {
+        prop: "Staff No",
+        type: String,
+        required: true,
+      },
+      Premium: {
+        prop: "Premium",
+        type: String,
+        required: true,
+      },
+      Mobile_No: {
+        prop: "Mobile No",
+        type: String,
+        required: true,
+      },
+      Nationality: {
+        prop: "Nationality",
+        type: String,
+        required: true,
+      },
+      CCHI_Status: {
+        prop: "CCHI Status",
         type: String,
         required: true,
       },

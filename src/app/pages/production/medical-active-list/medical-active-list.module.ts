@@ -7,6 +7,7 @@ import { SharedModule } from "src/app/shared/shared.module";
 import { AgGridModule } from "ag-grid-angular";
 import { MedicalActivePreviewModule } from "src/app/shared/components/medical-active-preview/medical-active-preview.module";
 import { PoilcyPreviewModule } from "src/app/shared/components/poilcy-preview/poilcy-preview.module";
+import { RangePickerModule } from "src/app/shared/components/range-picker/range-picker.module";
 
 export const routes: Routes = [
   { path: "", component: MedicalActiveListComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
     AgGridModule,
     MedicalActivePreviewModule,
     PoilcyPreviewModule,
+    RangePickerModule,
   ],
 })
 export class MedicalActiveListModule {}

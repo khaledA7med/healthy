@@ -1,3 +1,3 @@
-import { IMedicalData } from "./i-medical-active-list";
+import { IMedicalActive } from "./i-medical-active-list";
 
-export interface IMedicalAcivePreview extends IMedicalData {}
+export interface IMedicalAcivePreview extends IMedicalActive {}

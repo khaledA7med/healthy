@@ -40,15 +40,92 @@
         <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForm">
 
-                <!-- Branch -->
+                <!-- Policy Status -->
                 <div class="col-12 mb-3">
-                    <label for="branchName" class="form-label">Branch:</label>
-                    <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branchName"
-                        formControlName="branch">
+                    <label for="policyStatus" class="form-label">Policy Status:</label>
+                    <ng-select [items]="(lookupData | async)?.PolicyStatus?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="false" [searchable]="true" bindLabel="name"
+                        [closeOnSelect]="false" [hideSelected]="true" [multiple]="true" bindValue="name"
+                        id="policyStatus" formControlName="status"
+                        [ngClass]="{'is-submitted': (f.status?.touched || uiState.submitted) && f.status?.invalid}">
+                    </ng-select>
+                    <span class="invalid-feedback fw-bold mt-0"
+                        *ngIf="(f.status?.touched || uiState.submitted) && f.status?.invalid">Required</span>
+                </div>
+                <!-- Our Ref -->
+                <div class="col-12 mb-3">
+                    <label for="ourRefInput" class="form-label">Our Ref:</label>
+                    <input type="text" class="form-control form-control-sm" id="ourRefInput" placeholder="Our Ref"
+                        formControlName="ourRef" />
+                </div>
+                <!-- Client Name -->
+                <div class="col-12 mb-3">
+                    <label for="clientName" class="form-label">Client Name:</label>
+                    <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="clientName" formControlName="clientName">
+                    </ng-select>
+                </div>
+                <!-- Producer -->
+                <div class="col-12 mb-3">
+                    <label for="producerName" class="form-label">Producer:</label>
+                    <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
+                        [closeOnSelect]="false" [hideSelected]="true" id="producerName" formControlName="producer"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!">
+                    </ng-select>
+                </div>
+                <!-- Insurance Company -->
+                <div class="col-12 mb-3">
+                    <label for="insurCompany" class="form-label">Insurance Company:</label>
+                    <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="insurCompany" formControlName="insurCompany">
+                    </ng-select>
+                </div>
+                <!-- classOfInsurance -->
+                <div class="col-12 mb-3">
+                    <label for="classOfInsu" class="form-label">Class Of Insurance</label>
+                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
+                        bindValue="name" id="classOfInsu" (change)="getLineOfBusiness($event)"
+                        formControlName="classOfInsurance">
+                    </ng-select>
+                </div>
+                <!-- lineOfBusiness -->
+                <div class="col-12 mb-3">
+                    <label for="lineofBuss" class="form-label">Line Of Business</label>
+                    <ng-select [items]="uiState.lineOfBusinessList" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="lineofBuss"
+                        formControlName="lineOfBusiness">
+                    </ng-select>
+                </div>
+                <!-- PolicyNo -->
+                <div class="col-12 mb-3">
+                    <label for="policyNoInput" class="form-label">Policy No:</label>
+                    <input type="text" class="form-control form-control-sm" id="policyNoInput" placeholder="Policy No"
+                        formControlName="policyNo" />
+                </div>
+                <!-- createdBy -->
+                <div class="col-12 mb-3">
+                    <label for="created" class="form-label">Created By</label>
+                    <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="created"
+                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChProductionAccessAllUsers)!"
+                        formControlName="createdBy">
                     </ng-select>
                 </div>
 
+                <!-- Issue Range -->
+                <div class="col-12 mb-3">
+                    <label for="user" class="form-label">Expiry Range:</label>
+                    <app-range-picker (dateChange)="setExpiryRangeFilter($event)"></app-range-picker>
+                </div>
+                <!-- Inception Range -->
+                <div class="col-12 mb-3">
+                    <label for="user" class="form-label">Inception Range:</label>
+                    <app-range-picker (dateChange)="setInceptionRangeFilter($event)"></app-range-picker>
+                </div>
             </form>
         </div>
         <!-- submit and clear btn -->
