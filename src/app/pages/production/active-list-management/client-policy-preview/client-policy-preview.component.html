@@ -1,0 +1,119 @@
+<div class="modal-header py-3">
+    <h4 class="modal-title">Policy Details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body p-3">
+    <div class="row">
+        <div class="col-12 my-2">
+            <!-- Start Client Details Table -->
+            <div class="card details-tables pb-3">
+                <div class="card-header">
+                    <h6 class="card-title text-muted text-uppercase mb-0">Policy Details</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="table-responsive table-card">
+                                <table class="table table-borderless mb-0">
+                                    <tbody id="client-information-table">
+                                        <!--     
+                                            cancelled: 0
+                                            cancelledDate: "0001-01-01T00:00:00"
+                                            cancelledUser: null
+                                            
+                                            issueDate: "2022-06-21T00:00:00"
+                                            lineOfBusiness: "Motor Comprehensive Individual"
+                                            oasisPolRef: "POL-R-MCI-2022-3"
+                                            periodFrom: "2022-06-20T00:00:00"
+                                            periodTo: "2023-06-19T00:00:00"
+                                            savedBy: "Admin."
+                                            savedOn: "2023-03-18T10:11:43.67"
+                                            updatedBy: null
+                                            updatedOn: "0001-01-01T00:00:00"                                         -->
+                                        <tr>
+                                            <th class="fw-semibold">Account No :</th>
+                                            <td>{{ uiState.policyDetails.accNo || "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Client ID :</th>
+                                            <td>{{ uiState.policyDetails.clientNo || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Client Name :</th>
+                                            <td>{{ uiState.policyDetails.clientName || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Producer (Salesman) :</th>
+                                            <td>{{ uiState.policyDetails.producer || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Issued By (Insurance Company) :</th>
+                                            <td>{{ uiState.policyDetails.insurComp || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Class Of Business :</th>
+                                            <td>{{ uiState.policyDetails.className || "-"}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="table-responsive table-card">
+                                <table class="table table-borderless mb-0">
+                                    <tbody id="client-information-table">
+                                        <tr>
+                                            <th class="fw-semibold">Reversal Of :</th>
+                                            <td>{{ uiState.policyDetails.reversalOf || "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Policy No :</th>
+                                            <td>{{ uiState.policyDetails.policyNo || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Issue Date :</th>
+                                            <td>{{ (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") || "-" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Producer Commission (%) :</th>
+                                            <td>{{ uiState.policyDetails.producerCommPerc || "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Company Commission (%) :</th>
+                                            <td>{{ uiState.policyDetails.compCommPerc || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Line Of Budsiness :</th>
+                                            <td>{{ uiState.policyDetails.lineOfBusiness || "-"}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Client Details Table -->
+        </div>
+
+
+    </div>
+</div>
+<div class="modal-footer pt-0 p-sm-0">
+    <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex justify-content-end">
+        <div class="d-flex justify-content-end align-items-end">
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
+                (click)="openUploadFromExcelModal(uiState.sno)" *ngIf=" uiState.showMotorBtn">
+                Upload Vehicles Details
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
+                (click)="openUploadFromExcelModal(uiState.sno)" *ngIf=" uiState.showMedicalBtn">
+                Upload Medical Details
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="modal.close('Close click')">
+                Close
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,263 @@
+<div class="modal-header py-3">
+    <h4 class="modal-title">Upload From Excel File</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body p-3">
+    <p>Please download the excel template from the following
+        <a *ngIf="data.className ==='Motor'" href="/src/MotorVehiclesListTemplate.xlsx" download>link</a>,
+        <a *ngIf="data.className ==='Medical'" href="/src/MedicalMembersListTemplate.xlsx" download>link</a>,
+        <!-- <a href="/src/MotorVehiclesListTemplate.xlsx" download>link</a>, -->
+        fill it
+        with data
+        and upolad it from the follwing field
+    </p>
+    <div class="mb-3">
+        <input class="form-control form-control-sm" id="formFileSm" type="file"
+            (change)="data.className === 'Motor'?  uploadExeceFile($event,motorSchema) : uploadExeceFile($event,medicalSchema)"
+            [formControl]="fileInput">
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-lg-12 table-responsive">
+                <table class="table align-middle table-nowrap mb-0" *ngIf="data.className === 'Motor'">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Driver / Owner</th>
+                            <th scope="col">Plate No</th>
+                            <th scope="col">Plate Char 1</th>
+                            <th scope="col">Plate Char 2</th>
+                            <th scope="col">Plate Char 3</th>
+                            <th scope="col">Sequence No</th>
+                            <th scope="col">Custom ID</th>
+                            <th scope="col">Brand Name</th>
+                            <th scope="col">Model</th>
+                            <th scope="col" class="date">Inception</th>
+                            <th scope="col" class="date">Expiry</th>
+                            <th scope="col" class="date">Kcl Date</th>
+                            <th scope="col">Seats No</th>
+                            <th scope="col">Body Type</th>
+                            <th scope="col">Chassis No</th>
+                            <th scope="col">Market Value</th>
+                            <th scope="col">Repair Type</th>
+                            <th scope="col">Vehicle Owner ID</th>
+                            <th scope="col">Project Name</th>
+                            <th scope="col">ِAction</th>
+                        </tr>
+                    </thead>
+                    <tbody formArray="motorFormArr">
+                        <tr *ngFor="let c of motorFormArr.controls; index as i">
+                            <ng-container [formGroup]="motorFormArr.at(i)">
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Owner/Driver"
+                                        formControlName="ownerDriver" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Plate No"
+                                        formControlName="plateNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Plate Char 1"
+                                        formControlName="plateChar1" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Plate Char 2"
+                                        formControlName="plateChar2" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Plate Char 3"
+                                        formControlName="plateChar3" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Sequence No"
+                                        formControlName="sequenceNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Custom ID"
+                                        formControlName="customID" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Brand Name"
+                                        formControlName="brandName" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Model"
+                                        formControlName="model" />
+                                </td>
+                                <td>
+                                    <app-gregorian-picker [required]="true"
+                                        [model]="motorFormArrControls(i, 'inception').value"
+                                        (dateChange)="motorDates($event, i,'inception')"
+                                        [submitted]="motorFormArrControls(i, 'inception').invalid && motorFormArrControls(i, 'inception').touched"></app-gregorian-picker>
+                                </td>
+                                <td>
+                                    <app-gregorian-picker [required]="true"
+                                        [model]="motorFormArrControls(i, 'expiry').value"
+                                        (dateChange)="motorDates($event, i,'expiry')"
+                                        [submitted]="motorFormArrControls(i, 'expiry').invalid && motorFormArrControls(i, 'expiry').touched"></app-gregorian-picker>
+                                </td>
+                                <td>
+                                    <app-gregorian-picker [required]="true"
+                                        [model]="motorFormArrControls(i, 'kclDate').value"
+                                        (dateChange)="motorDates($event, i,'kclDate')"
+                                        [submitted]="motorFormArrControls(i, 'kclDate').invalid && motorFormArrControls(i, 'kclDate').touched"></app-gregorian-picker>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Seats No"
+                                        formControlName="seats" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Body Type"
+                                        formControlName="bodyType" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Chassis No"
+                                        formControlName="chassisNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Market Value"
+                                        formControlName="marketValue" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Repair Type"
+                                        formControlName="repairType" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        placeholder="Vehicle Owner ID" formControlName="vehicleOwnerID" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Project Name"
+                                        formControlName="projectName" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-soft-danger" (click)="removeItem(i)">
+                                        <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table align-middle table-nowrap mb-0" *ngIf="data.className === 'Medical'">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">IdIqama No.</th>
+                            <th scope="col">Membership No</th>
+                            <th scope="col">Member Name</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">Relation</th>
+                            <th scope="col">Marital Status</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Sponsor No</th>
+                            <th scope="col">Endt No</th>
+                            <th scope="col">Policy Number</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Staff No</th>
+                            <th scope="col">Premium</th>
+                            <th scope="col">Mobile No</th>
+                            <th scope="col">Nationality</th>
+                            <th scope="col">CCHI Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody formArray="medicalFormArr">
+                        <tr *ngFor="let c of medicalFormArr.controls; index as i">
+                            <ng-container [formGroup]="medicalFormArr.at(i)">
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="idIqamaNo"
+                                        formControlName="idIqamaNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Membership No"
+                                        formControlName="membershipNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Member Name"
+                                        formControlName="memberName" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="DOB"
+                                        formControlName="dob" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Relation"
+                                        formControlName="relation" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Marital Status"
+                                        formControlName="maritalStatus" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Gender"
+                                        formControlName="gender" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Sponsor No"
+                                        formControlName="sponsorNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="endtNo"
+                                        formControlName="endtNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Policy No"
+                                        formControlName="policyNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Class"
+                                        formControlName="class" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="City"
+                                        formControlName="city" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Staff No"
+                                        formControlName="staffNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Premium"
+                                        formControlName="premium" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Mobile No"
+                                        formControlName="mobileNo" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Nationality"
+                                        formControlName="nationality" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" placeholder="CCHI Status"
+                                        formControlName="cchiStatus" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-soft-danger" (click)="removeItem(i)">
+                                        <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-outline-secondary mx-2" (click)="submitData()">
+        Upload
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-warning mx-2" (click)="resetFormArr()">
+        Reset Data
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="clearFormArr()">
+        Clear Data
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="modal.close('Close click')">
+        Close
+    </button>
+</div>

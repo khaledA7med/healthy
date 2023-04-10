@@ -16,7 +16,6 @@ import { IPolicyPreview } from "../../app/models/Production/ipolicy-preview";
 import AppUtils from "../../app/util";
 import { MessagesService } from "../../services/messages.service";
 import { ProductionService } from "../../services/production/production.service";
-import { UploadExcelListComponent } from "./upload-excel-list/upload-excel-list.component";
 
 @Component({
 	selector: "app-poilcy-preview",
@@ -26,13 +25,9 @@ import { UploadExcelListComponent } from "./upload-excel-list/upload-excel-list.
 export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	@Input() data!: {
 		id: string;
-		activateUploadBtns: boolean;
 	};
 	uiState = {
 		sno: "" as string,
-		activateUploadBtns: false as boolean,
-		showMotorBtn: false as boolean,
-		showMedicalBtn: false as boolean,
 		policyDetails: {} as IPolicyPreview,
 		loadedData: false as boolean,
 		updatedState: false as boolean,
@@ -64,7 +59,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.permissions$ = this.privileges.getPrivileges(Roles.Production);
 		this.uiState.sno = this.data.id;
-		this.uiState.activateUploadBtns = this.data.activateUploadBtns;
 		this.getPolicyDetails(this.uiState.sno);
 	}
 
@@ -80,7 +74,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 						String(this.uiState.policyDetails.periodFrom) == "-" ? undefined : this.uiState.policyDetails.periodFrom;
 					this.uiState.policyDetails.periodTo = String(this.uiState.policyDetails.periodTo) == "-" ? undefined : this.uiState.policyDetails.periodTo;
 					this.customizeClientDocuments();
-					this.checkPolicyType();
 				} else this.message.popup("Oops!", res.message!, "error");
 			},
 		});
@@ -122,19 +115,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 
 			el.size = this.util.formatBytes(+el?.size!);
 		});
-	}
-
-	checkPolicyType() {
-		if (this.uiState.policyDetails.className === "Motor" && this.uiState.activateUploadBtns) {
-			this.uiState.showMotorBtn = true;
-			this.uiState.showMedicalBtn = false;
-		} else if (this.uiState.policyDetails.className === "Medical" && this.uiState.activateUploadBtns) {
-			this.uiState.showMotorBtn = false;
-			this.uiState.showMedicalBtn = true;
-		} else {
-			this.uiState.showMotorBtn = false;
-			this.uiState.showMedicalBtn = false;
-		}
 	}
 
 	deleteFile(index: number, path: string) {
@@ -288,20 +268,6 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
 	// To Do back to main route when close modal
 	backToMainRoute() {
 		this.modal.dismiss();
-	}
-
-	// Open Excel Uploading Modal
-	openUploadFromExcelModal(id: string) {
-		this.modalRef = this.modalService.open(UploadExcelListComponent, {
-			size: "xl",
-			scrollable: true,
-			centered: true,
-		});
-
-		this.modalRef.componentInstance.data = {
-			id,
-			className: this.uiState.policyDetails.className,
-		};
 	}
 
 	ngOnDestroy() {

@@ -6,7 +6,7 @@ import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap"
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { MODULES } from "src/app/core/models/MODULES";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { Roles } from "src/app/core/roles/Roles";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { AuthenticationService } from "src/app/core/services/auth.service";
@@ -14,6 +14,8 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { ActiveListCols } from "src/app/shared/app/grid/ActiveListCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IActiveListFilters, IActiveListFiltersForm } from "src/app/shared/app/models/Production/i-active-list-filters";
+import { IActivePolicy } from "src/app/shared/app/models/Production/i-active-policy";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
 import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
 import AppUtils from "src/app/shared/app/util";
@@ -21,6 +23,7 @@ import { PoilcyPreviewComponent } from "src/app/shared/components/poilcy-preview
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
+import { ClientPolicyPreviewComponent } from "./client-policy-preview/client-policy-preview.component";
 
 @Component({
 	selector: "app-active-list-management",
@@ -36,19 +39,20 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 			orderBy: "sNo",
 			orderDir: "asc",
 			status: ["Active"],
-		} as IProductionFilters,
+		} as IActiveListFilters,
 		gridReady: false,
 		submitted: false,
 		policies: {
-			list: [] as IPolicy[],
+			list: [] as IActivePolicy[],
 			totalPages: 0,
 		},
+		policyStatusList: [] as IGenericResponseType[],
 		privileges: ProductionPermissions,
 	};
 
 	permissions$!: Observable<string[]>;
 
-	filterForm!: FormGroup<IProductionFiltersForm>;
+	filterForm!: FormGroup<IActiveListFiltersForm>;
 	lookupData!: Observable<IBaseMasterTable>;
 	@ViewChild("filter") policiesFilter!: ElementRef;
 	modalRef!: NgbModalRef;
@@ -80,7 +84,6 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private productionService: ProductionService,
-		private masterService: MasterMethodsService,
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
@@ -96,10 +99,8 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 
 		this.initFilterForm();
 		this.getLookupData();
-		// this.disableAmountFilter();
 
 		let sub = this.permissions$.subscribe((res: string[]) => {
-			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) this.f.branch?.patchValue(this.auth.getUser().Branch!);
 			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
 			if (!res.includes(this.uiState.privileges.ChProductionAccessAllUsers)) this.f.producer?.patchValue(this.auth.getUser().name!);
 		});
@@ -114,7 +115,7 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<any[]>>) => {
+			let sub = this.productionService.getAllActivePolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IActivePolicy[]>>) => {
 				if (res.status) {
 					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 					this.uiState.policies.list = res.body?.data!;
@@ -176,34 +177,20 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 	}
 
 	private initFilterForm(): void {
-		this.filterForm = new FormGroup<any>({
+		this.filterForm = new FormGroup<IActiveListFiltersForm>({
 			status: new FormControl(["Active"], Validators.required),
-			branch: new FormControl(""),
 			ourRef: new FormControl(""),
 			clientName: new FormControl(""),
 			producer: new FormControl([]),
 			insurCompany: new FormControl(""),
 			classOfInsurance: new FormControl(""),
+			lineOfBusiness: new FormControl(""),
 			policyNo: new FormControl(""),
-			endorsNo: new FormControl(""),
-			policyEndorsType: new FormControl(""),
-			clientDNCNNo: new FormControl(""),
-			companyCommisionDNCNNo: new FormControl(""),
-			ourDNCNNo: new FormControl(""),
+			inceptionFrom: new FormControl(null),
+			inceptionTo: new FormControl(null),
+			expiryFrom: new FormControl(null),
+			expiryTo: new FormControl(null),
 			createdBy: new FormControl(""),
-			issueFrom: new FormControl(""),
-			issueTo: new FormControl(""),
-			financeApproveFrom: new FormControl(""),
-			financeApproveTo: new FormControl(""),
-			inceptionFrom: new FormControl(""),
-			inceptionTo: new FormControl(""),
-			financeEntryFrom: new FormControl(""),
-			financeEntryTo: new FormControl(""),
-			amount: new FormControl(""),
-			field: new FormControl(""),
-			operatordList: new FormControl(""),
-			amountNo: new FormControl(""),
-			amountNo2: new FormControl(""),
 		});
 	}
 
@@ -213,34 +200,27 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 
 	getLookupData() {
 		this.lookupData = this.table.getBaseData(MODULES.Production);
+		this.lookupData.subscribe((res) => {
+			this.uiState.policyStatusList = res.PolicyStatus?.content.filter(
+				(item) => item.name === "Active" || item.name === "Pending" || item.name === "Expired"
+			)!;
+		});
 	}
 
 	modifyFilterReq() {
 		this.uiState.filters = {
 			...this.uiState.filters,
 			...this.filterForm.value,
-			issueFrom: this.appUtils.dateFormater(this.f.issueFrom?.value) as any,
-			issueTo: this.appUtils.dateFormater(this.f.issueTo?.value) as any,
-			financeApproveFrom: this.appUtils.dateFormater(this.f.financeApproveFrom?.value) as any,
-			financeApproveTo: this.appUtils.dateFormater(this.f.financeApproveTo?.value) as any,
 			inceptionFrom: this.appUtils.dateFormater(this.f.inceptionFrom?.value) as any,
 			inceptionTo: this.appUtils.dateFormater(this.f.inceptionTo?.value) as any,
-			financeEntryFrom: this.appUtils.dateFormater(this.f.financeEntryFrom?.value) as any,
-			financeEntryTo: this.appUtils.dateFormater(this.f.financeEntryTo?.value) as any,
-			amount: JSON.stringify(this.f.amount?.value) as any,
-			amountNo: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo?.value) : "",
-			amountNo2: this.f.amountNo2?.value ? JSON.stringify(this.f.amountNo2?.value) : "",
+			expiryFrom: this.appUtils.dateFormater(this.f.expiryFrom?.value) as any,
+			expiryTo: this.appUtils.dateFormater(this.f.expiryTo?.value) as any,
 		};
 	}
 
-	setIssueRangeFilter(e: any) {
-		this.f.issueFrom?.patchValue(e.from);
-		this.f.issueTo?.patchValue(e.to);
-	}
-
-	setFinApprovedRangeFilter(e: any) {
-		this.f.financeApproveFrom?.patchValue(e.from);
-		this.f.financeApproveTo?.patchValue(e.to);
+	setExpiryRangeFilter(e: any) {
+		this.f.expiryFrom?.patchValue(e.from);
+		this.f.expiryTo?.patchValue(e.to);
 	}
 
 	setInceptionRangeFilter(e: any) {
@@ -248,31 +228,8 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 		this.f.inceptionTo?.patchValue(e.to);
 	}
 
-	setFinEntryRangeFilter(e: any) {
-		this.f.financeEntryFrom?.patchValue(e.from);
-		this.f.financeEntryTo?.patchValue(e.to);
-	}
-
-	disableAmountFilter() {
-		if (this.f.amount?.value === false) {
-			this.f.field?.reset();
-			this.f.operatordList?.reset();
-			this.f.amountNo?.reset();
-			this.f.amountNo2?.reset();
-			this.f.field?.disable();
-			this.f.operatordList?.disable();
-			this.f.amountNo?.disable();
-			this.f.amountNo2?.disable();
-		} else {
-			this.f.field?.enable();
-			this.f.operatordList?.enable();
-			this.f.amountNo?.enable();
-			this.f.amountNo2?.enable();
-		}
-	}
-
 	openPolicyPreview(id: string) {
-		this.modalRef = this.modalService.open(PoilcyPreviewComponent, {
+		this.modalRef = this.modalService.open(ClientPolicyPreviewComponent, {
 			fullscreen: true,
 			scrollable: true,
 		});

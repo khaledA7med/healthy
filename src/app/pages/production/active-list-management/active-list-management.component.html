@@ -42,14 +42,16 @@
         <div class="offcanvas-body">
             <form class="row justify-content-center" [formGroup]="filterForm">
 
-                <!-- Branch -->
+                <!-- Policy Status -->
                 <div class="col-12 mb-3">
-                    <label for="branchName" class="form-label">Branch:</label>
-                    <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branchName"
-                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
-                        formControlName="branch">
+                    <ng-select [items]="uiState.policyStatusList" [loading]="lookupData ? false : true"
+                        [clearable]="false" [searchable]="true" bindLabel="name" [closeOnSelect]="false"
+                        [hideSelected]="true" [multiple]="true" bindValue="name" id="policyStatus"
+                        formControlName="status"
+                        [ngClass]="{'is-submitted': (f.status?.touched || uiState.submitted) && f.status?.invalid}">
                     </ng-select>
+                    <span class="invalid-feedback fw-bold mt-0"
+                        *ngIf="(f.status?.touched || uiState.submitted) && f.status?.invalid">Required</span>
                 </div>
                 <!-- Our Ref -->
                 <div class="col-12 mb-3">
@@ -137,59 +139,15 @@
                         formControlName="createdBy">
                     </ng-select>
                 </div>
-
-                <!-- Issue Range -->
+                <!-- Expiry Range -->
                 <div class="col-12 mb-3">
-                    <label for="user" class="form-label">Deadline Range:</label>
-                    <app-range-picker (dateChange)="setIssueRangeFilter($event)"></app-range-picker>
-                </div>
-                <!-- Finance Approve Range -->
-                <div class="col-12 mb-3">
-                    <label for="user" class="form-label">Finance Approve Range:</label>
-                    <app-range-picker (dateChange)="setFinApprovedRangeFilter($event)"></app-range-picker>
+                    <label for="user" class="form-label">Expiry Range:</label>
+                    <app-range-picker (dateChange)="setExpiryRangeFilter($event)"></app-range-picker>
                 </div>
                 <!-- Inception Range -->
                 <div class="col-12 mb-3">
                     <label for="user" class="form-label">Inception Range:</label>
                     <app-range-picker (dateChange)="setInceptionRangeFilter($event)"></app-range-picker>
-                </div>
-                <!-- Finance Entry Range -->
-                <div class="col-12 mb-3">
-                    <label for="user" class="form-label">Finance Entry Range:</label>
-                    <app-range-picker (dateChange)="setFinEntryRangeFilter($event)"></app-range-picker>
-                </div>
-                <!-- Expires In Days -->
-                <div class="col-12 mb-3">
-                    <label class="m-checkbox m-checkbox--solid">
-                        <input name="Amount" id="filterAmount" type="checkbox" formControlName="amount"
-                            (change)="disableAmountFilter()"> Amount
-                    </label>
-                    <div class="row">
-                        <div class="col">
-                            <ng-select [items]="(lookupData | async)?.ProductionFieldList?.content!"
-                                [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                                bindLabel="name" bindValue="name" id="created" formControlName="field">
-                            </ng-select>
-                        </div>
-                        <div class="col">
-                            <ng-select [items]="(lookupData | async)?.ProductionOperatordList?.content!"
-                                [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-                                bindLabel="name" bindValue="name" id="created" formControlName="operatordList">
-                            </ng-select>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col">
-                            <input id="filterAmountNo" name="AmountNo" type="number" min="0"
-                                class="form-control form-control-sm" placeholder="0.00" formControlName="amountNo">
-                        </div>
-
-                        <div class="col" id="Amount2Div" *ngIf="f.operatordList?.value === 'Between' ">
-                            <input id="filterAmountNo2" name="AmountNo2" type="number" min="0"
-                                class="form-control form-control-sm" placeholder="0.00" formControlName="amountNo2">
-                        </div>
-                    </div>
                 </div>
             </form>
         </div>

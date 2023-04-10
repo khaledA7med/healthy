@@ -122,15 +122,3 @@ export function refundChecker(params: any) {
 		? ["input-text-right", "text-danger"]
 		: ["input-text-right"];
 }
-
-//#region For Testing Perpouse and to be deleted when evaluated
-export interface PersonsDataForm {
-	Name: FormControl<string | null>;
-	Age: FormControl<number | null>;
-}
-
-export interface PersonsData {
-	Name: string | null;
-	Age: number | null;
-}
-//#endregion
