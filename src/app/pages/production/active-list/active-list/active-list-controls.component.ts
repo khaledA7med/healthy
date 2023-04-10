@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { ICellRendererParams } from "ag-grid-community";
-import { MedicalActiveListComponent } from "./medical-active-list.component";
+import { ActiveListComponent } from "./active-list.component";
 import { PoliciesManagementComponent } from "../../policies-management/policies-management.component";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { Observable } from "rxjs";
@@ -37,9 +37,9 @@ import { Roles } from "src/app/core/roles/Roles";
   `,
   styles: ["#actionDropdown::after {display: none}"],
 })
-export class MedicalActiveListControlsComponent {
+export class ActiveListControlsComponent {
   private params!: ICellRendererParams;
-  public comp!: MedicalActiveListComponent;
+  public comp!: ActiveListComponent;
   permissions$!: Observable<string[]>;
   privileges = ProductionPermissions;
   route: string = AppRoutes.Production.details;

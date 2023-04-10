@@ -388,6 +388,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Production.productionOperatordList,
           name: BaseData.ProductionOperatordList,
         },
+        {
+          route: ApiRoutes.MasterTable.Production.getStatusClientsPolicies,
+          name: BaseData.GetStatusClientsPolicies,
+        },
       ],
       EditCommision: [
         {

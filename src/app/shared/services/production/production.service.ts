@@ -26,8 +26,9 @@ import {
   IPolicyRequests,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { IMedicalActiveFilters } from "../../app/models/Production/i-medical-active-list-filter";
-import { IMedicalActive } from "../../app/models/Production/i-medical-active-list";
+import { IActiveListFilters } from "../../app/models/Production/i-active-list-filter";
+import { IActiveList } from "../../app/models/Production/i-active-list";
+import { IMedicalActiveDataPreview } from "../../app/models/Production/i-medical-active-preview";
 
 @Injectable({
   providedIn: "root",
@@ -293,9 +294,9 @@ export class ProductionService {
 
   //#Clients Policies
   getAllClientsPolicies(
-    filters: IMedicalActiveFilters
-  ): Observable<HttpResponse<IBaseResponse<IMedicalActive[]>>> {
-    return this.http.post<IBaseResponse<IMedicalActive[]>>(
+    filters: IActiveListFilters
+  ): Observable<HttpResponse<IBaseResponse<IActiveList[]>>> {
+    return this.http.post<IBaseResponse<IActiveList[]>>(
       this.env + ApiRoutes.Production.clientsPolicies,
       filters,
       {
@@ -306,10 +307,25 @@ export class ProductionService {
 
   getClientPolicyById(
     policiesSNo: string
-  ): Observable<IBaseResponse<IMedicalActive>> {
-    return this.http.get<IBaseResponse<IMedicalActive>>(
+  ): Observable<IBaseResponse<IActiveList>> {
+    return this.http.get<IBaseResponse<IActiveList>>(
       this.env + ApiRoutes.Production.clientsDetails,
       { params: { policiesSNo } }
+    );
+  }
+  getMedicalDataById(
+    policiesSNo: number
+  ): Observable<IBaseResponse<IMedicalActiveDataPreview>> {
+    return this.http.get<IBaseResponse<IMedicalActiveDataPreview>>(
+      this.env + ApiRoutes.Production.medicalDetails,
+      { params: { policiesSNo } }
+    );
+  }
+  SaveMedical(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.saveMedical,
+      body,
+      { observe: "response" }
     );
   }
 }

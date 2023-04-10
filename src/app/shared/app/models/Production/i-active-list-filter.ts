@@ -1,7 +1,7 @@
 import { FormControl } from "@angular/forms";
 import { IBaseFilters } from "../App/IBaseFilters";
 
-export interface IMedicalActiveFiltersForm {
+export interface IActiveListFiltersForm {
   status?: FormControl<string[] | null>;
   producer?: FormControl<string[] | string | null>;
   ourRef?: FormControl<string | null>;
@@ -16,7 +16,7 @@ export interface IMedicalActiveFiltersForm {
   expiryFrom?: FormControl<Date | null>;
   expiryTo?: FormControl<Date | null>;
 }
-export interface IMedicalActiveFilters extends IBaseFilters {
+export interface IActiveListFilters extends IBaseFilters {
   status?: string[] | null;
   producer?: string[] | string | null;
   ourRef?: string | null;

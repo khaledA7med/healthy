@@ -33,26 +33,26 @@ import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
-import { MedicalActiveCols } from "src/app/shared/app/grid/medicalActiveListCols";
+import { ActiveListCols } from "src/app/shared/app/grid/ActiveListCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IMedicalActive } from "src/app/shared/app/models/Production/i-medical-active-list";
+import { IActiveList } from "src/app/shared/app/models/Production/i-active-list";
 import {
-  IMedicalActiveFilters,
-  IMedicalActiveFiltersForm,
-} from "src/app/shared/app/models/Production/i-medical-active-list-filter";
+  IActiveListFilters,
+  IActiveListFiltersForm,
+} from "src/app/shared/app/models/Production/i-active-list-filter";
 import AppUtils from "src/app/shared/app/util";
-import { MedicalActivePreviewComponent } from "src/app/shared/components/medical-active-preview/medical-active-preview/medical-active-preview.component";
+import { ActivePreviewComponent } from "src/app/shared/components/medical-active-preview/active-preview/active-preview.component";
 import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 
 @Component({
-  selector: "app-medical-active-list",
-  templateUrl: "./medical-active-list.component.html",
-  styleUrls: ["./medical-active-list.component.scss"],
+  selector: "app-active-list",
+  templateUrl: "./active-list.component.html",
+  styleUrls: ["./active-list.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class MedicalActiveListComponent implements OnInit, OnDestroy {
+export class ActiveListComponent implements OnInit, OnDestroy {
   uiState = {
     filters: {
       pageNumber: 1,
@@ -60,11 +60,11 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
       orderBy: "sNo",
       orderDir: "asc",
       status: ["Active"],
-    } as IMedicalActiveFilters,
+    } as IActiveListFilters,
     gridReady: false,
     submitted: false,
     policies: {
-      list: [] as IMedicalActive[],
+      list: [] as IActiveList[],
       totalPages: 0,
     },
     lineOfBusinessList: [] as IGenericResponseType[],
@@ -79,7 +79,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
 
   permissions$!: Observable<string[]>;
 
-  filterForm!: FormGroup<IMedicalActiveFiltersForm>;
+  filterForm!: FormGroup<IActiveListFiltersForm>;
   lookupData!: Observable<IBaseMasterTable>;
   @ViewChild("filter") policiesFilter!: ElementRef;
   modalRef!: NgbModalRef;
@@ -91,7 +91,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
-    columnDefs: MedicalActiveCols,
+    columnDefs: ActiveListCols,
     suppressCsvExport: true,
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
@@ -159,7 +159,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
       this.gridApi.showLoadingOverlay();
       let sub = this.productionService
         .getAllClientsPolicies(this.uiState.filters)
-        .subscribe((res: HttpResponse<IBaseResponse<IMedicalActive[]>>) => {
+        .subscribe((res: HttpResponse<IBaseResponse<IActiveList[]>>) => {
           if (res.status) {
             this.uiState.policies.totalPages = JSON.parse(
               res.headers.get("x-pagination")!
@@ -227,7 +227,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
   }
 
   private initFilterForm(): void {
-    this.filterForm = new FormGroup<IMedicalActiveFiltersForm>({
+    this.filterForm = new FormGroup<IActiveListFiltersForm>({
       status: new FormControl(["Active"], Validators.required),
       producer: new FormControl([]),
       ourRef: new FormControl(""),
@@ -285,7 +285,7 @@ export class MedicalActiveListComponent implements OnInit, OnDestroy {
   }
 
   openMedicalActivePreview(policiesSNo: string) {
-    this.modalRef = this.modalService.open(MedicalActivePreviewComponent, {
+    this.modalRef = this.modalService.open(ActivePreviewComponent, {
       fullscreen: true,
       scrollable: true,
     });

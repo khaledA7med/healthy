@@ -180,12 +180,12 @@ const routes: Routes = [
     ],
   },
   {
-    path: AppRoutes.Production.MedicalActive,
+    path: AppRoutes.Production.ActiveList,
     data: {
-      title: "Medical Active",
+      title: "Active Management",
     },
     loadChildren: () =>
-      import("./medical-active-list/medical-active-list.module").then(
+      import("./active-list/active-list.module").then(
         (m) => m.MedicalActiveListModule
       ),
     // canActivate: [

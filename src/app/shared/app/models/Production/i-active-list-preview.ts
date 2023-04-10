@@ -1,26 +1,4 @@
-export interface IMedicalActive {
-  sNo?: number;
-  policiesSNo?: number;
-  status?: string;
-  oasisPolRef?: string;
-  clientNo?: number;
-  clientName?: string;
-  producer?: string;
-  insurComp?: string;
-  className?: string;
-  lineOfBusiness?: string;
-  issueDate?: Date;
-  periodFrom?: Date;
-  periodTo?: Date;
-  producerCommPerc?: number;
-  compCommPerc?: number;
-  cancelled?: number;
-  savedBy?: number;
-  savedOn?: Date;
-  identity?: string;
-}
-
-export interface IMedicalActivePreview {
+export interface IActiveListPreview {
   sNo?: number;
   oasisPolRef?: string;
   reversalOf?: string;

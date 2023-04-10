@@ -119,6 +119,8 @@ export const ApiRoutes = {
       endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
       productionFieldList: LookUpTables + BaseData.ProductionFieldList,
       productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
+      getStatusClientsPolicies:
+        LookUpTables + BaseData.GetStatusClientsPolicies,
     },
     Claims: {
       claimStatus: LookUpTables + BaseData.ClaimStatus,
@@ -517,6 +519,8 @@ export const ApiRoutes = {
     debitcreditNoteReport: "/Production/Policy/GenerateArchivesReportsURL",
     clientsPolicies: "/Production/ClientsPolicies/Search",
     clientsDetails: "/Production/ClientsPolicies/Details",
+    medicalDetails: "/Production/ClientsPolicies/GetPoliciesMedical",
+    saveMedical: "/Production/ClientsPolicies/SavePoliciesMedical",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",

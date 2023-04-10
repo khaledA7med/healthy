@@ -43,7 +43,7 @@
                 <!-- Policy Status -->
                 <div class="col-12 mb-3">
                     <label for="policyStatus" class="form-label">Policy Status:</label>
-                    <ng-select [items]="(lookupData | async)?.PolicyStatus?.content!"
+                    <ng-select [items]="(lookupData | async)?.GetStatusClientsPolicies?.content!"
                         [loading]="lookupData ? false : true" [clearable]="false" [searchable]="true" bindLabel="name"
                         [closeOnSelect]="false" [hideSelected]="true" [multiple]="true" bindValue="name"
                         id="policyStatus" formControlName="status"

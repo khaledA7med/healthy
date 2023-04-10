@@ -459,8 +459,8 @@ export const MENU: MenuItem[] = [
       },
       {
         id: 405,
-        label: "MENUITEMS.PRODUCTION.LIST.MEDICALACTIVE",
-        link: AppRoutes.Production.MedicalActive,
+        label: "MENUITEMS.PRODUCTION.LIST.ACTIVELIST",
+        link: AppRoutes.Production.ActiveList,
         parentId: 4,
       },
     ],

@@ -1,12 +1,12 @@
 import { ColDef } from "ag-grid-community";
 import GlobalCellRender from "./globalCellRender";
 import StatusCellRender from "./statusCellRender";
-import { MedicalActiveListControlsComponent } from "src/app/pages/production/medical-active-list/medical-active-list/medical-active-list-controls.component";
+import { ActiveListControlsComponent } from "src/app/pages/production/active-list/active-list/active-list-controls.component";
 
-export const MedicalActiveCols: ColDef[] = [
+export const ActiveListCols: ColDef[] = [
   {
     colId: "action",
-    cellRenderer: MedicalActiveListControlsComponent,
+    cellRenderer: ActiveListControlsComponent,
     pinned: "left",
     maxWidth: 80,
     sortable: false,
