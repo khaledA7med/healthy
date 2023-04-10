@@ -78,6 +78,9 @@
             <i class="bx bx-envelope-open fs-22"></i>
           </button> -->
         </div>
+        <div class="ms-1 header-item d-none d-sm-flex">
+          <span class="badge bg-success">{{userData.DbConnection}}</span>
+        </div>
 
         <div class="dropdown ms-sm-3 header-item topbar-user" ngbDropdown>
           <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
@@ -86,11 +89,11 @@
               <img class="rounded-circle header-profile-user" src="assets/images/users/avatar.jpg" alt="Header Avatar">
               <span class="text-start ms-xl-2">
                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{userData.name}}</span>
-                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                <!-- <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
                   <span *ngFor="let role of userData.Role; let isLast=last">
                     {{role}}{{isLast ? '' : ', '}}
                   </span>
-                </span>
+                </span> -->
                 <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
                   {{userData.Branch}}
                 </span>

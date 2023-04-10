@@ -1,5 +1,3 @@
-import { FormControl } from "@angular/forms";
-
 export interface ITaskParams {
   timeStampFrom?: string;
   timeStampTo?: string;

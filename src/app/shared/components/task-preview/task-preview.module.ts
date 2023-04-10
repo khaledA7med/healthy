@@ -4,6 +4,7 @@ import { SharedModule } from "../../shared.module";
 import { RangePickerModule } from "../range-picker/range-picker.module";
 import { FlatpickrModule } from "angularx-flatpickr";
 import { TaskPreviewComponent } from "./task-preview.component";
+import { NgbCollapseModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [TaskPreviewComponent],
@@ -12,6 +13,7 @@ import { TaskPreviewComponent } from "./task-preview.component";
     SharedModule,
     RangePickerModule,
     FlatpickrModule.forRoot(),
+    NgbCollapseModule,
   ],
   exports: [TaskPreviewComponent],
 })

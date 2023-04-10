@@ -902,7 +902,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-5">
-                <input type="text" class="form-control form-control-sm" required
+                <input type="number" class="form-control form-control-sm" required
                     (keydown.enter)="clientID.valid ? requestsData.setDataSource() : false"
                     [(ngModel)]="uiState.clientSearch.clientID" #clientID="ngModel" placeholder="Client ID">
             </div>
@@ -938,7 +938,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-4">
-                <input type="text" class="form-control form-control-sm" required readonly
+                <input type="number" class="form-control form-control-sm" required readonly
                     [(ngModel)]="uiState.policySearch.clientID" #clientID="ngModel" placeholder="Client ID">
             </div>
             <div class="col-4">
