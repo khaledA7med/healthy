@@ -521,6 +521,8 @@ export const ApiRoutes = {
     clientsDetails: "/Production/ClientsPolicies/Details",
     medicalDetails: "/Production/ClientsPolicies/GetPoliciesMedical",
     saveMedical: "/Production/ClientsPolicies/SavePoliciesMedical",
+    motorDetails: "/Production/ClientsPolicies/GetPoliciesVehicles",
+    saveMotor: "/Production/ClientsPolicies/SavePoliciesVehicles",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",

@@ -29,6 +29,9 @@ import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IActiveListFilters } from "../../app/models/Production/i-active-list-filter";
 import { IActiveList } from "../../app/models/Production/i-active-list";
 import { IMedicalActiveDataPreview } from "../../app/models/Production/i-medical-active-preview";
+import { IMotorActiveDataPreview } from "../../app/models/Production/i-motor-active-preview";
+import { MotorData } from "../../app/models/Production/i-active-motor-forms";
+import { MedicalData } from "../../app/models/Production/i-active-medical-forms";
 
 @Injectable({
   providedIn: "root",
@@ -314,18 +317,31 @@ export class ProductionService {
     );
   }
   getMedicalDataById(
-    policiesSNo: number
+    policiesSNo: string
   ): Observable<IBaseResponse<IMedicalActiveDataPreview>> {
     return this.http.get<IBaseResponse<IMedicalActiveDataPreview>>(
       this.env + ApiRoutes.Production.medicalDetails,
       { params: { policiesSNo } }
     );
   }
-  SaveMedical(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
+  SaveMedical(body: MedicalData[]): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Production.saveMedical,
-      body,
-      { observe: "response" }
+      body
+    );
+  }
+  getMotorDataById(
+    policiesSNo: string
+  ): Observable<IBaseResponse<IMotorActiveDataPreview>> {
+    return this.http.get<IBaseResponse<IMotorActiveDataPreview>>(
+      this.env + ApiRoutes.Production.motorDetails,
+      { params: { policiesSNo } }
+    );
+  }
+  SaveMotor(body: MotorData[]): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.saveMotor,
+      body
     );
   }
 }

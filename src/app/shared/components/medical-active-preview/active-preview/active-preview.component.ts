@@ -21,9 +21,11 @@ import { ViewEncapsulation } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { IActiveList } from "src/app/shared/app/models/Production/i-active-list";
-import { UploadMedicalDataComponent } from "../upload-medical-data/upload-medical-data.component";
+import { UploadMedicalDataComponent } from "./upload-medical-data/upload-medical-data.component";
 import { IActiveListPreview } from "src/app/shared/app/models/Production/i-active-list-preview";
 import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/i-medical-active-preview";
+import { IMotorActiveDataPreview } from "src/app/shared/app/models/Production/i-motor-active-preview";
+import { UploadMotorDataComponent } from "./upload-motor-data/upload-motor-data.component";
 
 @Component({
   selector: "app-active-preview",
@@ -33,14 +35,16 @@ import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/
 })
 export class ActivePreviewComponent implements OnInit, OnDestroy {
   @Input() data!: {
+    id: string;
     policiesSNo: string;
     className: string;
   };
   uiState = {
-    sno: "",
+    sno: "" as string,
     policiesSNo: 0,
     policyDetails: {} as IActiveListPreview,
     medicalActiveData: {} as IMedicalActiveDataPreview,
+    motorActiveData: {} as IMotorActiveDataPreview,
     loadedData: false,
     updatedState: false,
     data: [] as any[],
@@ -70,12 +74,12 @@ export class ActivePreviewComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.permissions$ = this.privileges.getPrivileges(Roles.Production);
-    this.uiState.sno = this.data.policiesSNo;
+    this.uiState.sno = this.data.id;
     this.getPolicyDetails(this.uiState.sno);
   }
 
-  getPolicyDetails(policiesSNo: string): void {
-    let sub = this.productinService.getClientPolicyById(policiesSNo).subscribe({
+  getPolicyDetails(id: string): void {
+    let sub = this.productinService.getClientPolicyById(id).subscribe({
       next: (res: IBaseResponse<IActiveList>) => {
         if (res.status) {
           this.uiState.loadedData = true;
@@ -98,30 +102,36 @@ export class ActivePreviewComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  getMedicalActiveData(policiesSNo: number) {
-    let sub = this.productinService.getMedicalDataById(policiesSNo).subscribe({
-      next: (res: IBaseResponse<IMedicalActiveDataPreview>) => {
-        if (res.status) {
-          this.uiState.loadedData = true;
-          this.uiState.medicalActiveData = res.data!;
-        } else this.message.popup("Oops!", res.message!, "error");
-      },
-    });
-    this.subscribes.push(sub);
-  }
-
-  Upload(policiesSNo: number) {
+  UploadMedical(id: string) {
     this.modalRef = this.modalService.open(UploadMedicalDataComponent, {
       size: "xl",
       scrollable: true,
       centered: true,
     });
 
-    console.log(policiesSNo);
-    this.getMedicalActiveData(policiesSNo);
     this.modalRef.componentInstance.data = {
-      policiesSNo,
+      id,
       className: this.uiState.policyDetails.className,
+      clientID: this.uiState.policyDetails.clientNo,
+      oasisPOlRef: this.uiState.policyDetails.oasisPolRef,
+      PoliciesSno: this.uiState.policyDetails.policiesSNo,
+      PolicyNo: this.uiState.policyDetails.policyNo,
+    };
+  }
+  UploadMotor(id: string) {
+    this.modalRef = this.modalService.open(UploadMotorDataComponent, {
+      size: "xl",
+      scrollable: true,
+      centered: true,
+    });
+
+    this.modalRef.componentInstance.data = {
+      id,
+      className: this.uiState.policyDetails.className,
+      clientID: this.uiState.policyDetails.clientNo,
+      oasisPOlRef: this.uiState.policyDetails.oasisPolRef,
+      PoliciesSno: this.uiState.policyDetails.policiesSNo,
+      PolicyNo: this.uiState.policyDetails.policyNo,
     };
   }
 

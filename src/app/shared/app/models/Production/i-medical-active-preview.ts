@@ -22,4 +22,6 @@ export interface IMedicalActiveDataPreview {
   mobileNo: string;
   nationality: string;
   cchiStatus: string;
+  savedUser: string;
+  savedDate: Date;
 }

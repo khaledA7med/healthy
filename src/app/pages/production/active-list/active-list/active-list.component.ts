@@ -284,13 +284,13 @@ export class ActiveListComponent implements OnInit, OnDestroy {
     this.f.inceptionTo?.patchValue(e.to);
   }
 
-  openMedicalActivePreview(policiesSNo: string) {
+  openMedicalActivePreview(id: string) {
     this.modalRef = this.modalService.open(ActivePreviewComponent, {
       fullscreen: true,
       scrollable: true,
     });
     this.modalRef.componentInstance.data = {
-      policiesSNo,
+      id,
     };
   }
 

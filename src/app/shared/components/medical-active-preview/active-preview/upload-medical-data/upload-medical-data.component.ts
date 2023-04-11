@@ -7,20 +7,21 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { Observable, Subscription } from "rxjs";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Subscription } from "rxjs";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { IActiveList } from "src/app/shared/app/models/Production/i-active-list";
-import {
-  MedicalData,
-  MedicalDataForm,
-} from "src/app/shared/app/models/Production/production-util";
 import readXlsxFile from "read-excel-file";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { EventService } from "src/app/core/services/event.service";
 import { reserved } from "src/app/core/models/reservedWord";
 import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/i-medical-active-preview";
+import {
+  MedicalData,
+  MedicalDataForm,
+} from "src/app/shared/app/models/Production/i-active-medical-forms";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 
 @Component({
   selector: "app-upload-medical-data",
@@ -29,8 +30,12 @@ import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/
 })
 export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   @Input() data!: {
-    policiesSNo: number;
+    id: string;
     className: string;
+    clientID: number;
+    oasisPOlRef: string;
+    PoliciesSno: number;
+    PolicyNo: string;
   };
   uiState = {
     policiesSNo: 0,
@@ -38,7 +43,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
     loadedData: false,
     updatedState: false,
     data: [] as any[],
-    medicalData: [] as IActiveList[],
+    ActiveData: [] as IActiveList[],
     documentList: [],
     privileges: ProductionPermissions,
   };
@@ -51,12 +56,6 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   >([]);
   addMedical(data?: MedicalData) {
     let newData = new FormGroup<MedicalDataForm>({
-      sNo: new FormControl(data?.sNo || null),
-      oasisPolRef: new FormControl(data?.oasisPolRef || null),
-      policiesSNo: new FormControl(data?.policiesSNo || null),
-      policyNo: new FormControl(data?.policyNo || null),
-      clientID: new FormControl(data?.clientID || null),
-      valid: new FormControl(data?.valid || null),
       idIqamaNo: new FormControl(data?.idIqamaNo || null),
       membershipNo: new FormControl(data?.membershipNo || null),
       memberName: new FormControl(data?.memberName || null),
@@ -66,7 +65,6 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       gender: new FormControl(data?.gender || null),
       sponsorNo: new FormControl(data?.sponsorNo || null),
       endtNo: new FormControl(data?.endtNo || null),
-      policyNumber: new FormControl(data?.policyNumber || null),
       class: new FormControl(data?.class || null),
       city: new FormControl(data?.city || null),
       staffNo: new FormControl(data?.staffNo || null),
@@ -92,84 +90,113 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   constructor(
     private message: MessagesService,
     private productinService: ProductionService,
-    public modal: NgbActiveModal,
-    private eventService: EventService
+    public modal: NgbActiveModal
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getMedicalActiveData();
+  }
+
+  getMedicalActiveData() {
+    let sub = this.productinService
+      .getMedicalDataById(String(this.data.PoliciesSno))
+      .subscribe({
+        next: (res: IBaseResponse<IMedicalActiveDataPreview>) => {
+          if (res.status) {
+            this.uiState.loadedData = true;
+            this.uiState.medicalActiveData = res.data!;
+          } else this.message.popup("Oops!", res.message!, "error");
+        },
+      });
+    this.subscribes.push(sub);
+  }
 
   uploadExeceFile(e: any) {
     const schema = {
-      idIqamaNo: {
+      "idIqama No.": {
         prop: "idIqamaNo",
         type: String,
+        required: true,
       },
-      membershipNo: {
+      "Membership No": {
         prop: "membershipNo",
         type: String,
         required: true,
       },
-      memberName: {
+      "Member Name": {
         prop: "memberName",
         type: String,
         required: true,
       },
-      dob: {
+      DOB: {
         prop: "dob",
         type: String,
         required: true,
       },
-      relation: {
+      Relation: {
         prop: "relation",
         type: String,
+        required: true,
       },
-      maritalStatus: {
+      "Marital Status": {
         prop: "maritalStatus",
         type: String,
+        required: true,
       },
-      gender: {
+      Gender: {
         prop: "gender",
         type: String,
+        required: true,
       },
-      sponsorNo: {
+      "Sponsor No": {
         prop: "sponsorNo",
         type: String,
+        required: true,
       },
-      endtNo: {
+      "Endt No": {
         prop: "endtNo",
         type: String,
+        required: true,
       },
-      policyNumber: {
-        prop: "policyNumber",
+      "policy number": {
+        prop: "policyNo",
         type: String,
+        required: true,
       },
-      class: {
+      Class: {
         prop: "class",
         type: String,
+        required: true,
       },
-      city: {
+      City: {
         prop: "city",
         type: String,
+        required: true,
       },
-      staffNo: {
+      "Staff No": {
         prop: "staffNo",
         type: String,
+        required: true,
       },
-      premium: {
+      Premium: {
         prop: "premium",
-        type: Number,
+        type: String,
+        required: true,
       },
-      mobileNo: {
+      "Mobile No": {
         prop: "mobileNo",
         type: String,
+        required: true,
       },
-      nationality: {
+      Nationality: {
         prop: "nationality",
         type: String,
+        required: true,
       },
-      cchiStatus: {
+      "CCHI Status": {
         prop: "cchiStatus",
         type: String,
+        required: true,
       },
     };
 
@@ -180,7 +207,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       if (errors.length == 0) {
         console.log(rows);
         this.uiState.data = [...rows];
-        rows.forEach((person: any) => this.addMedical(person));
+        rows.forEach((med: any) => this.addMedical(med));
       } else {
         console.log("errrr", errors);
         this.message.popup(
@@ -198,8 +225,24 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
     });
   }
 
-  submit(DataFormArr: FormArray): void {
-    console.log(DataFormArr.value);
+  submit(): void {
+    let formData = this.DataFormArr.getRawValue();
+    let newData: MedicalData[] = formData.map((data) => {
+      return {
+        ...data,
+        clientID: this.data.clientID,
+        oasisPolRef: this.data.oasisPOlRef,
+        policiesSNo: this.data.PoliciesSno,
+        policyNo: data.policyNo || this.data.PolicyNo,
+      };
+    });
+
+    let sub = this.productinService.SaveMedical(newData).subscribe((res) => {
+      this.message.toast("Successfully Uploaded Medical Data", "success");
+      this.resetFormArr();
+      this.modal.close();
+    });
+    this.subscribes.push(sub);
   }
 
   ngOnDestroy() {

@@ -5,7 +5,7 @@
 <div class="modal-body">
     <div class="col-12 my-2">
         <p>if you don't have Medical Active File <a class="btn btn-sm btn-info"
-                href="/src/MedicalMembersListTemplate.xls" download><i class="ri-file-download-fill"></i>
+                href="/src/MedicalMembersListTemplate.xlsx" download><i class="ri-file-download-fill"></i>
                 File</a> download</p>
     </div>
     <div class="col-12  my-2">
@@ -48,31 +48,31 @@
                                         formControlName="idIqamaNo" />
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" placeholder="membershipNo"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Membership No"
                                         formControlName="membershipNo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="memberName"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Member Name"
                                         formControlName="memberName" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="dob"
+                                    <input type="text" class="form-control form-control-sm" placeholder="DOB"
                                         formControlName="dob" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="relation"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Relation"
                                         formControlName="relation" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="maritalStatus"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Marital Status"
                                         formControlName="maritalStatus" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="gender"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Gender"
                                         formControlName="gender" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="sponsorNo"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Sponsor No"
                                         formControlName="sponsorNo" />
                                 </td>
                                 <td>
@@ -80,11 +80,11 @@
                                         formControlName="endtNo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="policyNumber"
-                                        formControlName="policyNumber" />
+                                    <input type="text" class="form-control form-control-sm" placeholder="Policy No"
+                                        formControlName="policyNo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="class"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Class"
                                         formControlName="class" />
                                 </td>
                                 <td>
@@ -92,23 +92,23 @@
                                         formControlName="city" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="staffNo"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Staff No"
                                         formControlName="staffNo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="premium"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Premium"
                                         formControlName="premium" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="mobileNo"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Mobile No"
                                         formControlName="mobileNo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="nationality"
+                                    <input type="text" class="form-control form-control-sm" placeholder="Nationality"
                                         formControlName="nationality" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="cchiStatus"
+                                    <input type="text" class="form-control form-control-sm" placeholder="CCHI Status"
                                         formControlName="cchiStatus" />
                                 </td>
                                 <td>
@@ -126,7 +126,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-sm btn-outline-success mx-2" (click)="submit(DataFormArr)">
+    <button type="button" class="btn btn-sm btn-outline-success mx-2" (click)="submit()">
         Save
     </button>
     <button type="button" class="btn btn-sm btn-outline-info mx-2" (click)="resetFormArr()">
