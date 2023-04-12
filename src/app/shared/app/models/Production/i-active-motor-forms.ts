@@ -1,4 +1,13 @@
-import { FormControl } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+
+export interface IMotorDataForm {
+  policiesSNo?: FormControl<number | null>;
+  data?: FormArray<FormGroup<MotorDataForm>>;
+}
+export interface IMotorData {
+  data: MotorData[] | [];
+  policiesSNo: number;
+}
 
 export interface MotorDataForm {
   sNo?: FormControl<number | null>;

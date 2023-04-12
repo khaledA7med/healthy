@@ -15,7 +15,11 @@ export interface IActiveList {
   producerCommPerc?: number;
   compCommPerc?: number;
   cancelled?: number;
-  savedBy?: number;
+  savedBy?: string;
   savedOn?: Date;
+  updatedBy?: string;
+  updatedOn?: Date;
+  cancelledUser?: string;
+  cancelledDate?: Date;
   identity?: string;
 }

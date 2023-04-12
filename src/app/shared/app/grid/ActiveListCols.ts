@@ -97,4 +97,26 @@ export const ActiveListCols: ColDef[] = [
     minWidth: 120,
     valueFormatter: GlobalCellRender.dateFormater,
   },
+  {
+    headerName: "Updated By",
+    field: "updatedBy",
+    minWidth: 150,
+  },
+  {
+    headerName: "Updated On",
+    field: "updatedOn",
+    minWidth: 120,
+    valueFormatter: GlobalCellRender.dateFormater,
+  },
+  {
+    headerName: "Cancelled By",
+    field: "cancelledUser",
+    minWidth: 150,
+  },
+  {
+    headerName: "Cancelled On",
+    field: "cancelledDate",
+    minWidth: 120,
+    valueFormatter: GlobalCellRender.dateFormater,
+  },
 ];

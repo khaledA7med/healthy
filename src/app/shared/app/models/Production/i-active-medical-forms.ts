@@ -1,4 +1,13 @@
-import { FormControl } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+
+export interface IMedicalDataForm {
+  policiesSNo?: FormControl<number | null>;
+  data?: FormArray<FormGroup<MedicalDataForm>>;
+}
+export interface IMedicalData {
+  data: MedicalData[] | [];
+  policiesSNo?: number;
+}
 
 export interface MedicalDataForm {
   sNo?: FormControl<number | null>;

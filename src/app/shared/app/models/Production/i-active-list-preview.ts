@@ -17,9 +17,9 @@ export interface IActiveListPreview {
   paymentType?: string;
   compCommPerc?: number;
   producerCommPerc?: number;
-  savedBy?: number;
+  savedBy?: string;
   savedOn?: Date;
-  updatedBy?: number;
+  updatedBy?: string;
   updatedOn?: Date;
   cancelledUser?: string;
   cancelledDate?: Date;

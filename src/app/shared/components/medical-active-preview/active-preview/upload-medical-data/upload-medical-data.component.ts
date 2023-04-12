@@ -11,6 +11,7 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  Validators,
 } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
@@ -21,6 +22,7 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/i-medical-active-preview";
 import {
+  IMedicalData,
   MedicalData,
   MedicalDataForm,
 } from "src/app/shared/app/models/Production/i-active-medical-forms";
@@ -45,6 +47,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   };
   uiState = {
     policiesSNo: 0,
+    submitted: false,
     medicalActiveData: {} as IMedicalActiveDataPreview,
     medicalData: [] as MedicalData[],
     loadedData: false,
@@ -64,8 +67,14 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   addMedical(data?: MedicalData) {
     let newData = new FormGroup<MedicalDataForm>({
       idIqamaNo: new FormControl(data?.idIqamaNo || null),
-      membershipNo: new FormControl(data?.membershipNo || null),
-      memberName: new FormControl(data?.memberName || null),
+      membershipNo: new FormControl(
+        data?.membershipNo || null,
+        Validators.required
+      ),
+      memberName: new FormControl(
+        data?.memberName || null,
+        Validators.required
+      ),
       dob: new FormControl(
         (this.appUtils.dateStructFormat(data?.dob!) as any) || null
       ),
@@ -140,7 +149,6 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       "idIqama No.": {
         prop: "idIqamaNo",
         type: String,
-        required: true,
       },
       "Membership No": {
         prop: "membershipNo",
@@ -160,67 +168,54 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       Relation: {
         prop: "relation",
         type: String,
-        required: true,
       },
       "Marital Status": {
         prop: "maritalStatus",
         type: String,
-        required: true,
       },
       Gender: {
         prop: "gender",
         type: String,
-        required: true,
       },
       "Sponsor No": {
         prop: "sponsorNo",
         type: String,
-        required: true,
       },
       "Endt No": {
         prop: "endtNo",
         type: String,
-        required: true,
       },
       "policy number": {
         prop: "policyNo",
         type: String,
-        required: true,
       },
       Class: {
         prop: "class",
         type: String,
-        required: true,
       },
       City: {
         prop: "city",
         type: String,
-        required: true,
       },
       "Staff No": {
         prop: "staffNo",
         type: String,
-        required: true,
       },
       Premium: {
         prop: "premium",
         type: String,
-        required: true,
       },
       "Mobile No": {
         prop: "mobileNo",
         type: String,
-        required: true,
       },
       Nationality: {
         prop: "nationality",
         type: String,
-        required: true,
       },
       "CCHI Status": {
         prop: "cchiStatus",
         type: String,
-        required: true,
       },
     };
 
@@ -249,22 +244,42 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
     });
   }
 
-  submit(): void {
-    this.eventService.broadcast(reserved.isLoading, true);
-    let formData = this.MedicalDataArr.getRawValue();
-    let newData: MedicalData[] = formData.map((data) => {
-      return {
-        ...data,
-        dob: new Date(this.appUtils.dateFormater(data.dob)) as any,
-        clientID: this.data.clientID,
-        oasisPolRef: this.data.oasisPOlRef,
-        policiesSNo: this.data.PoliciesSno,
-        policyNo: data.policyNo || this.data.PolicyNo,
-      };
-    });
+  validationChecker(): boolean {
+    if (this.MedicalDataArr.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
 
-    let sub = this.productinService.SaveMedical(newData).subscribe((res) => {
-      this.message.toast("Successfully Uploaded Medical Data", "success");
+  submit(): void {
+    this.uiState.submitted = true;
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
+    const data: MedicalData[] = this.MedicalDataArr.getRawValue().map(
+      (Data) => {
+        return {
+          ...Data,
+          dob: new Date(this.appUtils.dateFormater(Data.dob)) as any,
+          clientID: this.data.clientID,
+          oasisPolRef: this.data.oasisPOlRef,
+          policiesSNo: this.data.PoliciesSno,
+          policyNo: this.data.PolicyNo,
+        };
+      }
+    );
+
+    const MedicalData: IMedicalData = {
+      data,
+      policiesSNo: this.data.PoliciesSno,
+    };
+
+    let sub = this.productinService.SaveMedical(MedicalData).subscribe(() => {
+      this.message.toast("Successfully Upload Medical Data", "success");
       this.resetMedicalDataArr();
       this.modal.close();
       this.eventService.broadcast(reserved.isLoading, false);

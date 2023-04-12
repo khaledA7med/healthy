@@ -30,7 +30,10 @@ import { IActiveListFilters } from "../../app/models/Production/i-active-list-fi
 import { IActiveList } from "../../app/models/Production/i-active-list";
 import { IMedicalActiveDataPreview } from "../../app/models/Production/i-medical-active-preview";
 import { IMotorActiveDataPreview } from "../../app/models/Production/i-motor-active-preview";
-import { MotorData } from "../../app/models/Production/i-active-motor-forms";
+import {
+  IMotorData,
+  MotorData,
+} from "../../app/models/Production/i-active-motor-forms";
 import { MedicalData } from "../../app/models/Production/i-active-medical-forms";
 
 @Injectable({
@@ -324,7 +327,7 @@ export class ProductionService {
       { params: { policiesSNo } }
     );
   }
-  SaveMedical(body: MedicalData[]): Observable<IBaseResponse<number>> {
+  SaveMedical(body: MedicalData): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Production.saveMedical,
       body
@@ -338,7 +341,7 @@ export class ProductionService {
       { params: { policiesSNo } }
     );
   }
-  SaveMotor(body: MotorData[]): Observable<IBaseResponse<number>> {
+  SaveMotor(body: IMotorData): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.Production.saveMotor,
       body

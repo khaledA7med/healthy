@@ -180,9 +180,9 @@ const routes: Routes = [
     ],
   },
   {
-    path: AppRoutes.Production.ActiveList,
+    path: AppRoutes.Production.ActivePoliciesList,
     data: {
-      title: "Active List Management",
+      title: "Active Policies Management",
     },
     loadChildren: () =>
       import("./active-list/active-list.module").then(

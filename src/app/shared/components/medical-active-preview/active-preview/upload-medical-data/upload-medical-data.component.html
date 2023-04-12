@@ -50,11 +50,27 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Membership No"
-                                        formControlName="membershipNo" />
+                                        [ngClass]="{
+                                        'is-invalid':
+                                          (MedicalDataArrControls(i, 'membershipNo').touched ||
+                                          uiState.submitted) &&
+                                          MedicalDataArrControls(i, 'membershipNo').invalid
+                                      }" formControlName="membershipNo" />
+                                    <div class="invalid-feedback fw-bold">
+                                        Required
+                                    </div>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Member Name"
-                                        formControlName="memberName" />
+                                        [ngClass]="{
+                                        'is-invalid':
+                                          (MedicalDataArrControls(i, 'memberName').touched ||
+                                          uiState.submitted) &&
+                                          MedicalDataArrControls(i, 'memberName').invalid
+                                      }" formControlName="memberName" />
+                                    <div class="invalid-feedback fw-bold">
+                                        Required
+                                    </div>
                                 </td>
                                 <td>
                                     <app-gregorian-picker [required]="true"

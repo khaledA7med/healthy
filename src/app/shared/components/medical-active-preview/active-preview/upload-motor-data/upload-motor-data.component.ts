@@ -4,6 +4,7 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  Validators,
 } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
@@ -11,6 +12,7 @@ import { ProductionPermissions } from "src/app/core/roles/production-permissions
 import { EventService } from "src/app/core/services/event.service";
 import { IActiveList } from "src/app/shared/app/models/Production/i-active-list";
 import {
+  IMotorData,
   MotorData,
   MotorDataForm,
 } from "src/app/shared/app/models/Production/i-active-motor-forms";
@@ -38,6 +40,7 @@ export class UploadMotorDataComponent implements OnInit {
   };
   uiState = {
     policiesSNo: 0,
+    submitted: false,
     motorActiveData: {} as IMotorActiveDataPreview,
     motorData: [] as MotorData[],
     loadedData: false,
@@ -61,7 +64,10 @@ export class UploadMotorDataComponent implements OnInit {
       plateChar1: new FormControl(data?.plateChar1 || null),
       plateChar2: new FormControl(data?.plateChar2 || null),
       plateChar3: new FormControl(data?.plateChar3 || null),
-      sequenceNo: new FormControl(data?.sequenceNo || null),
+      sequenceNo: new FormControl(
+        data?.sequenceNo || null,
+        Validators.required
+      ),
       customID: new FormControl(data?.customID || null),
       brandName: new FormControl(data?.brandName || null),
       model: new FormControl(data?.model || null),
@@ -76,7 +82,7 @@ export class UploadMotorDataComponent implements OnInit {
       ),
       seats: new FormControl(data?.seats || null),
       bodyType: new FormControl(data?.bodyType || null),
-      chassisNo: new FormControl(data?.chassisNo || null),
+      chassisNo: new FormControl(data?.chassisNo || null, Validators.required),
       marketValue: new FormControl(data?.marketValue || null),
       repairType: new FormControl(data?.repairType || null),
       vehicleOwnerID: new FormControl(data?.vehicleOwnerID || null),
@@ -137,27 +143,22 @@ export class UploadMotorDataComponent implements OnInit {
       "Owner / Driver": {
         prop: "ownerDriver",
         type: String,
-        required: true,
       },
       "Plate no": {
         prop: "plateNo",
         type: String,
-        required: true,
       },
       "Plate char 1": {
         prop: "plateChar1",
         type: String,
-        required: true,
       },
       "Plate char 2": {
         prop: "plateChar2",
         type: String,
-        required: true,
       },
       "Plate char 3": {
         prop: "plateChar3",
         type: String,
-        required: true,
       },
       "Sequence No": {
         prop: "sequenceNo",
@@ -167,17 +168,14 @@ export class UploadMotorDataComponent implements OnInit {
       "Custom ID": {
         prop: "customID",
         type: String,
-        required: true,
       },
       "Brand Name": {
         prop: "brandName",
         type: String,
-        required: true,
       },
       Model: {
         prop: "model",
         type: String,
-        required: true,
       },
       Inception: {
         prop: "inception",
@@ -197,12 +195,10 @@ export class UploadMotorDataComponent implements OnInit {
       "#seats": {
         prop: "seats",
         type: String,
-        required: true,
       },
       "Body Type": {
         prop: "bodyType",
         type: String,
-        required: true,
       },
       "Chassis No": {
         prop: "chassisNo",
@@ -212,22 +208,18 @@ export class UploadMotorDataComponent implements OnInit {
       "Market Value": {
         prop: "marketValue",
         type: String,
-        required: true,
       },
       "Repair Type": {
         prop: "repairType",
         type: String,
-        required: true,
       },
       "Vehicle Owner ID": {
         prop: "vehicleOwnerID",
         type: String,
-        required: true,
       },
       "Project Name": {
         prop: "projectName",
         type: String,
-        required: true,
       },
     };
 
@@ -256,15 +248,28 @@ export class UploadMotorDataComponent implements OnInit {
     });
   }
 
+  validationChecker(): boolean {
+    if (this.MotorDataArr.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
   submit(): void {
+    this.uiState.submitted = true;
+    if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
-    let formData = this.MotorDataArr.getRawValue();
-    let newData: MotorData[] = formData.map((data) => {
+    const data: MotorData[] = this.MotorDataArr.getRawValue().map((Data) => {
       return {
-        ...data,
-        inception: new Date(this.appUtils.dateFormater(data.inception)) as any,
-        expiry: new Date(this.appUtils.dateFormater(data.expiry)) as any,
-        kclDate: new Date(this.appUtils.dateFormater(data.kclDate)) as any,
+        ...Data,
+        inception: new Date(this.appUtils.dateFormater(Data.inception)) as any,
+        expiry: new Date(this.appUtils.dateFormater(Data.expiry)) as any,
+        kclDate: new Date(this.appUtils.dateFormater(Data.kclDate)) as any,
         clientID: this.data.clientID,
         oasisPolRef: this.data.oasisPOlRef,
         policiesSNo: this.data.PoliciesSno,
@@ -272,7 +277,12 @@ export class UploadMotorDataComponent implements OnInit {
       };
     });
 
-    let sub = this.productinService.SaveMotor(newData).subscribe((res) => {
+    const MotorData: IMotorData = {
+      data,
+      policiesSNo: this.data.PoliciesSno,
+    };
+
+    let sub = this.productinService.SaveMotor(MotorData).subscribe(() => {
       this.message.toast("Successfully Upload Motor Data", "success");
       this.resetMotorDataArr();
       this.modal.close();

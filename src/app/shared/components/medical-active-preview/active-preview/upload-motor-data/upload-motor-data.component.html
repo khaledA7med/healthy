@@ -68,7 +68,15 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Sequence No"
-                                        formControlName="sequenceNo" />
+                                        [ngClass]="{
+                                        'is-invalid':
+                                          (MotorDataArrControls(i, 'sequenceNo').touched ||
+                                          uiState.submitted) &&
+                                          MotorDataArrControls(i, 'sequenceNo').invalid
+                                      }" formControlName="sequenceNo" />
+                                    <div class="invalid-feedback fw-bold">
+                                        Required
+                                    </div>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Custom ID"
@@ -110,7 +118,15 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Chassis No"
-                                        formControlName="chassisNo" />
+                                        [ngClass]="{
+                                        'is-invalid':
+                                          (MotorDataArrControls(i, 'chassisNo').touched ||
+                                          uiState.submitted) &&
+                                          MotorDataArrControls(i, 'chassisNo').invalid
+                                      }" formControlName="chassisNo" />
+                                    <div class="invalid-feedback fw-bold">
+                                        Required
+                                    </div>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Market Value"
