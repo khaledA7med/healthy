@@ -18,13 +18,13 @@ export const ActiveListCols: ColDef[] = [
     cellRenderer: StatusCellRender.ClientsPolicyStatus,
   },
   {
-    headerName: "oasis Pol Ref",
+    headerName: "Oasis Pol Ref",
     field: "oasisPolRef",
     sort: "asc",
     minWidth: 150,
   },
   {
-    headerName: "client No.",
+    headerName: "Client No.",
     field: "clientNo",
     minWidth: 115,
   },
@@ -93,7 +93,7 @@ export const ActiveListCols: ColDef[] = [
   },
   {
     headerName: "Saved On",
-    field: "savedDate",
+    field: "savedOn",
     minWidth: 120,
     valueFormatter: GlobalCellRender.dateFormater,
   },
