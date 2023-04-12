@@ -6,4 +6,6 @@ export interface IActivePolicyDetails {
 	cancelled?: number;
 	cancelledUser?: string;
 	cancelledDate?: Date;
+	updatedBy?: Date;
+	updatedOn?: Date;
 }

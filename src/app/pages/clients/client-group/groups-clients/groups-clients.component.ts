@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, OnDestroy, ViewEncapsulation, TemplateRe
 import { ClientsGroupsService } from "src/app/shared/services/clients/clients.groups.service";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
-import { groupClientsCols } from "src/app/shared/app/grid/clinetGroupsCols";
+import { groupClientsCols } from "src/app/shared/app/grid/clientGroupsCols";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { Subscription } from "rxjs";
 import { HttpResponse } from "@angular/common/http";

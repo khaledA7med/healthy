@@ -102,7 +102,7 @@
 			"TEXT": "Production",
 			"LIST": {
 				"MANAGEMENT": "Policies/Endorsements Management",
-				"ACTIVELISTMANAGEMENT": "Active List Management",
+				"ACTIVELISTMANAGEMENT": "Active Policies Management",
 				"EDITCOMMISSIONS": "Policies/Edit Commissions",
 				"REPORTS": "Reports",
 				"REPORTLIST": {

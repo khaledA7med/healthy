@@ -1,4 +1,3 @@
-import { HttpResponse } from "@angular/common/http";
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { NgbActiveModal, NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -12,7 +11,6 @@ import { IPolicyPreview } from "src/app/shared/app/models/Production/ipolicy-pre
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import Swal from "sweetalert2";
 import { UploadExcelListComponent } from "./upload-excel-list/upload-excel-list.component";
 
 @Component({

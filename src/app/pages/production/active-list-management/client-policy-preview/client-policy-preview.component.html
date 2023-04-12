@@ -18,18 +18,13 @@
                                     <tbody id="client-information-table">
                                         <!--     
                                             cancelled: 0
-                                            cancelledDate: "0001-01-01T00:00:00"
-                                            cancelledUser: null
                                             
                                             issueDate: "2022-06-21T00:00:00"
                                             lineOfBusiness: "Motor Comprehensive Individual"
                                             oasisPolRef: "POL-R-MCI-2022-3"
                                             periodFrom: "2022-06-20T00:00:00"
                                             periodTo: "2023-06-19T00:00:00"
-                                            savedBy: "Admin."
-                                            savedOn: "2023-03-18T10:11:43.67"
-                                            updatedBy: null
-                                            updatedOn: "0001-01-01T00:00:00"                                         -->
+                                       -->
                                         <tr>
                                             <th class="fw-semibold">Account No :</th>
                                             <td>{{ uiState.policyDetails.accNo || "-" }}</td>
@@ -54,6 +49,32 @@
                                             <th class="fw-semibold">Class Of Business :</th>
                                             <td>{{ uiState.policyDetails.className || "-"}}</td>
                                         </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Saved By :</th>
+                                            <td>{{ uiState.policyDetails.savedBy || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Updated By :</th>
+                                            <td>{{ uiState.policyDetails.updatedBy || "-"}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="fw-semibold">Cancelled :</th>
+                                            <td><span *ngIf="uiState.policyDetails.cancelled"
+                                                    class="text-primary input-text-right"><i
+                                                        class="ri-checkbox-fill"></i>
+                                                </span>
+                                                <span *ngIf="!uiState.policyDetails.cancelled"
+                                                    class="input-text-right"><i
+                                                        class="ri-checkbox-blank-line"></i></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Cancelled By :</th>
+                                            <td>{{ uiState.policyDetails.cancelledUser || "-"}}</td>
+                                        </tr>
+
+
                                     </tbody>
                                 </table>
                             </div>
@@ -87,6 +108,21 @@
                                             <th class="fw-semibold">Line Of Budsiness :</th>
                                             <td>{{ uiState.policyDetails.lineOfBusiness || "-"}}</td>
                                         </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Saved On :</th>
+                                            <td>{{ (uiState.policyDetails.savedOn | date:"dd MMMM,yyyy") || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Updated On :</th>
+                                            <td>{{ (uiState.policyDetails.updatedOn | date:"dd MMMM,yyyy") || "-"}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="fw-semibold">Cancelled On :</th>
+                                            <td>{{ (uiState.policyDetails.cancelledDate | date:"dd MMMM,yyyy") || "-"}}
+                                            </td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -109,7 +145,7 @@
             </button>
             <button type="button" class="btn btn-sm btn-outline-secondary mx-2"
                 (click)="openUploadFromExcelModal(uiState.sno)" *ngIf=" uiState.showMedicalBtn">
-                Upload Medical Details
+                Upload Medical Members
             </button>
             <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="modal.close('Close click')">
                 Close

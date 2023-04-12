@@ -24,6 +24,7 @@ import {
 	IPolicyClient,
 	IPolicyRequestResponse,
 	IPolicyRequests,
+	UploadActivePoliciesData,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IActiveListFilters } from "../../app/models/Production/i-active-list-filters";
@@ -195,10 +196,10 @@ export class ProductionService {
 		return this.http.get<IBaseResponse<IMedicalData[]>>(this.env + ApiRoutes.Production.getMedicalsData, { params: { PoliciesSNo } });
 	}
 
-	saveMotorData(body: IMotorData[]): Observable<IBaseResponse<number>> {
+	saveMotorData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
 		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMotorData, body);
 	}
-	saveMedicalData(body: IMedicalData[]): Observable<IBaseResponse<number>> {
+	saveMedicalData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
 		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMedicalData, body);
 	}
 

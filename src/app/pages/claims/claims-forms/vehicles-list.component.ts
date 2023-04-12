@@ -2,23 +2,22 @@ import { HttpResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 import { Subscription } from "rxjs";
-import { claimsPoliciesRequestCols } from "src/app/shared/app/grid/claimsFormCols";
+import { ActivePoliciesVehiclesCols } from "src/app/shared/app/grid/activePoliciesVehicles";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClaimPolicies, IClaimPoliciesSearch } from "src/app/shared/app/models/Claims/claims-util";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
-	selector: "app-claims-request-list",
+	selector: "app-vehicles-list",
 	template: `
 		<div class="ag-theme-alpine" appTableView>
 			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts"> </ag-grid-angular>
 		</div>
-		<!-- <app-vehicles-list></app-vehicles-list> -->
 	`,
 	styles: [],
 })
-export class ClaimsRequestListComponent implements OnDestroy {
+export class VehiclesListComponent implements OnDestroy {
 	@Input() filter: IClaimPoliciesSearch = {
 		pageNumber: 1,
 		pageSize: 50,
@@ -42,7 +41,7 @@ export class ClaimsRequestListComponent implements OnDestroy {
 		pagination: true,
 		rowModelType: "infinite",
 		editType: "fullRow",
-		columnDefs: claimsPoliciesRequestCols,
+		columnDefs: ActivePoliciesVehiclesCols,
 		animateRows: true,
 		paginationPageSize: this.filter.pageSize,
 		cacheBlockSize: this.filter.pageSize,

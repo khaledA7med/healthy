@@ -3,8 +3,6 @@ import GlobalCellRender from "./globalCellRender";
 import StatusCellRender from "./statusCellRender";
 import { ActiveListManagementControlsComponent } from "src/app/pages/production/active-list-management/active-list-management-controls.component";
 
-// policyNo: "P/210/5009/20/000018";
-
 export const ActiveListCols: ColDef[] = [
 	{
 		colId: "action",
@@ -12,16 +10,6 @@ export const ActiveListCols: ColDef[] = [
 		pinned: "left",
 		maxWidth: 80,
 		sortable: false,
-	},
-	{
-		headerName: "SNo",
-		field: "sNo",
-		minWidth: 100,
-	},
-	{
-		headerName: "Policies SNo",
-		field: "policiesSNo",
-		minWidth: 120,
 	},
 	{
 		headerName: "Policy Status",
@@ -114,6 +102,29 @@ export const ActiveListCols: ColDef[] = [
 		field: "savedOn",
 		minWidth: 120,
 		valueFormatter: GlobalCellRender.dateFormater,
+	},
+	// ---------------------------
+	{
+		headerName: "Updated By",
+		field: "updatedBy",
+		minWidth: 150,
+	},
+	{
+		headerName: "Updated On",
+		field: "updatedOn",
+		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
+	},
+	{
+		headerName: "Cancelled By",
+		field: "cancelledUser",
+		minWidth: 150,
+	},
+	{
+		headerName: "Cancelled On",
+		field: "cancelledDate",
+		valueFormatter: GlobalCellRender.dateFormater,
+		minWidth: 150,
 	},
 ];
 

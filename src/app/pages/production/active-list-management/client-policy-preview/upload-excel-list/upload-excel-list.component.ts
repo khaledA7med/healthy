@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import readXlsxFile from "read-excel-file";
@@ -8,6 +8,7 @@ import { IMedicalData, IMedicalFormData } from "src/app/shared/app/models/Produc
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import AppUtils from "src/app/shared/app/util";
 import { ProductionService } from "src/app/shared/services/production/production.service";
+import { UploadActivePoliciesData } from "src/app/shared/app/models/Production/production-util";
 
 @Component({
 	selector: "app-upload-excel-list",
@@ -24,7 +25,6 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		PolicyNo: string;
 	};
 	fileInput: FormControl = new FormControl(null, Validators.required);
-	// @ViewChild("fileInput") fileInput!: ElementRef;
 
 	uiState = {
 		sno: "" as string,
@@ -159,7 +159,7 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		},
 		DOB: {
 			prop: "dob",
-			type: String,
+			type: Date,
 			required: true,
 		},
 		Relation: {
@@ -263,7 +263,7 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 			plateChar1: new FormControl(data?.plateChar1 || null),
 			plateChar2: new FormControl(data?.plateChar2 || null),
 			plateChar3: new FormControl(data?.plateChar3 || null),
-			sequenceNo: new FormControl(data?.sequenceNo || null),
+			sequenceNo: new FormControl(data?.sequenceNo || null, Validators.required),
 			customID: new FormControl(data?.customID || null),
 			brandName: new FormControl(data?.brandName || null),
 			model: new FormControl(data?.model || null),
@@ -272,7 +272,7 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 			kclDate: new FormControl((this.appUtils.dateStructFormat(data?.kclDate!) as any) || null),
 			seats: new FormControl(data?.seats || null),
 			bodyType: new FormControl(data?.bodyType || null),
-			chassisNo: new FormControl(data?.chassisNo || null),
+			chassisNo: new FormControl(data?.chassisNo || null, Validators.required),
 			marketValue: new FormControl(data?.marketValue || null),
 			repairType: new FormControl(data?.repairType || null),
 			vehicleOwnerID: new FormControl(data?.vehicleOwnerID || null),
@@ -290,30 +290,33 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 	}
 
 	submitMotorData() {
-		let MotorRawData = this.motorFormArr.getRawValue();
-		console.log(MotorRawData);
-		let newData: IMotorData[] = MotorRawData.map((item) => {
-			return {
-				...item,
-				// inception: this.appUtils.dateFormater(item.inception) as any,
-				// expiry: this.appUtils.dateFormater(item.expiry) as any,
-				// kclDate: this.appUtils.dateFormater(item.kclDate) as any,
-				inception: new Date(this.appUtils.dateFormater(item.inception)).toISOString() as any,
-				expiry: new Date(this.appUtils.dateFormater(item.expiry)).toISOString() as any,
-				kclDate: new Date(this.appUtils.dateFormater(item.kclDate)).toISOString() as any,
-				clientID: this.data.clientID,
-				oasisPolRef: this.data.oasisPOlRef,
-				policiesSNo: this.data.PoliciesSno,
-				policyNo: this.data.PolicyNo,
-			};
-		});
+		this.uiState.submitted = true;
+		if (this.motorFormArr.invalid) return;
+		else {
+			const data: IMotorData[] = this.motorFormArr.getRawValue().map((item) => {
+				return {
+					...item,
+					inception: new Date(this.appUtils.dateFormater(item.inception)) as any,
+					expiry: new Date(this.appUtils.dateFormater(item.expiry)) as any,
+					kclDate: new Date(this.appUtils.dateFormater(item.kclDate)) as any,
+					clientID: this.data.clientID,
+					oasisPolRef: this.data.oasisPOlRef,
+					policiesSNo: this.data.PoliciesSno,
+					policyNo: this.data.PolicyNo,
+				};
+			});
 
-		let sub = this.productionService.saveMotorData(newData).subscribe((res) => {
-			this.message.toast("Uplaoded Data Successfully", "success");
-			this.resetFormArr();
-			this.modal.close();
-		});
-		this.subscribes.push(sub);
+			const dataToSubmit: UploadActivePoliciesData = {
+				data,
+				policiesSNo: this.data.PoliciesSno,
+			};
+			let sub = this.productionService.saveMotorData(dataToSubmit).subscribe((res) => {
+				this.message.toast("Uplaoded Data Successfully", "success");
+				this.resetFormArr();
+				this.modal.close();
+			});
+			this.subscribes.push(sub);
+		}
 	}
 
 	//#endregion
@@ -334,9 +337,9 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		let item = new FormGroup<IMedicalFormData>({
 			policyNo: new FormControl(data?.policyNo!),
 			idIqamaNo: new FormControl(data?.idIqamaNo!),
-			membershipNo: new FormControl(data?.membershipNo!),
-			memberName: new FormControl(data?.memberName!),
-			dob: new FormControl(data?.dob!),
+			membershipNo: new FormControl(data?.membershipNo!, Validators.required),
+			memberName: new FormControl(data?.memberName!, Validators.required),
+			dob: new FormControl((this.appUtils.dateStructFormat(data?.dob!) as any) || null),
 			relation: new FormControl(data?.relation!),
 			maritalStatus: new FormControl(data?.maritalStatus!),
 			gender: new FormControl(data?.gender!),
@@ -353,24 +356,41 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		this.medicalFormArr?.push(item);
 	}
 
-	submitMedicalData() {
-		let MedicalRawData = this.medicalFormArr.getRawValue();
-		let newData: IMedicalData[] = MedicalRawData.map((item) => {
-			return {
-				...item,
-				clientID: this.data.clientID,
-				oasisPolRef: this.data.oasisPOlRef,
-				policiesSNo: this.data.PoliciesSno,
-				policyNo: item.policyNo || this.data.PolicyNo,
-			};
-		});
+	medicalFormArrControls(i: number, control: string): AbstractControl {
+		return this.medicalFormArr.controls[i].get(control)!;
+	}
 
-		let sub = this.productionService.saveMedicalData(newData).subscribe((res) => {
-			this.message.toast("Uplaoded Data Successfully", "success");
-			this.resetFormArr();
-			this.modal.close();
-		});
-		this.subscribes.push(sub);
+	medicalDates(e: any, i: any, control: string) {
+		this.medicalFormArrControls(i, control).patchValue(e.gon);
+	}
+
+	submitMedicalData() {
+		this.uiState.submitted = true;
+		if (this.medicalFormArr.invalid) return;
+		else {
+			const data: IMedicalData[] = this.medicalFormArr.getRawValue().map((item) => {
+				return {
+					...item,
+					clientID: this.data.clientID,
+					oasisPolRef: this.data.oasisPOlRef,
+					policiesSNo: this.data.PoliciesSno,
+					policyNo: item.policyNo || this.data.PolicyNo,
+					dob: new Date(this.appUtils.dateFormater(item.dob)) as any,
+				};
+			});
+
+			const dataToSubmit: UploadActivePoliciesData = {
+				data,
+				policiesSNo: this.data.PoliciesSno,
+			};
+
+			let sub = this.productionService.saveMedicalData(dataToSubmit).subscribe((res) => {
+				this.message.toast("Uplaoded Data Successfully", "success");
+				this.resetFormArr();
+				this.modal.close();
+			});
+			this.subscribes.push(sub);
+		}
 	}
 
 	//#endregion
@@ -392,10 +412,12 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 
 	clearFormArr() {
 		if (this.data.className === "Motor") {
+			this.uiState.motorData = [];
 			this.motorFormArr.clear();
 			this.motorFormArr.reset();
 			this.fileInput.reset();
 		} else if (this.data.className === "Medical") {
+			this.uiState.medicalData = [];
 			this.medicalFormArr.clear();
 			this.medicalFormArr.reset();
 			this.fileInput.reset();
@@ -407,13 +429,14 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		// This schema Will Change According to the ClassName
 		readXlsxFile(e.target.files[0], { schema }).then(({ rows, errors }) => {
 			if (errors.length == 0) {
-				console.log(rows);
 				if (this.data.className === "Motor") {
 					this.uiState.motorData = [...rows];
-					rows.forEach((item: any) => this.addVehicle(item));
+					if (rows.length === 0) this.motorFormArr.clear();
+					else rows.forEach((item: any) => this.addVehicle(item));
 				} else if (this.data.className === "Medical") {
 					this.uiState.medicalData = [...rows];
-					rows.forEach((item: any) => this.addMedicalItem(item));
+					if (rows.length === 0) this.medicalFormArr.clear();
+					else rows.forEach((item: any) => this.addMedicalItem(item));
 				} else {
 				}
 			} else {

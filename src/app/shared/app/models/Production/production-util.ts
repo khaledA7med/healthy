@@ -1,4 +1,6 @@
 import { FormControl } from "@angular/forms";
+import { IMotorData } from "./i-motor-active-list";
+import { IMedicalData } from "./i-medical-active-list";
 
 export enum searchBy {
 	client = "Client",
@@ -121,4 +123,9 @@ export function refundChecker(params: any) {
 	return params.data && (params.data.endorsType === "Refund" || params.data.endorsType === "Cancellation")
 		? ["input-text-right", "text-danger"]
 		: ["input-text-right"];
+}
+
+export interface UploadActivePoliciesData {
+	data: IMotorData[] | IMedicalData[] | [];
+	policiesSNo?: number;
 }
