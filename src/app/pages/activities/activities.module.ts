@@ -9,7 +9,11 @@ import { ActivitiesComponent } from "./activities.component";
 import { TaskPreviewModule } from "src/app/shared/components/task-preview/task-preview.module";
 
 export const routes: Routes = [
-  { path: AppRoutes.Activities.taskboard, component: ActivitiesComponent },
+  {
+    path: AppRoutes.Activities.taskboard,
+    data: { title: "Activities Board" },
+    component: ActivitiesComponent,
+  },
 ];
 
 @NgModule({

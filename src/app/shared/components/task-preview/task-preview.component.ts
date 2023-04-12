@@ -18,6 +18,12 @@ import AppUtils from "../../app/util";
 import { ActivitiesService } from "../../services/activities/activities.service";
 import { MessagesService } from "../../services/messages.service";
 
+enum UiView {
+  new = "new",
+  edit = "edit",
+  view = "view",
+}
+
 @Component({
   selector: "app-task-preview",
   templateUrl: "./task-preview.component.html",
@@ -29,6 +35,10 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     submitted: false as boolean,
     isRange: false as boolean,
     isLoading: false as boolean,
+    preview: UiView,
+    currentView: UiView.new as string,
+    isForm: true as boolean,
+    isView: false as boolean,
     lists: {
       clients: [] as IGenericResponseType[],
       module: [] as any[],
@@ -47,7 +57,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
   constructor(
     public modal: NgbActiveModal,
     private activityService: ActivitiesService,
-    private util: AppUtils,
+    public util: AppUtils,
     private message: MessagesService,
     private tables: MasterTableService
   ) {}
@@ -88,7 +98,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.Activities);
-    // if (this.task?.sNo) this.fillTaskData();
+    if (this.task?.sNo) this.taskPreview();
     let sub = this.formData.subscribe(
       (res) =>
         (this.uiState.lists.assignTo = res.Producers?.content.filter(
@@ -106,10 +116,19 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  taskPreview() {}
+  taskPreview() {
+    this.uiState.currentView = this.uiState.preview.view;
+    this.uiState.isForm = false;
+    this.uiState.editMode = false;
+    this.uiState.isView = true;
+  }
 
-  fillTaskData() {
+  editTaskData() {
     this.uiState.editMode = true;
+    this.uiState.currentView = this.uiState.preview.edit;
+    this.uiState.isForm = true;
+    this.uiState.isView = false;
+    this.rangeChecker(this.task.isAllDay!);
     this.clickedDate = {
       dueDateFrom: new Date(this.task?.dueDateFrom!),
       dueDateTo: new Date(this.task?.dueDateTo!),
@@ -205,8 +224,8 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
   }
 
-  setDate(e: { from?: NgbDate; to?: NgbDate; range?: boolean }) {
-    if (e.range) {
+  rangeChecker(evt: boolean) {
+    if (evt) {
       this.uiState.isRange = true;
       this.f.startTime?.disable();
       this.f.endTime?.disable();
@@ -217,26 +236,45 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
       this.f.endTime?.enable();
       this.f.isAllDay?.patchValue(false);
     }
+  }
+
+  setDate(e: { from?: NgbDate; to?: NgbDate; range?: boolean }) {
+    this.rangeChecker(e.range!);
     this.f.start?.patchValue(this.util.dateFormater(e?.from!) as any);
     this.f.end?.patchValue(this.util.dateFormater(e?.to!) as any);
   }
 
   datesHandler(): void {
-    if (this.uiState.isRange) {
-      let start = new Date(this.f.start?.value!).getTime() / 1000,
-        end = new Date(this.f.end?.value!).getTime() / 1000;
-      this.f.timeStampFrom?.patchValue(+start!);
-      this.f.timeStampTo?.patchValue(+end!);
-    } else {
-      let start = this.f.start?.value,
-        end = this.f.end?.value,
-        startTime = this.f.startTime?.value,
-        endTime = this.f.endTime?.value;
-      start = new Date(start + " " + startTime);
-      end = new Date(end + " " + endTime);
-      this.f.timeStampFrom?.patchValue(start.getTime() / 1000);
-      this.f.timeStampTo?.patchValue(end.getTime() / 1000);
-    }
+    let start = new Date(this.f.start?.value!).getTime() / 1000,
+      end = new Date(this.f.end?.value!).getTime() / 1000;
+    this.f.timeStampFrom?.patchValue(+start!);
+    this.f.timeStampTo?.patchValue(+end!);
+  }
+
+  checkExpiration(dd: Date): boolean {
+    let now = new Date().getTime(),
+      date = new Date(dd).getTime();
+    return date < now;
+  }
+
+  getTime(params: any) {
+    params = new Date(params);
+    if (params.getHours() != null) {
+      var hour = params.getHours();
+      var minute = params.getMinutes() ? params.getMinutes() : 0;
+      return hour + ":" + minute;
+    } else return null;
+  }
+
+  tConvert(time: any) {
+    var t = time.split(":");
+    var hours = t[0];
+    var minutes = t[1];
+    var newformat = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ":" + minutes + " " + newformat;
   }
 
   onSubmit() {
@@ -244,7 +282,6 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     this.datesHandler();
     if (!this.validationChecker()) return;
     this.uiState.isLoading = true;
-
     let val = this.formGroup.getRawValue();
 
     let data: ITasks = {
