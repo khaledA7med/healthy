@@ -23,4 +23,4 @@ export const routes: Routes = [{ path: "", component: ActiveListComponent }];
     ActivePreviewModule,
   ],
 })
-export class MedicalActiveListModule {}
+export class ActiveListModule {}

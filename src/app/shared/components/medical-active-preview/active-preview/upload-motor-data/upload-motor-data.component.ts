@@ -20,6 +20,7 @@ import { ProductionService } from "src/app/shared/services/production/production
 import readXlsxFile from "read-excel-file";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
+import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
   selector: "app-upload-motor-data",
@@ -38,6 +39,7 @@ export class UploadMotorDataComponent implements OnInit {
   uiState = {
     policiesSNo: 0,
     motorActiveData: {} as IMotorActiveDataPreview,
+    motorData: [] as MotorData[],
     loadedData: false,
     updatedState: false,
     data: [] as any[],
@@ -49,7 +51,7 @@ export class UploadMotorDataComponent implements OnInit {
 
   @ViewChild("fileInput") fileInput!: ElementRef;
 
-  DataFormArr: FormArray<FormGroup<MotorDataForm>> = new FormArray<
+  MotorDataArr: FormArray<FormGroup<MotorDataForm>> = new FormArray<
     FormGroup<MotorDataForm>
   >([]);
   addMotor(data?: MotorData) {
@@ -72,9 +74,6 @@ export class UploadMotorDataComponent implements OnInit {
       kclDate: new FormControl(
         (this.appUtils.dateStructFormat(data?.kclDate!) as any) || null
       ),
-      // inception: new FormControl(data?.inception || null),
-      // expiry: new FormControl(data?.expiry || null),
-      // kclDate: new FormControl(data?.kclDate || null),
       seats: new FormControl(data?.seats || null),
       bodyType: new FormControl(data?.bodyType || null),
       chassisNo: new FormControl(data?.chassisNo || null),
@@ -83,27 +82,27 @@ export class UploadMotorDataComponent implements OnInit {
       vehicleOwnerID: new FormControl(data?.vehicleOwnerID || null),
       projectName: new FormControl(data?.projectName || null),
     });
-    this.DataFormArr?.push(newData);
+    this.MotorDataArr?.push(newData);
   }
 
-  DataFormArrControls(i: number, control: string): AbstractControl {
-    return this.DataFormArr.controls[i].get(control)!;
+  MotorDataArrControls(i: number, control: string): AbstractControl {
+    return this.MotorDataArr.controls[i].get(control)!;
   }
 
   Dates(e: any, i: any, control: string) {
-    this.DataFormArrControls(i, control).patchValue(e.gon);
+    this.MotorDataArrControls(i, control).patchValue(e.gon);
   }
 
   removeMedical(i: number) {
-    this.DataFormArr.removeAt(i);
+    this.MotorDataArr.removeAt(i);
   }
-  resetFormArr() {
-    this.DataFormArr.clear();
+  resetMotorDataArr() {
+    this.MotorDataArr.clear();
     this.uiState.data.forEach((newData: any) => this.addMotor(newData));
   }
-  clearFromArr() {
-    this.DataFormArr.reset();
-    this.DataFormArr.clear();
+  clearMotorDataArr() {
+    this.MotorDataArr.reset();
+    this.MotorDataArr.clear();
     this.fileInput.nativeElement.value = "";
   }
   constructor(
@@ -122,10 +121,11 @@ export class UploadMotorDataComponent implements OnInit {
     let sub = this.productinService
       .getMotorDataById(String(this.data.PoliciesSno))
       .subscribe({
-        next: (res: IBaseResponse<IMotorActiveDataPreview>) => {
+        next: (res: IBaseResponse<MotorData[]>) => {
           if (res.status) {
             this.uiState.loadedData = true;
-            this.uiState.motorActiveData = res.data!;
+            this.uiState.motorData = res.data!;
+            this.uiState.motorData.forEach((mot: any) => this.addMotor(mot));
           } else this.message.popup("Oops!", res.message!, "error");
         },
       });
@@ -257,7 +257,8 @@ export class UploadMotorDataComponent implements OnInit {
   }
 
   submit(): void {
-    let formData = this.DataFormArr.getRawValue();
+    this.eventService.broadcast(reserved.isLoading, true);
+    let formData = this.MotorDataArr.getRawValue();
     let newData: MotorData[] = formData.map((data) => {
       return {
         ...data,
@@ -273,8 +274,9 @@ export class UploadMotorDataComponent implements OnInit {
 
     let sub = this.productinService.SaveMotor(newData).subscribe((res) => {
       this.message.toast("Successfully Upload Motor Data", "success");
-      this.resetFormArr();
+      this.resetMotorDataArr();
       this.modal.close();
+      this.eventService.broadcast(reserved.isLoading, false);
     });
     this.subscribes.push(sub);
   }

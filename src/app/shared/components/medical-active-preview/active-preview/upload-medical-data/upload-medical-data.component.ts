@@ -6,7 +6,12 @@ import {
   OnInit,
   ViewChild,
 } from "@angular/core";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+} from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
@@ -14,14 +19,15 @@ import { IActiveList } from "src/app/shared/app/models/Production/i-active-list"
 import readXlsxFile from "read-excel-file";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
-import { EventService } from "src/app/core/services/event.service";
-import { reserved } from "src/app/core/models/reservedWord";
 import { IMedicalActiveDataPreview } from "src/app/shared/app/models/Production/i-medical-active-preview";
 import {
   MedicalData,
   MedicalDataForm,
 } from "src/app/shared/app/models/Production/i-active-medical-forms";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import AppUtils from "src/app/shared/app/util";
+import { EventService } from "src/app/core/services/event.service";
+import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
   selector: "app-upload-medical-data",
@@ -40,6 +46,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   uiState = {
     policiesSNo: 0,
     medicalActiveData: {} as IMedicalActiveDataPreview,
+    medicalData: [] as MedicalData[],
     loadedData: false,
     updatedState: false,
     data: [] as any[],
@@ -51,7 +58,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
 
   @ViewChild("fileInput") fileInput!: ElementRef;
 
-  DataFormArr: FormArray<FormGroup<MedicalDataForm>> = new FormArray<
+  MedicalDataArr: FormArray<FormGroup<MedicalDataForm>> = new FormArray<
     FormGroup<MedicalDataForm>
   >([]);
   addMedical(data?: MedicalData) {
@@ -59,12 +66,15 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       idIqamaNo: new FormControl(data?.idIqamaNo || null),
       membershipNo: new FormControl(data?.membershipNo || null),
       memberName: new FormControl(data?.memberName || null),
-      dob: new FormControl(data?.dob || null),
+      dob: new FormControl(
+        (this.appUtils.dateStructFormat(data?.dob!) as any) || null
+      ),
       relation: new FormControl(data?.relation || null),
       maritalStatus: new FormControl(data?.maritalStatus || null),
       gender: new FormControl(data?.gender || null),
       sponsorNo: new FormControl(data?.sponsorNo || null),
       endtNo: new FormControl(data?.endtNo || null),
+      policyNo: new FormControl(data?.policyNo || null),
       class: new FormControl(data?.class || null),
       city: new FormControl(data?.city || null),
       staffNo: new FormControl(data?.staffNo || null),
@@ -73,24 +83,35 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       nationality: new FormControl(data?.nationality || null),
       cchiStatus: new FormControl(data?.cchiStatus || null),
     });
-    this.DataFormArr?.push(newData);
+    this.MedicalDataArr?.push(newData);
   }
+
+  MedicalDataArrControls(i: number, control: string): AbstractControl {
+    return this.MedicalDataArr.controls[i].get(control)!;
+  }
+
+  Dates(e: any, i: any, control: string) {
+    this.MedicalDataArrControls(i, control).patchValue(e.gon);
+  }
+
   removeMedical(i: number) {
-    this.DataFormArr.removeAt(i);
+    this.MedicalDataArr.removeAt(i);
   }
-  resetFormArr() {
-    this.DataFormArr.clear();
+  resetMedicalDataArr() {
+    this.MedicalDataArr.clear();
     this.uiState.data.forEach((newData: any) => this.addMedical(newData));
   }
-  clearFromArr() {
-    this.DataFormArr.reset();
-    this.DataFormArr.clear();
+  clearMedicalDataArr() {
+    this.MedicalDataArr.reset();
+    this.MedicalDataArr.clear();
     this.fileInput.nativeElement.value = "";
   }
   constructor(
     private message: MessagesService,
     private productinService: ProductionService,
-    public modal: NgbActiveModal
+    public modal: NgbActiveModal,
+    private appUtils: AppUtils,
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void {
@@ -101,10 +122,13 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
     let sub = this.productinService
       .getMedicalDataById(String(this.data.PoliciesSno))
       .subscribe({
-        next: (res: IBaseResponse<IMedicalActiveDataPreview>) => {
+        next: (res: IBaseResponse<MedicalData[]>) => {
           if (res.status) {
             this.uiState.loadedData = true;
-            this.uiState.medicalActiveData = res.data!;
+            this.uiState.medicalData = res.data!;
+            this.uiState.medicalData.forEach((med: any) =>
+              this.addMedical(med)
+            );
           } else this.message.popup("Oops!", res.message!, "error");
         },
       });
@@ -130,7 +154,7 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
       },
       DOB: {
         prop: "dob",
-        type: String,
+        type: Date,
         required: true,
       },
       Relation: {
@@ -226,10 +250,12 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
   }
 
   submit(): void {
-    let formData = this.DataFormArr.getRawValue();
+    this.eventService.broadcast(reserved.isLoading, true);
+    let formData = this.MedicalDataArr.getRawValue();
     let newData: MedicalData[] = formData.map((data) => {
       return {
         ...data,
+        dob: new Date(this.appUtils.dateFormater(data.dob)) as any,
         clientID: this.data.clientID,
         oasisPolRef: this.data.oasisPOlRef,
         policiesSNo: this.data.PoliciesSno,
@@ -239,8 +265,9 @@ export class UploadMedicalDataComponent implements OnInit, OnDestroy {
 
     let sub = this.productinService.SaveMedical(newData).subscribe((res) => {
       this.message.toast("Successfully Uploaded Medical Data", "success");
-      this.resetFormArr();
+      this.resetMedicalDataArr();
       this.modal.close();
+      this.eventService.broadcast(reserved.isLoading, false);
     });
     this.subscribes.push(sub);
   }

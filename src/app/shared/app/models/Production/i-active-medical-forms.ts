@@ -1,6 +1,7 @@
 import { FormControl } from "@angular/forms";
 
 export interface MedicalDataForm {
+  sNo?: FormControl<number | null>;
   oasisPolRef?: FormControl<string | null>;
   policiesSNo?: FormControl<number | null>;
   policyNo?: FormControl<string | null>;
@@ -8,7 +9,7 @@ export interface MedicalDataForm {
   idIqamaNo?: FormControl<string | null>;
   membershipNo?: FormControl<string | null>;
   memberName?: FormControl<string | null>;
-  dob?: FormControl<string | null>;
+  dob?: FormControl<Date | null>;
   relation?: FormControl<string | null>;
   maritalStatus?: FormControl<string | null>;
   gender?: FormControl<string | null>;
@@ -24,6 +25,7 @@ export interface MedicalDataForm {
 }
 
 export interface MedicalData {
+  sNo?: number | null;
   oasisPolRef?: string | null;
   policiesSNo?: number | null;
   policyNo?: string | null;
@@ -31,7 +33,7 @@ export interface MedicalData {
   idIqamaNo?: string | null;
   membershipNo?: string | null;
   memberName?: string | null;
-  dob?: string | null;
+  dob?: Date | null;
   relation?: string | null;
   maritalStatus?: string | null;
   gender?: string | null;

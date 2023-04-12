@@ -1,17 +1,18 @@
 <div class="modal-header">
-    <h4 class="modal-title">Excel Data</h4>
+    <h4 class="modal-title">Upload Vehicle</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
     <div class="col-12 my-2">
-        <p>if you don't have Motor Active File <a class="btn btn-sm btn-info" href="/src/MotorVehiclesListTemplate.xlsx"
+        <p>if you don't have Motor File <a class="btn btn-sm btn-info" href="/src/MotorVehiclesListTemplate.xlsx"
                 download><i class="ri-file-download-fill"></i>
                 File</a> download</p>
     </div>
     <div class="col-12  my-2">
         <div class="mb-3">
-            <label for="formFile" class="form-label">Excel File</label>
-            <input class="form-control" type="file" id="formFile" (change)="uploadExeceFile($event)" #fileInput>
+            <label for="formFile" class="form-label">Upload Excel File</label>
+            <input class="form-control form-control-sm" type="file" id="formFile" (change)="uploadExeceFile($event)"
+                #fileInput>
         </div>
     </div>
     <div>
@@ -42,9 +43,9 @@
                             <th scope="col">ِAction</th>
                         </tr>
                     </thead>
-                    <tbody formArray="DataFormArr">
-                        <tr *ngFor="let c of DataFormArr.controls; index as i">
-                            <ng-container [formGroup]="DataFormArr.at(i)">
+                    <tbody formArray="MotorDataArr">
+                        <tr *ngFor="let c of MotorDataArr.controls; index as i">
+                            <ng-container [formGroup]="MotorDataArr.at(i)">
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Owner/Driver"
                                         formControlName="ownerDriver" />
@@ -83,34 +84,22 @@
                                 </td>
                                 <td>
                                     <app-gregorian-picker [required]="true"
-                                        [model]="DataFormArrControls(i, 'inception').value"
+                                        [model]="MotorDataArrControls(i, 'inception').value"
                                         (dateChange)="Dates($event, i,'inception')"
-                                        [submitted]="DataFormArrControls(i, 'inception').invalid && DataFormArrControls(i, 'inception').touched"></app-gregorian-picker>
+                                        [submitted]="MotorDataArrControls(i, 'inception').invalid && MotorDataArrControls(i, 'inception').touched"></app-gregorian-picker>
                                 </td>
                                 <td>
                                     <app-gregorian-picker [required]="true"
-                                        [model]="DataFormArrControls(i, 'expiry').value"
+                                        [model]="MotorDataArrControls(i, 'expiry').value"
                                         (dateChange)="Dates($event, i,'expiry')"
-                                        [submitted]="DataFormArrControls(i, 'expiry').invalid && DataFormArrControls(i, 'expiry').touched"></app-gregorian-picker>
+                                        [submitted]="MotorDataArrControls(i, 'expiry').invalid && MotorDataArrControls(i, 'expiry').touched"></app-gregorian-picker>
                                 </td>
                                 <td>
                                     <app-gregorian-picker [required]="true"
-                                        [model]="DataFormArrControls(i, 'kclDate').value"
+                                        [model]="MotorDataArrControls(i, 'kclDate').value"
                                         (dateChange)="Dates($event, i,'kclDate')"
-                                        [submitted]="DataFormArrControls(i, 'kclDate').invalid && DataFormArrControls(i, 'kclDate').touched"></app-gregorian-picker>
+                                        [submitted]="MotorDataArrControls(i, 'kclDate').invalid && MotorDataArrControls(i, 'kclDate').touched"></app-gregorian-picker>
                                 </td>
-                                <!-- <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="inception"
-                                        formControlName="inception" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="expiry"
-                                        formControlName="expiry" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm" placeholder="kclDate"
-                                        formControlName="kclDate" />
-                                </td> -->
                                 <td>
                                     <input type="text" class="form-control form-control-sm" placeholder="Seats No"
                                         formControlName="seats" />
@@ -154,14 +143,17 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-sm btn-outline-success mx-2" (click)="submit()">
-        Save
+    <button type="button" class="btn btn-sm btn-outline-success d-flex align-items-center mx-2" (click)="submit()">
+        <i class="ri-save-line mx-1"></i> Save
     </button>
-    <button type="button" class="btn btn-sm btn-outline-info mx-2" (click)="resetFormArr()">
-        Reset
+    <button type="button" class="btn btn-sm btn-outline-info d-flex align-items-center mx-2"
+        (click)="getMotorActiveData()">
+        <i class="ri-refresh-line mx-1"></i> Reset
     </button>
-    <button type="button" class="btn btn-sm btn-outline-danger mx-2" (click)="clearFromArr()">
-        Clear
+    <button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center mx-2"
+        (click)="clearMotorDataArr()">
+        <i class="ri-delete-bin-line mx-1"></i> Clear
     </button>
-    <button type="button" class="btn btn-sm btn-outline-danger" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-sm btn-outline-danger d-flex align-items-center"
+        (click)="modal.close('Close click')"><i class="ri-close-line mx-1"></i> Close</button>
 </div>

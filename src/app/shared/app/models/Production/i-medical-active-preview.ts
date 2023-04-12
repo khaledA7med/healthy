@@ -5,6 +5,7 @@ export interface IMedicalActiveDataPreview {
   policyNo: string;
   clientID: number;
   valid: number;
+  moveNo: number;
   idIqamaNo: string;
   membershipNo: string;
   memberName: string;
@@ -14,7 +15,6 @@ export interface IMedicalActiveDataPreview {
   gender: string;
   sponsorNo: string;
   endtNo: string;
-  policyNumber: string;
   class: string;
   city: string;
   staffNo: string;

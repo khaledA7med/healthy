@@ -182,11 +182,11 @@ const routes: Routes = [
   {
     path: AppRoutes.Production.ActiveList,
     data: {
-      title: "Active Management",
+      title: "Active List Management",
     },
     loadChildren: () =>
       import("./active-list/active-list.module").then(
-        (m) => m.MedicalActiveListModule
+        (m) => m.ActiveListModule
       ),
     // canActivate: [
     //   () =>

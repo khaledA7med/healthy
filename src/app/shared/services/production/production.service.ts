@@ -318,8 +318,8 @@ export class ProductionService {
   }
   getMedicalDataById(
     policiesSNo: string
-  ): Observable<IBaseResponse<IMedicalActiveDataPreview>> {
-    return this.http.get<IBaseResponse<IMedicalActiveDataPreview>>(
+  ): Observable<IBaseResponse<MedicalData[]>> {
+    return this.http.get<IBaseResponse<MedicalData[]>>(
       this.env + ApiRoutes.Production.medicalDetails,
       { params: { policiesSNo } }
     );
@@ -332,8 +332,8 @@ export class ProductionService {
   }
   getMotorDataById(
     policiesSNo: string
-  ): Observable<IBaseResponse<IMotorActiveDataPreview>> {
-    return this.http.get<IBaseResponse<IMotorActiveDataPreview>>(
+  ): Observable<IBaseResponse<MotorData[]>> {
+    return this.http.get<IBaseResponse<MotorData[]>>(
       this.env + ApiRoutes.Production.motorDetails,
       { params: { policiesSNo } }
     );

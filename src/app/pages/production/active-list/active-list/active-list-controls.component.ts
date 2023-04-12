@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { ICellRendererParams } from "ag-grid-community";
 import { ActiveListComponent } from "./active-list.component";
-import { PoliciesManagementComponent } from "../../policies-management/policies-management.component";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
 import { Observable } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -29,6 +28,7 @@ import { Roles } from "src/app/core/roles/Roles";
           class="dropdown-menu"
         >
           <button ngbDropdownItem (click)="View()" class="btn btn-sm">
+            <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
             View
           </button>
         </div>
@@ -44,10 +44,7 @@ export class ActiveListControlsComponent {
   privileges = ProductionPermissions;
   route: string = AppRoutes.Production.details;
   leadStatus: any = SalesLeadStatus;
-  constructor(
-    private _Router: Router,
-    private permission: PermissionsService
-  ) {}
+  constructor(private permission: PermissionsService) {}
 
   agInit(params: ICellRendererParams) {
     this.params = params;
