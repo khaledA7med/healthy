@@ -5,8 +5,10 @@ import { Subscription } from "rxjs";
 import { ActivePoliciesVehiclesCols } from "src/app/shared/app/grid/activePoliciesVehicles";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClaimPolicies, IClaimPoliciesSearch } from "src/app/shared/app/models/Claims/claims-util";
+import { IMotorData } from "src/app/shared/app/models/Production/i-motor-active-list";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { ProductionService } from "src/app/shared/services/production/production.service";
 
 @Component({
 	selector: "app-vehicles-list",
@@ -18,21 +20,10 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 	styles: [],
 })
 export class VehiclesListComponent implements OnDestroy {
-	@Input() filter: IClaimPoliciesSearch = {
-		pageNumber: 1,
-		pageSize: 50,
-		orderBy: "sNo",
-		orderDir: "asc",
-		classOfInsurance: "",
-		clientName: "",
-		insuranceCompany: "",
-		lineOfBusiness: "",
-		policyNo: "",
-	};
+	@Input() policiesSno!: any;
+	@Input() className!: String;
 
-	@Output() dataEvent: EventEmitter<any> = new EventEmitter();
-
-	policies: IClaimPolicies[] = [];
+	vehicles: IMotorData[] = [];
 	totalPages: number = 0;
 
 	gridReady: boolean = false;
@@ -43,8 +34,8 @@ export class VehiclesListComponent implements OnDestroy {
 		editType: "fullRow",
 		columnDefs: ActivePoliciesVehiclesCols,
 		animateRows: true,
-		paginationPageSize: this.filter.pageSize,
-		cacheBlockSize: this.filter.pageSize,
+		// paginationPageSize: this.filter.pageSize,
+		// cacheBlockSize: this.filter.pageSize,
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,
@@ -53,28 +44,27 @@ export class VehiclesListComponent implements OnDestroy {
 		},
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
-		onPaginationChanged: (e) => this.onPageChange(e),
-		onSortChanged: (e) => this.onSort(e),
-		onRowClicked: (e) => this.onRowClicked(e),
+		// onPaginationChanged: (e) => this.onPageChange(e),
+		// onSortChanged: (e) => this.onSort(e),
+		// onRowClicked: (e) => this.onRowClicked(e),
 	};
 
 	subscribes: Subscription[] = [];
-	constructor(private message: MessagesService, private claimService: ClaimsService) {}
+	constructor(private message: MessagesService, private productionService: ProductionService) {}
 
 	// Request Section
 	requestDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.claimService.searchPolicy(this.filter).subscribe((res: HttpResponse<IBaseResponse<IClaimPolicies[]>>) => {
-				if (res.body?.status) {
-					this.policies = res.body?.data!;
-					this.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.productionService.getVehiclesData(this.policiesSno).subscribe((res: IBaseResponse<IMotorData[]>) => {
+				if (res.status) {
+					this.vehicles = res.data!;
 
-					params.successCallback(this.policies, this.totalPages);
-					if (this.policies.length === 0) this.gridApi.showNoRowsOverlay();
+					params.successCallback(this.vehicles, this.vehicles.length);
+					if (this.vehicles.length === 0) this.gridApi.showNoRowsOverlay();
 					else this.gridApi.hideOverlay();
 				} else {
-					this.message.popup("Oops!", res.body?.message!, "warning");
+					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();
 				}
 				this.gridReady = true;
@@ -88,27 +78,27 @@ export class VehiclesListComponent implements OnDestroy {
 		this.gridApi.showNoRowsOverlay();
 	}
 
-	onPageChange(params: GridReadyEvent) {
-		if (this.gridReady) this.filter.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
-	}
+	// onPageChange(params: GridReadyEvent) {
+	// 	if (this.gridReady) this.filter.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
+	// }
 
-	onSort(e: GridReadyEvent) {
-		let colState = e.columnApi.getColumnState();
-		colState.forEach((el) => {
-			if (el.sort) {
-				this.filter.orderBy = el.colId!;
-				this.filter.orderDir = el.sort!;
-			}
-		});
-	}
+	// onSort(e: GridReadyEvent) {
+	// 	let colState = e.columnApi.getColumnState();
+	// 	colState.forEach((el) => {
+	// 		if (el.sort) {
+	// 			this.filter.orderBy = el.colId!;
+	// 			this.filter.orderDir = el.sort!;
+	// 		}
+	// 	});
+	// }
 
 	setDataSource() {
 		this.gridApi.setDatasource(this.requestDataSource);
 	}
 
-	onRowClicked(e: RowClickedEvent) {
-		this.dataEvent.emit(e.data);
-	}
+	// onRowClicked(e: RowClickedEvent) {
+	// 	this.dataEvent.emit(e.data);
+	// }
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

@@ -14,7 +14,8 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 		<div class="ag-theme-alpine" appTableView>
 			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts"> </ag-grid-angular>
 		</div>
-		<!-- <app-vehicles-list></app-vehicles-list> -->
+		<app-vehicles-list></app-vehicles-list>
+		<!-- <app-medical-members-list></app-medical-members-list> -->
 	`,
 	styles: [],
 })
@@ -32,6 +33,14 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	};
 
 	@Output() dataEvent: EventEmitter<any> = new EventEmitter();
+
+	selectedPolicy = {
+		className: "" as String,
+		policiesSno: 0 as Number,
+	};
+
+	showPolicyVehicles: boolean = false;
+	showPolicyMedicalMembers: boolean = false;
 
 	policies: IClaimPolicies[] = [];
 	totalPages: number = 0;
@@ -57,6 +66,7 @@ export class ClaimsRequestListComponent implements OnDestroy {
 		onPaginationChanged: (e) => this.onPageChange(e),
 		onSortChanged: (e) => this.onSort(e),
 		onRowClicked: (e) => this.onRowClicked(e),
+		onRowDoubleClicked: (e) => this.onRowDoubleClicked(e),
 	};
 
 	subscribes: Subscription[] = [];
@@ -108,6 +118,10 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	}
 
 	onRowClicked(e: RowClickedEvent) {
+		console.log(e);
+	}
+
+	onRowDoubleClicked(e: RowClickedEvent) {
 		this.dataEvent.emit(e.data);
 	}
 

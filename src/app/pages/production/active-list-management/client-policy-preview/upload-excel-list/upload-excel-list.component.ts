@@ -250,8 +250,12 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 
 	getVehiclesData() {
 		let sub = this.productionService.getVehiclesData(String(this.data.PoliciesSno)).subscribe((res) => {
-			this.uiState.motorData = res?.data!;
-			this.uiState.motorData.forEach((item: any) => this.addVehicle(item));
+			if (res.status) {
+				this.uiState.motorData = res?.data!;
+				this.uiState.motorData.forEach((item: any) => this.addVehicle(item));
+			} else {
+				this.message.popup("Error", res.message!, "error");
+			}
 		});
 		this.subscribes.push(sub);
 	}
@@ -311,9 +315,13 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 				policiesSNo: this.data.PoliciesSno,
 			};
 			let sub = this.productionService.saveMotorData(dataToSubmit).subscribe((res) => {
-				this.message.toast("Uplaoded Data Successfully", "success");
-				this.resetFormArr();
-				this.modal.close();
+				if (res.status) {
+					this.message.toast("Uplaoded Data Successfully", "success");
+					this.resetFormArr();
+					this.modal.close();
+				} else {
+					this.message.popup("Error", res.message!, "error");
+				}
 			});
 			this.subscribes.push(sub);
 		}
@@ -327,8 +335,12 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 
 	getMedicalsData() {
 		let sub = this.productionService.getMedicalsData(String(this.data.PoliciesSno)).subscribe((res) => {
-			this.uiState.medicalData = res?.data!;
-			this.uiState.medicalData.forEach((item: any) => this.addMedicalItem(item));
+			if (res.status) {
+				this.uiState.medicalData = res?.data!;
+				this.uiState.medicalData.forEach((item: any) => this.addMedicalItem(item));
+			} else {
+				this.message.popup("Error", res.message!, "error");
+			}
 		});
 		this.subscribes.push(sub);
 	}
@@ -385,9 +397,13 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 			};
 
 			let sub = this.productionService.saveMedicalData(dataToSubmit).subscribe((res) => {
-				this.message.toast("Uplaoded Data Successfully", "success");
-				this.resetFormArr();
-				this.modal.close();
+				if (res.status) {
+					this.message.toast("Uplaoded Data Successfully", "success");
+					this.resetFormArr();
+					this.modal.close();
+				} else {
+					this.message.popup("Error", res.message!, "error");
+				}
 			});
 			this.subscribes.push(sub);
 		}
