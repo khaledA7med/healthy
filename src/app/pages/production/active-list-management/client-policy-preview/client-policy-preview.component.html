@@ -16,19 +16,6 @@
                             <div class="table-responsive table-card">
                                 <table class="table table-borderless mb-0">
                                     <tbody id="client-information-table">
-                                        <!--     
-                                            cancelled: 0
-                                            
-                                            issueDate: "2022-06-21T00:00:00"
-                                            lineOfBusiness: "Motor Comprehensive Individual"
-                                            oasisPolRef: "POL-R-MCI-2022-3"
-                                            periodFrom: "2022-06-20T00:00:00"
-                                            periodTo: "2023-06-19T00:00:00"
-                                       -->
-                                        <tr>
-                                            <th class="fw-semibold">Account No :</th>
-                                            <td>{{ uiState.policyDetails.accNo || "-" }}</td>
-                                        </tr>
                                         <tr>
                                             <th class="fw-semibold">Client ID :</th>
                                             <td>{{ uiState.policyDetails.clientNo || "-"}}</td>
@@ -50,14 +37,64 @@
                                             <td>{{ uiState.policyDetails.className || "-"}}</td>
                                         </tr>
                                         <tr>
+                                            <th class="fw-semibold">Line Of Budsiness :</th>
+                                            <td>{{ uiState.policyDetails.lineOfBusiness || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Policy No :</th>
+                                            <td>{{ uiState.policyDetails.policyNo || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Issue Date :</th>
+                                            <td>{{ (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") || "-" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Period From :</th>
+                                            <td>{{ (uiState.policyDetails.periodFrom | date:"dd MMMM,yyyy") || "-" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Period To :</th>
+                                            <td>{{ (uiState.policyDetails.periodTo | date:"dd MMMM,yyyy") || "-" }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="table-responsive table-card">
+                                <table class="table table-borderless mb-0">
+                                    <tbody id="client-information-table">
+                                        <tr>
+                                            <th class="fw-semibold">Account No :</th>
+                                            <td>{{ uiState.policyDetails.accNo || "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Producer Commission (%) :</th>
+                                            <td>{{ uiState.policyDetails.producerCommPerc || "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Company Commission (%) :</th>
+                                            <td>{{ uiState.policyDetails.compCommPerc || "-"}}</td>
+                                        </tr>
+                                        <tr>
                                             <th class="fw-semibold">Saved By :</th>
                                             <td>{{ uiState.policyDetails.savedBy || "-"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Saved On :</th>
+                                            <td>{{ (uiState.policyDetails.savedOn | date:"dd MMMM,yyyy") || "-"}}</td>
                                         </tr>
                                         <tr>
                                             <th class="fw-semibold">Updated By :</th>
                                             <td>{{ uiState.policyDetails.updatedBy || "-"}}</td>
                                         </tr>
-
+                                        <tr>
+                                            <th class="fw-semibold">Updated On :</th>
+                                            <td>{{ (uiState.policyDetails.updatedOn | date:"dd MMMM,yyyy") || "-"}}</td>
+                                        </tr>
                                         <tr>
                                             <th class="fw-semibold">Cancelled :</th>
                                             <td><span *ngIf="uiState.policyDetails.cancelled"
@@ -73,50 +110,6 @@
                                             <th class="fw-semibold">Cancelled By :</th>
                                             <td>{{ uiState.policyDetails.cancelledUser || "-"}}</td>
                                         </tr>
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="table-responsive table-card">
-                                <table class="table table-borderless mb-0">
-                                    <tbody id="client-information-table">
-                                        <tr>
-                                            <th class="fw-semibold">Reversal Of :</th>
-                                            <td>{{ uiState.policyDetails.reversalOf || "-" }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Policy No :</th>
-                                            <td>{{ uiState.policyDetails.policyNo || "-"}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Issue Date :</th>
-                                            <td>{{ (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") || "-" }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Producer Commission (%) :</th>
-                                            <td>{{ uiState.policyDetails.producerCommPerc || "-" }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Company Commission (%) :</th>
-                                            <td>{{ uiState.policyDetails.compCommPerc || "-"}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Line Of Budsiness :</th>
-                                            <td>{{ uiState.policyDetails.lineOfBusiness || "-"}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Saved On :</th>
-                                            <td>{{ (uiState.policyDetails.savedOn | date:"dd MMMM,yyyy") || "-"}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Updated On :</th>
-                                            <td>{{ (uiState.policyDetails.updatedOn | date:"dd MMMM,yyyy") || "-"}}</td>
-                                        </tr>
-
                                         <tr>
                                             <th class="fw-semibold">Cancelled On :</th>
                                             <td>{{ (uiState.policyDetails.cancelledDate | date:"dd MMMM,yyyy") || "-"}}

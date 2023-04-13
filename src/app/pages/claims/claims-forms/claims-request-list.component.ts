@@ -7,6 +7,8 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IClaimPolicies, IClaimPoliciesSearch } from "src/app/shared/app/models/Claims/claims-util";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { VehiclesListComponent } from "./vehicles-list.component";
+import { MedicalMembersListComponent } from "./medical-members-list.component";
 
 @Component({
 	selector: "app-claims-request-list",
@@ -16,22 +18,13 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 				class="gridScrollbar"
 				style="width: 100%;"
 				[ngStyle]="{ height: selectedPolicy.className === 'Motor' || selectedPolicy.className === 'Medical' ? '35vh' : '70vh' }"
-				[gridOptions]="gridOpts"
-				(rowClicked)="filter.classOfInsurance === 'Motor' ? vehiclesList.setDataSource() : MedicalMembersList.setDataSource()">
+				[gridOptions]="gridOpts">
 			</ag-grid-angular>
 		</div>
 
-		<app-vehicles-list
-			[policiesSno]="selectedPolicy.policiesSno"
-			[ngClass]="{ 'd-none': filter.classOfInsurance !== 'Motor' || showPolicyVehicles }"
-			#vehiclesList
-			(dataLength)="setShowPolicyVehicle($event)"></app-vehicles-list>
+		<app-vehicles-list [ngClass]="{ 'd-none': filter.classOfInsurance !== 'Motor' }" #vehiclesList></app-vehicles-list>
 
-		<app-medical-members-list
-			[policiesSno]="selectedPolicy.policiesSno"
-			[ngClass]="{ 'd-none': filter.classOfInsurance !== 'Medical' || showPolicyMedicalMembers }"
-			#MedicalMembersList
-			(dataLength)="setShowPolicyMedicalMembers($event)"></app-medical-members-list>
+		<app-medical-members-list [ngClass]="{ 'd-none': filter.classOfInsurance !== 'Medical' }" #MedicalMembersList></app-medical-members-list>
 	`,
 	styles: [],
 })
@@ -51,9 +44,11 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	@Output()
 	dataEvent: EventEmitter<any> = new EventEmitter();
 
+	@ViewChild("vehiclesList") vehiclesList!: VehiclesListComponent;
+	@ViewChild("MedicalMembersList") MedicalMembersList!: MedicalMembersListComponent;
 	selectedPolicy = {
 		className: "" as String,
-		policiesSno: 0 as Number,
+		policiesSno: "" as any,
 	};
 
 	showPolicyVehicles: boolean = true;
@@ -137,19 +132,15 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	onRowClicked(e: RowClickedEvent) {
 		this.selectedPolicy.policiesSno = e.data.sNo;
 		this.selectedPolicy.className = e.data.className;
+		if (e.data.className === "Motor") {
+			this.vehiclesList.setDataSource(e.data.sNo);
+		} else if (e.data.className === "Medical") {
+			this.MedicalMembersList.setDataSource(e.data.sNo);
+		}
 	}
 
 	onRowDoubleClicked(e: RowClickedEvent) {
 		this.dataEvent.emit(e.data);
-	}
-
-	setShowPolicyVehicle(e: number) {
-		console.log(e);
-		if (e > 0) this.showPolicyVehicles = false;
-	}
-
-	setShowPolicyMedicalMembers(e: number) {
-		if (e > 0) this.showPolicyMedicalMembers = false;
 	}
 
 	ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { ActivePoliciesMedicalMembersCols } from "src/app/shared/app/grid/activePoliciesMedicalMembers";
@@ -10,6 +10,20 @@ import { ProductionService } from "src/app/shared/services/production/production
 @Component({
 	selector: "app-medical-members-list",
 	template: `
+		<div class="row justify-content-between align-items-center">
+			<div class="col-md-4">
+				<h5 class="header-item mb-0">List Of Medical Members</h5>
+			</div>
+			<div class="col-md-4">
+				<div class="input-group input-group-sm">
+					<input type="text" class="form-control form-control-sm" placeholder="Filter" (input)="searchData($event)" />
+					<button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+						<!-- <i class="ri-user-search-fill mx-1"></i> -->
+						<i class="ri-search-line"></i>
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="ag-theme-alpine" appTableView>
 			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts"> </ag-grid-angular>
 		</div>
@@ -18,7 +32,6 @@ import { ProductionService } from "src/app/shared/services/production/production
 })
 export class MedicalMembersListComponent implements OnDestroy {
 	@Input() policiesSno!: any;
-	@Output() dataLength: EventEmitter<any> = new EventEmitter();
 
 	medicalMembers: IMedicalData[] = [];
 
@@ -26,7 +39,7 @@ export class MedicalMembersListComponent implements OnDestroy {
 	gridApi: GridApi = <GridApi>{};
 	gridOpts: GridOptions = {
 		pagination: true,
-		rowModelType: "infinite",
+		rowModelType: "clientSide",
 		editType: "fullRow",
 		columnDefs: ActivePoliciesMedicalMembersCols,
 		animateRows: true,
@@ -48,32 +61,14 @@ export class MedicalMembersListComponent implements OnDestroy {
 	subscribes: Subscription[] = [];
 	constructor(private message: MessagesService, private productionService: ProductionService) {}
 
-	// Request Section
-	requestDataSource: IDatasource = {
-		getRows: (params: IGetRowsParams) => {
-			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getMedicalsData(this.policiesSno).subscribe((res: IBaseResponse<IMedicalData[]>) => {
-				if (res.status) {
-					this.medicalMembers = res.data!;
-
-					params.successCallback(this.medicalMembers, this.medicalMembers.length);
-					if (this.medicalMembers.length === 0) this.gridApi.showNoRowsOverlay();
-					else this.gridApi.hideOverlay();
-				} else {
-					this.message.popup("Oops!", res.message!, "warning");
-					this.gridApi.hideOverlay();
-
-					this.dataLength.emit(this.medicalMembers.length);
-				}
-				this.gridReady = true;
-			});
-			this.subscribes.push(sub);
-		},
-	};
-
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.showNoRowsOverlay();
+	}
+
+	searchData(e: any) {
+		let val = e.target.value;
+		this.gridApi.setQuickFilter(val);
 	}
 
 	// onPageChange(params: GridReadyEvent) {
@@ -90,8 +85,22 @@ export class MedicalMembersListComponent implements OnDestroy {
 	// 	});
 	// }
 
-	setDataSource() {
-		this.gridApi.setDatasource(this.requestDataSource);
+	setDataSource(policiesSno: number) {
+		this.gridApi.showLoadingOverlay();
+		let sub = this.productionService.getMedicalsData(String(policiesSno)).subscribe((res: IBaseResponse<IMedicalData[]>) => {
+			if (res.status) {
+				this.medicalMembers = res.data!;
+				this.gridApi.setRowData(this.medicalMembers);
+				this.gridApi.redrawRows();
+				if (this.medicalMembers.length === 0) this.gridApi.showNoRowsOverlay();
+				else this.gridApi.hideOverlay();
+			} else {
+				this.message.popup("Oops!", res.message!, "warning");
+				this.gridApi.hideOverlay();
+			}
+			this.gridReady = true;
+		});
+		this.subscribes.push(sub);
 	}
 
 	// onRowClicked(e: RowClickedEvent) {

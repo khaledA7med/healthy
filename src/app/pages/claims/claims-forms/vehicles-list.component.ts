@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { ActivePoliciesVehiclesCols } from "src/app/shared/app/grid/activePoliciesVehicles";
@@ -10,6 +10,20 @@ import { ProductionService } from "src/app/shared/services/production/production
 @Component({
 	selector: "app-vehicles-list",
 	template: `
+		<div class="row justify-content-between align-items-center">
+			<div class="col-md-4">
+				<h5 class="header-item mb-0">List Of Vehicles Details</h5>
+			</div>
+			<div class="col-md-4">
+				<div class="input-group input-group-sm">
+					<input type="text" class="form-control form-control-sm" placeholder="Filter" (input)="searchData($event)" />
+					<button class="btn btn-info btn-sm d-flex align-items-center" type="button">
+						<!-- <i class="ri-user-search-fill mx-1"></i> -->
+						<i class="ri-search-line"></i>
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="ag-theme-alpine" appTableView>
 			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts"> </ag-grid-angular>
 		</div>
@@ -18,14 +32,14 @@ import { ProductionService } from "src/app/shared/services/production/production
 })
 export class VehiclesListComponent implements OnDestroy {
 	@Input() policiesSno!: any;
-	@Output() dataLength: EventEmitter<any> = new EventEmitter();
+
 	vehicles: IMotorData[] = [];
 
 	gridReady: boolean = false;
 	gridApi: GridApi = <GridApi>{};
 	gridOpts: GridOptions = {
 		pagination: true,
-		rowModelType: "infinite",
+		rowModelType: "clientSide",
 		editType: "fullRow",
 		columnDefs: ActivePoliciesVehiclesCols,
 		animateRows: true,
@@ -37,6 +51,7 @@ export class VehiclesListComponent implements OnDestroy {
 			resizable: true,
 			sortable: true,
 		},
+		rowData: this.vehicles,
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		// onPaginationChanged: (e) => this.onPageChange(e),
@@ -47,36 +62,15 @@ export class VehiclesListComponent implements OnDestroy {
 	subscribes: Subscription[] = [];
 	constructor(private message: MessagesService, private productionService: ProductionService) {}
 
-	// Request Section
-	requestDataSource: IDatasource = {
-		getRows: (params: IGetRowsParams) => {
-			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getVehiclesData(this.policiesSno).subscribe((res: IBaseResponse<IMotorData[]>) => {
-				if (res.status) {
-					this.vehicles = res.data!;
-					params.successCallback(this.vehicles, this.vehicles.length);
-					if (this.vehicles.length === 0) this.gridApi.showNoRowsOverlay();
-					else this.gridApi.hideOverlay();
-
-					this.dataLength.emit(this.vehicles.length);
-				} else {
-					this.message.popup("Oops!", res.message!, "warning");
-					this.gridApi.hideOverlay();
-				}
-				this.gridReady = true;
-			});
-			this.subscribes.push(sub);
-		},
-	};
-
 	onGridReady(param: GridReadyEvent) {
 		this.gridApi = param.api;
 		this.gridApi.showNoRowsOverlay();
 	}
 
-	// onPageChange(params: GridReadyEvent) {
-	// 	if (this.gridReady) this.filter.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
-	// }
+	searchData(e: any) {
+		let val = e.target.value;
+		this.gridApi.setQuickFilter(val);
+	}
 
 	// onSort(e: GridReadyEvent) {
 	// 	let colState = e.columnApi.getColumnState();
@@ -88,13 +82,23 @@ export class VehiclesListComponent implements OnDestroy {
 	// 	});
 	// }
 
-	setDataSource() {
-		this.gridApi.setDatasource(this.requestDataSource);
+	setDataSource(policiesSno: number) {
+		this.gridApi.showLoadingOverlay();
+		let sub = this.productionService.getVehiclesData(String(policiesSno)).subscribe((res: IBaseResponse<IMotorData[]>) => {
+			if (res.status) {
+				this.vehicles = res.data!;
+				this.gridApi.setRowData(this.vehicles);
+				this.gridApi.redrawRows();
+				if (this.vehicles.length === 0) this.gridApi.showNoRowsOverlay();
+				else this.gridApi.hideOverlay();
+			} else {
+				this.message.popup("Oops!", res.message!, "warning");
+				this.gridApi.hideOverlay();
+			}
+			this.gridReady = true;
+		});
+		this.subscribes.push(sub);
 	}
-
-	// onRowClicked(e: RowClickedEvent) {
-	// 	this.dataEvent.emit(e.data);
-	// }
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

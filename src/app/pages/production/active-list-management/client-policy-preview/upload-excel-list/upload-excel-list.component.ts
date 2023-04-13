@@ -418,10 +418,10 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 	resetFormArr() {
 		if (this.data.className === "Motor") {
 			this.motorFormArr.clear();
-			this.uiState.motorData.forEach((item: any) => this.addVehicle(item));
+			this.getVehiclesData();
 		} else if (this.data.className === "Medical") {
 			this.medicalFormArr.clear();
-			this.uiState.medicalData.forEach((item: any) => this.addMedicalItem(item));
+			this.getMedicalsData();
 		} else {
 		}
 	}
@@ -469,13 +469,9 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 	}
 
 	submitData() {
-		if (this.fileInput.valid || this.motorFormArr.length > 0 || this.medicalFormArr.length > 0) {
-			if (this.data.className === "Motor") this.submitMotorData();
-			else if (this.data.className === "Medical") this.submitMedicalData();
-			else {
-			}
-		} else {
-			this.message.popup("Error", "Please Choose a File Before You Can Upload", "error");
+		if (this.data.className === "Motor") this.submitMotorData();
+		else if (this.data.className === "Medical") this.submitMedicalData();
+		else {
 		}
 	}
 
