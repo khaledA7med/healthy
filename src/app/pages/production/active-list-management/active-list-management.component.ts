@@ -20,6 +20,7 @@ import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { ClientPolicyPreviewComponent } from "./client-policy-preview/client-policy-preview.component";
+import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 
 @Component({
 	selector: "app-active-list-management",
@@ -42,6 +43,7 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 			list: [] as IActivePolicy[],
 			totalPages: 0,
 		},
+		lineOfBusinessList: [] as IGenericResponseType[],
 		policyStatusList: [] as IGenericResponseType[],
 		privileges: ProductionPermissions,
 	};
@@ -80,6 +82,7 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private productionService: ProductionService,
+		private masterService: MasterMethodsService,
 		private message: MessagesService,
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
@@ -201,6 +204,13 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 				(item) => item.name === "Active" || item.name === "Pending" || item.name === "Expired"
 			)!;
 		});
+	}
+
+	getLineOfBusiness(e: IGenericResponseType) {
+		let sub = this.masterService.getLineOfBusiness(e.name).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.uiState.lineOfBusinessList = res.body?.data!.content;
+		});
+		this.subscribes.push(sub);
 	}
 
 	modifyFilterReq() {

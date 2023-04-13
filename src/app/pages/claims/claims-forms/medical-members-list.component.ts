@@ -1,12 +1,11 @@
-import { HttpResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
-import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
+import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { ActivePoliciesMedicalMembersCols } from "src/app/shared/app/grid/activePoliciesMedicalMembers";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IClaimPolicies, IClaimPoliciesSearch } from "src/app/shared/app/models/Claims/claims-util";
-import { ClaimsService } from "src/app/shared/services/claims/claims.service";
+import { IMedicalData } from "src/app/shared/app/models/Production/i-medical-active-list";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { ProductionService } from "src/app/shared/services/production/production.service";
 
 @Component({
 	selector: "app-medical-members-list",
@@ -18,22 +17,10 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 	styles: [],
 })
 export class MedicalMembersListComponent implements OnDestroy {
-	@Input() filter: IClaimPoliciesSearch = {
-		pageNumber: 1,
-		pageSize: 50,
-		orderBy: "sNo",
-		orderDir: "asc",
-		classOfInsurance: "",
-		clientName: "",
-		insuranceCompany: "",
-		lineOfBusiness: "",
-		policyNo: "",
-	};
+	@Input() policiesSno!: any;
+	@Output() dataLength: EventEmitter<any> = new EventEmitter();
 
-	@Output() dataEvent: EventEmitter<any> = new EventEmitter();
-
-	policies: IClaimPolicies[] = [];
-	totalPages: number = 0;
+	medicalMembers: IMedicalData[] = [];
 
 	gridReady: boolean = false;
 	gridApi: GridApi = <GridApi>{};
@@ -43,8 +30,8 @@ export class MedicalMembersListComponent implements OnDestroy {
 		editType: "fullRow",
 		columnDefs: ActivePoliciesMedicalMembersCols,
 		animateRows: true,
-		paginationPageSize: this.filter.pageSize,
-		cacheBlockSize: this.filter.pageSize,
+		// paginationPageSize: this.filter.pageSize,
+		// cacheBlockSize: this.filter.pageSize,
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,
@@ -53,29 +40,30 @@ export class MedicalMembersListComponent implements OnDestroy {
 		},
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
-		onPaginationChanged: (e) => this.onPageChange(e),
-		onSortChanged: (e) => this.onSort(e),
-		onRowClicked: (e) => this.onRowClicked(e),
+		// onPaginationChanged: (e) => this.onPageChange(e),
+		// onSortChanged: (e) => this.onSort(e),
+		// onRowClicked: (e) => this.onRowClicked(e),
 	};
 
 	subscribes: Subscription[] = [];
-	constructor(private message: MessagesService, private claimService: ClaimsService) {}
+	constructor(private message: MessagesService, private productionService: ProductionService) {}
 
 	// Request Section
 	requestDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.claimService.searchPolicy(this.filter).subscribe((res: HttpResponse<IBaseResponse<IClaimPolicies[]>>) => {
-				if (res.body?.status) {
-					this.policies = res.body?.data!;
-					this.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.productionService.getMedicalsData(this.policiesSno).subscribe((res: IBaseResponse<IMedicalData[]>) => {
+				if (res.status) {
+					this.medicalMembers = res.data!;
 
-					params.successCallback(this.policies, this.totalPages);
-					if (this.policies.length === 0) this.gridApi.showNoRowsOverlay();
+					params.successCallback(this.medicalMembers, this.medicalMembers.length);
+					if (this.medicalMembers.length === 0) this.gridApi.showNoRowsOverlay();
 					else this.gridApi.hideOverlay();
 				} else {
-					this.message.popup("Oops!", res.body?.message!, "warning");
+					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();
+
+					this.dataLength.emit(this.medicalMembers.length);
 				}
 				this.gridReady = true;
 			});
@@ -88,27 +76,27 @@ export class MedicalMembersListComponent implements OnDestroy {
 		this.gridApi.showNoRowsOverlay();
 	}
 
-	onPageChange(params: GridReadyEvent) {
-		if (this.gridReady) this.filter.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
-	}
+	// onPageChange(params: GridReadyEvent) {
+	// 	if (this.gridReady) this.filter.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
+	// }
 
-	onSort(e: GridReadyEvent) {
-		let colState = e.columnApi.getColumnState();
-		colState.forEach((el) => {
-			if (el.sort) {
-				this.filter.orderBy = el.colId!;
-				this.filter.orderDir = el.sort!;
-			}
-		});
-	}
+	// onSort(e: GridReadyEvent) {
+	// 	let colState = e.columnApi.getColumnState();
+	// 	colState.forEach((el) => {
+	// 		if (el.sort) {
+	// 			this.filter.orderBy = el.colId!;
+	// 			this.filter.orderDir = el.sort!;
+	// 		}
+	// 	});
+	// }
 
 	setDataSource() {
 		this.gridApi.setDatasource(this.requestDataSource);
 	}
 
-	onRowClicked(e: RowClickedEvent) {
-		this.dataEvent.emit(e.data);
-	}
+	// onRowClicked(e: RowClickedEvent) {
+	// 	this.dataEvent.emit(e.data);
+	// }
 
 	ngOnDestroy(): void {
 		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());

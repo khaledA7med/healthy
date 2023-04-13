@@ -1,12 +1,9 @@
-import { HttpResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
-import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
+import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { ActivePoliciesVehiclesCols } from "src/app/shared/app/grid/activePoliciesVehicles";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
-import { IClaimPolicies, IClaimPoliciesSearch } from "src/app/shared/app/models/Claims/claims-util";
 import { IMotorData } from "src/app/shared/app/models/Production/i-motor-active-list";
-import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 
@@ -21,10 +18,8 @@ import { ProductionService } from "src/app/shared/services/production/production
 })
 export class VehiclesListComponent implements OnDestroy {
 	@Input() policiesSno!: any;
-	@Input() className!: String;
-
+	@Output() dataLength: EventEmitter<any> = new EventEmitter();
 	vehicles: IMotorData[] = [];
-	totalPages: number = 0;
 
 	gridReady: boolean = false;
 	gridApi: GridApi = <GridApi>{};
@@ -59,10 +54,11 @@ export class VehiclesListComponent implements OnDestroy {
 			let sub = this.productionService.getVehiclesData(this.policiesSno).subscribe((res: IBaseResponse<IMotorData[]>) => {
 				if (res.status) {
 					this.vehicles = res.data!;
-
 					params.successCallback(this.vehicles, this.vehicles.length);
 					if (this.vehicles.length === 0) this.gridApi.showNoRowsOverlay();
 					else this.gridApi.hideOverlay();
+
+					this.dataLength.emit(this.vehicles.length);
 				} else {
 					this.message.popup("Oops!", res.message!, "warning");
 					this.gridApi.hideOverlay();

@@ -1,5 +1,5 @@
 import { HttpResponse } from "@angular/common/http";
-import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from "@angular/core";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { claimsPoliciesRequestCols } from "src/app/shared/app/grid/claimsFormCols";
@@ -12,10 +12,26 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 	selector: "app-claims-request-list",
 	template: `
 		<div class="ag-theme-alpine" appTableView>
-			<ag-grid-angular class="gridScrollbar" style="width: 100%; height: 35vh" [gridOptions]="gridOpts"> </ag-grid-angular>
+			<ag-grid-angular
+				class="gridScrollbar"
+				style="width: 100%;"
+				[ngStyle]="{ height: selectedPolicy.className === 'Motor' || selectedPolicy.className === 'Medical' ? '35vh' : '70vh' }"
+				[gridOptions]="gridOpts"
+				(rowClicked)="filter.classOfInsurance === 'Motor' ? vehiclesList.setDataSource() : MedicalMembersList.setDataSource()">
+			</ag-grid-angular>
 		</div>
-		<app-vehicles-list></app-vehicles-list>
-		<!-- <app-medical-members-list></app-medical-members-list> -->
+
+		<app-vehicles-list
+			[policiesSno]="selectedPolicy.policiesSno"
+			[ngClass]="{ 'd-none': filter.classOfInsurance !== 'Motor' || showPolicyVehicles }"
+			#vehiclesList
+			(dataLength)="setShowPolicyVehicle($event)"></app-vehicles-list>
+
+		<app-medical-members-list
+			[policiesSno]="selectedPolicy.policiesSno"
+			[ngClass]="{ 'd-none': filter.classOfInsurance !== 'Medical' || showPolicyMedicalMembers }"
+			#MedicalMembersList
+			(dataLength)="setShowPolicyMedicalMembers($event)"></app-medical-members-list>
 	`,
 	styles: [],
 })
@@ -32,15 +48,16 @@ export class ClaimsRequestListComponent implements OnDestroy {
 		policyNo: "",
 	};
 
-	@Output() dataEvent: EventEmitter<any> = new EventEmitter();
+	@Output()
+	dataEvent: EventEmitter<any> = new EventEmitter();
 
 	selectedPolicy = {
 		className: "" as String,
 		policiesSno: 0 as Number,
 	};
 
-	showPolicyVehicles: boolean = false;
-	showPolicyMedicalMembers: boolean = false;
+	showPolicyVehicles: boolean = true;
+	showPolicyMedicalMembers: boolean = true;
 
 	policies: IClaimPolicies[] = [];
 	totalPages: number = 0;
@@ -118,11 +135,21 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	}
 
 	onRowClicked(e: RowClickedEvent) {
-		console.log(e);
+		this.selectedPolicy.policiesSno = e.data.sNo;
+		this.selectedPolicy.className = e.data.className;
 	}
 
 	onRowDoubleClicked(e: RowClickedEvent) {
 		this.dataEvent.emit(e.data);
+	}
+
+	setShowPolicyVehicle(e: number) {
+		console.log(e);
+		if (e > 0) this.showPolicyVehicles = false;
+	}
+
+	setShowPolicyMedicalMembers(e: number) {
+		if (e > 0) this.showPolicyMedicalMembers = false;
 	}
 
 	ngOnDestroy(): void {

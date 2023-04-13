@@ -44,6 +44,7 @@
 
                 <!-- Policy Status -->
                 <div class="col-12 mb-3">
+                    <label class="form-label">Status</label>
                     <ng-select [items]="uiState.policyStatusList" [loading]="lookupData ? false : true"
                         [clearable]="false" [searchable]="true" bindLabel="name" [closeOnSelect]="false"
                         [hideSelected]="true" [multiple]="true" bindValue="name" id="policyStatus"
@@ -89,7 +90,16 @@
                     <label for="classOfInsu" class="form-label">Class Of Insurance</label>
                     <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="classOfInsu" formControlName="classOfInsurance">
+                        bindValue="name" id="classOfInsu" formControlName="classOfInsurance"
+                        (change)="getLineOfBusiness($event)">
+                    </ng-select>
+                </div>
+                <!-- lineOfBusiness -->
+                <div class="col-12 mb-3">
+                    <label for="lineofBuss" class="form-label">Line Of Business</label>
+                    <ng-select [items]="uiState.lineOfBusinessList" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="lineofBuss"
+                        formControlName="lineOfBusiness">
                     </ng-select>
                 </div>
                 <!-- PolicyNo -->
@@ -97,38 +107,6 @@
                     <label for="policyNoInput" class="form-label">Policy No:</label>
                     <input type="text" class="form-control form-control-sm" id="policyNoInput" placeholder="Policy No"
                         formControlName="policyNo" />
-                </div>
-                <!-- EndorsNo -->
-                <div class="col-12 mb-3">
-                    <label for="endorsNoInput" class="form-label">Endors No:</label>
-                    <input type="text" class="form-control form-control-sm" id="endorsNoInput" placeholder="EndorsNo"
-                        formControlName="endorsNo" />
-                </div>
-                <!-- Policy Endors Type-->
-                <div class="col-12 mb-3">
-                    <label for="polEndorsType" class="form-label">Policy Endors Type:</label>
-                    <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
-                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="polEndorsType" formControlName="policyEndorsType">
-                    </ng-select>
-                </div>
-                <!-- CLIENT DN/CN NO -->
-                <div class="col-12 mb-3">
-                    <label for="clientDN" class="form-label">Client DN/CN NO:</label>
-                    <input type="text" class="form-control form-control-sm" id="clientDN" placeholder="Client DN/CN NO"
-                        formControlName="clientDNCNNo" />
-                </div>
-                <!-- COMPANY COMMISION DN/CN NO -->
-                <div class="col-12 mb-3">
-                    <label for="commDNCN" class="form-label">Company Commission DN/CN NO:</label>
-                    <input type="text" class="form-control form-control-sm" id="commDNCN"
-                        placeholder="Company Commission DN/CN NO" formControlName="companyCommisionDNCNNo" />
-                </div>
-                <!-- OUR DN/CN NO -->
-                <div class="col-12 mb-3">
-                    <label for="ourDNCNNo" class="form-label">Our DN/CN NO:</label>
-                    <input type="text" class="form-control form-control-sm" id="ourDNCNNo" placeholder="Our DN/CN NO"
-                        formControlName="ourDNCNNo" />
                 </div>
                 <!-- createdBy -->
                 <div class="col-12 mb-3">
