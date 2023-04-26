@@ -6,11 +6,8 @@ import { environment } from "src/environments/environment";
 import { ITaskParams } from "../../app/models/Activities/itask-params";
 import { ITasks } from "../../app/models/Activities/itasks";
 import { IBaseResponse } from "../../app/models/App/IBaseResponse";
-import { ISalesLeadDetails } from "../../app/models/BusinessDevelopment/isalesLeadDetails";
-import { IClaims } from "../../app/models/Claims/iclaims";
-import { IClient } from "../../app/models/Clients/iclient";
-import { ICustomerService } from "../../app/models/CustomerService/icustomer-service";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
+import { ITaskLog } from "../../app/models/Activities/itask-log";
 
 @Injectable({
   providedIn: "root",
@@ -50,5 +47,16 @@ export class ActivitiesService {
 
   addTask(body: ITasks): Observable<any> {
     return this.http.post(this.env + ApiRoutes.Activities.addTask, body);
+  }
+
+  changeStatus(body: any): Observable<IBaseResponse<number>> {
+    return this.http.post(this.env + ApiRoutes.Activities.changeStatus, body);
+  }
+
+  taskLogs(sno: number): Observable<IBaseResponse<ITaskLog[]>> {
+    return this.http.post<IBaseResponse<ITaskLog[]>>(
+      this.env + ApiRoutes.Activities.taskLogs,
+      sno
+    );
   }
 }

@@ -155,8 +155,8 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<debitCreditNoteForm>({
-			branchs: new FormControl(""),
-			filter: new FormControl(""),
+			branchs: new FormControl(null),
+			// filter: new FormControl(""),
 			plain: new FormControl(true),
 			pram: new FormControl(1),
 			reportType: new FormControl(1),
@@ -216,6 +216,9 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.pram?.patchValue(1);
+		this.f.reportType?.patchValue(1);
+		this.f.plain?.patchValue(true);
 		this.submitted = false;
 	}
 }

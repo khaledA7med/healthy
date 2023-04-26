@@ -1,4 +1,6 @@
 import { FormControl } from "@angular/forms";
+import { IMotorData } from "./i-motor-active-list";
+import { IMedicalData } from "./i-medical-active-list";
 
 export enum searchBy {
 	client = "Client",
@@ -123,14 +125,7 @@ export function refundChecker(params: any) {
 		: ["input-text-right"];
 }
 
-//#region For Testing Perpouse and to be deleted when evaluated
-export interface PersonsDataForm {
-	Name: FormControl<string | null>;
-	Age: FormControl<number | null>;
+export interface UploadActivePoliciesData {
+	data: IMotorData[] | IMedicalData[] | [];
+	policiesSNo?: number;
 }
-
-export interface PersonsData {
-	Name: string | null;
-	Age: number | null;
-}
-//#endregion

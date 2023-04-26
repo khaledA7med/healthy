@@ -59,14 +59,13 @@
                         {{ uiState.isClient ? "Client" : "Group" }}</label>
                       <div class="input-group input-group-sm is-invalid">
                         <ng-select [readonly]="uiState.editMode" id="client" formControlName="name" bindValue="name"
-                          bindLabel="name" class="form-control form-control-sm is-invalid"
-                          aria-describedby="inputGroup-sizing-sm" (change)="getClientId($event)"
-                          [loading]="formData ? false : true" [items]="
+                          bindLabel="name" class="form-control form-control-sm" aria-describedby="inputGroup-sizing-sm"
+                          (change)="getClientId($event)" [loading]="formData ? false : true" [items]="
                             uiState.isClient
                               ? (formData | async)?.AllClients?.content!
                               : (formData | async)?.GroupsList?.content!
                           " [ngClass]="{
-                            'is-submitted': submitted && f.name?.invalid
+                            'is-submitted': (f.name?.touched || submitted) && f.name?.invalid
                           }" placeholder="{{
                             uiState.isClient ? 'Select Client' : 'Select Group'
                           }}">
@@ -855,7 +854,7 @@
                     <!-- /col -->
                     <!-- col table -->
                     <div class="col-12 mb-2 custom-overflow">
-                      <table class="table table-responsive align-middle table-nowrap" id="">
+                      <table class="table table-responsive align-middle table-nowrap">
                         <thead class="table-light">
                           <tr>
                             <th scope="col" class="px-3">No.</th>

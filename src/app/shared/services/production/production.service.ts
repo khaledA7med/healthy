@@ -24,8 +24,13 @@ import {
 	IPolicyClient,
 	IPolicyRequestResponse,
 	IPolicyRequests,
+	UploadActivePoliciesData,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
+import { IActiveListFilters } from "../../app/models/Production/i-active-list-filters";
+import { IActivePolicy } from "../../app/models/Production/i-active-policy";
+import { IMotorData } from "../../app/models/Production/i-motor-active-list";
+import { IMedicalData } from "../../app/models/Production/i-medical-active-list";
 
 @Injectable({
 	providedIn: "root",
@@ -172,4 +177,31 @@ export class ProductionService {
 			observe: "response",
 		});
 	}
+
+	//#region Clients Active Policies Functions
+	getAllActivePolicies(filters: IActiveListFilters): Observable<HttpResponse<IBaseResponse<IActivePolicy[]>>> {
+		return this.http.post<IBaseResponse<IActivePolicy[]>>(this.env + ApiRoutes.Production.activeListSearch, filters, {
+			observe: "response",
+		});
+	}
+
+	getActivePolicy(PoliciesSNo: string): Observable<IBaseResponse<IPolicyPreview>> {
+		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.loadActivePolicyData, { params: { PoliciesSNo } });
+	}
+
+	getVehiclesData(PoliciesSNo: string): Observable<IBaseResponse<IMotorData[]>> {
+		return this.http.get<IBaseResponse<IMotorData[]>>(this.env + ApiRoutes.Production.getVehiclesData, { params: { PoliciesSNo } });
+	}
+	getMedicalsData(PoliciesSNo: string): Observable<IBaseResponse<IMedicalData[]>> {
+		return this.http.get<IBaseResponse<IMedicalData[]>>(this.env + ApiRoutes.Production.getMedicalsData, { params: { PoliciesSNo } });
+	}
+
+	saveMotorData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
+		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMotorData, body);
+	}
+	saveMedicalData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
+		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMedicalData, body);
+	}
+
+	//#endregion
 }

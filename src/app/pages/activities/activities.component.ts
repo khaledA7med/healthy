@@ -19,9 +19,12 @@ import {
   EventClickArg,
   EventApi,
   EventInput,
+  EventDropArg,
 } from "@fullcalendar/core"; // useful for typechecking
 import bootstrap5Plugin from "@fullcalendar/bootstrap5";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, {
+  EventResizeDoneArg,
+} from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
@@ -41,6 +44,7 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { FormControl, FormGroup } from "@angular/forms";
 import { TaskPreviewComponent } from "src/app/shared/components/task-preview/task-preview.component";
+import { MessagesService } from "src/app/shared/services/messages.service";
 
 @Component({
   selector: "app-activities",
@@ -67,7 +71,8 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     private activityService: ActivitiesService,
     private modalService: NgbModal,
     private tables: MasterTableService,
-    private offcanvas: NgbOffcanvas
+    private offcanvas: NgbOffcanvas,
+    private message: MessagesService
   ) {}
 
   initForm() {
@@ -173,6 +178,8 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
+    eventDrop: this.handleDragging.bind(this),
+    eventResize: this.handleDragging.bind(this),
     eventDisplay: "block",
     events: ({ start, end }: EventInput, cb: (evt: EventInput[]) => void) =>
       this.getAllEvents({ start, end }, cb),
@@ -206,6 +213,8 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       backdrop: "static",
       size: "lg",
       centered: true,
+      modalDialogClass: "task-preview",
+      backdropClass: "modal-backdrop-preview",
     });
 
     let task = clickInfo.event.extendedProps as ITasks;
@@ -219,6 +228,34 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
     this.changeDetector.detectChanges();
+  }
+
+  handleDragging(event: EventDropArg | EventResizeDoneArg) {
+    let evt = event.event.extendedProps as ITasks,
+      start = new Date(event.event.start!).getTime() / 1000,
+      end = new Date(event.event.end!).getTime() / 1000;
+
+    let data: ITasks = {
+      sNo: evt.sNo ? +evt.sNo! : 0,
+      module: evt.module!,
+      moduleSNo: +evt.moduleSNo!,
+      taskName: evt.taskName!,
+      type: evt.type!,
+      timeStampFrom: start.toString(),
+      timeStampTo: end.toString(),
+      isAllDay: evt.isAllDay!,
+      status: "Open",
+      taskDetails: evt.taskDetails!,
+      assignedTo: evt.assignedTo!,
+      clientName: evt.clientName!,
+    };
+
+    let sub = this.activityService
+      .addTask(data)
+      .subscribe((res: IBaseResponse<any>) => {
+        if (!res.status) this.message.popup("Oops!", res.message!, "warning");
+      });
+    this.subscribe.push(sub);
   }
 
   openFilter() {
@@ -284,6 +321,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       backdrop: "static",
       size: "lg",
       centered: true,
+      backdropClass: "modal-backdrop-preview",
     });
     this.modalRef.componentInstance.clickedDate = {
       isAllDay: data?.allDay,

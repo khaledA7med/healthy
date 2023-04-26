@@ -101,15 +101,15 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 		switch (controlName) {
 			case "branch":
 				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-				else this.f.branchs?.patchValue(null);
+				else this.f.branchs?.patchValue([]);
 				break;
 			case "producer":
 				if (check) this.f.producers?.patchValue(this.uiState.lists.producersLists.map((e) => e.name));
-				else this.f.producers?.patchValue(null);
+				else this.f.producers?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) this.f.classofBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-				else this.f.classofBusiness?.patchValue(null);
+				else this.f.classofBusiness?.patchValue([]);
 				break;
 			default:
 				break;
@@ -197,6 +197,10 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.classofBusiness?.patchValue([]);
+		this.f.branchs?.patchValue([]);
+		this.f.producers?.patchValue([]);
+		this.f.reportType?.patchValue(1);
 		this.submitted = false;
 	}
 }

@@ -24,6 +24,7 @@ export interface UserAccess {
   Branch?: string;
   UserId?: string;
   Role?: string[];
+  DbConnection?: string;
 }
 
 export interface IPrivileges {

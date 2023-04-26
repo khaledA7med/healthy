@@ -22,3 +22,11 @@
 .offcanvas.offcanvas-top {
   height: fit-content !important;
 }
+
+.modal {
+  --bs-modal-zindex: 1040;
+}
+
+.modal-backdrop-preview {
+  z-index: 1040 !important;
+}

@@ -26,7 +26,7 @@ const routes: Routes = [
 	{
 		path: AppRoutes.Production.activeList,
 		data: {
-			title: "Active Policies List",
+			title: "Active Policies Management",
 		},
 		loadChildren: () => import("./active-list-management/active-list-management.module").then((m) => m.ActiveListManagementModule),
 		canActivate: [() => ProductionFormGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProductionReadOnly])],
