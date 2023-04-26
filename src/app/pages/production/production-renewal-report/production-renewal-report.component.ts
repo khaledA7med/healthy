@@ -106,15 +106,15 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 		switch (controlName) {
 			case "branch":
 				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-				else this.f.branchs?.patchValue(null);
+				else this.f.branchs?.patchValue([]);
 				break;
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-				else this.f.insuranceCompany?.patchValue(null);
+				else this.f.insuranceCompany?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-				else this.f.classOfBusiness?.patchValue(null);
+				else this.f.classOfBusiness?.patchValue([]);
 				break;
 			default:
 				break;
@@ -203,6 +203,10 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.branchs?.patchValue([]);
+		this.f.classOfBusiness?.patchValue([]);
+		this.f.insuranceCompany?.patchValue([]);
+		this.f.producer?.patchValue("Select All");
 		this.submitted = false;
 	}
 }

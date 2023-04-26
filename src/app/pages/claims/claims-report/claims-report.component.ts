@@ -110,6 +110,23 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+
+		this.uiState.checkAllControls.allLineOfBusinessControl.disable();
+		this.uiState.checkAllControls.allSubStatusControl.disable();
+
+		let sub = this.f.classOfBusiness?.valueChanges.subscribe((res) => {
+			if (res?.length! == 0) {
+				this.uiState.checkAllControls.allLineOfBusinessControl.disable();
+				this.uiState.lists.linesOfBusinessLists = [];
+			} else this.uiState.checkAllControls.allLineOfBusinessControl.enable();
+		});
+		let sub2 = this.f.status?.valueChanges.subscribe((res) => {
+			if (res?.length! == 0) {
+				this.uiState.checkAllControls.allSubStatusControl.disable();
+				this.uiState.lists.subStatusList = [];
+			} else this.uiState.checkAllControls.allSubStatusControl.enable();
+		});
+		this.subscribes.push(sub!);
 	}
 
 	setClientData(e: any) {
@@ -141,35 +158,35 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		switch (controlName) {
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-				else this.f.insuranceCompany?.patchValue(null);
+				else this.f.insuranceCompany?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) {
 					this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
 					this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue());
 				} else {
-					this.f.classOfBusiness?.patchValue(null);
-					this.f.lineOfBusiness?.patchValue(null);
+					this.f.classOfBusiness?.patchValue([]);
+					this.f.lineOfBusiness?.patchValue([]);
 					this.uiState.lists.linesOfBusinessLists = [];
 				}
 				break;
 			case "lineOfBusiness":
 				if (check) this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-				else this.f.lineOfBusiness?.patchValue(null);
+				else this.f.lineOfBusiness?.patchValue([]);
 				break;
 			case "status":
 				if (check) {
 					this.f.status?.patchValue(this.uiState.lists.statusList.map((e) => e.name));
 					this.getSubStatus();
 				} else {
-					this.f.status?.patchValue(null);
-					this.f.subStatus?.patchValue(null);
+					this.f.status?.patchValue([]);
+					this.f.subStatus?.patchValue([]);
 					this.uiState.lists.subStatusList = [];
 				}
 				break;
 			case "subStatus":
 				if (check) this.f.subStatus?.patchValue(this.uiState.lists.subStatusList.map((e) => e));
-				else this.f.subStatus?.patchValue(null);
+				else this.f.subStatus?.patchValue([]);
 
 				break;
 			default:
@@ -280,6 +297,19 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false);
 		this.uiState.checkAllControls.allStatusControl.patchValue(false);
 		this.uiState.checkAllControls.allSubStatusControl.patchValue(false);
+
+		this.f.insuranceCompany?.patchValue([]);
+		this.f.classOfBusiness?.patchValue([]);
+		this.f.lineOfBusiness?.patchValue([]);
+		this.f.status?.patchValue([]);
+		this.f.subStatus?.patchValue([]);
+		this.f.branch?.patchValue("Select All");
+		this.f.clientData?.patchValue("Select All");
+		this.f.clientGroup?.patchValue("Select All");
+		this.f.rejectionReason?.patchValue("Service Not Covered");
+		this.f.reportType?.patchValue(1);
+		this.f.excludeZeroClaimAmount?.patchValue(false);
+
 		this.submitted = false;
 	}
 }

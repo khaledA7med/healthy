@@ -24,7 +24,7 @@
                                                         <ng-select [items]="uiState.lists.clientsLists"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" [formControl]="uiState.clientDataContorl">
                                                         </ng-select>
                                                     </div>
@@ -37,7 +37,7 @@
                                                         <ng-select [items]="uiState.lists.usersLists!"
                                                             placeholder="Select User"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" formControlName="user">
                                                         </ng-select>
                                                     </div>
@@ -51,7 +51,7 @@
                                                     <ng-select [items]="uiState.lists.branchesLists"
                                                         placeholder="Select Branch(s)"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="name" formControlName="branch">
                                                     </ng-select>
                                                 </div>
