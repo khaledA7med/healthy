@@ -18,28 +18,28 @@
     <div>
         <div class="row">
             <div class="col-lg-12 table-responsive">
-                <table class="table align-middle table-nowrap mb-0">
+                <table class="table align-middle table-nowrap mb-0" *ngIf="uiState.motorData.length > 0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col">ownerDriver</th>
-                            <th scope="col">plateNo</th>
-                            <th scope="col">plateChar1</th>
-                            <th scope="col">plateChar2</th>
-                            <th scope="col">plateChar3</th>
-                            <th scope="col">sequenceNo</th>
-                            <th scope="col">customID</th>
-                            <th scope="col">brandName</th>
-                            <th scope="col">model</th>
-                            <th scope="col" class="date">inception</th>
-                            <th scope="col" class="date">expiry</th>
-                            <th scope="col" class="date">kclDate</th>
-                            <th scope="col">seats</th>
-                            <th scope="col">bodyType</th>
-                            <th scope="col">chassisNo</th>
-                            <th scope="col">marketValue</th>
-                            <th scope="col">repairType</th>
-                            <th scope="col">vehicleOwnerID</th>
-                            <th scope="col">projectName</th>
+                            <th scope="col">Owner / Driver</th>
+                            <th scope="col">Plate No</th>
+                            <th scope="col">Plate Char 1</th>
+                            <th scope="col">Plate Char 2</th>
+                            <th scope="col">Plate Char 3</th>
+                            <th scope="col">Sequence No</th>
+                            <th scope="col">Custom ID</th>
+                            <th scope="col">Brand Name</th>
+                            <th scope="col">Model</th>
+                            <th scope="col" class="date">Inception</th>
+                            <th scope="col" class="date">Expiry</th>
+                            <th scope="col" class="date">Kcl Date</th>
+                            <th scope="col">Seats No</th>
+                            <th scope="col">Body Type</th>
+                            <th scope="col">Chassis No</th>
+                            <th scope="col">Market Value</th>
+                            <th scope="col">Repair Type</th>
+                            <th scope="col">Vehicle Owner ID</th>
+                            <th scope="col">Project Name</th>
                             <th scope="col">ِAction</th>
                         </tr>
                     </thead>

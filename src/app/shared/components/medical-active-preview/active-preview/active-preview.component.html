@@ -17,6 +17,10 @@
                                 <table class="table table-borderless mb-0">
                                     <tbody id="client-information-table">
                                         <tr>
+                                            <th class="fw-semibold">A/C No :</th>
+                                            <td>{{ uiState.policyDetails.accNo }}</td>
+                                        </tr>
+                                        <tr>
                                             <th class="fw-semibold">Client ID :</th>
                                             <td>{{ uiState.policyDetails.clientNo }}</td>
                                         </tr>
@@ -29,19 +33,11 @@
                                             <td>{{ uiState.policyDetails.producer }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="fw-semibold">A/C No :</th>
-                                            <td>{{ uiState.policyDetails.accNo }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Policy No :</th>
-                                            <td>{{ uiState.policyDetails.policyNo }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Issued By :</th>
+                                            <th class="fw-semibold">Issued By (Insurance Company) :</th>
                                             <td>{{ uiState.policyDetails.insurComp }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="fw-semibold">Class of Insurance :</th>
+                                            <th class="fw-semibold">Class of Business :</th>
                                             <td>{{ uiState.policyDetails.className }}</td>
                                         </tr>
                                         <tr>
@@ -49,12 +45,25 @@
                                             <td>{{ uiState.policyDetails.lineOfBusiness }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="fw-semibold">Company Commissiom % :</th>
-                                            <td>{{ uiState.policyDetails.compCommPerc }} %</td>
+                                            <th class="fw-semibold">Policy No :</th>
+                                            <td>{{ uiState.policyDetails.policyNo }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="fw-semibold">Producer Commission % :</th>
-                                            <td>{{ uiState.policyDetails.producerCommPerc }} %</td>
+                                            <th class="fw-semibold">Issue Date :</th>
+                                            <td>{{ (uiState.policyDetails.issueDate != undefined) ?
+                                                (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") : '-' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Period From :</th>
+                                            <td>{{ (uiState.policyDetails.periodFrom != undefined) ?
+                                                (uiState.policyDetails.periodFrom | date:"dd MMMM,yyyy") : '-' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Period To :</th>
+                                            <td>{{ (uiState.policyDetails.periodTo != undefined) ?
+                                                (uiState.policyDetails.periodTo | date:"dd MMMM,yyyy") : '-' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -65,21 +74,12 @@
                                 <table class="table table-borderless mb-0">
                                     <tbody id="client-information-table">
                                         <tr>
-                                            <th class="fw-semibold">Issue Date :</th>
-                                            <td>{{ (uiState.policyDetails.issueDate != undefined) ?
-                                                (uiState.policyDetails.issueDate | date:"dd MMMM,yyyy") : '-' }}
-                                            </td>
+                                            <th class="fw-semibold">Company Commissiom % :</th>
+                                            <td>{{ uiState.policyDetails.compCommPerc }} %</td>
                                         </tr>
                                         <tr>
-                                            <th class="fw-semibold">Inception Date :</th>
-                                            <td>{{ (uiState.policyDetails.periodFrom != undefined) ?
-                                                (uiState.policyDetails.periodFrom | date:"dd MMMM,yyyy") : '-' }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="fw-semibold">Expiry Date :</th>
-                                            <td>{{ (uiState.policyDetails.periodTo != undefined) ?
-                                                (uiState.policyDetails.periodTo | date:"dd MMMM,yyyy") : '-' }}</td>
+                                            <th class="fw-semibold">Producer Commission % :</th>
+                                            <td>{{ uiState.policyDetails.producerCommPerc }} %</td>
                                         </tr>
                                         <tr>
                                             <th class="fw-semibold">Saved By :</th>
@@ -103,10 +103,16 @@
                                             <th class="fw-semibold">Cancelled By :</th>
                                             <td>{{ uiState.policyDetails.cancelledUser }}</td>
                                         </tr>
+
                                         <tr>
                                             <th class="fw-semibold">Cancelled On :</th>
                                             <td>{{ (uiState.policyDetails.cancelledDate != undefined) ?
                                                 (uiState.policyDetails.cancelledDate | date:"dd MMMM,yyyy") : '-' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="fw-semibold">Cancelled :</th>
+                                            <td>{{ uiState.policyDetails.cancelled }}
                                             </td>
                                         </tr>
                                     </tbody>

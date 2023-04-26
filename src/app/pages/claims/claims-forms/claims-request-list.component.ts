@@ -5,6 +5,7 @@ import {
   Input,
   OnDestroy,
   Output,
+  ViewChild,
 } from "@angular/core";
 import {
   GridApi,
@@ -13,6 +14,7 @@ import {
   IDatasource,
   IGetRowsParams,
   RowClickedEvent,
+  RowDoubleClickedEvent,
 } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { claimsPoliciesRequestCols } from "src/app/shared/app/grid/claimsFormCols";
@@ -23,6 +25,8 @@ import {
 } from "src/app/shared/app/models/Claims/claims-util";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { MedicalListComponent } from "./medical-list/medical-list.component";
+import { MotorListComponent } from "./motor-list/motor-list.component";
 
 @Component({
   selector: "app-claims-request-list",
@@ -32,9 +36,30 @@ import { MessagesService } from "src/app/shared/services/messages.service";
         class="gridScrollbar"
         style="width: 100%; height: 70vh"
         [gridOptions]="gridOpts"
+        [ngStyle]="{
+          height:
+            policyList.className === 'Motor' ||
+            policyList.className === 'Medical'
+              ? '35vh'
+              : '70vh'
+        }"
       >
       </ag-grid-angular>
     </div>
+    <app-medical-list
+      #MedicalList
+      [policiesSno]="policyList.policiesSno"
+      [ngClass]="{
+        'd-none': filter.classOfInsurance !== 'Medical'
+      }"
+    ></app-medical-list>
+    <app-motor-list
+      #MotorList
+      [policiesSno]="policyList.policiesSno"
+      [ngClass]="{
+        'd-none': filter.classOfInsurance !== 'Motor'
+      }"
+    ></app-motor-list>
   `,
   styles: [],
 })
@@ -50,8 +75,18 @@ export class ClaimsRequestListComponent implements OnDestroy {
     lineOfBusiness: "",
     policyNo: "",
   };
-
   @Output() dataEvent: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild("MedicalList") MedicalList!: MedicalListComponent;
+  @ViewChild("MotorList") MotorList!: MotorListComponent;
+
+  policyList = {
+    className: "" as String,
+    policiesSno: 0 as Number,
+  };
+
+  showMedicalList: boolean = true;
+  showMotorList: boolean = true;
 
   policies: IClaimPolicies[] = [];
   totalPages: number = 0;
@@ -78,6 +113,7 @@ export class ClaimsRequestListComponent implements OnDestroy {
     onPaginationChanged: (e) => this.onPageChange(e),
     onSortChanged: (e) => this.onSort(e),
     onRowClicked: (e) => this.onRowClicked(e),
+    onRowDoubleClicked: (e) => this.onRowDoubleClicked(e),
   };
 
   subscribes: Subscription[] = [];
@@ -137,6 +173,15 @@ export class ClaimsRequestListComponent implements OnDestroy {
   }
 
   onRowClicked(e: RowClickedEvent) {
+    this.policyList.policiesSno = e.data.sNo;
+    this.policyList.className = e.data.className;
+    if (e.data.className === "Medical") {
+      this.MedicalList.setDataSource(e.data.sNo);
+    } else if (e.data.className === "Motor") {
+      this.MotorList.setDataSource(e.data.sNo);
+    }
+  }
+  onRowDoubleClicked(e: RowDoubleClickedEvent) {
     this.dataEvent.emit(e.data);
   }
 
