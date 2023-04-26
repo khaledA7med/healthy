@@ -13,6 +13,7 @@
                                 <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
                                     [items]="(lookupData | async)?.InsurClasses?.content!"
                                     [loading]="lookupData ? false : true" (change)="filter($event)"
+                                    [hideSelected]="true"
                                     [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                                     [clearable]="true" [searchable]="true" formControlName="className" bindLabel="name"
                                     bindValue="name">
@@ -95,6 +96,7 @@
                                     <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
                                         [items]="(lookupData | async)?.InsurClasses?.content!"
                                         [loading]="lookupData ? false : true" (change)="filter($event)"
+                                        [hideSelected]="true"
                                         [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                                         [clearable]="true" [searchable]="true" formControlName="className"
                                         bindLabel="name" bindValue="name">

@@ -169,7 +169,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
 
   initCompanyRequirementsForm() {
     this.CompanyRequirementsForm = new FormGroup<IAddCompanyRequirements>({
-      sno: new FormControl(0),
       endorsType: new FormControl("", Validators.required),
       classofInsurance: new FormControl("", Validators.required),
       insuranceCompanyID: new FormControl(null, Validators.required),
@@ -211,9 +210,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     const data: IAddCompanyRequirementsData = {
-      sno: this.uiState.editCompanyRequirementsMode
-        ? this.uiState.editCompanyRequirementsData.sno
-        : 0,
       ...form.getRawValue(),
     };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(

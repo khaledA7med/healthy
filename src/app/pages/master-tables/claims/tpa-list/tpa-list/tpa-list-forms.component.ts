@@ -70,7 +70,7 @@ export class TpaListFormsComponent {
       .confirm("Sure!", "You Want To Delete?!", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
-          this.comp.DeleteTpaList(this.params.data.sno);
+          this.comp.DeleteTpaList(this.params.data.tpaName);
         } else {
           return;
         }

@@ -331,7 +331,7 @@ export const ApiRoutes = {
       },
       tpaList: {
         search: "/MasterTables/Claims/TPAList/Index",
-        save: "/MasterTables/Claims/TPAList/Save",
+        save: "/MasterTables/Claims/TPAList/Create",
         delete: "/MasterTables/Claims/TPAList/Delete",
       },
       claimsGeneralItems: {

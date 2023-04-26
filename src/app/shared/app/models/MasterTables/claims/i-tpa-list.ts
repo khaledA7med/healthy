@@ -1,14 +1,8 @@
-import { FormControl } from "@angular/forms"
+import { FormControl } from "@angular/forms";
 
-export interface ITpaList
-{
-    sno?: FormControl<number | null>,
-    tpaName?: FormControl<string | null>
-
+export interface ITpaList {
+  tpaName?: FormControl<string | null>;
 }
-export interface ITpaListData
-{
-    sno?: number,
-    tpaName?: string,
-
+export interface ITpaListData {
+  tpaName?: string;
 }
