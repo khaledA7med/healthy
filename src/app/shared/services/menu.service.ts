@@ -591,13 +591,13 @@ export class MenuService {
         icon: "ri-briefcase-5-line",
         auth: true,
         subItems: [
-          {
-            id: 301,
-            label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.DASHBOARD",
-            link: AppRoutes.BusinessDevelopment.dashboard,
-            parentId: 3,
-            auth: true,
-          },
+          // {
+          //   id: 301,
+          //   label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.DASHBOARD",
+          //   link: AppRoutes.BusinessDevelopment.dashboard,
+          //   parentId: 3,
+          //   auth: true,
+          // },
           {
             id: 302,
             label: "MENUITEMS.BUSINESSDEVELOPMENT.LIST.MANAGEMENT",
