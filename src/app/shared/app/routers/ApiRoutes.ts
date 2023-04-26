@@ -7,10 +7,12 @@ export const ApiRoutes = {
 		refesh: "/Account/RefreshToken",
 	},
 	Activities: {
-		allTasks: "/Activity/Activities/AllTasks",
-		moduleClients: "/Activity/Activities/ModuleClients",
-		searchModule: "/Activity/Activities/SearchModule",
-		addTask: "/Activity/Activities/saveTask",
+		allTasks: "/Activities/Calendar/AllTasks",
+		moduleClients: "/Activities/Calendar/ModuleClients",
+		searchModule: "/Activities/Calendar/SearchModule",
+		addTask: "/Activities/Calendar/saveTask",
+		changeStatus: "/Activities/Calendar/ChangeTaskStatus",
+		taskLogs: "/Activities/Calendar/TaskLogs",
 	},
 	Emails: {
 		allActiveClients: LookUpTables + "ActiveClient",

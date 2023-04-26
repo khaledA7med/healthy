@@ -1,14 +1,15 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
     <div class="modal-header">
-        <h4 class="modal-title">{{uiState.currentView === uiState.preview.new ? "New" : uiState.currentView ===
-            uiState.preview.edit ? "Edit" : uiState.currentView === uiState.preview.view ? "View" : '' }} Activity
+        <h4 class="modal-title">{{uiState.currentView === uiState.preview.new ? "New Activity" : uiState.currentView ===
+            uiState.preview.edit ? "Edit Activity" : uiState.currentView === uiState.preview.view ? task.taskName : ''
+            }}
         </h4>
         <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
         <div class="text-end" *ngIf="uiState.currentView !== this.uiState.preview.new">
-            <button type="button" class="btn btn-sm btn-soft-info ms-2" role="button">
+            <button type="button" class="btn btn-sm btn-soft-info ms-2" role="button" (click)="getTaskLogs(history)">
                 <i class="ri-history-line align-bottom"></i> History
             </button>
             <button type="button" class="btn btn-sm btn-soft-primary ms-2" role="button" (click)="editTaskData()"
@@ -19,8 +20,12 @@
                 *ngIf="uiState.currentView === this.uiState.preview.edit">
                 <i class="ri-close-line align-bottom"></i> Cancel
             </button>
-            <button type="button" class="btn btn-soft-success btn-sm ms-2">
-                <i class="ri-check-fill align-bottom"></i> Close Task
+            <button type="button" class="btn btn-sm ms-2"
+                [ngClass]="{'btn-soft-danger' : uiState.taskStatus === 'Closed', 'btn-soft-success' : uiState.taskStatus === 'Open'}"
+                (click)="changeStatus()">
+                <span *ngIf="uiState.taskStatus === 'Open'"><i class="ri-check-fill align-bottom"></i> Close Task</span>
+                <span *ngIf="uiState.taskStatus === 'Closed'"><i class="ri-restart-line align-bottom"></i> ReOpen
+                    Task</span>
             </button>
         </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.isForm">
@@ -267,4 +272,32 @@
         <button type="submit" class="btn btn-primary btn-sm"
             *ngIf="uiState.currentView !== this.uiState.preview.view">Save</button>
     </div>
+    <ng-template #history let-offcanvas>
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title fs-4">{{task.taskName}}</h4>
+            <button type="button" class="btn-close" aria-label="Close"
+                (click)="offcanvas.dismiss('Cross click')"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div *ngFor="let log of uiState.lists.taskLogs">
+                <hr>
+                <h6 class="fs-13">
+                    Created By : {{log.createdBy}}
+                </h6>
+                <h6 class="fs-13">
+                    Created On : {{util.formatDate(log.createdOn)}}
+                </h6>
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="ri-checkbox-circle-fill text-success"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                        <p class="text-muted mb-0" [innerHTML]="log.event?.replace('\r\n', '<br />')">
+                            {{log.event}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </form>
