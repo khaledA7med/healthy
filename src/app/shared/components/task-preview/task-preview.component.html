@@ -29,7 +29,7 @@
             </button>
         </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.isForm">
-            <div class="col-sm-12 my-2">
+            <div class="col-sm-12 my-2" *ngIf="!task?.isModule">
                 <label for="module" class="asterisk-input">Section</label>
                 <ng-select formControlName="module" id="module" class="is-invalid" placeholder="Select Section Name"
                     bindLabel="name" bindValue="name" (change)="getModuleClients($event.name);"
@@ -58,7 +58,7 @@
                     Required
                 </div>
             </div>
-            <div class="col-sm-12 my-2">
+            <div class="col-sm-12 my-2" *ngIf="!task?.isModule">
                 <label for="clientName">Client</label>
                 <ng-select formControlName="clientName" placeholder="Select Client" bindValue="name"
                     (change)="searchModule($event.id)" bindLabel="name" [items]="uiState.lists.clients">
@@ -67,7 +67,7 @@
                     </ng-template>
                 </ng-select>
             </div>
-            <div class="col-sm-12 my-2" *ngIf="f.module?.value">
+            <div class="col-sm-12 my-2" *ngIf="f.module?.value && !task.isModule">
                 <label for="moduleSNo">
                     <span *ngIf="f.module?.value === 'Claims'">Claims Details
                         <small style="font-size: 10px;">Claim No | Client ID | Client Name | Class Of Business |

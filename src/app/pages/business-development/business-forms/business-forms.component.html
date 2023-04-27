@@ -773,58 +773,58 @@
     </ngb-panel>
     <!-- end lead activities acc  -->
     <!-- start tasks acc on edit mood -->
-    <ngb-panel id="4" title="New Activities" cardClass="open my-4" *ngIf="uiState.editMode">
+    <ngb-panel id="4" title="Activities ( Tasks )" cardClass="open my-4" *ngIf="uiState.editMode">
       <ng-template ngbPanelContent>
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingThree">
           <div class="container-fluid mb-3">
             <div class="card ribbon-box border shadow-none mb-lg-0 pb-1">
               <div class="card-body">
-                <div class="ribbon ribbon-info round-shape">Tasks</div>
+                <div class="ribbon ribbon-info round-shape">Activities</div>
                 <div class="ribbon-content mt-4 text-muted">
 
-                  <div class="row  my-2">
-                    <!-- col type  -->
-                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                  <!-- <div class="row  my-2"> -->
+                  <!-- col type  -->
+                  <!-- <div class="col-md-6 col-lg-3 d-flex flex-column">
                       <label for="taskType" class="asterisk-input">Task Type</label>
                       <ng-select id="taskType" class="form-control-sm" placeholder="Select Task Type" bindLabel="name"
                         bindValue="name" [items]="(formData | async)?.LogType?.content!"
                         [loading]="formData ? false : true">
                       </ng-select>
-                    </div>
-                    <!-- /col -->
-                    <!-- col name -->
-                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                    </div> -->
+                  <!-- /col -->
+                  <!-- col name -->
+                  <!-- <div class="col-md-6 col-lg-3 d-flex flex-column">
                       <label for="taskName" class="asterisk-input">Task Name</label>
                       <input id="taskName" class="form-control form-control-sm" placeholder="Select Task Type" />
-                    </div>
-                    <!-- /col -->
-                    <!-- col assigned -->
-                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                    </div> -->
+                  <!-- /col -->
+                  <!-- col assigned -->
+                  <!-- <div class="col-md-6 col-lg-3 d-flex flex-column">
                       <label for="assigned" class="asterisk-input">Assigned To
                       </label>
                       <ng-select id="assigned" class="form-control-sm" placeholder="Select Task Type" bindLabel="name"
                         bindValue="name" [items]="(formData | async)?.Producers?.content!"
                         [loading]="formData ? false : true">
                       </ng-select>
-                    </div>
-                    <!-- /col -->
-                    <!-- col date -->
-                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                    </div> -->
+                  <!-- /col -->
+                  <!-- col date -->
+                  <!-- <div class="col-md-6 col-lg-3 d-flex flex-column">
                       <label class="asterisk-input">Task Date</label>
                       <app-range-picker (dateChange)="dateRange($event)"></app-range-picker>
-                    </div>
-                    <!-- /col -->
-                  </div>
+                    </div> -->
+                  <!-- /col -->
+                  <!-- </div> -->
                   <div class="row  my-2 align-items-center">
                     <!-- col description  -->
-                    <div class="col-md-6 col-lg-8 d-flex flex-column">
+                    <!-- <div class="col-md-6 col-lg-8 d-flex flex-column">
                       <label>Task Description</label>
 
                       <textarea class="form-control form-control-sm" rows="3"></textarea>
-                    </div>
+                    </div> -->
                     <!-- /col -->
                     <!-- col start time  -->
-                    <div class="col-md-3 col-lg-2 d-flex flex-column" *ngIf="uiState.showTime">
+                    <!-- <div class="col-md-3 col-lg-2 d-flex flex-column" *ngIf="uiState.showTime">
                       <label for="sTime">Start Time</label>
                       <div class="input-group input-group-sm">
                         <input id="sTime" type="text" class="form-control form-control-sm"
@@ -832,10 +832,10 @@
                           [enableTime]="true" dateFormat="H:i" />
                         <span class="input-group-text"><i class="ri-time-line"></i></span>
                       </div>
-                    </div>
+                    </div> -->
                     <!-- /col -->
                     <!-- col end time   -->
-                    <div class="col-md-3 col-lg-2 d-flex flex-column" *ngIf="uiState.showTime">
+                    <!-- <div class="col-md-3 col-lg-2 d-flex flex-column" *ngIf="uiState.showTime">
                       <label for="eTime">End Time</label>
                       <div class="input-group input-group-sm">
                         <input class="form-control form-control-sm" placeholder="Select End Time" id="eTime" type="text"
@@ -843,12 +843,14 @@
                           dateFormat="H:i" />
                         <span class="input-group-text"><i class="ri-time-line"></i></span>
                       </div>
-                    </div>
+                    </div> -->
                     <!-- /col -->
                     <!-- col task btn -->
-                    <div class="col-12  my-2 d-flex justify-content-end">
-                      <button type="button" class="btn btn-sm btn-success" (click)="addTask()">
-                        Add Task
+                    <div class="my-2 d-flex justify-content-end">
+                      <button type="button"
+                        class="ms-auto btn btn-sm btn-soft-primary bg-gradient waves-effect waves-light"
+                        (click)="taskControl()">
+                        New Activity
                       </button>
                     </div>
                     <!-- /col -->
@@ -857,7 +859,6 @@
                       <table class="table table-responsive align-middle table-nowrap">
                         <thead class="table-light">
                           <tr>
-                            <th scope="col" class="px-3">No.</th>
                             <th scope="col" class="px-3">Status</th>
                             <th scope="col" class="px-3">Type</th>
                             <th scope="col" class="px-3">Name</th>
@@ -871,21 +872,32 @@
                             <th scope="col" class="px-3">Actions</th>
                           </tr>
                         </thead>
-                        <tbody formArrayName="salesLeadTasks">
-                          <tr *ngFor="let c of f.salesLeadTasks?.controls; index as i">
-                            <ng-container [formGroupName]="i">
-                              <td>
-                                {{ salesleadTasksControls(i,"Type").value }}
-                              </td>
-                              <td>
-                                {{salesleadTasksControls(i,"TaskName").value }}
-                              </td>
-                              <td>
-                                {{salesleadTasksControls(i,"TaskDetails").value }}
-                              </td>
-                            </ng-container>
+                        <tbody>
+                          <tr *ngFor="let i of businessTasks">
+                            <td scope="col" class="px-3">
+                              <span class="badge"
+                                [ngClass]="{'bg-danger' : checkExpiration(i.dueDateTo!) && i.status === 'Open', 'bg-warning' : i.status === 'Open', 'bg-success' : i.status === 'Closed'}">
+                                {{i.status}}
+                              </span>
+                            </td>
+                            <td scope="col" class="px-3">{{i.type}} </td>
+                            <td scope="col" class="px-3">{{i.taskName}} </td>
+                            <td scope="col" class="px-3 text-truncate" style="max-width: 250px;">
+                              <span>{{i.taskDetails}}</span>
+                            </td>
+                            <td scope="col" class="px-3">{{i.dueDateFrom | date: 'medium'}}</td>
+                            <td scope="col" class="px-3">{{i.dueDateTo | date: 'medium'}}</td>
+                            <td scope="col" class="px-3">{{i.assignedTo}}</td>
+                            <td scope="col" class="px-3">{{i.assignedOn | date: 'medium'}}</td>
+                            <td scope="col" class="px-3">{{i.assignedBy}}</td>
+                            <td scope="col" class="px-3">{{i.leadProducer}}</td>
+                            <td scope="col" class="px-3">
+                              <button class="btn btn-sm btn-soft-primary" type="button" (click)="taskControl(i)"
+                                *ngIf="i.sNo">
+                                <i class="ri-eye-line"></i>
+                              </button>
+                            </td>
                           </tr>
-
                         </tbody>
                       </table>
                     </div>

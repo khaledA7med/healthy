@@ -327,6 +327,7 @@ export class ActivitiesComponent implements OnInit, AfterViewInit, OnDestroy {
       isAllDay: data?.allDay,
       dueDateFrom: data?.start,
       dueDateTo: data?.end,
+      isModule: false,
     } as ITasks;
     let sub = this.modalRef.closed.subscribe(() =>
       this.calendarComponent?.getApi().refetchEvents()

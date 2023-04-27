@@ -26,8 +26,7 @@
             Filters
         </button>
         <a type="button" [routerLink]="'/' + uiState.routerLink.forms"
-            class="btn btn-sm btn-success  d-flex align-items-center" id="create-btn" asp-action="CSRegistry"
-            asp-controller="CustomerService"
+            class="btn btn-sm btn-success  d-flex align-items-center"
             *ngIf="!(permissions$ | async)?.includes(uiState.privileges.ChCustomerServiceReadOnly)">
             <i class="ri-add-line align-bottom me-1"></i> New Request
         </a>
