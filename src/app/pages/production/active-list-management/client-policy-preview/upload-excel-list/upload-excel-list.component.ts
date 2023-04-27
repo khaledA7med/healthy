@@ -142,7 +142,7 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 	};
 
 	medicalSchema = {
-		"Id-Iqama No.": {
+		"Id\\Iqama No.": {
 			prop: "idIqamaNo",
 			type: String,
 			required: true,
