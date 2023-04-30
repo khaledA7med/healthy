@@ -141,8 +141,10 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 					this.uiState.policies.list = res.body?.data!;
 					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
 					if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
-					this.uiState.gridReady = true;
-					this.gridApi.hideOverlay();
+					else {
+						this.uiState.gridReady = true;
+						this.gridApi.hideOverlay();
+					}
 				} else {
 					this.message.popup("Oops!", res.body?.message!, "warning");
 					this.gridApi.hideOverlay();

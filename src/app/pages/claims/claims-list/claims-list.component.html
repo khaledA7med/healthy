@@ -187,10 +187,16 @@
         </div>
         <!-- /col -->
         <!-- col branch  -->
-        <div class="col-12 mb-3">
+        <!-- <div class="col-12 mb-3">
           <label for="form-label">Branch:</label>
           <input type="text" class="form-control form-control-sm"
             [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBrancheClaim)!" />
+        </div> -->
+        <div class="co-12 mb-3">
+          <label for="form-label">Branch:</label>
+          <ng-select [loading]="formData ? false : true" [items]="(formData | async)?.Branch?.content!" bindLabel="name"
+            bindValue="name" class="form-control-sm p-0" placeholder="Select Branch" formControlName="branch"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBrancheClaim)!"></ng-select>
         </div>
         <!-- /col -->
         <!-- col insurance company -->
