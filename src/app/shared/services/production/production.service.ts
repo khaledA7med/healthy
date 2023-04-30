@@ -196,6 +196,10 @@ export class ProductionService {
 		return this.http.get<IBaseResponse<IMedicalData[]>>(this.env + ApiRoutes.Production.getMedicalsData, { params: { PoliciesSNo } });
 	}
 
+	getExcelTemplate(path: string): Observable<HttpResponse<any>> {
+		return this.http.post(this.env + ApiRoutes.Production.downloadExcelFiles, { path }, { observe: "response", responseType: "blob" });
+	}
+
 	saveMotorData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
 		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMotorData, body);
 	}

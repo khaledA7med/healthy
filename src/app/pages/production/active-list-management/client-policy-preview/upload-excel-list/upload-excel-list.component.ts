@@ -244,6 +244,23 @@ export class UploadExcelListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	getExcelTemplate(type: string) {
+		let sub = this.productionService.getExcelTemplate(type).subscribe((res) => {
+			const downloadedFile = new Blob([res.body as BlobPart], {
+				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			});
+			const a = document.createElement("a");
+			a.setAttribute("style", "display:none;");
+			document.body.appendChild(a);
+			a.download = type;
+			a.href = URL.createObjectURL(downloadedFile);
+			a.target = "_blank";
+			a.click();
+			document.body.removeChild(a);
+		});
+		this.subscribes.push(sub);
+	}
+
 	//#region Motor Functions and Vars
 
 	motorFormArr: FormArray<FormGroup<IMotorFormData>> = new FormArray<FormGroup<IMotorFormData>>([]);

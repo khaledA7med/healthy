@@ -4,8 +4,8 @@
 </div>
 <div class="modal-body p-3">
     <p>Please download the excel template from the following
-        <a *ngIf="data.className ==='Motor'" href="/src/MotorVehiclesListTemplate.xlsx" download>link,</a>
-        <a *ngIf="data.className ==='Medical'" href="/src/MedicalMembersListTemplate.xlsx" download>link,</a>
+        <a *ngIf="data.className ==='Motor'" type="button" (click)="getExcelTemplate('Motor')" download>link,</a>
+        <a *ngIf="data.className ==='Medical'" type="button" (click)="getExcelTemplate('Medical')" download>link,</a>
         <!-- <a href="/src/MotorVehiclesListTemplate.xlsx" download>link</a>, -->
         fill it
         with data

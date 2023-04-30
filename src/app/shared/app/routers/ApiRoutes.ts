@@ -495,6 +495,7 @@ export const ApiRoutes = {
 	Production: {
 		search: "/Production/Policy/Search",
 		activeListSearch: "/Production/ClientsPolicies/Search",
+		downloadExcelFiles: "/Production/ClientsPolicies/DownloadStaticDocument",
 		details: "/Production/Policy/Details",
 		clientByRequest: "/Production/Policy/SearchClientByRequest",
 		searchClient: LookUpTables + "ActiveClient",
