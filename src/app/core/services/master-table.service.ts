@@ -281,6 +281,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Client.banks,
           name: BaseData.Banks,
         },
+        {
+          route: ApiRoutes.MasterTable.Client.cities,
+          name: BaseData.Cities,
+        },
       ],
       BusinessDevelopmentForm: [
         {
