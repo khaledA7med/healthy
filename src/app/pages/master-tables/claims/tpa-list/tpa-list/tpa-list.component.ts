@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import {
   CellEvent,
@@ -32,6 +33,7 @@ import {
   selector: "app-tpa-list",
   templateUrl: "./tpa-list.component.html",
   styleUrls: ["./tpa-list.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TpaListComponent implements OnInit, OnDestroy {
   TpaListFormSubmitted = false as boolean;
