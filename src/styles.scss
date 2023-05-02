@@ -25,6 +25,12 @@ div.asterisk-div {
   }
 }
 
+.ag-theme-alpine-dark,
+.ag-theme-alpine {
+  --ag-grid-size: 3px;
+  --ag-font-size: 10px;
+}
+
 .gridScrollbar .ag-body-horizontal-scroll-viewport,
 .gridScrollbar .ag-body-vertical-scroll-viewport {
   position: relative;

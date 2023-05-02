@@ -56,6 +56,10 @@
         color: $vertical-menu-item-hover-color;
       }
 
+      &.disabled {
+        color: #c8c8c8 !important;
+      }
+
       i {
         display: inline-block;
         min-width: $vertical-menu-item-icon-width;
@@ -766,6 +770,10 @@
 
         &.active {
           color: $vertical-menu-item-active-color-dark;
+        }
+
+        &.disabled {
+          color: #5e5e5e !important;
         }
 
         &[data-bs-toggle="collapse"] {
