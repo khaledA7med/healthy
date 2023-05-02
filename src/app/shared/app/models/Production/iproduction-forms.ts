@@ -51,7 +51,7 @@ export interface IProductionForms {
   renewalOf?: FormControl<string | null>;
   endorsRequestType?: FormControl<string | null>;
   periodFrom?: FormControl<string | null>;
-  periodTo?: FormControl<string | null>;
+  periodTo?: FormControl<{ day: number; month: number; year: number } | null>;
   paymentTermsList?: FormArray<FormGroup<IPolicyPaymentsListForms>>;
   producersCommissionsList?: FormArray<FormGroup<IPolicyCommissionListForms>>;
 }

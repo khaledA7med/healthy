@@ -471,11 +471,18 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="City" class="asterisk-input">City</label>
-                <input id="City" class="form-control form-control-sm" formControlName="cityName" [ngClass]="{
-                    'is-invalid':
-                      (f.cityName?.touched || submitted) && f.cityName?.invalid
-                  }" />
-                <div class="invalid-feedback fw-bold">
+                <ng-select formControlName="cityName" class="is-invalid" [ngClass]="{
+                  'is-submitted': submitted && f.cityName?.invalid
+                }" [items]="(formData | async)?.Cities?.content!" bindLabel="name" bindValue="name"
+                  [loading]="formData ? false : true">
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>{{ item.name }}</div>
+                  </ng-template>
+                </ng-select>
+                <div class="invalid-feedback fw-bold" *ngIf="
+                  (f.cityName?.touched || submitted) &&
+                  f.cityName?.invalid
+                ">
                   Required
                 </div>
               </div>

@@ -11,6 +11,7 @@ import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { filter, map, mergeMap } from "rxjs/operators";
 import { UserAccess } from "src/app/core/models/iuser";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   selector: "app-topbar",
@@ -38,7 +39,8 @@ export class TopbarComponent implements OnInit {
     private eventService: EventService,
     private authService: AuthenticationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +57,7 @@ export class TopbarComponent implements OnInit {
   private setTitleFromRouteData(routeData: any) {
     if (routeData && routeData["title"]) this.title = routeData["title"];
     else this.title = "";
+    this.titleService.setTitle(this.title + " | Oasis - Computer Systems");
   }
 
   private getLatestChild(route: any) {

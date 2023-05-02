@@ -15,6 +15,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
 import { FooterComponent } from "./footer/footer.component";
 import { RightsidebarComponent } from "./rightsidebar/rightsidebar.component";
 import { GeneralLoaderComponent } from "../shared/components/general-loader/general-loader.component";
+import { Title } from "@angular/platform-browser";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,6 @@ import { GeneralLoaderComponent } from "../shared/components/general-loader/gene
     SimplebarAngularModule,
     TranslateModule,
   ],
-  providers: [LanguageService],
+  providers: [LanguageService, Title],
 })
 export class LayoutsModule {}

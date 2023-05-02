@@ -73,6 +73,7 @@ export const ApiRoutes = {
 			commericalNo: LookUpTables + BaseData.CommericalNo,
 			groupsList: LookUpTables + BaseData.GroupsList,
 			status: LookUpTables + BaseData.ClientStatus,
+			cities: LookUpTables + BaseData.Cities,
 		},
 		BusinessDevelopment: {
 			groupsList: LookUpTables + BaseData.GroupsList,
