@@ -3,6 +3,7 @@ import { IDocumentList } from "./../App/IDocument";
 import { IRequirement } from "./irequirement";
 import { ICompetitors } from "./icompetitors";
 import { IActivityLog } from "./iactivity-log";
+import { ITasks } from "../Activities/itasks";
 export interface ISalesLeadDetails extends IBusinessDevelopment {
   docSNo?: number;
   prospectID?: number;
@@ -76,5 +77,5 @@ export interface ISalesLeadDetails extends IBusinessDevelopment {
   policyRequiermentsList?: IRequirement[];
   staffName?: string;
   allowedToAccessProducer?: boolean;
-  salesLeadTasks?: any[];
+  salesLeadTasks?: ITasks[];
 }

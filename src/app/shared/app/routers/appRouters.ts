@@ -98,6 +98,7 @@ export const AppRoutes = {
   },
   Production: {
     base: "production",
+    activeList: "active-policies-list",
     details: "policy",
     create: "production/create",
     edit: "production/update/",
@@ -109,7 +110,6 @@ export const AppRoutes = {
       renewalsNotice: "production/renewal-notice-report",
       archive: { dcNote: "production/archives/debit-credit-notes" },
     },
-    ActivePoliciesList: "production/active-policies-managment",
   },
   CustomerService: {
     base: "customer-service",

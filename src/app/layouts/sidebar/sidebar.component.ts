@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit {
     this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
       this.privileges = res;
       this.menuItems = this.menu.getMenu(this.privileges);
-      this.modifyMenuAuth();
+      // this.modifyMenuAuth();
     });
   }
 
@@ -253,15 +253,15 @@ export class SidebarComponent implements OnInit {
     document.body.classList.remove("vertical-sidebar-enable");
   }
 
-  modifyMenuAuth() {
-    const filterItems = (items: any) => {
-      return items.filter((item: any) => {
-        if (item.auth) {
-          if (item.subItems) item.subItems = filterItems(item.subItems);
-          return true;
-        } else return false;
-      });
-    };
-    this.menuItems = filterItems(this.menuItems);
-  }
+  // modifyMenuAuth() {
+  //   const filterItems = (items: any) => {
+  //     return items.filter((item: any) => {
+  //       if (item.auth) {
+  //         if (item.subItems) item.subItems = filterItems(item.subItems);
+  //         return true;
+  //       } else return false;
+  //     });
+  //   };
+  //   this.menuItems = filterItems(this.menuItems);
+  // }
 }

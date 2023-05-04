@@ -118,15 +118,15 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 		switch (controlName) {
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-				else this.f.insuranceCompany?.patchValue(null);
+				else this.f.insuranceCompany?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
-				else this.f.classOfBusiness?.patchValue(null);
+				else this.f.classOfBusiness?.patchValue([]);
 				break;
 			case "status":
 				if (check) this.f.status?.patchValue(this.uiState.lists.statusList.map((e) => e.name));
-				else this.f.status?.patchValue(null);
+				else this.f.status?.patchValue([]);
 				break;
 			default:
 				break;
@@ -219,6 +219,13 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.insuranceCompany?.patchValue([]);
+		this.f.classOfBusiness?.patchValue([]);
+		this.f.status?.patchValue([]);
+		this.f.branch?.patchValue("Select All");
+		this.f.user?.patchValue("Select All");
+		this.f.reportType?.patchValue(1);
+		this.f.currentStatus?.patchValue(1);
 		this.submitted = false;
 	}
 }

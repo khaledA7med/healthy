@@ -1,26 +1,30 @@
 .table-card {
-  margin: -1rem -1rem;
+	margin: -1rem -1rem;
 }
 .table-details {
-  .table-card {
-    height: 100% !important;
-    table {
-      height: 100% !important;
-      td:last-child,
-      th:first-child {
-        padding: 0px 16px !important;
-      }
-    }
-  }
+	.table-card {
+		height: 100% !important;
+		table {
+			height: 100% !important;
+			td:last-child,
+			th:first-child {
+				padding: 0px 16px !important;
+			}
+		}
+	}
 }
 .table-card {
-  .table-header {
-    padding: 12px 9px;
-  }
+	.table-header {
+		padding: 12px 9px;
+	}
 }
 .table > :not(caption) > * > * {
-  padding: 0.3rem 0.8rem !important;
+	padding: 0.3rem 0.8rem !important;
 }
 .dropdown-toggle::after {
-  display: none;
+	display: none;
+}
+
+.modal-body {
+	background-color: var(--bs-body-bg);
 }

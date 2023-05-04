@@ -134,14 +134,13 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
     this.getLookupData();
     this.disableAmountFilter();
 
-    let sub = this.router.events.subscribe((evt) => {
-      if (evt instanceof NavigationEnd) {
-        if (!evt.url.includes("details")) {
-          if (this.router.getCurrentNavigation()?.extras.state!["updated"])
-            this.gridApi.setDatasource(this.dataSource);
-        }
-      }
-    });
+    // let sub = this.router.events.subscribe((evt) => {
+    // 	if (evt instanceof NavigationEnd) {
+    // 		if (!evt.url.includes("details")) {
+    // 			if (this.router.getCurrentNavigation()?.extras.state!["updated"]) this.gridApi.setDatasource(this.dataSource);
+    // 		}
+    // 	}
+    // });
     let sub2 = this.permissions$.subscribe((res: string[]) => {
       if (!res.includes(this.uiState.privileges.ViewAllBranchs))
         this.f.branch?.patchValue(this.auth.getUser().Branch!);
@@ -158,7 +157,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
     let sub4 = this.lookupData.subscribe((res) => {
       this.uiState.lists.policyStatus = res.PolicyStatus?.content!;
     });
-    this.subscribes.push(sub, sub2, sub3, sub4);
+    this.subscribes.push(sub2, sub3, sub4);
   }
 
   dataSource: IDatasource = {
@@ -178,8 +177,10 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
             );
             if (this.uiState.policies.list.length === 0)
               this.gridApi.showNoRowsOverlay();
-            this.uiState.gridReady = true;
-            this.gridApi.hideOverlay();
+            else {
+              this.uiState.gridReady = true;
+              this.gridApi.hideOverlay();
+            }
           } else {
             this.message.popup("Oops!", res.body?.message!, "warning");
             this.gridApi.hideOverlay();
@@ -296,6 +297,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
   modifyFilterReq() {
     this.uiState.filters = {
       ...this.uiState.filters,

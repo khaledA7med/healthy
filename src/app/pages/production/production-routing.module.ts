@@ -27,21 +27,6 @@ const routes: Routes = [
         ]),
     ],
   },
-  // {
-  //   path: AppRoutes.Production.details + "/:sno",
-  //   outlet: "details",
-  //   loadChildren: () =>
-  //     import(
-  //       "./../../shared/components/poilcy-preview/poilcy-preview.module"
-  //     ).then((m) => m.PoilcyPreviewModule),
-  //   canActivate: [
-  //     () =>
-  //       ProductionGuard([
-  //         ProductionPermissions.ChProduction,
-  //         ProductionPermissions.ChProdPolicies,
-  //       ]),
-  //   ],
-  // },
   {
     path: AppRoutes.Production.create,
     data: {
@@ -50,6 +35,23 @@ const routes: Routes = [
     loadChildren: () =>
       import("./policies-forms/policies-forms.module").then(
         (m) => m.PoliciesFormsModule
+      ),
+    canActivate: [
+      () =>
+        ProductionFormGuard([
+          ProductionPermissions.ChProduction,
+          ProductionPermissions.ChProductionReadOnly,
+        ]),
+    ],
+  },
+  {
+    path: AppRoutes.Production.activeList,
+    data: {
+      title: "Active Policies Management",
+    },
+    loadChildren: () =>
+      import("./active-list-management/active-list-management.module").then(
+        (m) => m.ActiveListManagementModule
       ),
     canActivate: [
       () =>

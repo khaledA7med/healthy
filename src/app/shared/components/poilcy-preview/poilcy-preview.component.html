@@ -2,7 +2,7 @@
     <h4 class="modal-title">Policy Details</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 </div>
-<div class="modal-body bg-light p-3">
+<div class="modal-body p-3">
     <div class="row">
         <div class="col-lg-4  my-2">
             <!-- Start Client Details Table -->
@@ -372,7 +372,7 @@
     <div class="col-lg-7 col-md-12 col-sm-12 mt-sm-3 d-flex justify-content-between">
         <div class="row col-7 align-items-end">
             <div class="col-10">
-                <label class="col-form-label" for="deliveryStatus">Delivry Status</label>
+                <label class="col-form-label" for="deliveryStatus">Delivery Status</label>
                 <ng-select id="deliveryStatus" [searchable]="false" [formControl]="deliveryStatus" bindLabel="name"
                     bindValue="name" placeholder="Delivry Status">
                     <ng-option [value]="'Delivered'">Delivered</ng-option>

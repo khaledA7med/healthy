@@ -110,6 +110,15 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+		this.uiState.checkAllControls.allLinesOfBusinessControl.disable();
+
+		let sub = this.f.classOfBusiness?.valueChanges.subscribe((res) => {
+			if (res?.length! == 0) {
+				this.uiState.checkAllControls.allLinesOfBusinessControl.disable();
+				this.uiState.lists.linesOfBusinessLists = [];
+			} else this.uiState.checkAllControls.allLinesOfBusinessControl.enable();
+		});
+		this.subscribes.push(sub!);
 	}
 
 	setClientData(e: any) {
@@ -121,29 +130,29 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		switch (controlName) {
 			case "branch":
 				if (check) this.f.branchs?.patchValue(this.uiState.lists.branchesLists.map((e) => e.name));
-				else this.f.branchs?.patchValue(null);
+				else this.f.branchs?.patchValue([]);
 				break;
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-				else this.f.insuranceCompany?.patchValue(null);
+				else this.f.insuranceCompany?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) {
 					this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
 					this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-				} else this.f.classOfBusiness?.patchValue(null);
+				} else this.f.classOfBusiness?.patchValue([]);
 				break;
 			case "linesOfBusiness":
 				if (check) this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-				else this.f.lineOfBusiness?.patchValue(null);
+				else this.f.lineOfBusiness?.patchValue([]);
 				break;
 			case "transactionTypes":
 				if (check) this.f.transactionType?.patchValue(this.uiState.lists.transactionTypesLists.map((e) => e.name));
-				else this.f.transactionType?.patchValue(null);
+				else this.f.transactionType?.patchValue([]);
 				break;
 			case "producers":
 				if (check) this.f.producers?.patchValue(this.uiState.lists.producersLists.map((e) => e.name));
-				else this.f.producers?.patchValue(null);
+				else this.f.producers?.patchValue([]);
 				break;
 			default:
 				break;
@@ -261,6 +270,17 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.branchs?.patchValue([]);
+		this.f.insuranceCompany?.patchValue([]);
+		this.f.classOfBusiness?.patchValue([]);
+		this.f.lineOfBusiness?.patchValue([]);
+		this.f.transactionType?.patchValue([]);
+		this.f.producers?.patchValue([]);
+		this.f.clientGroup?.patchValue("Select All");
+		this.f.reportType?.patchValue(1);
+		this.f.basedOn?.patchValue(1);
+		this.f.status?.patchValue(1);
+		this.f.captive_NonPactive?.patchValue(1);
 		this.submitted = false;
 	}
 }

@@ -281,6 +281,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.Client.banks,
           name: BaseData.Banks,
         },
+        {
+          route: ApiRoutes.MasterTable.Client.cities,
+          name: BaseData.Cities,
+        },
       ],
       BusinessDevelopmentForm: [
         {
@@ -509,6 +513,10 @@ export class MasterTableService {
         {
           route: ApiRoutes.MasterTable.Claims.typeOfCustomerServices,
           name: BaseData.TypeOfCustomerServices,
+        },
+        {
+          route: ApiRoutes.MasterTable.Claims.branch,
+          name: BaseData.Branch,
         },
         {
           route: ApiRoutes.MasterTable.CustomerServiceForm.PendingReason,

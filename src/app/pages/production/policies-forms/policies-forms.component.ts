@@ -290,46 +290,57 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.uiState.requestSearch.dateTo = this.appUtils.dateFormater(e.to);
   }
 
-  expiryDateCalc(e: any) {
-    let date = new Date(e.gon.year, e.gon.month, e.gon.day),
-      month = date.getMonth(),
-      days = date.getDate(),
-      year = date.getFullYear();
+  expiryDateCalc(e: { gon: { day: number; month: number; year: number } }): {
+    day: number;
+    month: number;
+    year: number;
+  } {
+    let date = { day: 0, month: 0, year: 0 };
+    let curr = e.gon;
 
-    if (e.gon.day === 1) {
-      month = date.getMonth() - 1;
-      days = this.getDaysInMonth(year, month);
-    } else days = days - 1;
-
-    if (month === 0) month = 12;
-
-    date.setDate(days);
-    date.setMonth(month);
-    if (month !== 0) year + 1;
-
-    e.gon = {
-      day: days,
-      month: month,
-      year: year,
-    };
-    return e;
+    if (curr.day === 1 && curr.month !== 1 && curr.month !== 3) {
+      date = {
+        day: this.getDaysInMonth(curr.year + 1, curr.month - 1),
+        month: curr.month - 1,
+        year: curr.year + 1,
+      };
+    } else if (curr.day === 1 && curr.month === 1) {
+      date = {
+        day: 31,
+        month: 12,
+        year: curr.year,
+      };
+    } else if (curr.day === 1 && curr.month === 3) {
+      date = {
+        day: this.getDaysInMonth(curr.year + 1, 2),
+        month: 2,
+        year: curr.year + 1,
+      };
+    } else {
+      date = {
+        day: curr.day - 1,
+        month: curr.month,
+        year: curr.year + 1,
+      };
+    }
+    return date;
   }
 
   getDaysInMonth(year: number, month: number): number {
-    return new Date(year, month, 0).getDate();
+    return new Date(Date.UTC(year, month, 0)).getDate();
   }
 
   issueDate(e: any) {
     this.f.issueDate?.patchValue(e.gon);
     this.f.periodFrom?.patchValue(e.gon);
     if (this.f.periodTo?.enabled)
-      this.f.periodTo?.patchValue(this.expiryDateCalc(e).gon);
+      this.f.periodTo?.patchValue(this.expiryDateCalc(e));
   }
 
   inceptionDate(e: any) {
     this.f.periodFrom?.patchValue(e.gon);
     if (this.f.periodTo?.enabled)
-      this.f.periodTo?.patchValue(this.expiryDateCalc(e).gon);
+      this.f.periodTo?.patchValue(this.expiryDateCalc(e));
   }
 
   expiryDate(e: any) {

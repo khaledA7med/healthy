@@ -8,7 +8,11 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbActiveModal,
+  NgbModal,
+  NgbModalRef,
+} from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
@@ -34,13 +38,15 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
     id: string;
   };
   uiState = {
-    sno: "",
+    sno: "" as string,
     policyDetails: {} as IPolicyPreview,
-    loadedData: false,
-    updatedState: false,
+    loadedData: false as boolean,
+    updatedState: false as boolean,
     documentList: [],
     privileges: ProductionPermissions,
   };
+
+  modalRef!: NgbModalRef;
 
   deliveryStatus: FormControl = new FormControl(null, Validators.required);
 
@@ -51,13 +57,16 @@ export class PoilcyPreviewComponent implements OnInit, OnDestroy {
   lookupData!: Observable<IBaseMasterTable>;
 
   @ViewChild("details") detailsModal!: TemplateRef<any>;
+
   constructor(
     private message: MessagesService,
     private productinService: ProductionService,
     public util: AppUtils,
     public modal: NgbActiveModal,
-    private privileges: PermissionsService
+    private privileges: PermissionsService,
+    private modalService: NgbModal
   ) {}
+
   ngOnInit(): void {
     this.permissions$ = this.privileges.getPrivileges(Roles.Production);
     this.uiState.sno = this.data.id;

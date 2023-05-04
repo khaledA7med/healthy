@@ -12,12 +12,18 @@
 </div>
 
 <div #collapse="ngbCollapse" [(ngbCollapse)]="!uiState.showSelectContact" *ngIf="uiState.showSelectContact">
-    <div class="d-flex justify-content-end align-items-center my-3">
-        <button class="btn btn-soft-primary btn-sm d-flex align-items-center" id="addNewClientContactBtn" type="button"
-            (click)="uiState.showAddContact = true;uiState.showSelectContact = false">
-            <i class="ri-add-line mx-1"></i>
-            Add New Contact
-        </button>
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>{{uiState.selectedCompanyName}}</h5>
+        <div class="d-flex justify-content-end align-items-center my-3">
+            <button class="btn btn-soft-danger btn-sm mx-2" id="chooseAnotherCompanyBtn"
+                (click)="uiState.showSelectContact = false;uiState.showCopmanies = false">Choose
+                Another Company</button>
+            <button class="btn btn-soft-primary btn-sm d-flex align-items-center" id="addNewClientContactBtn"
+                type="button" (click)="uiState.showAddContact = true;uiState.showSelectContact = false">
+                <i class="ri-add-line mx-1"></i>
+                Add New Contact
+            </button>
+        </div>
     </div>
     <div class="ag-theme-alpine" appTableView>
         <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 50vh" [gridOptions]="contactsGridOpts">

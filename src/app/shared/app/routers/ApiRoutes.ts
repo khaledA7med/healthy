@@ -7,10 +7,12 @@ export const ApiRoutes = {
     refesh: "/Account/RefreshToken",
   },
   Activities: {
-    allTasks: "/Activity/Activities/AllTasks",
-    moduleClients: "/Activity/Activities/ModuleClients",
-    searchModule: "/Activity/Activities/SearchModule",
-    addTask: "/Activity/Activities/saveTask",
+    allTasks: "/Activities/Calendar/AllTasks",
+    moduleClients: "/Activities/Calendar/ModuleClients",
+    searchModule: "/Activities/Calendar/SearchModule",
+    addTask: "/Activities/Calendar/saveTask",
+    changeStatus: "/Activities/Calendar/ChangeTaskStatus",
+    taskLogs: "/Activities/Calendar/TaskLogs",
   },
   Emails: {
     allActiveClients: LookUpTables + "ActiveClient",
@@ -73,6 +75,7 @@ export const ApiRoutes = {
       commericalNo: LookUpTables + BaseData.CommericalNo,
       groupsList: LookUpTables + BaseData.GroupsList,
       status: LookUpTables + BaseData.ClientStatus,
+      cities: LookUpTables + BaseData.Cities,
     },
     BusinessDevelopment: {
       groupsList: LookUpTables + BaseData.GroupsList,
@@ -119,8 +122,6 @@ export const ApiRoutes = {
       endorsTypes: LookUpTables + BaseData.PolicyEndorsTypes,
       productionFieldList: LookUpTables + BaseData.ProductionFieldList,
       productionOperatordList: LookUpTables + BaseData.ProductionOperatordList,
-      getStatusClientsPolicies:
-        LookUpTables + BaseData.GetStatusClientsPolicies,
     },
     Claims: {
       claimStatus: LookUpTables + BaseData.ClaimStatus,
@@ -331,7 +332,7 @@ export const ApiRoutes = {
       },
       tpaList: {
         search: "/MasterTables/Claims/TPAList/Index",
-        save: "/MasterTables/Claims/TPAList/Create",
+        save: "/MasterTables/Claims/TPAList/Save",
         delete: "/MasterTables/Claims/TPAList/Delete",
       },
       claimsGeneralItems: {
@@ -497,14 +498,21 @@ export const ApiRoutes = {
   },
   Production: {
     search: "/Production/Policy/Search",
+    activeListSearch: "/Production/ClientsPolicies/Search",
+    downloadExcelFiles: "/Production/ClientsPolicies/DownloadStaticDocument",
     details: "/Production/Policy/Details",
     clientByRequest: "/Production/Policy/SearchClientByRequest",
     searchClient: LookUpTables + "ActiveClient",
     searchPolicies: "/Production/Policy/SearchClientPolicies",
     fillRequestData: "/Production/Policy/FillRequestData",
     loadPolicyData: "/Production/Policy/LoadPolicyData",
+    loadActivePolicyData: "/Production/ClientsPolicies/Details",
+    getVehiclesData: "/Production/ClientsPolicies/GetPoliciesVehicles",
+    getMedicalsData: "/Production/ClientsPolicies/GetPoliciesMedical",
     lineOfBusiness: "/LookupTables/LineOfBusiness",
     save: "/Production/Policy/Save",
+    saveMotorData: "/Production/ClientsPolicies/SavePoliciesVehicles",
+    saveMedicalData: "/Production/ClientsPolicies/SavePoliciesMedical",
     edit: "/Production/Policy/Edit",
     checkEndorsNo: "/Production/Policy/CheckPolicyEnrodsNo",
     changeStatus: "/Production/Policy/ChangeStatus",
@@ -517,12 +525,6 @@ export const ApiRoutes = {
     renewalNoticeReports: "/Production/Policy/RenewalNoticeReports",
     archiveReport: "/Production/Policy/ArchivesReports",
     debitcreditNoteReport: "/Production/Policy/GenerateArchivesReportsURL",
-    clientsPolicies: "/Production/ClientsPolicies/Search",
-    clientsDetails: "/Production/ClientsPolicies/Details",
-    medicalDetails: "/Production/ClientsPolicies/GetPoliciesMedical",
-    saveMedical: "/Production/ClientsPolicies/SavePoliciesMedical",
-    motorDetails: "/Production/ClientsPolicies/GetPoliciesVehicles",
-    saveMotor: "/Production/ClientsPolicies/SavePoliciesVehicles",
   },
   CustomerService: {
     search: "/CustomerService/Requests/Search",

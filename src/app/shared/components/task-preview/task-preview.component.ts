@@ -1,6 +1,17 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NgbActiveModal, NgbDate } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbActiveModal,
+  NgbDate,
+  NgbOffcanvas,
+} from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import {
   IBaseMasterTable,
@@ -17,6 +28,8 @@ import { ICustomerService } from "../../app/models/CustomerService/icustomer-ser
 import AppUtils from "../../app/util";
 import { ActivitiesService } from "../../services/activities/activities.service";
 import { MessagesService } from "../../services/messages.service";
+import { ITaskLog } from "../../app/models/Activities/itask-log";
+import { TaskModules } from "../../app/models/Activities/task-modules";
 
 enum UiView {
   new = "new",
@@ -39,10 +52,12 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     currentView: UiView.new as string,
     isForm: true as boolean,
     isView: false as boolean,
+    taskStatus: "",
     lists: {
       clients: [] as IGenericResponseType[],
       module: [] as any[],
       assignTo: [] as any,
+      taskLogs: [] as ITaskLog[],
     },
   };
 
@@ -54,12 +69,15 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
 
   @Input() task!: ITasks;
 
+  @Output() taskResult: EventEmitter<ITasks> = new EventEmitter<ITasks>();
+
   constructor(
     public modal: NgbActiveModal,
     private activityService: ActivitiesService,
     public util: AppUtils,
     private message: MessagesService,
-    private tables: MasterTableService
+    private tables: MasterTableService,
+    private offcanvas: NgbOffcanvas
   ) {}
 
   initForm(): void {
@@ -99,6 +117,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     this.initForm();
     this.formData = this.tables.getBaseData(MODULES.Activities);
     if (this.task?.sNo) this.taskPreview();
+    if (this.task?.isModule) this.moduleTask();
     let sub = this.formData.subscribe(
       (res) =>
         (this.uiState.lists.assignTo = res.Producers?.content.filter(
@@ -121,6 +140,15 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     this.uiState.isForm = false;
     this.uiState.editMode = false;
     this.uiState.isView = true;
+    this.uiState.taskStatus = this.task.status!;
+  }
+
+  moduleTask() {
+    this.formGroup.patchValue({
+      clientName: this.task.clientName,
+      module: this.task.module,
+      moduleSNo: this.task.moduleSNo,
+    });
   }
 
   editTaskData() {
@@ -178,7 +206,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
     let sub = this.activityService
       .searchModule(this.f.module?.value!, clientId)
       .subscribe((res: IBaseResponse<any>) => {
-        if (this.f.module?.value === "Claims")
+        if (this.f.module?.value === TaskModules.Claims)
           this.uiState.lists.module = (res.data as IClaims[])?.map(
             (el: IClaims) => {
               return {
@@ -192,7 +220,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
               };
             }
           );
-        else if (this.f.module?.value === "Customer Services")
+        else if (this.f.module?.value === TaskModules.CustomerServices)
           this.uiState.lists.module = (res.data as ICustomerService[])?.map(
             (el: ICustomerService) => {
               return {
@@ -206,7 +234,7 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
               };
             }
           );
-        else if (this.f.module?.value === "SalesLead")
+        else if (this.f.module?.value === TaskModules.SalesLead)
           this.uiState.lists.module = (res.data as ISalesLeadDetails[])?.map(
             (el: ISalesLeadDetails) => {
               return {
@@ -303,6 +331,16 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
       if (res.status) {
         this.modal.close();
         this.message.toast(res.message, "success");
+        if (this.task.isModule) {
+          data = {
+            dueDateFrom: this.f.start?.value!,
+            dueDateTo: this.f.end?.value!,
+            assignedOn: this.task.assignedOn,
+            assignedBy: this.task.assignedBy,
+            ...data,
+          };
+          this.taskResult.emit(data);
+        }
       } else this.message.popup("Oops!", res.message, "warning");
       this.uiState.isLoading = false;
     });
@@ -319,6 +357,44 @@ export class TaskPreviewComponent implements OnInit, OnDestroy {
       return false;
     }
     return true;
+  }
+
+  changeStatus(): void {
+    let status = this.uiState.taskStatus === "Open" ? "Close" : "Reopen";
+    this.uiState.isLoading = true;
+    let sub = this.activityService
+      .changeStatus({
+        sNo: this.task.sNo,
+        newStatus: status,
+        module: this.task.module,
+      })
+      .subscribe((res: IBaseResponse<any>) => {
+        this.uiState.taskStatus = status === "Close" ? "Closed" : "Open";
+        if (res.status) {
+          this.message.toast(res.message!, "success");
+          this.modal.close();
+        } else this.message.popup("Oops!", res.message!, "warning");
+        this.uiState.isLoading = false;
+      });
+    this.subscribes.push(sub);
+  }
+
+  getTaskLogs(history: any): void {
+    this.uiState.isLoading = true;
+    let sub = this.activityService
+      .taskLogs(this.task.sNo!)
+      .subscribe((res: IBaseResponse<ITaskLog[]>) => {
+        if (res.status) {
+          this.uiState.lists.taskLogs = res.data!;
+          this.offcanvas.open(history, {
+            position: "end",
+            container: "body",
+            backdropClass: "off-canvas-drop",
+          });
+        } else this.message.popup("Oops!", res.message!, "warning");
+        this.uiState.isLoading = false;
+      });
+    this.subscribes.push(sub);
   }
 
   ngOnDestroy(): void {

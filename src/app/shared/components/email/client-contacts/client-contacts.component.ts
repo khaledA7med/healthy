@@ -1,5 +1,5 @@
 import { HttpResponse } from "@angular/common/http";
-import { Component, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
 import { Subscription } from "rxjs";
@@ -19,7 +19,7 @@ import { EmailModalComponent } from "../email-modal/email-modal.component";
 	styleUrls: ["./client-contacts.component.scss"],
 	encapsulation: ViewEncapsulation.None,
 })
-export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
+export class ClientContactsComponent implements OnInit, OnDestroy {
 	clientInfo: FormControl = new FormControl();
 	clientIDFilter: FormControl = new FormControl();
 	clientNameFilter: FormControl = new FormControl();
@@ -72,6 +72,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
 		onSortChanged: (e) => this.onSort(e),
@@ -91,19 +92,15 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReadyContacts(e),
 		onCellClicked: (e) => this.onCellClickedContacts(e),
 		onSortChanged: (e) => this.onSortContacts(e),
 	};
 
-	ngOnChanges(): void {
-		console.log("Form ngOnChanges", this.emailModalInstance);
-	}
-
 	constructor(private eventService: EventService, private emailService: EmailService, private message: MessagesService) {}
 
 	ngOnInit(): void {
-		console.log("Form ngOnInit", this.emailModalInstance);
 		this.contactsGridOpts.context = { comp: this.emailModalInstance };
 		this.clientInfo.disable();
 	}
@@ -124,10 +121,14 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 				if (res.body?.status) {
 					this.uiState.clients.list = res.body?.data!;
 					params.successCallback(this.uiState.clients.list, this.uiState.clients.list.length);
-				} else this.message.popup("Oops!", res.body?.message!, "error");
+					if (this.uiState.clients.list.length === 0) this.gridApi.showNoRowsOverlay();
+					else this.gridApi.hideOverlay();
+				} else {
+					this.message.popup("Oops!", res.body?.message!, "error");
+					this.gridApi.hideOverlay();
+				}
 				this.uiState.gridReady = true;
 				this.eventService.broadcast(reserved.isLoading, false);
-				this.gridApi.hideOverlay();
 			});
 			this.subscribes.push(sub);
 		},
@@ -162,7 +163,7 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 	contactsDataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			if (this.uiState.contacts.list.length == 0) this.eventService.broadcast(reserved.isLoading, true);
-			else this.gridApi.showLoadingOverlay();
+			else this.contactsGridApi.showLoadingOverlay();
 			console.log(this.uiState.selectedClientSno);
 			let sub = this.emailService
 				.getAllClientContacts(this.uiState.selectedClientSno)
@@ -170,10 +171,14 @@ export class ClientContactsComponent implements OnInit, OnDestroy, OnChanges {
 					if (res.body?.status) {
 						this.uiState.contacts.list = res.body?.data!;
 						params.successCallback(this.uiState.contacts.list, this.uiState.contacts.list.length);
-					} else this.message.popup("Oops!", res.body?.message!, "error");
+						if (this.uiState.contacts.list.length === 0) this.contactsGridApi.showNoRowsOverlay();
+						else this.contactsGridApi.hideOverlay();
+					} else {
+						this.message.popup("Oops!", res.body?.message!, "error");
+						this.contactsGridApi.hideOverlay();
+					}
 					this.uiState.gridReady = true;
 					this.eventService.broadcast(reserved.isLoading, false);
-					this.gridApi.hideOverlay();
 				});
 			this.subscribes.push(sub);
 		},

@@ -101,6 +101,15 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
+		this.uiState.checkAllControls.allLinesOfBusinessControl.disable();
+
+		let sub = this.f.classOfBusiness?.valueChanges.subscribe((res) => {
+			if (res?.length! == 0) {
+				this.uiState.checkAllControls.allLinesOfBusinessControl.disable();
+				this.uiState.lists.linesOfBusinessLists = [];
+			} else this.uiState.checkAllControls.allLinesOfBusinessControl.enable();
+		});
+		this.subscribes.push(sub!);
 	}
 
 	setClientData(e: any) {
@@ -112,17 +121,17 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		switch (controlName) {
 			case "insuranceCompany":
 				if (check) this.f.insuranceCompany?.patchValue(this.uiState.lists.insuranceCompanyControlLists.map((e) => e.name));
-				else this.f.insuranceCompany?.patchValue(null);
+				else this.f.insuranceCompany?.patchValue([]);
 				break;
 			case "classOfBusiness":
 				if (check) {
 					this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
 					this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-				} else this.f.classOfBusiness?.patchValue(null);
+				} else this.f.classOfBusiness?.patchValue([]);
 				break;
 			case "linesOfBusiness":
 				if (check) this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-				else this.f.lineOfBusiness?.patchValue(null);
+				else this.f.lineOfBusiness?.patchValue([]);
 				break;
 			default:
 				break;
@@ -224,6 +233,13 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 
 	resetForm() {
 		this.filterForm.reset();
+		this.f.insuranceCompany?.patchValue([]);
+		this.f.classOfBusiness?.patchValue([]);
+		this.f.lineOfBusiness?.patchValue([]);
+		this.f.branch?.patchValue("Select all");
+		this.f.clientGroup?.patchValue("Select all");
+		this.f.reportType?.patchValue(1);
+
 		this.submitted = false;
 	}
 }

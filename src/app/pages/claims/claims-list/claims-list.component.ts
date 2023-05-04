@@ -86,6 +86,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			sortable: true,
 			resizable: true,
 		},
+		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
 		onSortChanged: (e) => this.onSort(e),
@@ -113,8 +114,8 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			if (!res.includes(this.uiState.privileges.ChAccessAllUsersClaim)) this.filterF.savedUser?.patchValue(this.auth.getUser().name!);
 		});
 		this.subscribes.push(sub);
-		console.log(this.auth.getUser().Branch!);
-		this.filterF.branch?.patchValue(this.auth.getUser().Branch!);
+		// console.log(this.auth.getUser().Branch!);
+		// this.filterF.branch?.patchValue(this.auth.getUser().Branch!);
 	}
 
 	//#region Table
@@ -128,8 +129,12 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 				this.uiState.claims.list = res.body?.data!;
 
 				params.successCallback(this.uiState.claims.list, this.uiState.claims.totalPages);
-				this.uiState.gridReady = true;
-				this.gridApi.hideOverlay();
+				if (this.uiState.claims.list.length === 0) {
+					this.gridApi.showNoRowsOverlay();
+				} else {
+					this.uiState.gridReady = true;
+					this.gridApi.hideOverlay();
+				}
 			});
 			this.subscribes.push(sub);
 		},

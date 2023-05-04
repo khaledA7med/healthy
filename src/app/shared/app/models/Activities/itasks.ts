@@ -25,4 +25,6 @@ export interface ITasks {
   timeStampFrom?: string;
   timeStampTo?: string;
   type?: string;
+
+  isModule?: boolean;
 }

@@ -14,7 +14,6 @@ import {
   IDatasource,
   IGetRowsParams,
   RowClickedEvent,
-  RowDoubleClickedEvent,
 } from "ag-grid-community";
 import { Subscription } from "rxjs";
 import { claimsPoliciesRequestCols } from "src/app/shared/app/grid/claimsFormCols";
@@ -25,6 +24,8 @@ import {
 } from "src/app/shared/app/models/Claims/claims-util";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
+import { VehiclesListComponent } from "./vehicles-list.component";
+import { MedicalMembersListComponent } from "./medical-members-list.component";
 
 @Component({
   selector: "app-claims-request-list",
@@ -32,11 +33,28 @@ import { MessagesService } from "src/app/shared/services/messages.service";
     <div class="ag-theme-alpine" appTableView>
       <ag-grid-angular
         class="gridScrollbar"
-        style="width: 100%; height: 70vh"
+        style="width: 100%;"
+        [ngStyle]="{
+          height:
+            selectedPolicy.className === 'Motor' ||
+            selectedPolicy.className === 'Medical'
+              ? '35vh'
+              : '70vh'
+        }"
         [gridOptions]="gridOpts"
       >
       </ag-grid-angular>
     </div>
+
+    <app-vehicles-list
+      [ngClass]="{ 'd-none': filter.classOfInsurance !== 'Motor' }"
+      #vehiclesList
+    ></app-vehicles-list>
+
+    <app-medical-members-list
+      [ngClass]="{ 'd-none': filter.classOfInsurance !== 'Medical' }"
+      #MedicalMembersList
+    ></app-medical-members-list>
   `,
   styles: [],
 })
@@ -52,7 +70,20 @@ export class ClaimsRequestListComponent implements OnDestroy {
     lineOfBusiness: "",
     policyNo: "",
   };
-  @Output() dataEvent: EventEmitter<any> = new EventEmitter();
+
+  @Output()
+  dataEvent: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild("vehiclesList") vehiclesList!: VehiclesListComponent;
+  @ViewChild("MedicalMembersList")
+  MedicalMembersList!: MedicalMembersListComponent;
+  selectedPolicy = {
+    className: "" as String,
+    policiesSno: "" as any,
+  };
+
+  showPolicyVehicles: boolean = true;
+  showPolicyMedicalMembers: boolean = true;
 
   policies: IClaimPolicies[] = [];
   totalPages: number = 0;
@@ -79,6 +110,7 @@ export class ClaimsRequestListComponent implements OnDestroy {
     onPaginationChanged: (e) => this.onPageChange(e),
     onSortChanged: (e) => this.onSort(e),
     onRowClicked: (e) => this.onRowClicked(e),
+    onRowDoubleClicked: (e) => this.onRowDoubleClicked(e),
   };
 
   subscribes: Subscription[] = [];
@@ -137,7 +169,17 @@ export class ClaimsRequestListComponent implements OnDestroy {
     this.gridApi.setDatasource(this.requestDataSource);
   }
 
-  onRowClicked(e: RowDoubleClickedEvent) {
+  onRowClicked(e: RowClickedEvent) {
+    this.selectedPolicy.policiesSno = e.data.sNo;
+    this.selectedPolicy.className = e.data.className;
+    if (e.data.className === "Motor") {
+      this.vehiclesList.setDataSource(e.data.sNo);
+    } else if (e.data.className === "Medical") {
+      this.MedicalMembersList.setDataSource(e.data.sNo);
+    }
+  }
+
+  onRowDoubleClicked(e: RowClickedEvent) {
     this.dataEvent.emit(e.data);
   }
 
