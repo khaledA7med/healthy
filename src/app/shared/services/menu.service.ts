@@ -704,15 +704,6 @@ export class MenuService {
               },
             ],
           },
-          {
-            id: 405,
-            label: "MENUITEMS.PRODUCTION.LIST.ACTIVEPOLICIESLIST",
-            link: AppRoutes.Production.ActivePoliciesList,
-            parentId: 4,
-            auth: privileges.Production?.includes(
-              ProductionPermissions.ChProduction
-            ),
-          },
         ],
       },
       {

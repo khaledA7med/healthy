@@ -179,23 +179,6 @@ const routes: Routes = [
         ]),
     ],
   },
-  {
-    path: AppRoutes.Production.ActivePoliciesList,
-    data: {
-      title: "Active Policies Management",
-    },
-    loadChildren: () =>
-      import("./active-list/active-list.module").then(
-        (m) => m.ActiveListModule
-      ),
-    // canActivate: [
-    //   () =>
-    //     ProductionGuard([
-    //       ProductionPermissions.ChProduction,
-    //       ProductionPermissions.ChProdMedicalActive,
-    //     ]),
-    // ],
-  },
 ];
 
 @NgModule({

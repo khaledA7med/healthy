@@ -26,15 +26,6 @@ import {
   IPolicyRequests,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
-import { IActiveListFilters } from "../../app/models/Production/i-active-list-filter";
-import { IActiveList } from "../../app/models/Production/i-active-list";
-import { IMedicalActiveDataPreview } from "../../app/models/Production/i-medical-active-preview";
-import { IMotorActiveDataPreview } from "../../app/models/Production/i-motor-active-preview";
-import {
-  IMotorData,
-  MotorData,
-} from "../../app/models/Production/i-active-motor-forms";
-import { MedicalData } from "../../app/models/Production/i-active-medical-forms";
 
 @Injectable({
   providedIn: "root",
@@ -295,56 +286,6 @@ export class ProductionService {
       {
         observe: "response",
       }
-    );
-  }
-
-  //#Clients Policies
-  getAllClientsPolicies(
-    filters: IActiveListFilters
-  ): Observable<HttpResponse<IBaseResponse<IActiveList[]>>> {
-    return this.http.post<IBaseResponse<IActiveList[]>>(
-      this.env + ApiRoutes.Production.clientsPolicies,
-      filters,
-      {
-        observe: "response",
-      }
-    );
-  }
-
-  getClientPolicyById(
-    policiesSNo: string
-  ): Observable<IBaseResponse<IActiveList>> {
-    return this.http.get<IBaseResponse<IActiveList>>(
-      this.env + ApiRoutes.Production.clientsDetails,
-      { params: { policiesSNo } }
-    );
-  }
-  getMedicalDataById(
-    policiesSNo: string
-  ): Observable<IBaseResponse<MedicalData[]>> {
-    return this.http.get<IBaseResponse<MedicalData[]>>(
-      this.env + ApiRoutes.Production.medicalDetails,
-      { params: { policiesSNo } }
-    );
-  }
-  SaveMedical(body: MedicalData): Observable<IBaseResponse<number>> {
-    return this.http.post<IBaseResponse<number>>(
-      this.env + ApiRoutes.Production.saveMedical,
-      body
-    );
-  }
-  getMotorDataById(
-    policiesSNo: string
-  ): Observable<IBaseResponse<MotorData[]>> {
-    return this.http.get<IBaseResponse<MotorData[]>>(
-      this.env + ApiRoutes.Production.motorDetails,
-      { params: { policiesSNo } }
-    );
-  }
-  SaveMotor(body: IMotorData): Observable<IBaseResponse<number>> {
-    return this.http.post<IBaseResponse<number>>(
-      this.env + ApiRoutes.Production.saveMotor,
-      body
     );
   }
 }

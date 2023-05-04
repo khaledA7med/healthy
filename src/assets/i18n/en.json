@@ -103,7 +103,6 @@
       "LIST": {
         "MANAGEMENT": "Policies/Endorsements Management",
         "EDITCOMMISSIONS": "Policies/Edit Commissions",
-        "ACTIVEPOLICIESLIST": "Active Policies Management",
         "REPORTS": "Reports",
         "REPORTLIST": {
           "PRODUCTION": "Production",

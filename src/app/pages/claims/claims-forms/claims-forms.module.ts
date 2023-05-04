@@ -19,8 +19,6 @@ import { ClaimApprovalsFormComponent } from "./form-helpers/claim-approvals-form
 import { ClaimInvoicesFormComponent } from "./form-helpers/claim-invoices-form.component";
 import { ClaimRejectDeductFormComponent } from "./form-helpers/claim-reject-deduct-form.component";
 import { ReportsViewerModule } from "src/app/shared/components/reports-viewer/reports-viewer.module";
-import { MedicalListComponent } from './medical-list/medical-list.component';
-import { MotorListComponent } from './motor-list/motor-list.component';
 
 export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
 
@@ -32,8 +30,6 @@ export const routes: Routes = [{ path: "", component: ClaimsFormsComponent }];
     ClaimApprovalsFormComponent,
     ClaimInvoicesFormComponent,
     ClaimRejectDeductFormComponent,
-    MedicalListComponent,
-    MotorListComponent,
   ],
   imports: [
     CommonModule,
