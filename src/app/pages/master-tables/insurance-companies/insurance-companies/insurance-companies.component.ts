@@ -210,7 +210,7 @@ export class InsuranceCompaniesComponent implements OnInit {
       abbreviation: new FormControl(null, Validators.required),
       vatNo: new FormControl(null, Validators.required),
       crNo: new FormControl(null, Validators.required),
-      tele1: new FormControl(null, Validators.pattern("[0-9]{9}")),
+      tele1: new FormControl(null),
       fax: new FormControl(null),
       unifiedNo: new FormControl(null),
       email: new FormControl(null, Validators.email),
@@ -286,14 +286,8 @@ export class InsuranceCompaniesComponent implements OnInit {
         Validators.email,
         Validators.required,
       ]),
-      contactMobileNo: new FormControl(data?.contactMobileNo || null, [
-        Validators.pattern("[0-9]{9}"),
-        Validators.required,
-      ]),
-      contactTele: new FormControl(
-        data?.contactTele || null,
-        Validators.pattern("[0-9]{9}")
-      ),
+      contactMobileNo: new FormControl(data?.contactMobileNo || null),
+      contactTele: new FormControl(data?.contactTele || null),
       LineOfBusiness: new FormControl(data?.LineOfBusiness || null),
       department: new FormControl(data?.department || null),
       address: new FormControl(data?.address || null),

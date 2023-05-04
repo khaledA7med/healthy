@@ -46,7 +46,7 @@ export const AppRoutes = {
       customerServiceCancellationReason: "Cs-cancellation-reasons",
     },
     claims: {
-      carsMake: "cars-make",
+      carsMaker: "cars-maker",
       hospitals: "hospitals",
       insuranceWorkShopDetails: "insurance-work-shop-details",
       tpaList: "tpa-list",

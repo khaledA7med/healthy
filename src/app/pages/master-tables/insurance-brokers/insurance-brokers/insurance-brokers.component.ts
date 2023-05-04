@@ -68,7 +68,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };

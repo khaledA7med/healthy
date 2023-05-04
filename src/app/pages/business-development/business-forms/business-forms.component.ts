@@ -586,9 +586,12 @@ export class BusinessFormsComponent implements OnInit, OnDestroy {
   }
 
   validationChecker(): boolean {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    if (this.formGroup.invalid) return false;
+    if (this.formGroup.invalid) {
+      this.message.popup("Error", "Please Fill Required Inputs");
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      return false;
+    }
     return true;
   }
   resetForm(): void {

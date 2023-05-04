@@ -58,8 +58,9 @@
                       <label for="client" [ngClass]="{ 'asterisk-input': !uiState.editMode }">
                         {{ uiState.isClient ? "Client" : "Group" }}</label>
                       <div class="input-group input-group-sm is-invalid">
-                        <ng-select [readonly]="uiState.editMode" id="client" formControlName="name" bindValue="name"
-                          bindLabel="name" class="form-control form-control-sm" aria-describedby="inputGroup-sizing-sm"
+                        <ng-select [readonly]="uiState.editMode" [clearable]="true" [clearOnBackspace]="true"
+                          [hideSelected]="true" id="client" formControlName="name" bindValue="name" bindLabel="name"
+                          class="form-control form-control-sm" aria-describedby="inputGroup-sizing-sm"
                           (change)="getClientId($event)" [loading]="formData ? false : true" [items]="
                             uiState.isClient
                               ? (formData | async)?.AllClients?.content!
@@ -111,6 +112,7 @@
                         Producer</label>
                       <ng-select id="Producer" class="form-control-sm is-invalid" placeholder="Select Producer"
                         formControlName="producer" bindValue="name" bindLabel="name" [loading]="formData ? false : true"
+                        [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true"
                         [items]="(formData | async)?.Producers?.content!" [ngClass]="{
                           'is-submitted': submitted && f.producer?.invalid
                         }">
@@ -143,8 +145,9 @@
                           <label for="classOfInc" [ngClass]="{ 'asterisk-input': !uiState.editMode }">
                             Class of Insurance</label>
                           <ng-select [readonly]="uiState.editMode" id="classOfInc" class="form-control-sm is-invalid"
-                            placeholder="Select Class Of Insurance" formControlName="classOfBusiness" bindValue="name"
-                            bindLabel="name" [loading]="formData ? false : true"
+                            placeholder="Select Class of Insurance" formControlName="classOfBusiness" bindValue="name"
+                            bindLabel="name" [loading]="formData ? false : true" [clearable]="true"
+                            [clearOnBackspace]="true" [hideSelected]="true"
                             [items]="(formData | async)?.InsurClasses?.content!" [ngClass]="{
                               'is-submitted':
                                 submitted && f.classOfBusiness?.invalid
@@ -163,8 +166,9 @@
                           <label for="lineOfBus" class="asterisk-input">
                             Line of Business</label>
                           <ng-select id="lineOfBus" class="form-control-sm is-invalid"
-                            placeholder="Select Lien Of Business" formControlName="lineOfBusiness" bindValue="name"
-                            bindLabel="name" [loading]="formData ? false : true" [items]="lineOfBussArr" [ngClass]="{
+                            placeholder="Select Line of Business" formControlName="lineOfBusiness" bindValue="name"
+                            [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true" bindLabel="name"
+                            [loading]="formData ? false : true" [items]="lineOfBussArr" [ngClass]="{
                               'is-submitted':
                                 submitted && f.lineOfBusiness?.invalid
                             }">
@@ -222,7 +226,8 @@
                           <label for="PrefInCompnies">Preferred Insurance Companies</label>
                           <ng-select id="PrefInCompnies" class="form-control-sm" placeholder="Choose Companies"
                             formControlName="preferedInsurComapnies" bindLabel="name" bindValue="name" [multiple]="true"
-                            [hideSelected]="true" [closeOnSelect]="false" [items]="
+                            [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true" [closeOnSelect]="false"
+                            [items]="
                               (formData | async)?.InsuranceCompanyName?.content!
                             " [loading]="formData ? false : true">
                           </ng-select>
@@ -316,7 +321,8 @@
                           </label>
                           <ng-select id="curIncBroker" class="form-control-sm is-invalid"
                             placeholder="Select Current Broker" formControlName="currentBroker" bindLabel="name"
-                            bindValue="name" [ngClass]="{
+                            [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true" bindValue="name"
+                            [ngClass]="{
                               'is-submitted':
                                 (f.currentBroker?.touched || submitted) &&
                                 f.currentBroker?.invalid
@@ -340,7 +346,8 @@
                           </label>
                           <ng-select id="curIncCompany" class="form-control-sm is-invalid"
                             placeholder="Select Current Company" formControlName="currentInsurer" bindLabel="name"
-                            bindValue="name" [ngClass]="{
+                            [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true" bindValue="name"
+                            [ngClass]="{
                               'is-submitted':
                                 (f.currentInsurer?.touched || submitted) &&
                                 f.currentInsurer?.invalid
@@ -404,8 +411,9 @@
                         <div class="col-12 mt-2">
                           <div class="input-group input-group-sm">
                             <ng-select class="form-control form-control-sm" aria-describedby="inputGroup-sizing-sm"
-                              placeholder="Select company" bindLabel="name" bindValue="name"
-                              formControlName="companyNameQuot" [items]="f.preferedInsurComapnies?.value!">
+                              placeholder="Select company" bindLabel="name" bindValue="name" [clearable]="true"
+                              [clearOnBackspace]="true" [hideSelected]="true" formControlName="companyNameQuot"
+                              [items]="f.preferedInsurComapnies?.value!">
                             </ng-select>
 
                             <button class="input-group-text btn-outline-success btn-sm" id="inputGroup-sizing-sm"
@@ -479,8 +487,9 @@
                         <div class="col-12 mt-2">
                           <div class="input-group input-group-sm">
                             <ng-select class="form-control form-control-sm" aria-describedby="inputGroup-sizing-sm"
-                              placeholder="Select company" bindLabel="name" bindValue="name"
-                              formControlName="companyNamePol" [items]="f.preferedInsurComapnies?.value!">
+                              placeholder="Select company" bindLabel="name" bindValue="name" [clearable]="true"
+                              [clearOnBackspace]="true" [hideSelected]="true" formControlName="companyNamePol"
+                              [items]="f.preferedInsurComapnies?.value!">
                             </ng-select>
 
                             <button type="button" class="input-group-text btn-outline-success btn-sm"
@@ -586,7 +595,8 @@
                               <ng-container [formGroupName]="i">
                                 <td>
                                   <div>
-                                    <ng-select appendTo="body" class="form-control-sm is-invalid" placeholder="log Type"
+                                    <ng-select appendTo="body" class="form-control-sm is-invalid" placeholder="Log Type"
+                                      [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true"
                                       dropdownPosition="top" formControlName="logType" bindLabel="name" bindValue="name"
                                       [ngClass]="{
                                         'is-submitted':
@@ -936,7 +946,8 @@
           <!-- branch -->
           <div class="col-lg-4 col-md-6 col-sm-12  my-2" *ngIf="!uiState.editMode">
             <ng-select placeholder="Choose Branch" class="form-control form-control-sm" formControlName="branch"
-              bindLabel="name" bindValue="name" [ngClass]="{
+              [clearable]="true" [clearOnBackspace]="true" [hideSelected]="true" bindLabel="name" bindValue="name"
+              [ngClass]="{
                                   'is-submitted': submitted && f.branch?.invalid
                                 }" [clearable]="false" [items]="(formData | async)?.Branch?.content!"
               [loading]="formData ? false : true">

@@ -12,6 +12,8 @@ export const insuranceCompaniesCols: ColDef[] = [
   {
     headerName: "No.",
     valueGetter: "node.rowIndex + 1",
+    minWidth: 70,
+    maxWidth: 300,
   },
   {
     headerName: "Company Name",
@@ -36,7 +38,7 @@ export const insuranceCompaniesCols: ColDef[] = [
   {
     headerName: "Unified No.",
     field: "unifiedNo",
-    minWidth: 150,
+    minWidth: 130,
   },
   {
     headerName: "Tel",

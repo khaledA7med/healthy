@@ -82,14 +82,9 @@
                                         <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                             <label for="tele1">Tele</label>
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-text">+966</span>
                                                 <input id="tele1" class="form-control form-control-sm"
                                                     [ngClass]="{'is-invalid': (f.tele1?.touched || uiState.submitted) && f.tele1?.invalid}"
                                                     formControlName="tele1" />
-                                                <span class="invalid-feedback fw-bold"
-                                                    *ngIf="(f.tele1?.touched || uiState.submitted) && f.tele1?.invalid">
-                                                    Invalid Phone Number
-                                                </span>
                                             </div>
                                         </div>
 
@@ -150,7 +145,7 @@
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th scope="col">Classes</th>
-                                                        <th scope="col">Line Of Businesses</th>
+                                                        <th scope="col">Line of Businesses</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody formArrayName="productsList">
@@ -160,7 +155,7 @@
                                                             <td class="asterisk-input">
                                                                 <ng-select id="classOfInc"
                                                                     class="form-control-sm is-invalid"
-                                                                    placeholder="Select Class Of Insurance"
+                                                                    placeholder="Select Class of Insurance"
                                                                     formControlName="classOfBusiness" bindValue="name"
                                                                     appendTo="table" bindLabel="name" [ngClass]="{
                                                                         'is-submitted':
@@ -179,7 +174,7 @@
                                                             <td class="asterisk-input">
                                                                 <ng-select id="lineOfBus"
                                                                     class="form-control-sm is-invalid"
-                                                                    placeholder="Select Lien Of Business"
+                                                                    placeholder="Select Line Of Business"
                                                                     appendTo="table" formControlName="lineOfBusiness"
                                                                     bindValue="name" bindLabel="name" [ngClass]="{
                                                                         'is-submitted':
@@ -211,7 +206,7 @@
                                                     </tr>
                                                     <tr *ngIf="productsListArray.controls.length === 0"
                                                         class="my-1 text-center text-dark fw-bold no-item-contact">
-                                                        <td colspan="100">No items show</td>
+                                                        <td colspan="100">No items to show</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -289,49 +284,25 @@
                                                                     </td>
 
                                                                     <td scope="col">
-                                                                        <div class="input-group input-group-sm">
+                                                                        <div class="asterisk-div">
+                                                                            <div class="input-group input-group-sm">
 
-                                                                            <input type="text"
-                                                                                class="form-control form-control-sm"
-                                                                                [ngClass]="{
+                                                                                <input type="text"
+                                                                                    class="form-control form-control-sm"
+                                                                                    [ngClass]="{
                                                                                 'is-invalid':
                                                                                 uiState.submitted &&
                                                                                 contactListControls(i, 'contactEmail').invalid
                                                                               }" formControlName="contactEmail"
-                                                                                placeholder="contact Email" />
-                                                                            <span class="invalid-feedback fw-bold"
-                                                                                *ngIf="contactListControls(i, 'contactEmail').invalid">
-                                                                                Invalid Email
-                                                                            </span>
-                                                                            <span class="invalid-feedback fw-bold"
-                                                                                *ngIf="(contactListControls(i, 'contactEmail').touched ||
-                                                                                uiState.submitted) &&
-                                                                              contactListControls(i, 'contactEmail').invalid">
-                                                                                Required
-                                                                            </span>
-                                                                        </div>
-                                                                    </td>
-
-                                                                    <td scope="col">
-                                                                        <div class="asterisk-div">
-
-                                                                            <div class="input-group input-group-sm">
-                                                                                <span
-                                                                                    class="input-group-text">+966</span>
-                                                                                <input type="text"
-                                                                                    class="form-control form-control-sm"
-                                                                                    formControlName="contactMobileNo"
-                                                                                    [ngClass]="{
-                                                                                'is-invalid':
-                                                                                uiState.submitted &&
-                                                                                contactListControls(i, 'contactMobileNo').invalid
-                                                                              }" placeholder="contact mobile number" />
+                                                                                    placeholder="contact Email" />
                                                                                 <span class="invalid-feedback fw-bold"
-                                                                                    *ngIf="contactListControls(i, 'contactMobileNo').invalid">
-                                                                                    Invalid Phone Number
+                                                                                    *ngIf="contactListControls(i, 'contactEmail').invalid">
+                                                                                    Invalid Email
                                                                                 </span>
                                                                                 <span class="invalid-feedback fw-bold"
-                                                                                    *ngIf="uiState.submitted && contactListControls(i, 'contactMobileNo')?.hasError('required')">
+                                                                                    *ngIf="(contactListControls(i, 'contactEmail').touched ||
+                                                                                uiState.submitted) &&
+                                                                              contactListControls(i, 'contactEmail').invalid">
                                                                                     Required
                                                                                 </span>
                                                                             </div>
@@ -339,19 +310,22 @@
                                                                     </td>
 
                                                                     <td scope="col">
+                                                                        <div class="asterisk-div">
+                                                                            <div class="input-group input-group-sm">
+                                                                                <input type="text"
+                                                                                    class="form-control form-control-sm"
+                                                                                    formControlName="contactMobileNo"
+                                                                                    placeholder="contact mobile number" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+
+                                                                    <td scope="col">
                                                                         <div class="input-group input-group-sm">
-                                                                            <span class="input-group-text">+966</span>
                                                                             <input type="text"
                                                                                 class="form-control form-control-sm"
-                                                                                formControlName="contactTele" [ngClass]="{
-                                                                                'is-invalid':
-                                                                                uiState.submitted &&
-                                                                                contactListControls(i, 'contactTele').invalid
-                                                                              }" placeholder="contact Tele" />
-                                                                            <span class="invalid-feedback fw-bold"
-                                                                                *ngIf="contactListControls(i, 'contactTele').invalid">
-                                                                                Invalid Phone Number
-                                                                            </span>
+                                                                                formControlName="contactTele"
+                                                                                placeholder="contact Tele" />
                                                                         </div>
                                                                     </td>
 

@@ -12,10 +12,14 @@ export const bankSettingsCols: ColDef[] = [
   {
     headerName: "No.",
     valueGetter: "node.rowIndex + 1",
+    minWidth: 70,
+    maxWidth: 300,
   },
   {
     headerName: "Bank Name",
     field: "bankName",
+    minWidth: 140,
+    maxWidth: 500,
   },
   {
     headerName: "Swift",
