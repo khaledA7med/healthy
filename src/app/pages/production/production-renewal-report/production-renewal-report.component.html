@@ -4,14 +4,14 @@
             autocomplete="off">
             <ngb-accordion #acc="ngbAccordion" activeIds="1">
                 <!-- Client Details -->
-                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                <ngb-panel id="1" title="Filters" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <div class=" ribbon-box border shadow-none mt-2 ">
                                         <div class="card-body">
-                                            <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
+                                            <span class="ribbon ribbon-info round-shape"><span>Parameters
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
                                                 <div class="col-12 row  my-2 pe-0">
@@ -24,7 +24,7 @@
                                                         <ng-select [items]="uiState.lists.clientsList"
                                                             placeholder="Select Client(s)"
                                                             [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
+                                                            [clearable]="false" [searchable]="true" bindLabel="name"
                                                             bindValue="name" [formControl]="uiState.clientDataContorl"
                                                             (change)="setClientData($event)">
                                                         </ng-select>
@@ -102,7 +102,7 @@
                                                         placeholder="Select Producer"
                                                         [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" bindLabel="name"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
                                                         bindValue="name" formControlName="producer">
                                                     </ng-select>
                                                     <div class="invalid-feedback d-inline-block fw-bold"
@@ -113,8 +113,8 @@
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -129,8 +129,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>

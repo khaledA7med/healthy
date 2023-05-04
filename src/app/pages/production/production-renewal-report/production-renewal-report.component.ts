@@ -15,6 +15,10 @@ import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer
 import { IPolicyRenewalReportForm, IPolicyRenewalReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-report";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { NavigationStart, Router } from "@angular/router";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { AuthenticationService } from "src/app/core/services/auth.service";
+import { ProductionPermissions } from "src/app/core/roles/production-permissions";
+import { Roles } from "src/app/core/roles/Roles";
 @Component({
 	selector: "app-production-renewal-report",
 	templateUrl: "./production-renewal-report.component.html",
@@ -43,7 +47,9 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			producersList: [] as IGenericResponseType[],
 		},
 		clientDataContorl: new FormControl("Select All"),
+		privileges: ProductionPermissions,
 	};
+	permissions$!: Observable<string[]>;
 	modalRef!: NgbModalRef;
 
 	constructor(
@@ -53,10 +59,14 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router
+		private router: Router,
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
+		this.permissions$ = this.permission.getPrivileges(Roles.Production);
+
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Production);
 		let sub = this.lookupData.subscribe((res) => {
@@ -66,10 +76,35 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 			res.ClientsList?.content! ? (this.uiState.lists.clientsList = [{ id: 0, name: "Select All" }, ...res.ClientsList?.content!]) : "";
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 		});
-		let sub2 = this.router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {
-				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+
+		// let sub2 = this.router.events.subscribe((event) => {
+		// 	if (event instanceof NavigationStart) {
+		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+		// 	}
+		// });
+
+		let sub2 = this.permissions$.subscribe((res: string[]) => {
+			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
+
+			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) {
+				this.uiState.checkAllControls.allBranchControl.disable();
+				this.f.branchs?.patchValue([this.auth.getUser().Branch!]);
+			} else {
+				this.uiState.checkAllControls.allBranchControl.patchValue(true);
+				if (this.uiState.lists.branchesLists != undefined && this.uiState.lists.branchesLists.length > 0) this.checkAllToggler(true, "branch");
 			}
+
+			if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
+				this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
+				this.checkAllToggler(true, "insuranceCompany");
+			}
+
+			if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
+				this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
+				this.checkAllToggler(true, "classOfBusiness");
+			}
+
+			this.eventService.broadcast(reserved.isLoading, false);
 		});
 		this.subscribes.push(sub, sub2);
 
