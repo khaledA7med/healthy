@@ -47,6 +47,7 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
                                                         formControlName="branchs" (change)="ngSelectChange('branch')">
                                                     </ng-select>
                                                 </div>
@@ -103,6 +104,7 @@
                                                         [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!"
                                                         bindValue="name" formControlName="producer">
                                                     </ng-select>
                                                     <div class="invalid-feedback d-inline-block fw-bold"
