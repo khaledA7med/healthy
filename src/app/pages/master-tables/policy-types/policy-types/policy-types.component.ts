@@ -197,7 +197,8 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
           this.resetPolicyTypesForm();
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+        } else this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);
