@@ -4,19 +4,41 @@
             autocomplete="off">
             <ngb-accordion #acc="ngbAccordion" activeIds="1">
                 <!-- Client Details -->
-                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                <ngb-panel id="1" title="Filters" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <div class=" ribbon-box border shadow-none mt-2 ">
+                                    <div class=" ribbon-box border shadow-none mt-2">
                                         <div class="card-body">
-                                            <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
-                                                </span></span>
+                                            <span class="ribbon ribbon-info round-shape"><span>Parameters</span></span>
                                             <div class="row mt-5 mx-2">
-                                                <div class="col-12 row  my-2">
+                                                <div class="col-12 row my-2 p-0">
+                                                    <!-- Branchs -->
+                                                    <div class="col-lg-6 col-md-6 col-sm-12 ps-4 pe-0">
+                                                        <div class="accordion-info">
+                                                            <div class="d-flex justify-content-between">
+                                                                <label for="Branch">Branch</label>
+                                                                <div>
+                                                                    <label for="checkall" class="mx-2">Select
+                                                                        All</label>
+                                                                    <input type="checkbox" id="checkall"
+                                                                        [formControl]="uiState.checkAllContorls.checkAllBranches"
+                                                                        (change)="checkAllStatusAction(uiState.checkAllContorls.checkAllBranches.value,'branch')">
+                                                                </div>
+                                                            </div>
+                                                            <ng-select [items]="(lookupData | async)?.Branch?.content!"
+                                                                [loading]="lookupData ? false : true" [clearable]="true"
+                                                                [hideSelected]="true" placeholder="Select Branch(es)"
+                                                                [multiple]="true" [searchable]="true" bindLabel="name"
+                                                                bindValue="name" id="branch" formControlName="branchs"
+                                                                (change)="ngSelectChange('branchs')">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+
                                                     <!-- Status -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 pe-1">
+                                                    <div class="col-lg-6 col-md-6 col-sm-12 ps-4 pe-0">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="status">Status
                                                             </label>
@@ -52,7 +74,7 @@
                                                             <label for="Name">Name</label>
                                                         </div>
                                                         <input for="Name" type="text" id="ClntName"
-                                                            formControlName="name"
+                                                            formControlName="name" placeholder="Client Name"
                                                             class="form-control form-control-sm ">
                                                     </div>
                                                 </div>
@@ -61,10 +83,10 @@
                                                     <div class="accordion-info form-check"
                                                         style="padding-left:0!important">
                                                         <div class="lables">
-                                                            <label for="AccountNumber">Account NO.</label>
+                                                            <label for="AccountNumber">Account No.</label>
                                                         </div>
                                                         <input for="AccountNumber" type="text" id="ClntAccountNumber"
-                                                            formControlName="accountNumber"
+                                                            formControlName="accountNumber" placeholder="Account No."
                                                             class="form-control form-control-sm ">
                                                     </div>
                                                 </div>
@@ -72,11 +94,10 @@
                                                 <div class="col-lg-3 col-md-4 col-sm-12">
                                                     <div class="accordion-info">
                                                         <div class="lables">
-                                                            <label for="CrNOChoiced">CR
-                                                                No.</label>
+                                                            <label for="CrNOChoiced">CR No.</label>
                                                         </div>
                                                         <ng-select [items]="uiState.lists.crNoList"
-                                                            [loading]="lookupData ? false : true" [clearable]="true"
+                                                            [loading]="lookupData ? false : true" [clearable]="false"
                                                             placeholder="select commerical number" [searchable]="true"
                                                             bindLabel="name" bindValue="name" id="commercialNo"
                                                             formControlName="crNO">
@@ -91,53 +112,33 @@
                                                                 class="asterisk-input">Producer</label>
                                                         </div>
                                                         <ng-select [items]="uiState.lists.producersList"
-                                                            [loading]="lookupData ? false : true" [clearable]="true"
+                                                            [loading]="lookupData ? false : true" [clearable]="false"
                                                             [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
                                                             class="is-invalid" placeholder="select producer"
                                                             [searchable]="true" bindLabel="name" bindValue="name"
-                                                            id="producer" formControlName="producer">
+                                                            id="producer" formControlName="producer"
+                                                            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersClients)">
                                                         </ng-select>
 
                                                     </div>
                                                 </div>
-                                                <!-- Type -->
+                                                <!-- Client Type -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mt-2">
                                                     <div class="accordion-info">
-                                                        <label for="type">Type</label>
+                                                        <label for="type">Client Type</label>
                                                         <ng-select [items]="uiState.lists.typesList"
-                                                            [loading]="lookupData ? false : true" [clearable]="true"
+                                                            [loading]="lookupData ? false : true" [clearable]="false"
                                                             [searchable]="true" placeholder="select type"
                                                             bindLabel="name" bindValue="name" id="type"
                                                             formControlName="type">
                                                         </ng-select>
                                                     </div>
                                                 </div>
-                                                <!-- Branchs -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mt-2">
-                                                    <div class="accordion-info">
-                                                        <div class="d-flex justify-content-between">
-                                                            <label for="Branch">Branch</label>
-                                                            <div>
-                                                                <label for="checkall" class="mx-2">Select All</label>
-                                                                <input type="checkbox" id="checkall"
-                                                                    [formControl]="uiState.checkAllContorls.checkAllBranches"
-                                                                    (change)="checkAllStatusAction(uiState.checkAllContorls.checkAllBranches.value,'branch')">
-                                                            </div>
-                                                        </div>
-                                                        <ng-select [items]="(lookupData | async)?.Branch?.content!"
-                                                            [loading]="lookupData ? false : true" [clearable]="true"
-                                                            [hideSelected]="true" placeholder="select branch"
-                                                            [multiple]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" id="branch" formControlName="branchs"
-                                                            (change)="ngSelectChange('branchs')">
-                                                        </ng-select>
-                                                    </div>
-                                                </div>
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -152,8 +153,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>

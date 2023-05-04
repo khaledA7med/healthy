@@ -67,8 +67,8 @@
         <div class="col-12 mb-2">
           <label for="branch" class="form-label">Branch</label>
           <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
-            formControlName="branch">
+            placeholder="Select Branch(es)" [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name"
+            id="branch" formControlName="branch">
           </ng-select>
         </div>
         <!-- producer -->

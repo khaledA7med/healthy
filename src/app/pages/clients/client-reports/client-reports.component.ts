@@ -15,6 +15,10 @@ import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer
 import { IClientReportFiltersForm, IClientReportReq } from "src/app/shared/app/models/Clients/iclient-report";
 import AppUtils from "src/app/shared/app/util";
 import { NavigationStart, Router } from "@angular/router";
+import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { Roles } from "src/app/core/roles/Roles";
+import { AuthenticationService } from "src/app/core/services/auth.service";
 
 @Component({
 	selector: "app-client-reports",
@@ -42,7 +46,10 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			typesList: [] as IGenericResponseType[],
 			branchesLists: [] as IGenericResponseType[],
 		},
+		privileges: ClientsPermissions,
 	};
+	permissions$!: Observable<string[]>;
+
 	modalRef!: NgbModalRef;
 	constructor(
 		private modalService: NgbModal,
@@ -51,26 +58,34 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router
+		private router: Router,
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
+		this.permissions$ = this.permission.getPrivileges(Roles.Clients);
+
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Client);
 
 		let sub = this.lookupData.subscribe((res) => {
 			this.uiState.lists.clientStatus = res.ClientStatus?.content!;
 			this.uiState.lists.branchesLists = res.Branch?.content!;
+			this.uiState.checkAllContorls.checkAllBranches.patchValue(true);
+			this.uiState.checkAllContorls.checkAllStatus.patchValue(true);
+			if (this.uiState.lists.branchesLists != undefined && this.uiState.lists.branchesLists.length > 0) this.checkAllStatusAction(true, "branch");
+			if (this.uiState.lists.clientStatus != undefined && this.uiState.lists.clientStatus.length > 0) this.checkAllStatusAction(true, "status");
 			res.CommericalNo?.content! ? (this.uiState.lists.crNoList = [{ id: 0, name: "Select All" }, ...res.CommericalNo?.content!]) : "";
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 			res.ClientTypes?.content! ? (this.uiState.lists.typesList = [{ id: 0, name: "Select All" }, ...res.ClientTypes?.content!]) : "";
 		});
-		let sub2 = this.router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {
-				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-			}
-		});
-		this.subscribes.push(sub, sub2);
+		// let sub2 = this.router.events.subscribe((event) => {
+		// 	if (event instanceof NavigationStart) {
+		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+		// 	}
+		// });
+		this.subscribes.push(sub);
 
 		let date = new Date();
 		let todayDate = {
@@ -177,11 +192,40 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "Clients Reports",
-			url: data,
-		};
+		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
+		// this.modalRef.componentInstance.data = {
+		// 	reportName: "Clients Reports",
+		// 	url: data,
+		// };
+		const myWindow = window.open(data, "_blank", "fullscreen: true");
+		const content = `		
+						<!DOCTYPE html>
+						<html lang="en">
+							<head>
+								<title>Clients Reports</title>
+								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+								<style>
+								body {height: 98vh;}
+								.myIFrame {
+								border: none;
+								}
+								</style>
+							</head>
+							<body>
+								<iframe
+								src="${data}"
+								class="myIFrame justify-content-center"
+								frameborder="5"
+								width="100%"
+								height="99%"
+								referrerpolicy="no-referrer-when-downgrade"
+								>
+								</iframe>
+							</body>
+						</html>
+
+		`;
+		myWindow?.document.write(content);
 	}
 
 	ngOnDestroy(): void {
