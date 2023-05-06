@@ -49,25 +49,26 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.MasterTable">
                                                 <ng-container *ngIf="item.name === 'chMasterTabels' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('MasterTable',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chMasterTablesReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chMasterTabels' && item.name !== 'chMasterTablesReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('MasterTable')">
-                                                    <label class="form-check-label parent">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('MasterTable')">
+                                                    <label [for]="item.name" class="form-check-label parent">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -84,26 +85,26 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.BussinessDevelopment">
                                                 <ng-container *ngIf="item.name === 'chBussDevelopment' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('BussinessDevelopment',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chBusinessDevelopmentReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chBussDevelopment' && item.name !== 'chBusinessDevelopmentReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
                                                         (change)="checkMasterItem('BussinessDevelopment')">
-                                                    <label class="form-check-label parent">
+                                                    <label [for]="item.name" class="form-check-label parent">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -120,26 +121,27 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.ClientRegistry">
                                                 <ng-container *ngIf="item.name === 'chClientsRegistryAdmin' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('ClientRegistry',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name === 'chClientsRegistryAdministratorReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chClientsRegistryAdmin' && item.name !== 'chClientsRegistryAdministratorReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('ClientRegistry')">
-                                                    <label class="form-check-label parent">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('ClientRegistry')">
+                                                    <label [for]="item.name" class="form-check-label parent">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -156,25 +158,26 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.Production">
                                                 <ng-container *ngIf="item.name === 'chProduction' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('Production',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chProductionReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chProduction' && item.name !== 'chProductionReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('Production')">
-                                                    <label class="form-check-label parent">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('Production')">
+                                                    <label [for]="item.name" class="form-check-label parent">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -191,25 +194,26 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.CustomerService">
                                                 <ng-container *ngIf="item.name === 'chCustomerService' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('CustomerService',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chCustomerServiceReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chCustomerService' && item.name !== 'chCustomerServiceReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('CustomerService')">
-                                                    <label class="form-check-label parent">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('CustomerService')">
+                                                    <label [for]="item.name" class="form-check-label parent">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -231,25 +235,26 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.ClaimsManagement">
                                                 <ng-container *ngIf="item.name === 'chClaims' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('ClaimsManagement',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chClaimsManagementSystemReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container
                                                     *ngIf="item.name !== 'chClaims' && item.name !== 'chClaimsManagementSystemReadOnly'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('ClaimsManagement')">
-                                                    <label class="form-check-label child">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('ClaimsManagement')">
+                                                    <label [for]="item.name" class="form-check-label child">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -264,15 +269,16 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="form-check col-8 mb-2">
-                                                <input class="form-check-input selectAll7" type="checkbox"
-                                                    formControlName="chFinance"
+                                                <input id="ChFinance" class="form-check-input selectAll7"
+                                                    type="checkbox" formControlName="chFinance"
                                                     (change)="allItemsChecker('FinancialManagement',ff.chFinance.value!)">
                                                 <label class="form-check-label parent text-info" for="ChFinance">
                                                     Financial Management System
                                                 </label>
                                             </div>
                                             <div class="form-check col-4 mb-2">
-                                                <input class="form-check-input" type="checkbox"
+                                                <input id="ChFinancialManagementSystemReadOnly" class="form-check-input"
+                                                    type="checkbox"
                                                     formControlName="chFinancialManagementSystemReadOnly">
                                                 <label class="form-check-label parent text-info"
                                                     for="ChFinancialManagementSystemReadOnly">
@@ -287,19 +293,20 @@
                                                         *ngFor="let item of globalArrs.FinancialManagement.makeNewRoles">
                                                         <div class="form-check mb-2"
                                                             *ngIf="item.name === 'chFinMakeNew'">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                [formControl]="item.control"
+                                                            <input [id]="item.name" class="form-check-input"
+                                                                type="checkbox" [formControl]="item.control"
                                                                 (change)="subItemsChecker('FinancialManagement','makeNewRoles',item.control.value!)">
-                                                            <label class="form-check-label parent text-info">
+                                                            <label [for]="item.name"
+                                                                class="form-check-label parent text-info">
                                                                 {{item.label}}
                                                             </label>
                                                         </div>
                                                         <div class="form-check col-12 mb-2 ms-3"
                                                             *ngIf="item.name !== 'chFinMakeNew'">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                [formControl]="item.control"
+                                                            <input [id]="item.name" class="form-check-input"
+                                                                type="checkbox" [formControl]="item.control"
                                                                 (change)="checkMasterItem('FinancialManagement','makeNewRoles')">
-                                                            <label class="form-check-label child">
+                                                            <label [for]="item.name" class="form-check-label child">
                                                                 {{item.label}}
                                                             </label>
                                                         </div>
@@ -310,19 +317,20 @@
                                                 <ng-container
                                                     *ngFor="let item of globalArrs.FinancialManagement.archivesRoles">
                                                     <div class="form-check mb-2" *ngIf="item.name === 'chFinArchive'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="subItemsChecker('FinancialManagement','archivesRoles',item.control.value!)">
-                                                        <label class="form-check-label parent text-info">
+                                                        <label [for]="item.name"
+                                                            class="form-check-label parent text-info">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
                                                     <div class="form-check col-12 mb-2 ms-3"
                                                         *ngIf="item.name !== 'chFinArchive'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="checkMasterItem('FinancialManagement','archivesRoles')">
-                                                        <label class="form-check-label child">
+                                                        <label [for]="item.name" class="form-check-label child">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
@@ -334,19 +342,20 @@
                                                 <ng-container
                                                     *ngFor="let item of globalArrs.FinancialManagement.approvalsRoles">
                                                     <div class="form-check mb-2" *ngIf="item.name === 'chFinApprovals'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="subItemsChecker('FinancialManagement','approvalsRoles',item.control.value!)">
-                                                        <label class="form-check-label parent text-info">
+                                                        <label [for]="item.name"
+                                                            class="form-check-label parent text-info">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
                                                     <div class="form-check col-12 mb-2 ms-3"
                                                         *ngIf="item.name !== 'chFinApprovals'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="checkMasterItem('FinancialManagement','approvalsRoles')">
-                                                        <label class="form-check-label child">
+                                                        <label [for]="item.name" class="form-check-label child">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
@@ -356,19 +365,20 @@
                                                 <ng-container
                                                     *ngFor="let item of globalArrs.FinancialManagement.reportsRoles">
                                                     <div class="form-check mb-2" *ngIf="item.name === 'chFinReports'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="subItemsChecker('FinancialManagement','reportsRoles',item.control.value!)">
-                                                        <label class="form-check-label parent text-info">
+                                                        <label [for]="item.name"
+                                                            class="form-check-label parent text-info">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
                                                     <div class="form-check col-12 mb-2 ms-3"
                                                         *ngIf="item.name !== 'chFinReports'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="checkMasterItem('FinancialManagement','reportsRoles')">
-                                                        <label class="form-check-label child">
+                                                        <label [for]="item.name" class="form-check-label child">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
@@ -377,10 +387,10 @@
                                                 <ng-container
                                                     *ngFor="let item of globalArrs.FinancialManagement.generalRoles">
                                                     <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="checkMasterItem('FinancialManagement','generalRoles')">
-                                                        <label class="form-check-label child">
+                                                        <label [for]="item.name" class="form-check-label child">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
@@ -397,14 +407,15 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox" formControlName="chHR"
+                                                <input id="ChHR" class="form-check-input" type="checkbox"
+                                                    formControlName="chHR"
                                                     (change)="allItemsChecker('HumanResources',ff.chHR.value!)">
                                                 <label class="form-check-label parent text-info" for="ChHR">
                                                     Human Resources
                                                 </label>
                                             </div>
                                             <div class="form-check col-6 mb-2">
-                                                <input class="form-check-input" type="checkbox"
+                                                <input id="ChHRReadOnly" class="form-check-input" type="checkbox"
                                                     formControlName="chHRReadOnly">
                                                 <label class="form-check-label parent text-info" for="ChHRReadOnly">
                                                     Read-Only
@@ -418,20 +429,21 @@
                                                     *ngFor="let item of globalArrs.HumanResources.payrollRoles">
                                                     <div class="form-check col-12 mb-2"
                                                         *ngIf="item.name === 'chPayroll'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="subItemsChecker('HumanResources','payrollRoles',item.control.value!)">
-                                                        <label class="form-check-label parent text-info">
+                                                        <label [for]="item.name"
+                                                            class="form-check-label parent text-info">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
                                                     <div class="form-check col-6 mb-2"
                                                         style="padding-inline-start: 40px;"
                                                         *ngIf="item.name !== 'chPayroll'">
-                                                        <input class="form-check-input" type="checkbox"
+                                                        <input [id]="item.name" class="form-check-input" type="checkbox"
                                                             [formControl]="item.control"
                                                             (change)="checkMasterItem('HumanResources','payrollRoles')">
-                                                        <label class="form-check-label child">
+                                                        <label [for]="item.name" class="form-check-label child">
                                                             {{item.label}}
                                                         </label>
                                                     </div>
@@ -442,10 +454,10 @@
                                                     <ng-container
                                                         *ngFor="let item of globalArrs.HumanResources.generalRoles">
                                                         <div class="form-check col-6 mb-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                [formControl]="item.control"
+                                                            <input [id]="item.name" class="form-check-input"
+                                                                type="checkbox" [formControl]="item.control"
                                                                 (change)="checkMasterItem('HumanResources','generalRoles')">
-                                                            <label class="form-check-label child">
+                                                            <label [for]="item.name" class="form-check-label child">
                                                                 {{item.label}}
                                                             </label>
                                                         </div>
@@ -465,17 +477,17 @@
                                             <div class="form-check mb-2 col-6"
                                                 *ngFor="let item of globalArrs.FixedAssets">
                                                 <ng-container *ngIf="item.name === 'chFixedAssets' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('FixedAssets',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name === 'chFixedAssetsReadOnly'">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
@@ -491,17 +503,18 @@
                                         <div class="row">
                                             <div class="form-check mb-2 col-6" *ngFor="let item of globalArrs.SysAdmin">
                                                 <ng-container *ngIf="item.name === 'chSystemAdmin' ">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input [id]="item.name" class="form-check-input" type="checkbox"
                                                         [formControl]="item.control"
                                                         (change)="allItemsChecker('SysAdmin',item.control.value!)">
-                                                    <label class="form-check-label parent text-info">
+                                                    <label [for]="item.name" class="form-check-label parent text-info">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.name !== 'chSystemAdmin'">
-                                                    <input class="form-check-input" [formControl]="item.control"
-                                                        type="checkbox" (change)="checkMasterItem('SysAdmin')">
-                                                    <label class="form-check-label child">
+                                                    <input [id]="item.name" class="form-check-input"
+                                                        [formControl]="item.control" type="checkbox"
+                                                        (change)="checkMasterItem('SysAdmin')">
+                                                    <label [for]="item.name" class="form-check-label child">
                                                         {{item.label}}
                                                     </label>
                                                 </ng-container>
