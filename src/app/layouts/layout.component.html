@@ -1,3 +1,4 @@
 <!-- Vertical layout -->
-<app-vertical></app-vertical>
+<app-vertical *ngIf="layoutType === layoutVars.VER"></app-vertical>
+<app-horizontal *ngIf="layoutType === layoutVars.HOR"></app-horizontal>
 <app-general-loader></app-general-loader>

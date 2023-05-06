@@ -1,18 +1,24 @@
 <div class="row justify-content-between align-items-center mb-3">
-  <div class="col-lg-2 col-md-3 col-sm-6 form-group row align-items-center">
-    <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
-    <div class="col-sm-8">
-      <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
-        [(ngModel)]="uiState.filters.pageSize">
-        <ng-option [value]="25">25</ng-option>
-        <ng-option [value]="50">50</ng-option>
-        <ng-option [value]="100">100</ng-option>
-        <ng-option [value]="150">150</ng-option>
-        <ng-option [value]="200">200</ng-option>
-      </ng-select>
+  <div class="col-lg-2 col-md-3 col-sm-6 row align-items-center">
+    <div class="col-7 form-group row align-items-center">
+      <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
+      <div class="col-sm-8">
+        <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
+          [(ngModel)]="uiState.filters.pageSize">
+          <ng-option [value]="25">25</ng-option>
+          <ng-option [value]="50">50</ng-option>
+          <ng-option [value]="100">100</ng-option>
+          <ng-option [value]="150">150</ng-option>
+          <ng-option [value]="200">200</ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="col">
+      <button (click)="exportExcelFile()" class="btn btn-sm btn-outline-primary"><i class="bx bxs-file-export"></i> Copy
+        to Excel</button>
     </div>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-6 mt-sm-3 d-flex justify-content-end">
+  <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-end">
     <button class="btn btn-sm btn-info mx-2" (click)="openFilterOffcanvas()">
       <i class="ri-filter-3-line me-1"></i> Filters
     </button>
