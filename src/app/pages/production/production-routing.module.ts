@@ -60,7 +60,7 @@ const routes: Routes = [
 	{
 		path: AppRoutes.Production.reports.production,
 		data: {
-			title: "Production(statistics) Report",
+			title: "Production Report",
 		},
 		loadChildren: () => import("./production-report/production-report.module").then((m) => m.ProductionReportModule),
 		canActivate: [() => ProductionGuard([ProductionPermissions.ChProduction, ProductionPermissions.ChProdReports])],

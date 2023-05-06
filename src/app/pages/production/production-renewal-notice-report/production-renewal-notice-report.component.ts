@@ -3,7 +3,7 @@ import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { Caching, IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
@@ -15,6 +15,10 @@ import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { IPolicyRenewalNoticeReportForm, IPolicyRenewalNoticeReportReq } from "src/app/shared/app/models/Production/ipolicy-renewal-notice-report";
 import { NavigationStart, Router } from "@angular/router";
+import { ProductionPermissions } from "src/app/core/roles/production-permissions";
+import { AuthenticationService } from "src/app/core/services/auth.service";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { Roles } from "src/app/core/roles/Roles";
 @Component({
 	selector: "app-production-renewal-notice-report",
 	templateUrl: "./production-renewal-notice-report.component.html",
@@ -45,7 +49,9 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			linesOfBusinessLists: [] as string[],
 		},
 		clientDataContorl: new FormControl("Select all"),
+		privileges: ProductionPermissions,
 	};
+	permissions$!: Observable<string[]>;
 	modalRef!: NgbModalRef;
 	constructor(
 		private modalService: NgbModal,
@@ -54,10 +60,15 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router
+		private router: Router,
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
+		this.eventService.broadcast(reserved.isLoading, true);
+		this.permissions$ = this.permission.getPrivileges(Roles.Production);
+
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
 
@@ -67,13 +78,35 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			res.Branch?.content! ? (this.uiState.lists.branchesLists = [{ id: 0, name: "Select all" }, ...res.Branch?.content!]) : "";
 			res.ClientsList?.content! ? (this.uiState.lists.clientsLists = [{ id: 0, name: "Select all" }, ...res.ClientsList?.content!]) : "";
 			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select all" }, ...res.GroupsList?.content!]) : "";
-		});
-		let sub2 = this.router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {
-				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+
+			if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
+				this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
+				this.checkAllToggler(true, "insuranceCompany");
 			}
+			if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
+				this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
+				this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true);
+
+				this.checkAllToggler(true, "classOfBusiness");
+				this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
+			}
+
+			let sub2 = this.permissions$.subscribe((res: string[]) => {
+				if (!res.includes(this.uiState.privileges.ViewAllBranchs)) {
+					this.f.branch?.disable();
+					this.f.branch?.patchValue(this.auth.getUser().Branch!);
+				}
+
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub2);
 		});
-		this.subscribes.push(sub, sub2);
+		// let sub2 = this.router.events.subscribe((event) => {
+		// 	if (event instanceof NavigationStart) {
+		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
+		// 	}
+		// });
+		this.subscribes.push(sub);
 
 		let date = new Date();
 		let todayDate = {
@@ -170,6 +203,16 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		let cls = classList.map((el: any) => (el?.name ? el?.name : el));
 		let sub = this.productionService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
 			this.uiState.lists.linesOfBusinessLists = res.body?.data!;
+
+			if (this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length)
+				this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(false);
+			else this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true);
+
+			if (this.uiState.checkAllControls.allClassOfBusinessControl.value && this.uiState.checkAllControls.allLinesOfBusinessControl.value) {
+				this.checkAllToggler(true, "linesOfBusiness");
+			} else {
+				this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
+			}
 		});
 		this.subscribes.push(sub);
 	}
@@ -220,11 +263,40 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 	}
 
 	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "Renewal Notice Report",
-			url: data,
-		};
+		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
+		// this.modalRef.componentInstance.data = {
+		// 	reportName: "Renewal Notice Report",
+		// 	url: data,
+		// };
+		const myWindow = window.open(data, "_blank", "fullscreen: true");
+		const content = `		
+						<!DOCTYPE html>
+						<html lang="en">
+							<head>
+								<title>Prospects Reports</title>
+								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+								<style>
+								body {height: 98vh;}
+								.myIFrame {
+								border: none;
+								}
+								</style>
+							</head>
+							<body>
+								<iframe
+								src="${data}"
+								class="myIFrame justify-content-center"
+								frameborder="5"
+								width="100%"
+								height="99%"
+								referrerpolicy="no-referrer-when-downgrade"
+								>
+								</iframe>
+							</body>
+						</html>
+
+		`;
+		myWindow?.document.write(content);
 	}
 
 	ngOnDestroy(): void {

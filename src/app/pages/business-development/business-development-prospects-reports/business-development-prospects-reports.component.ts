@@ -66,9 +66,9 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 	) {}
 
 	ngOnInit(): void {
+		this.eventService.broadcast(reserved.isLoading, true);
 		this.permissions$ = this.permission.getPrivileges(Roles.BusinessDevelopment);
 
-		this.eventService.broadcast(reserved.isLoading, true);
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.BusinessDevelopment);
 		let sub = this.lookupData.subscribe((res) => {
@@ -80,31 +80,32 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 				this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
 				this.checkAllToggler(true, "classOfBusiness");
 			}
-		});
 
-		let sub2 = this.permissions$.subscribe((res: string[]) => {
-			if (!res.includes(this.uiState.privileges.ChAccessAllBranchBussiness)) {
-				this.uiState.checkAllControls.allBranchControl.disable();
-				this.f.branchs?.patchValue([this.auth.getUser().Branch!]);
-			} else {
-				this.uiState.checkAllControls.allBranchControl.patchValue(true);
-				if (this.uiState.lists.branchesLists != undefined && this.uiState.lists.branchesLists.length > 0) this.checkAllToggler(true, "branch");
-			}
-			if (!res.includes(this.uiState.privileges.ChAccessAllProducersSales)) {
-				this.uiState.checkAllControls.allProducersControl.disable();
-				this.f.producers?.patchValue([this.auth.getUser().name!]);
-			} else {
-				this.uiState.checkAllControls.allProducersControl.patchValue(true);
-				if (this.uiState.lists.producersLists != undefined && this.uiState.lists.producersLists.length > 0) this.checkAllToggler(true, "producer");
-			}
-			this.eventService.broadcast(reserved.isLoading, false);
+			let sub2 = this.permissions$.subscribe((res: string[]) => {
+				if (!res.includes(this.uiState.privileges.ChAccessAllBranchBussiness)) {
+					this.uiState.checkAllControls.allBranchControl.disable();
+					this.f.branchs?.patchValue([this.auth.getUser().Branch!]);
+				} else {
+					this.uiState.checkAllControls.allBranchControl.patchValue(true);
+					if (this.uiState.lists.branchesLists != undefined && this.uiState.lists.branchesLists.length > 0) this.checkAllToggler(true, "branch");
+				}
+				if (!res.includes(this.uiState.privileges.ChAccessAllProducersSales)) {
+					this.uiState.checkAllControls.allProducersControl.disable();
+					this.f.producers?.patchValue([this.auth.getUser().name!]);
+				} else {
+					this.uiState.checkAllControls.allProducersControl.patchValue(true);
+					if (this.uiState.lists.producersLists != undefined && this.uiState.lists.producersLists.length > 0) this.checkAllToggler(true, "producer");
+				}
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub2);
 		});
 		// let sub2 = this.router.events.subscribe((event) => {
 		// 	if (event instanceof NavigationStart) {
 		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
 		// 	}
 		// });
-		this.subscribes.push(sub, sub2);
+		this.subscribes.push(sub);
 
 		let date = new Date();
 		let todayDate = {

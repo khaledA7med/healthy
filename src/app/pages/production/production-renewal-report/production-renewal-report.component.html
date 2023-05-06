@@ -14,22 +14,22 @@
                                             <span class="ribbon ribbon-info round-shape"><span>Parameters
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
-                                                <div class="col-12 row  my-2 pe-0">
-                                                    <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client(s)
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.clientsList"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="false" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" [formControl]="uiState.clientDataContorl"
-                                                            (change)="setClientData($event)">
-                                                        </ng-select>
+                                                <!-- <div class="col-12 row  my-2 pe-0"> -->
+                                                <!-- Client(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client(s)
+                                                        </label>
                                                     </div>
+                                                    <ng-select [items]="uiState.lists.clientsList"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" [formControl]="uiState.clientDataContorl"
+                                                        (change)="setClientData($event)">
+                                                    </ng-select>
                                                 </div>
+                                                <!-- </div> -->
                                                 <!-- Branches -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -50,67 +50,6 @@
                                                         [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
                                                         formControlName="branchs" (change)="ngSelectChange('branch')">
                                                     </ng-select>
-                                                </div>
-                                                <!-- Insurance Company -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Insurance Company
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall2" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall2"
-                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                                                        placeholder="Select Insurance Company(s)"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany"
-                                                        (change)="ngSelectChange('insuranceCompany')">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Class Of Business -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Class Of Business
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall3" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall3"
-                                                                [formControl]="uiState.checkAllControls.allClassOfBusinessControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allClassOfBusinessControl.value!,'classOfBusiness')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                                                        placeholder="Select Classes Of Business"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="classOfBusiness"
-                                                        (change)="ngSelectChange('classOfBusiness')">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Producer -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Producer</label>
-                                                    </div>
-                                                    <ng-select [items]="uiState.lists.producersList"
-                                                        placeholder="Select Producer"
-                                                        [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" bindLabel="name"
-                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!"
-                                                        bindValue="name" formControlName="producer">
-                                                    </ng-select>
-                                                    <div class="invalid-feedback d-inline-block fw-bold"
-                                                        *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">
-                                                        Required
-                                                    </div>
                                                 </div>
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
@@ -141,6 +80,69 @@
                                                             *ngIf="(f.maxDate?.touched || submitted) && f.maxDate?.invalid">
                                                             Required
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Insurance Company -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Insurance Company
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall2" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall2"
+                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                                                        placeholder="Select Insurance Company(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
+                                                    </ng-select>
+                                                </div>
+
+                                                <!-- Class Of Business -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Class Of Business
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall3" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall3"
+                                                                [formControl]="uiState.checkAllControls.allClassOfBusinessControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allClassOfBusinessControl.value!,'classOfBusiness')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                                                        placeholder="Select Classes Of Business"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="classOfBusiness"
+                                                        (change)="ngSelectChange('classOfBusiness')">
+                                                    </ng-select>
+                                                </div>
+
+                                                <!-- Producer -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Producer</label>
+                                                    </div>
+                                                    <ng-select [items]="uiState.lists.producersList"
+                                                        placeholder="Select Producer"
+                                                        [ngClass]="{'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid}"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!"
+                                                        bindValue="name" formControlName="producer">
+                                                    </ng-select>
+                                                    <div class="invalid-feedback d-inline-block fw-bold"
+                                                        *ngIf="(f.producer?.touched || submitted) && f.producer?.invalid">
+                                                        Required
                                                     </div>
                                                 </div>
 

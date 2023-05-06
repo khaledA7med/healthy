@@ -84,7 +84,10 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 		// });
 
 		let sub2 = this.permissions$.subscribe((res: string[]) => {
-			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
+			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) {
+				this.f.producer?.patchValue(this.auth.getUser().name!);
+				this.f.producer?.disable();
+			}
 
 			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) {
 				this.uiState.checkAllControls.allBranchControl.disable();
@@ -225,11 +228,40 @@ export class ProductionRenewalReportComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "Policies Reports - Renewals",
-			url: data,
-		};
+		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
+		// this.modalRef.componentInstance.data = {
+		// 	reportName: "Policies Reports - Renewals",
+		// 	url: data,
+		// };
+		const myWindow = window.open(data, "_blank", "fullscreen: true");
+		const content = `		
+						<!DOCTYPE html>
+						<html lang="en">
+							<head>
+								<title>Prospects Reports</title>
+								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+								<style>
+								body {height: 98vh;}
+								.myIFrame {
+								border: none;
+								}
+								</style>
+							</head>
+							<body>
+								<iframe
+								src="${data}"
+								class="myIFrame justify-content-center"
+								frameborder="5"
+								width="100%"
+								height="99%"
+								referrerpolicy="no-referrer-when-downgrade"
+								>
+								</iframe>
+							</body>
+						</html>
+
+		`;
+		myWindow?.document.write(content);
 	}
 
 	ngOnDestroy(): void {
