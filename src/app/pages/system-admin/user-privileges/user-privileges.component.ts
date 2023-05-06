@@ -37,6 +37,7 @@ export class UserPrivilegesComponent implements OnInit {
 			list: [] as IUserRoles[],
 			totalPages: 0,
 		},
+		roleName: null,
 		privilagesData: {} as IUserRolesPrivileges,
 		convertedPrivilagesData: {} as IUserRolesPrivilegesBoolean,
 	};
@@ -106,6 +107,7 @@ export class UserPrivilegesComponent implements OnInit {
 			});
 		} else {
 			this.getAllPrivileges(params.data.sno);
+			this.uiState.roleName = params.data.securityRole;
 		}
 	}
 
