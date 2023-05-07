@@ -219,17 +219,14 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       insurComp: new FormControl(null, Validators.required),
       className: new FormControl(null, Validators.required),
       lineOfBusiness: new FormControl(null, Validators.required),
-      minDriverAge: new FormControl(
-        { value: null, disabled: true },
-        Validators.required
-      ),
+      minDriverAge: new FormControl({ value: null, disabled: true }),
       issueDate: new FormControl(null, Validators.required),
       periodFrom: new FormControl(null, Validators.required),
       periodTo: new FormControl(null, Validators.required),
-      numberOfBeneficiaries: new FormControl(null, [
-        Validators.required,
-        Validators.min(1),
-      ]),
+      numberOfBeneficiaries: new FormControl(
+        { value: null, disabled: true },
+        Validators.min(1)
+      ),
       claimNoOfDays: new FormControl(null),
       csNoOfDays: new FormControl(null),
       remarks: new FormControl(null),
@@ -241,7 +238,7 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
       compCommDNCNNo: new FormControl(null, Validators.required),
       sumInsur: new FormControl(0),
       netPremium: new FormControl(0),
-      fees: new FormControl(0, [Validators.max(1000)]),
+      fees: new FormControl(0, Validators.max(1000)),
       deductFees: new FormControl({ value: false, disabled: true }),
       vatPerc: new FormControl(+reserved.DefaultVATPerc),
       vatValue: new FormControl(0),
@@ -519,7 +516,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
   // Issue Types
   newIssue(): void {
-    this.f.accNo?.enable();
     this.f.policyNo?.enable();
 
     this.f.endorsType?.reset();
@@ -528,7 +524,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.f.endorsNo?.disable();
     this.f.insurComp?.enable();
     this.f.className?.enable();
-    this.f.lineOfBusiness?.enable();
     this.f.issueDate?.enable();
     this.f.periodFrom?.enable();
     this.f.periodTo?.enable();
@@ -538,7 +533,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   renewalIssue(): void {
-    this.f.accNo?.enable();
     this.f.policyNo?.enable();
 
     this.f.endorsType?.reset();
@@ -549,7 +543,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     this.f.insurComp?.enable();
     this.f.className?.enable();
-    this.f.lineOfBusiness?.enable();
     this.f.periodFrom?.enable();
     this.f.periodTo?.enable();
     this.f.compCommPerc?.enable();
@@ -557,8 +550,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
   }
 
   endorsementIssue(): void {
-    this.f.accNo?.reset();
-    this.f.accNo?.disable();
     this.f.policyNo?.reset();
     this.f.policyNo?.disable();
 
@@ -570,9 +561,6 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
 
     this.f.className?.disable();
     this.f.className?.reset();
-
-    this.f.lineOfBusiness?.disable();
-    this.f.lineOfBusiness?.reset();
 
     this.f.issueDate?.enable();
     this.f.periodFrom?.enable();
@@ -618,8 +606,12 @@ export class PoliciesFormsComponent implements OnInit, OnDestroy {
     this.subscribes.push(sub);
     if (cls === "Motor") this.f.minDriverAge?.enable();
     else this.f.minDriverAge?.disable();
+    if (cls === "Medical" || cls === "Life")
+      this.f.numberOfBeneficiaries?.enable();
+    else this.f.numberOfBeneficiaries?.disable();
+    if (cls === "Medical") this.f.sumInsur?.disable();
+    else this.f.sumInsur?.enable();
   }
-
   //#endregion
 
   //#region Invoices Details
