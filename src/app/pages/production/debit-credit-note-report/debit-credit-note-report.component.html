@@ -1,17 +1,17 @@
 <div class="row">
     <div class="col-md-12">
-        <form [formGroup]="filterForm" (ngSubmit)="onSubmit(content)" name="ClntReportsForm" id="ClntReportForm"
+        <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" name="ClntReportsForm" id="ClntReportForm"
             autocomplete="off">
             <ngb-accordion #acc="ngbAccordion" activeIds="1">
                 <!-- Client Details -->
-                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                <ngb-panel id="1" title="Filters" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <div class=" ribbon-box border shadow-none mt-2">
+                                    <div class="ribbon-box border shadow-none mt-2">
                                         <div class="card-body">
-                                            <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
+                                            <span class="ribbon ribbon-info round-shape"><span>Parameters
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
                                                 <!-- Branches -->
@@ -20,10 +20,10 @@
                                                         <label for="branch">Branch
                                                         </label>
                                                     </div>
-                                                    <ng-select [items]="(lookupData | async)?.Branch?.content!"
+                                                    <ng-select [items]="uiState.lists.branchesLists"
                                                         placeholder="Select Branch(s)"
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" bindLabel="name"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
                                                         bindValue="name" formControlName="branchs">
                                                     </ng-select>
                                                 </div>
@@ -49,19 +49,19 @@
                                                         <ng-option [value]="2">Show Other Policyholder</ng-option>
                                                     </ng-select>
                                                 </div>
-                                                <div
+                                                <!-- <div
                                                     class="col-lg-3 col-md-4 col-sm-12  my-2 d-flex align-items-center pt-4">
 
                                                     <input type="checkbox" id="exZero" formControlName="plain" XCTV
                                                         class="mx-1">
                                                     <label for="exZero" class="m-0">ExcludeZeroClaimAmount</label>
 
-                                                </div>
+                                                </div> -->
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -76,8 +76,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>
@@ -108,6 +108,12 @@
 
                                         </div>
                                     </div>
+
+                                    <div class="ag-theme-alpine" appTableView>
+                                        <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh"
+                                            [gridOptions]="gridOpts">
+                                        </ag-grid-angular>
+                                    </div>
                                 </div>
 
                             </div>
@@ -121,7 +127,7 @@
 </div>
 
 
-<ng-template #content let-modal>
+<!-- <ng-template #content let-modal>
     <div class="modal-header mb-0">
         <h4 class="modal-title" id="modal-basic-title">Notes Search</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -132,4 +138,4 @@
             </ag-grid-angular>
         </div>
     </div>
-</ng-template>
+</ng-template> -->

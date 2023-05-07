@@ -20,7 +20,7 @@
                                                     </div>
                                                     <span
                                                         *ngFor="let item of (lookupData | async)?.ProspectsReportsTypes?.content!; index as i;"
-                                                        class="reportsRadioBtn mx-2 my-1 d-flex justify-content-center align-items-center">
+                                                        class="reportsRadioBtn col my-1 ">
                                                         <input type="radio" [value]="item.id"
                                                             formControlName="reportType" [id]="item.name" />
                                                         <label [for]="item.name" class="mx-2 my-0 py-0"

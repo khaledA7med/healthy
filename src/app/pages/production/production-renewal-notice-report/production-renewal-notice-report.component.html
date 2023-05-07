@@ -4,45 +4,45 @@
             autocomplete="off">
             <ngb-accordion #acc="ngbAccordion" activeIds="1">
                 <!-- Client Details -->
-                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                <ngb-panel id="1" title="Filters" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <div class=" ribbon-box border shadow-none mt-2">
                                         <div class="card-body">
-                                            <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
+                                            <span class="ribbon ribbon-info round-shape"><span>Parameters
                                                 </span></span>
-                                            <div class="row mt-4 mx-2">
-                                                <div class="col-12 row mt-4 mb-2 pe-0">
-                                                    <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client(s)
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.clientsLists"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="false" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" [formControl]="uiState.clientDataContorl"
-                                                            (change)="setClientData($event)">
-                                                        </ng-select>
+                                            <div class="row mt-5 mx-2">
+                                                <!-- <div class="col-12 row mt-4 mb-2 pe-0"> -->
+                                                <!-- Client(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client(s)
+                                                        </label>
                                                     </div>
-                                                    <!-- Client Group(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client Group(s)
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.groupsLists"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="false" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" formControlName="clientGroup">
-                                                        </ng-select>
-                                                    </div>
+                                                    <ng-select [items]="uiState.lists.clientsLists"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" [formControl]="uiState.clientDataContorl"
+                                                        (change)="setClientData($event)">
+                                                    </ng-select>
                                                 </div>
+                                                <!-- Client Group(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client Group(s)
+                                                        </label>
+                                                    </div>
+                                                    <ng-select [items]="uiState.lists.groupsLists"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" formControlName="clientGroup">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- </div> -->
                                                 <!-- Branches -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -54,69 +54,6 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="false" [searchable]="true" [closeOnSelect]="false"
                                                         bindLabel="name" bindValue="name" formControlName="branch">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Insurance Company -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Insurance Company
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall2" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall2"
-                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                                                        placeholder="Select Insurance Company(s)"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany"
-                                                        (change)="ngSelectChange('insuranceCompany')">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Class Of Business -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Class Of Business
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall3" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall3"
-                                                                [formControl]="uiState.checkAllControls.allClassOfBusinessControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allClassOfBusinessControl.value!,'classOfBusiness')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                                                        placeholder="Select Classes Of Business"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="classOfBusiness"
-                                                        (change)="getLinesOfBusiness($event);ngSelectChange('classOfBusiness')">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Line Of Business -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Line Of Business
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall3" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall3"
-                                                                [formControl]="uiState.checkAllControls.allLinesOfBusinessControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allLinesOfBusinessControl.value!,'linesOfBusiness')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select [items]="uiState.lists.linesOfBusinessLists"
-                                                        placeholder="Select Line Of Business" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="lineOfBusiness"
-                                                        (change)="ngSelectChange('linesOfBusiness')">
                                                     </ng-select>
                                                 </div>
                                                 <!-- Report Type -->
@@ -151,8 +88,8 @@
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -167,8 +104,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>
@@ -179,7 +116,70 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <!-- <div class="col-lg-3 col-md-4 col-sm-12"></div> -->
+                                                <!-- Class Of Business -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Class Of Business
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall3" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall3"
+                                                                [formControl]="uiState.checkAllControls.allClassOfBusinessControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allClassOfBusinessControl.value!,'classOfBusiness')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
+                                                        placeholder="Select Classes Of Business"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="classOfBusiness"
+                                                        (change)="getLinesOfBusiness($event);ngSelectChange('classOfBusiness')">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Line Of Business -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Line Of Business
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall3" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall3"
+                                                                [formControl]="uiState.checkAllControls.allLinesOfBusinessControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allLinesOfBusinessControl.value!,'linesOfBusiness')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select [items]="uiState.lists.linesOfBusinessLists"
+                                                        placeholder="Select Line Of Business" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="lineOfBusiness"
+                                                        (change)="ngSelectChange('linesOfBusiness')">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Insurance Company -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Insurance Company
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall2" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall2"
+                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                                                        placeholder="Select Insurance Company(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
+                                                    </ng-select>
+                                                </div>
                                                 <!-- SubmittionBtns -->
                                                 <div class="col-12 my-3 d-flex justify-content-end align-items-end">
                                                     <button type="submit"
