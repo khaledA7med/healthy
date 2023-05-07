@@ -50,6 +50,7 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		},
 		clientDataContorl: new FormControl("Select all"),
 		privileges: ProductionPermissions,
+		initLineOfBusinessFlag: false,
 	};
 	permissions$!: Observable<string[]>;
 	modalRef!: NgbModalRef;
@@ -79,17 +80,7 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 			res.ClientsList?.content! ? (this.uiState.lists.clientsLists = [{ id: 0, name: "Select all" }, ...res.ClientsList?.content!]) : "";
 			res.GroupsList?.content! ? (this.uiState.lists.groupsLists = [{ id: 0, name: "Select all" }, ...res.GroupsList?.content!]) : "";
 
-			if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
-				this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
-				this.checkAllToggler(true, "insuranceCompany");
-			}
-			if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
-				this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
-				this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true);
-
-				this.checkAllToggler(true, "classOfBusiness");
-				this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-			}
+			this.initSelectAllChecks();
 
 			let sub2 = this.permissions$.subscribe((res: string[]) => {
 				if (!res.includes(this.uiState.privileges.ViewAllBranchs)) {
@@ -145,6 +136,21 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 		this.subscribes.push(sub!);
 	}
 
+	initSelectAllChecks() {
+		if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
+			this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
+			this.checkAllToggler(true, "insuranceCompany");
+		}
+		this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
+		this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true);
+
+		if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
+			this.checkAllToggler(true, "classOfBusiness");
+			if (this.uiState.lists.linesOfBusinessLists.length > 0)
+				this.checkAllToggler(this.uiState.checkAllControls.allLinesOfBusinessControl.value!, "linesOfBusiness");
+		}
+	}
+
 	setClientData(e: any) {
 		let data = `${e.id}, ${e.name}`;
 		this.f.clientData?.patchValue(data);
@@ -160,7 +166,13 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 				if (check) {
 					this.f.classOfBusiness?.patchValue(this.uiState.lists.classOfBusinessLists.map((e) => e.name));
 					this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-				} else this.f.classOfBusiness?.patchValue([]);
+				} else {
+					this.f.classOfBusiness?.patchValue([]);
+					this.f.lineOfBusiness?.patchValue([]);
+					this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(false);
+					this.uiState.lists.linesOfBusinessLists = [];
+					this.uiState.initLineOfBusinessFlag = false;
+				}
 				break;
 			case "linesOfBusiness":
 				if (check) this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
@@ -200,21 +212,21 @@ export class ProductionRenewalNoticeReportComponent implements OnInit, OnDestroy
 	}
 
 	getLinesOfBusiness(classList: any) {
-		let cls = classList.map((el: any) => (el?.name ? el?.name : el));
-		let sub = this.productionService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.linesOfBusinessLists = res.body?.data!;
-
-			if (this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length)
-				this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(false);
-			else this.uiState.checkAllControls.allLinesOfBusinessControl.patchValue(true);
-
-			if (this.uiState.checkAllControls.allClassOfBusinessControl.value && this.uiState.checkAllControls.allLinesOfBusinessControl.value) {
-				this.checkAllToggler(true, "linesOfBusiness");
-			} else {
-				this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-			}
-		});
-		this.subscribes.push(sub);
+		if (
+			(!this.uiState.initLineOfBusinessFlag && this.uiState.lists.linesOfBusinessLists.length == 0) ||
+			this.uiState.lists.classOfBusinessLists.length > this.f.classOfBusiness?.value?.length! ||
+			(!this.uiState.initLineOfBusinessFlag &&
+				this.uiState.checkAllControls.allClassOfBusinessControl.value &&
+				this.f.classOfBusiness?.value?.length! > 0)
+		) {
+			let cls = classList.map((el: any) => (el?.name ? el?.name : el));
+			let sub = this.productionService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				this.uiState.lists.linesOfBusinessLists = res.body?.data!;
+				this.checkAllToggler(this.uiState.checkAllControls.allLinesOfBusinessControl.value!, "linesOfBusiness");
+			});
+			this.subscribes.push(sub);
+			this.uiState.initLineOfBusinessFlag = true;
+		}
 	}
 
 	reportDate(e: any) {

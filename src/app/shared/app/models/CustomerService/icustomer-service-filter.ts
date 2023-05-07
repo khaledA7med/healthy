@@ -7,9 +7,10 @@ export interface ICustomerServiceFiltersForm {
 	type?: FormControl<string[] | null>;
 	requestNo?: FormControl<string | null>;
 	branch?: FormControl<string | null>;
-	insuranceCompany?: FormControl<string | null>;
+	insuranceCompany?: FormControl<string | string[] | null>;
 	pendingReason?: FormControl<string | null>;
-	classOfBusniess?: FormControl<string | null>;
+	classOfBusniess?: FormControl<string[] | null>;
+	lineOfBusiness?: FormControl<string[] | null>;
 	createdBy?: FormControl<string | null>;
 	duration?: FormControl<string | null>;
 	deadline?: FormControl<Date | null>;
@@ -23,9 +24,10 @@ export interface ICustomerServiceFilters extends IBaseFilters {
 	type?: string[] | null;
 	requestNo?: string | null;
 	branch?: string | null;
-	insuranceCompany?: string | null;
+	insuranceCompany?: string | string[] | null;
 	pendingReason?: string | null;
-	classOfBusniess?: string | null;
+	classOfBusniess?: string[] | null;
+	lineOfBusiness?: string[] | null;
 	createdBy?: string | null;
 	duration?: string | null;
 	deadline?: Date | null;

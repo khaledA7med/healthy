@@ -80,6 +80,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,
@@ -114,8 +115,6 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			if (!res.includes(this.uiState.privileges.ChAccessAllUsersClaim)) this.filterF.savedUser?.patchValue(this.auth.getUser().name!);
 		});
 		this.subscribes.push(sub);
-		// console.log(this.auth.getUser().Branch!);
-		// this.filterF.branch?.patchValue(this.auth.getUser().Branch!);
 	}
 
 	//#region Table
@@ -209,7 +208,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 			chassisNumber: new FormControl(null),
 			policyCertificateNo: new FormControl(null),
 			declarationNo: new FormControl(null),
-			insurCompany: new FormControl(null),
+			insurCompany: new FormControl([]),
 			savedUser: new FormControl(null),
 			invoiceNo: new FormControl(null),
 			wipNo: new FormControl(null),

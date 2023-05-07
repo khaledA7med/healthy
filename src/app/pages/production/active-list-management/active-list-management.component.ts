@@ -67,6 +67,7 @@ export class ActiveListManagementComponent implements OnInit, OnDestroy {
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,

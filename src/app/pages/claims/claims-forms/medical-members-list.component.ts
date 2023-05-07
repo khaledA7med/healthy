@@ -45,6 +45,7 @@ export class MedicalMembersListComponent implements OnDestroy {
 		animateRows: true,
 		// paginationPageSize: this.filter.pageSize,
 		// cacheBlockSize: this.filter.pageSize,
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,

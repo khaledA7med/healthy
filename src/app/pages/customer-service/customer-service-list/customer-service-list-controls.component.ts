@@ -12,9 +12,9 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 @Component({
 	selector: "app-customer-service-list-controls",
 	template: `
-		<div class="col">
+		<div class="col d-flex align-items-center justify-content-center">
 			<div ngbDropdown class="d-inline-block">
-				<button type="button" class="btn btn-ghost-secondary waves-effect rounded-pill" id="actionDropdown" ngbDropdownToggle>
+				<button type="button" class="btn btn-sm btn-ghost-secondary waves-effect rounded-pill" id="actionDropdown" ngbDropdownToggle>
 					<i class="ri-more-2-fill"></i>
 				</button>
 				<div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">
@@ -34,16 +34,14 @@ import { CustomerServiceListComponent } from "./customer-service-list.component"
 						ngbDropdownItem
 						class="btn btn-sm"
 						(click)="Edit()"
-						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)"
-					>
+						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)">
 						Edit
 					</button>
 					<button
 						ngbDropdownItem
 						class="btn btn-sm"
 						(click)="makeInvoice()"
-						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)"
-					>
+						*ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)">
 						Make Invoice
 					</button>
 					<li *ngIf="!(comp.permissions$ | async)?.includes(comp.uiState.privileges.ChCustomerServiceReadOnly)">

@@ -102,26 +102,27 @@
                 <!-- Insurance Company -->
                 <div class="col-12 mb-3">
                     <label for="insurCompany" class="form-label">Insurance Company:</label>
-                    <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="insurCompany" formControlName="insurCompany">
+                    <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!" [multiple]="true"
+                        [closeOnSelect]="false" [loading]="lookupData ? false : true" [clearable]="true"
+                        [searchable]="true" bindLabel="name" bindValue="name" id="insurCompany"
+                        formControlName="insurCompany">
                     </ng-select>
                 </div>
                 <!-- classOfInsurance -->
                 <div class="col-12 mb-3">
                     <label for="classOfInsu" class="form-label">Class Of Insurance</label>
-                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                        [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
-                        bindValue="name" id="classOfInsu" (change)="getLineOfBusiness($event)"
-                        formControlName="classOfInsurance">
+                    <ng-select [items]="(lookupData | async)?.InsurClasses?.content!" [multiple]="true"
+                        [closeOnSelect]="false" [loading]="lookupData ? false : true" [clearable]="true"
+                        [searchable]="true" bindLabel="name" bindValue="name" id="classOfInsu"
+                        (change)="getLineOfBusiness($event)" formControlName="classOfInsurance">
                     </ng-select>
                 </div>
                 <!-- lineOfBusiness -->
                 <div class="col-12 mb-3">
                     <label for="lineofBuss" class="form-label">Line Of Business</label>
                     <ng-select [items]="uiState.lineOfBusinessList" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="lineofBuss"
-                        formControlName="lineOfBusiness">
+                        [multiple]="true" [closeOnSelect]="false" [clearable]="true" [searchable]="true"
+                        bindLabel="name" bindValue="name" id="lineofBuss" formControlName="lineOfBusiness">
                     </ng-select>
                 </div>
                 <!-- PolicyNo -->

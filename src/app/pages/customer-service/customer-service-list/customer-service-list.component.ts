@@ -9,7 +9,7 @@ import { NgbOffcanvas, NgbOffcanvasRef } from "@ng-bootstrap/ng-bootstrap";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { ICustomerServiceFilters, ICustomerServiceFiltersForm } from "src/app/shared/app/models/CustomerService/icustomer-service-filter";
@@ -73,6 +73,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			canceledCount: 0,
 		},
 		privileges: CustomerServicePermissions,
+		lineOfBusinessList: [] as IGenericResponseType[],
 	};
 
 	permissions$!: Observable<string[]>;
@@ -95,6 +96,7 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 		suppressCsvExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
+		rowSelection: "single",
 		context: { comp: this },
 		defaultColDef: {
 			flex: 1,
@@ -206,9 +208,10 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 			type: new FormControl([]),
 			requestNo: new FormControl(null),
 			branch: new FormControl(null),
-			insuranceCompany: new FormControl(null),
+			insuranceCompany: new FormControl([]),
 			pendingReason: new FormControl(null),
-			classOfBusniess: new FormControl(null),
+			classOfBusniess: new FormControl([]),
+			lineOfBusiness: new FormControl([]),
 			createdBy: new FormControl(null),
 			deadline: new FormControl(null),
 			deadlineFrom: new FormControl(null),
@@ -239,6 +242,14 @@ export class CustomerServiceListComponent implements OnInit, AfterViewInit, OnDe
 
 	getLookupData() {
 		this.lookupData = this.table.getBaseData(MODULES.CustomerService);
+	}
+
+	getLineOfBusiness(e: any) {
+		let cls = e.map((el: any) => (el?.name ? el?.name : el));
+		let sub = this.customerService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.uiState.lineOfBusinessList = res.body?.data!;
+		});
+		this.subscribes.push(sub);
 	}
 
 	modifyFilterReq() {

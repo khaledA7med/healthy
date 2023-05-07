@@ -107,4 +107,10 @@ export class CustomerServiceService {
 	getRequestsSummary(): Observable<IBaseResponse<ICustomerServiceSummary>> {
 		return this.http.get<IBaseResponse<ICustomerServiceSummary>>(this.env + ApiRoutes.CustomerService.summary);
 	}
+
+	getLinesOFBusinessByClassNames(body: string[]): Observable<HttpResponse<IBaseResponse<string[]>>> {
+		return this.http.post<IBaseResponse<string[]>>(this.env + ApiRoutes.MasterTable.Reports.lineOfBusinessByClassNames, body, {
+			observe: "response",
+		});
+	}
 }

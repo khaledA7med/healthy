@@ -42,6 +42,7 @@ export class ClientGroupComponent implements OnInit, OnDestroy {
 		context: { comp: this },
 		// paginationPageSize: this.uiState.groupsList.length,
 		// cacheBlockSize: this.uiState.groupsList.length,
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,

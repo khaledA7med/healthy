@@ -76,6 +76,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,
@@ -203,9 +204,9 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 			ourRef: new FormControl(""),
 			clientName: new FormControl(""),
 			producer: new FormControl([]),
-			insurCompany: new FormControl(""),
-			classOfInsurance: new FormControl(""),
-			lineOfBusiness: new FormControl(""),
+			insurCompany: new FormControl([]),
+			classOfInsurance: new FormControl([]),
+			lineOfBusiness: new FormControl([]),
 			policyNo: new FormControl(""),
 			endorsNo: new FormControl(""),
 			policyEndorsType: new FormControl(""),
@@ -237,9 +238,10 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.lookupData = this.table.getBaseData(MODULES.Production);
 	}
 
-	getLineOfBusiness(e: IGenericResponseType) {
-		let sub = this.masterService.getLineOfBusiness(e.name).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
-			this.uiState.lineOfBusinessList = res.body?.data!.content;
+	getLineOfBusiness(e: any) {
+		let cls = e.map((el: any) => (el?.name ? el?.name : el));
+		let sub = this.productionService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+			this.uiState.lineOfBusinessList = res.body?.data!;
 		});
 		this.subscribes.push(sub);
 	}

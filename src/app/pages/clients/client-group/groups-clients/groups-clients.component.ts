@@ -49,6 +49,7 @@ export class GroupsClientsComponent implements OnInit, OnDestroy, OnChanges {
 		columnDefs: groupClientsCols,
 		suppressCsvExport: true,
 		context: { comp: this },
+		rowSelection: "single",
 		// paginationPageSize: this.uiState.groupsList.length,
 		// cacheBlockSize: this.uiState.groupsList.length,
 		defaultColDef: {
