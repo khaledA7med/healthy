@@ -212,13 +212,17 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     this.gridApi.exportDataAsCsv({
       fileName: "Clients",
       processCellCallback: (params: ProcessCellForExportParams) =>
-        this.cellCellEditing(params),
+        this.editPrintedCells(params),
       columnKeys: columnsToExport,
     });
   }
 
-  cellCellEditing(params: ProcessCellForExportParams) {
-    if (params.column.getUserProvidedColDef()?.type === "date")
+  editPrintedCells(params: ProcessCellForExportParams) {
+    if (
+      params.column.getColId() === "approvedDate" ||
+      params.column.getColId() === "rejectionDate" ||
+      params.column.getColId() === "createdOn"
+    )
       return this.util.formatDate(params.value, true);
     else return params.value;
   }

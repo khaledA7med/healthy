@@ -43,9 +43,7 @@ export default class AppUtils {
         if (mm.length < 2) mm = "0" + mm;
         return [day + "-" + month + "-" + year + " " + hh + ":" + mm].join(" ");
       }
-    } else {
-      return "";
-    }
+    } else return "";
   }
 
   public formatBytes(bytes: number, decimals?: number): string {

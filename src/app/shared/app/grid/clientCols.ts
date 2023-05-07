@@ -85,7 +85,6 @@ export const clientManageCols: ColDef[] = [
     field: "createdOn",
     valueFormatter: GlobalCellRender.dateTimeFormater,
     minWidth: 130,
-    type: "date",
   },
   {
     headerName: "Rejection Reason",
@@ -97,7 +96,6 @@ export const clientManageCols: ColDef[] = [
     field: "rejectionDate",
     valueFormatter: GlobalCellRender.dateTimeFormater,
     minWidth: 130,
-    type: "date",
   },
   {
     headerName: "Approved By",
@@ -109,7 +107,6 @@ export const clientManageCols: ColDef[] = [
     field: "approvedDate",
     valueFormatter: GlobalCellRender.dateTimeFormater,
     minWidth: 130,
-    type: "date",
   },
 ];
 
