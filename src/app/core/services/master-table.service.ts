@@ -188,6 +188,10 @@ export class MasterTableService {
       ],
       Client: [
         {
+          route: ApiRoutes.MasterTable.Client.AllClients,
+          name: BaseData.AllClients,
+        },
+        {
           route: ApiRoutes.MasterTable.Client.clientType,
           name: BaseData.ClientType,
         },
