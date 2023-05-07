@@ -55,6 +55,8 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		subStatus: [],
 		clientDataContorl: new FormControl("Select All"),
 		privileges: ClaimsPermissions,
+		initSubStatusFlag: false,
+		initLineOfBusinessFlag: false,
 	};
 	permissions$!: Observable<string[]>;
 	modalRef!: NgbModalRef;
@@ -85,26 +87,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 			this.uiState.lists.statusList = res.ClaimStatus?.content!;
 
-			if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
-				this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
-				this.checkAllToggler(true, "insuranceCompany");
-			}
-
-			if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
-				this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
-				this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(true);
-
-				this.checkAllToggler(true, "classOfBusiness");
-				this.getLinesOfBusiness(this.f.classOfBusiness?.getRawValue()!);
-			}
-
-			if (this.uiState.lists.statusList != undefined && this.uiState.lists.statusList.length > 0) {
-				this.uiState.checkAllControls.allStatusControl.patchValue(true);
-				this.uiState.checkAllControls.allSubStatusControl.patchValue(true);
-
-				this.checkAllToggler(true, "status");
-				this.getSubStatus();
-			}
+			this.initSelectAllChecks();
 
 			let sub2 = this.permissions$.subscribe((res: string[]) => {
 				if (!res.includes(this.uiState.privileges.ChAccessAllBrancheClaim)) {
@@ -116,11 +99,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			});
 			this.subscribes.push(sub2);
 		});
-		// let sub2 = this.router.events.subscribe((event) => {
-		// 	if (event instanceof NavigationStart) {
-		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-		// 	}
-		// });
+
 		this.subscribes.push(sub);
 
 		let date = new Date();
@@ -170,48 +149,65 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		this.subscribes.push(sub!, sub2!);
 	}
 
+	initSelectAllChecks() {
+		if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
+			this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
+			this.checkAllToggler(true, "insuranceCompany");
+		}
+
+		this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
+		this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(true);
+
+		if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
+			this.checkAllToggler(true, "classOfBusiness");
+			if (this.uiState.lists.linesOfBusinessLists.length > 0)
+				this.checkAllToggler(this.uiState.checkAllControls.allLineOfBusinessControl.value!, "lineOfBusiness");
+		}
+		this.uiState.checkAllControls.allStatusControl.patchValue(true);
+		this.uiState.checkAllControls.allSubStatusControl.patchValue(true);
+
+		if (this.uiState.lists.statusList != undefined && this.uiState.lists.statusList.length > 0) {
+			this.checkAllToggler(true, "status");
+			if (this.uiState.lists.subStatusList.length > 0) this.checkAllToggler(this.uiState.checkAllControls.allSubStatusControl.value!, "subStatus");
+		}
+	}
+
 	setClientData(e: any) {
 		let data = `${e.id}, ${e.name}`;
 		this.f.clientData?.patchValue(data);
 	}
 
 	getSubStatus() {
-		if (this.f.status?.value!.length == 0) {
-			this.uiState.subStatus = [];
-			this.f.subStatus?.reset();
-			return;
+		if (
+			(!this.uiState.initSubStatusFlag && this.uiState.lists.subStatusList.length == 0) ||
+			this.uiState.lists.statusList.length > this.f.status?.value?.length! ||
+			(!this.uiState.initSubStatusFlag && this.uiState.checkAllControls.allStatusControl.value && this.f.status?.value?.length! > 0)
+		) {
+			let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				this.uiState.lists.subStatusList = res.body?.data!;
+				this.checkAllToggler(this.uiState.checkAllControls.allSubStatusControl.value!, "subStatus");
+			});
+			this.subscribes.push(sub);
+			this.uiState.initSubStatusFlag = true;
 		}
-		let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.subStatusList = res.body?.data!;
-
-			if (this.f.status?.value?.length! < this.uiState.lists.statusList.length) this.uiState.checkAllControls.allSubStatusControl.patchValue(false);
-			else this.uiState.checkAllControls.allSubStatusControl.patchValue(true);
-
-			if (this.uiState.checkAllControls.allStatusControl.value && this.uiState.checkAllControls.allSubStatusControl.value) {
-				this.checkAllToggler(true, "subStatus");
-			} else {
-				this.f.subStatus?.patchValue(this.uiState.lists.subStatusList.map((e) => e));
-			}
-		});
-		this.subscribes.push(sub);
 	}
 
 	getLinesOfBusiness(classList: any) {
-		let cls = classList.map((el: any) => (el?.name ? el?.name : el));
-		let sub = this.claimService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.linesOfBusinessLists = res.body?.data!;
-
-			if (this.f.classOfBusiness?.value?.length! < this.uiState.lists.classOfBusinessLists.length)
-				this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false);
-			else this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(true);
-
-			if (this.uiState.checkAllControls.allClassOfBusinessControl.value && this.uiState.checkAllControls.allLineOfBusinessControl.value) {
-				this.checkAllToggler(true, "lineOfBusiness");
-			} else {
-				this.f.lineOfBusiness?.patchValue(this.uiState.lists.linesOfBusinessLists.map((e) => e));
-			}
-		});
-		this.subscribes.push(sub);
+		if (
+			(!this.uiState.initLineOfBusinessFlag && this.uiState.lists.linesOfBusinessLists.length == 0) ||
+			this.uiState.lists.classOfBusinessLists.length > this.f.classOfBusiness?.value?.length! ||
+			(!this.uiState.initLineOfBusinessFlag &&
+				this.uiState.checkAllControls.allClassOfBusinessControl.value &&
+				this.f.classOfBusiness?.value?.length! > 0)
+		) {
+			let cls = classList.map((el: any) => (el?.name ? el?.name : el));
+			let sub = this.claimService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				this.uiState.lists.linesOfBusinessLists = res.body?.data!;
+				this.checkAllToggler(this.uiState.checkAllControls.allLineOfBusinessControl.value!, "lineOfBusiness");
+			});
+			this.subscribes.push(sub);
+			this.uiState.initLineOfBusinessFlag = true;
+		}
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
@@ -227,7 +223,9 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				} else {
 					this.f.classOfBusiness?.patchValue([]);
 					this.f.lineOfBusiness?.patchValue([]);
+					this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false);
 					this.uiState.lists.linesOfBusinessLists = [];
+					this.uiState.initLineOfBusinessFlag = false;
 				}
 				break;
 			case "lineOfBusiness":
@@ -241,7 +239,9 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				} else {
 					this.f.status?.patchValue([]);
 					this.f.subStatus?.patchValue([]);
+					this.uiState.checkAllControls.allSubStatusControl.patchValue(false);
 					this.uiState.lists.subStatusList = [];
+					this.uiState.initSubStatusFlag = false;
 				}
 				break;
 			case "subStatus":

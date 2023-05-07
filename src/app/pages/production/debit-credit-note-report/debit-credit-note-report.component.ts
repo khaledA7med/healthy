@@ -72,6 +72,7 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			minWidth: 100,
 			resizable: true,
 		},
+		rowSelection: "single",
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onRowClicked: (e) => this.onRowClicked(e),
@@ -94,6 +95,7 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 		let sub = this.lookupData.subscribe((res) => {
 			res.Branch?.content! ? (this.uiState.lists.branchesLists = [{ id: 0, name: "Select All" }, ...res.Branch?.content!]) : "";
 		});
+
 		this.subscribes.push(sub);
 		let date = new Date();
 		let todayDate = {
@@ -131,10 +133,6 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			this.subscribes.push(sub);
 		},
 	};
-
-	setDataSource() {
-		this.gridApi.setDatasource(this.dataSource);
-	}
 
 	onRowClicked(e: RowClickedEvent) {
 		this.uiState.selectedNote = e.data;

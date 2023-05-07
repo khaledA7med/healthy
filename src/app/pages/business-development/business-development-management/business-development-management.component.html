@@ -236,16 +236,25 @@
         <div class="col-12 mb-2">
           <label for="classOfBusiness" class="form-label">Class Of Business</label>
           <ng-select [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="classOfBusiness"
-            formControlName="classOfBusiness" class="form-control-sm px-0">
+            [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name"
+            bindValue="name" id="classOfBusiness" formControlName="classOfBusiness" class="form-control-sm px-0"
+            (change)="getLineOfBusiness($event)">
+          </ng-select>
+        </div>
+        <!-- LineOfBusiness -->
+        <div class=" col-12 mb-2">
+          <label for="lineofBuss" class="form-label">Line Of Business:</label>
+          <ng-select [items]="uiState.lineOfBusinessList" [clearable]="true" [searchable]="true" [multiple]="true"
+            [closeOnSelect]="false" bindLabel="name" bindValue="name" id="lineofBuss" formControlName="lineOfBusiness "
+            class="form-control-sm px-0">
           </ng-select>
         </div>
         <!-- producer -->
         <div class="col-12 mb-2">
           <label for="producer" class="form-label">Producer</label>
           <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="producer"
-            formControlName="producer" class="form-control-sm px-0">
+            [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name"
+            bindValue="name" id="producer" formControlName="producer" class="form-control-sm px-0">
           </ng-select>
         </div>
         <!-- User -->

@@ -7,9 +7,9 @@ export interface IProductionFiltersForm {
 	ourRef?: FormControl<string | null>;
 	clientName?: FormControl<string | null>;
 	producer?: FormControl<string[] | string | null>;
-	insurCompany?: FormControl<string | null>;
-	classOfInsurance?: FormControl<string | null>;
-	lineOfBusiness?: FormControl<string | null>;
+	insurCompany?: FormControl<string[] | null>;
+	classOfInsurance?: FormControl<string[] | null>;
+	lineOfBusiness?: FormControl<string[] | null>;
 	policyNo?: FormControl<string | null>;
 	endorsNo?: FormControl<string | null>;
 	policyEndorsType?: FormControl<string | null>;
@@ -37,9 +37,9 @@ export interface IProductionFilters extends IBaseFilters {
 	ourRef?: string | null;
 	clientName?: string | null;
 	producer?: string[] | string | null;
-	insurCompany?: string | null;
-	classOfInsurance?: string | null;
-	lineOfBusiness?: string | null;
+	insurCompany?: string[] | null;
+	classOfInsurance?: string[] | null;
+	lineOfBusiness?: string[] | null;
 	policyNo?: string | null;
 	endorsNo?: string | null;
 	policyEndorsType?: string | null;

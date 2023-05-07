@@ -13,7 +13,7 @@ import { SweetAlertResult } from "sweetalert2";
       <div ngbDropdown class="d-inline-block">
         <button
           type="button"
-          class="btn btn-ghost-secondary waves-effect rounded-pill"
+          class="btn btn-sm btn-ghost-secondary waves-effect rounded-pill"
           id="actionDropdown"
           ngbDropdownToggle
         >
