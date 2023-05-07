@@ -12,7 +12,7 @@ export default class AppUtils {
     });
   }
 
-  public formatDate(e: any) {
+  public formatDate(e: any, time?: boolean) {
     if (e) {
       var monthNames = [
         "Jan",
@@ -34,10 +34,16 @@ export default class AppUtils {
         year = d.getFullYear();
       if (month.length < 2) month = "0" + month;
       if (day.length < 2) day = "0" + day;
-      return [day + " " + month, year].join(", ");
-    } else {
-      return "";
-    }
+      if (!time) {
+        return `${day}-${month}-${year}`;
+      } else {
+        var hh = "" + d.getHours(),
+          mm = "" + d.getMinutes();
+        if (hh.length < 2) hh = "0" + hh;
+        if (mm.length < 2) mm = "0" + mm;
+        return [day + "-" + month + "-" + year + " " + hh + ":" + mm].join(" ");
+      }
+    } else return "";
   }
 
   public formatBytes(bytes: number, decimals?: number): string {
