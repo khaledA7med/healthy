@@ -10,8 +10,8 @@ import { UserPrivilegesComponent } from "./user-privileges.component";
 @Component({
 	selector: "app-user-accounts-management-controls",
 	template: `
-		<div class="col">
-			<button type="button" (click)="delete()" class="btn btn-ghost-secondary waves-effect rounded-pill">
+		<div class="col d-flex align-items-center justify-content-center">
+			<button type="button" (click)="delete()" class="btn btn-sm btn-ghost-secondary waves-effect rounded-pill p-0">
 				<i class="ri-delete-bin-2-fill"></i>
 			</button>
 		</div>

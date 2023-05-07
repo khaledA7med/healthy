@@ -17,13 +17,13 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Policy Status",
 		field: "policyStatus",
-		minWidth: 150,
+		minWidth: 80,
 		cellRenderer: StatusCellRender.policyStatus,
 	},
 	{
 		headerName: "Delivery Status",
 		field: "deliveryStatus",
-		minWidth: 150,
+		minWidth: 100,
 	},
 	{
 		headerName: "Our Ref",
@@ -34,12 +34,12 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Branch",
 		field: "branch",
-		minWidth: 110,
+		minWidth: 80,
 	},
 	{
 		headerName: "Client ID",
 		field: "clientNo",
-		minWidth: 115,
+		minWidth: 60,
 	},
 	{
 		headerName: "Client Name",
@@ -54,17 +54,17 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Producer",
 		field: "producer",
-		minWidth: 200,
+		minWidth: 150,
 	},
 	{
 		headerName: "Issued By (Insurance Company)",
 		field: "insurComp",
-		minWidth: 280,
+		minWidth: 240,
 	},
 	{
 		headerName: "Class of Insurance",
 		field: "className",
-		minWidth: 170,
+		minWidth: 80,
 	},
 	{
 		headerName: "Line of Business",
@@ -89,7 +89,7 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Type",
 		field: "endorsType",
-		minWidth: 115,
+		minWidth: 100,
 	},
 	{
 		headerName: "Certificate No",
@@ -111,20 +111,21 @@ export const productionCols: ColDef[] = [
 		field: "sumInsur",
 		valueFormatter: GlobalCellRender.currencyFormater,
 		cellClass: refundChecker,
-		minWidth: 150,
+		minWidth: 120,
 	},
 	{
 		headerName: "Net Premium",
 		field: "netPremium",
 		valueFormatter: GlobalCellRender.currencyFormater,
 		cellClass: refundChecker,
-		minWidth: 150,
+		minWidth: 100,
 	},
 	{
 		headerName: "Fees",
 		field: "fees",
 		valueFormatter: GlobalCellRender.currencyFormater,
 		cellClass: refundChecker,
+		minWidth: 80,
 	},
 	{
 		headerName: "Net Premium + Fees",
@@ -137,6 +138,7 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "VAT %",
 		field: "vatPerc",
+		cellClass: ["input-text-right"],
 	},
 	{
 		headerName: "VAT Amount",
@@ -171,6 +173,7 @@ export const productionCols: ColDef[] = [
 		headerName: "Company Comm %",
 		field: "compCommPerc",
 		minWidth: 160,
+		cellClass: ["input-text-right"],
 	},
 	{
 		headerName: "Company Comm",
@@ -190,6 +193,7 @@ export const productionCols: ColDef[] = [
 		headerName: "Producer Comm %",
 		field: "producerCommPerc",
 		minWidth: 180,
+		cellClass: ["input-text-right"],
 	},
 	{
 		headerName: "Producer Comm.",

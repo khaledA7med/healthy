@@ -71,4 +71,10 @@ export class BusinessDevelopmentService {
 	getSalesLeadById(id: string): Observable<HttpResponse<IBaseResponse<any>>> {
 		return this.http.get<IBaseResponse<any>>(this.env + ApiRoutes.BusinessDevelopment.edit, { params: { id }, observe: "response" });
 	}
+
+	getLinesOFBusinessByClassNames(body: string[]): Observable<HttpResponse<IBaseResponse<string[]>>> {
+		return this.http.post<IBaseResponse<string[]>>(this.env + ApiRoutes.MasterTable.Reports.lineOfBusinessByClassNames, body, {
+			observe: "response",
+		});
+	}
 }

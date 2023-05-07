@@ -43,6 +43,7 @@ export class VehiclesListComponent implements OnDestroy {
 		editType: "fullRow",
 		columnDefs: ActivePoliciesVehiclesCols,
 		animateRows: true,
+		rowSelection: "single",
 		// paginationPageSize: this.filter.pageSize,
 		// cacheBlockSize: this.filter.pageSize,
 		defaultColDef: {

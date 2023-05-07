@@ -17,9 +17,15 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { InputMaskDirective } from "./directives/input-mask.directive";
 import { SubLoaderModule } from "./components/sub-loader/sub-loader.module";
+import { OnlyNumbersDirective } from "./directives/only-numbers.directive";
 
 @NgModule({
-  declarations: [ScrollspyDirective, TableViewDirective, InputMaskDirective],
+  declarations: [
+    ScrollspyDirective,
+    TableViewDirective,
+    InputMaskDirective,
+    OnlyNumbersDirective,
+  ],
   imports: [
     CommonModule,
     NgbNavModule,
@@ -45,6 +51,7 @@ import { SubLoaderModule } from "./components/sub-loader/sub-loader.module";
     InputMaskDirective,
     SubLoaderModule,
     NgbTooltipModule,
+    OnlyNumbersDirective,
   ],
 })
 export class SharedModule {}

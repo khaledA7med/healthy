@@ -53,6 +53,7 @@ export class UserPrivilegesComponent implements OnInit {
 		suppressCsvExport: true,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
+		rowSelection: "single",
 		defaultColDef: {
 			flex: 1,
 			minWidth: 100,

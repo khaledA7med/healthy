@@ -39,6 +39,7 @@ export class CustomerServiceListComponent implements OnDestroy, OnInit {
 			minWidth: 100,
 			resizable: true,
 		},
+		rowSelection: "single",
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onRowClicked: (e) => this.onRowClicked(e),
