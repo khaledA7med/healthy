@@ -122,7 +122,7 @@
                                                 (change)="issueTypeToggler($event)" id="renewal"
                                                 [value]="this.uiState.policy.issueType.renewal">
                                             <label class="form-check-label" for="renewal">Renewal
-                                                Of</label>
+                                                of</label>
                                         </div>
                                         <div class="form-check form-check-inline mx-2">
                                             <input class="form-check-input" type="radio" formControlName="issueType"
@@ -220,8 +220,8 @@
 
                             <!-- Class Of Insurance -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="className" class="asterisk-input">Class Of Business</label>
-                                <ng-select formControlName="className" id="className" placeholder="Class Of Business"
+                                <label for="className" class="asterisk-input">Class of Business</label>
+                                <ng-select formControlName="className" id="className" placeholder="Class of Business"
                                     [items]="(formData | async)?.InsurClasses?.content!" bindLabel="name"
                                     bindValue="name" class="is-invalid"
                                     [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
@@ -236,9 +236,9 @@
 
                             <!-- Line Of Business -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="lineOfBusiness" class="asterisk-input">Line Of Business</label>
+                                <label for="lineOfBusiness" class="asterisk-input">Line of Business</label>
                                 <ng-select formControlName="lineOfBusiness" id="lineOfBusiness"
-                                    placeholder="Line Of Business" class="is-invalid"
+                                    placeholder="Line of Business" class="is-invalid"
                                     [items]="uiState.policy.lineOfBusiness!" bindLabel="name" bindValue="name"
                                     [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"
                                     [loading]="formData ? false : true">
@@ -287,11 +287,11 @@
 
                             <!-- Number Of Beneficiaries -->
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="numberOfBeneficiaries">No. Of Beneficiaries</label>
+                                <label for="numberOfBeneficiaries">No. of Beneficiaries</label>
                                 <input type="number" class="form-control form-control-sm"
                                     formControlName="numberOfBeneficiaries" id="numberOfBeneficiaries"
                                     [ngClass]="{'is-invalid': (f.numberOfBeneficiaries?.touched || uiState.submitted) && f.numberOfBeneficiaries?.invalid}"
-                                    placeholder="Number Of Beneficiaries">
+                                    placeholder="Number of Beneficiaries">
                                 <span class="invalid-feedback mt-0">Should Be Greater Than 0</span>
                             </div>
 
