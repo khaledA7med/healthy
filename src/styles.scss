@@ -42,6 +42,14 @@ div.asterisk-div {
   opacity: 0.6;
 }
 
+.ag-horizontal-left-spacer {
+  display: none;
+}
+
+#actionDropdown {
+  padding: 0 6px;
+}
+
 .input-text-right,
 .input-text-right::placeholder {
   text-align: right !important;

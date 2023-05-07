@@ -16,6 +16,8 @@ import { FooterComponent } from "./footer/footer.component";
 import { RightsidebarComponent } from "./rightsidebar/rightsidebar.component";
 import { GeneralLoaderComponent } from "../shared/components/general-loader/general-loader.component";
 import { Title } from "@angular/platform-browser";
+import { HorizontalComponent } from "./horizontal/horizontal.component";
+import { HorizontalTopbarComponent } from "./horizontal-topbar/horizontal-topbar.component";
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { Title } from "@angular/platform-browser";
     FooterComponent,
     RightsidebarComponent,
     GeneralLoaderComponent,
+    HorizontalComponent,
+    HorizontalTopbarComponent,
   ],
   imports: [
     CommonModule,
