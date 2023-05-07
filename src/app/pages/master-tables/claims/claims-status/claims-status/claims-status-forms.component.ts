@@ -67,7 +67,7 @@ export class ClaimsStatusFormsComponent {
 
   Delete() {
     this.message
-      .confirm("Sure!", "You Want To Delete?!", "primary", "question")
+      .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
           this.comp.DeleteClaimsStatus(this.params.data.sno);

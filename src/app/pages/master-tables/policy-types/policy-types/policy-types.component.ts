@@ -67,7 +67,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -197,8 +197,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
           this.resetPolicyTypesForm();
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.body?.message!, "success");
-        } else this.eventService.broadcast(reserved.isLoading, false);
-        this.message.toast(res.body!.message!, "error");
+        } else this.message.toast(res.body!.message!, "error");
       }
     );
     this.subscribes.push(sub);

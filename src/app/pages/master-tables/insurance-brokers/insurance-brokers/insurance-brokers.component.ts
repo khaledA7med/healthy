@@ -91,7 +91,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
         (res: HttpResponse<IBaseResponse<IInsuranceBrokers[]>>) => {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list);
+            params.successCallback(this.uiState.list, this.uiState.list.length);
             if (this.uiState.list.length === 0)
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();

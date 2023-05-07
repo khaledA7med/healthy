@@ -18,6 +18,7 @@ export const claimsStatusCols: ColDef[] = [
   {
     headerName: "Status",
     field: "status",
+    minWidth: 100,
   },
   {
     headerName: "Status Notes",

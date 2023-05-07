@@ -67,7 +67,7 @@ export class PolicyIssuanceRequirementsFormsComponent {
 
   Delete() {
     this.message
-      .confirm("Sure!", "You Want To Delete?!", "primary", "question")
+      .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
           this.comp.DeletePolicyIssuanceRequirements(this.params.data.identity);

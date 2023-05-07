@@ -20,7 +20,7 @@ export const vehiclesTypesCols: ColDef[] = [
     field: "vehicleType",
   },
   {
-    headerName: "Abbreviation Type",
+    headerName: "Abbreviation",
     field: "abbreviation",
   },
 ];

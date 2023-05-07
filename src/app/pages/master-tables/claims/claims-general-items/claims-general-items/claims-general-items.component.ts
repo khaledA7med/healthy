@@ -73,6 +73,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: claimsGeneralItemsCols,
     suppressCsvExport: true,
     context: { comp: this },

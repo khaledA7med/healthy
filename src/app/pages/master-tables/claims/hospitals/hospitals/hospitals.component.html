@@ -46,18 +46,8 @@
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                     <label for="tele" class="asterisk-input">Tele</label>
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text">+966</span>
-                                        <input id="abbreviation" class="form-control form-control-sm"
-                                            [ngClass]="{'is-invalid': (f.tele?.touched || uiState.submitted) && f.tele?.invalid}"
-                                            formControlName="tele" />
-                                        <span *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid"
-                                            class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
-                                    </div>
-                                    <span class="invalid-feedback fw-bold"
-                                        *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid">
-                                        Invalid Phone Number
-                                    </span>
+                                    <input id="abbreviation" class="form-control form-control-sm"
+                                        formControlName="tele" />
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
@@ -84,7 +74,7 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
-                                    <label for="specialties">Specialties</label>
+                                    <label for="specialties">Specialites</label>
                                     <input id="specialties" class="form-control form-control-sm"
                                         formControlName="specialties" />
                                 </div>
@@ -188,7 +178,6 @@
                                                             <td scope="col">
                                                                 <div class="asterisk-div">
                                                                     <div class="input-group input-group-sm">
-                                                                        <span class="input-group-text">+966</span>
                                                                         <input type="text"
                                                                             class="form-control form-control-sm"
                                                                             formControlName="phone"
@@ -197,10 +186,6 @@
                                                                         uiState.submitted &&
                                                                         contactListControls(i, 'phone').invalid
                                                                       }" />
-                                                                        <span class="invalid-feedback fw-bold"
-                                                                            *ngIf="contactListControls(i, 'phone').invalid">
-                                                                            Invalid Phone Number
-                                                                        </span>
                                                                         <span class="invalid-feedback fw-bold"
                                                                             *ngIf="uiState.submitted && contactListControls(i, 'phone')?.hasError('required')">
                                                                             Required

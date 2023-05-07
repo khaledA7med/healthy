@@ -68,6 +68,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: claimsRejectionReasonsCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -78,7 +79,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };

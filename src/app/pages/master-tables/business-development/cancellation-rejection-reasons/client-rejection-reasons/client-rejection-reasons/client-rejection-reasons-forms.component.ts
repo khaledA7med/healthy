@@ -68,7 +68,7 @@ export class ClientRejectionReasonsFormsComponent {
 
   Delete() {
     this.message
-      .confirm("Sure!", "You Want To Delete?!", "primary", "question")
+      .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
           this.comp.DeleteClientRejectionReasons(this.params.data.identity);

@@ -151,6 +151,10 @@ export class MasterTableService {
           route: ApiRoutes.MasterTable.MasterTables.insuranceComapnies,
           name: BaseData.InsuranceCompanies,
         },
+        {
+          route: ApiRoutes.MasterTable.MasterTables.vehicleCarsMake,
+          name: BaseData.VehicleCarsMake,
+        },
       ],
       MasterTableListOfRequiredDocuments: [
         {

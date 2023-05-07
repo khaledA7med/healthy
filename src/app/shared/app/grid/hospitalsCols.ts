@@ -18,27 +18,23 @@ export const hospitalsCols: ColDef[] = [
   {
     headerName: "Name",
     field: "name",
-    minWidth: 320,
+    minWidth: 230,
   },
   {
     headerName: "City",
     field: "city",
-    minWidth: 250,
   },
   {
     headerName: "Address",
     field: "address",
-    minWidth: 150,
   },
   {
     headerName: "Email",
     field: "email",
-    minWidth: 150,
   },
   {
     headerName: "Tele",
     field: "tele",
-    minWidth: 150,
   },
   {
     headerName: "Specialties",

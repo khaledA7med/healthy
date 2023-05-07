@@ -21,8 +21,8 @@
           "TEXT": "Business Development",
           "SALES": {
             "TEXT": "Sales",
-            "QUOTINGREQUIREMENTS": "Quoting Requirments",
-            "POLICYISSUANCEREQUIREMENTS": "Policy Issuance Requirments",
+            "QUOTINGREQUIREMENTS": "Quoting Requirements",
+            "POLICYISSUANCEREQUIREMENTS": "Policy Issuance Requirements",
             "PROSPECTLOSSREASONS": "Prospect Loss Reasons"
           },
           "CANCELLATION/REJECTIONREASONS": {
@@ -36,7 +36,7 @@
         "CUSTOMERSERVICE": {
           "TEXT": "Customer Service",
           "INSURANCECOMPANIESDOCUMENTS": "Insurance Companies Documents",
-          "CUSTOMERSERVICEREQUIREMENTS": "Customer Service Requirments",
+          "CUSTOMERSERVICEREQUIREMENTS": "Customer Service Requirements",
           "COMPLAINTSTYPES": "Complaints Types",
           "COMPLAINTSSETTINGS": "Complaints Settings",
           "COMPLAINTSSUSPECTIVECAUSES": "Complaints Suspective Causes",
