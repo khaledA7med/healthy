@@ -91,6 +91,7 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
     paginationPageSize: this.uiState.filters.pageSize,
     cacheBlockSize: this.uiState.filters.pageSize,
     context: { comp: this },
+    rowSelection: "single",
     defaultColDef: {
       flex: 1,
       minWidth: 100,
@@ -233,11 +234,12 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
   }
   private initFilterForm(): void {
     this.filterForm = new FormGroup({
-      fullName: new FormControl(""),
-      type: new FormControl(""),
-      branch: new FormControl(""),
-      producer: new FormControl(""),
-      commericalNo: new FormControl(""),
+      fullName: new FormControl(null),
+      type: new FormControl(null),
+      sponsorID: new FormControl(null),
+      branch: new FormControl(null),
+      producer: new FormControl(null),
+      commericalNo: new FormControl(null),
       status: new FormControl([]),
     });
   }
