@@ -9,6 +9,7 @@ export interface IUser {
   password?: string;
   roles?: string;
   branch?: string;
+  connectTo?: string;
 }
 
 export interface LoginResponse {

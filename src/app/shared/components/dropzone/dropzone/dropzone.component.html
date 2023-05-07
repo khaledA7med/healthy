@@ -51,7 +51,7 @@
                             <div>{{util.formatBytes(item.size)}}</div>
                         </td>
                         <td scope="col" class="tableCenter">
-                            <button type="button" (click)="removeImage(item.name)"
+                            <button type="button" (click)="removeImage(item)"
                                 class="btn btn-soft-danger btn-icon waves-effect waves-light doc-btn"><i
                                     class="ri-delete-bin-5-line"></i></button>
                         </td>
@@ -90,42 +90,3 @@
         </div>
     </div>
 </div>
-
-<!-- 
-fileType[0] === "image"
-? `<img id="file-preview" src="${x.data}" name="imageSrc" class="img-fluid rounded shadow-sm"><a href="${x.data}"
-    onclick=debugBase64(${x.data}) target="blank">&nbsp; ${x.name}</a>`
-: fileType[1] === "msword" || fileType[1] === "vnd.openxmlformats-officedocument.wordprocessingml.document"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-secondary text-secondary rounded"><i class="ri-file-word-2-fill"></i></div><a
-        href="#" target="blank">&nbsp; ${x.name}</a>
-</div>`
-: fileType[1] === "vnd.ms-powerpoint" || fileType[1] === "vnd.openxmlformats-officedocument.presentationml.presentation"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-danger text-danger rounded"><i class="ri-file-ppt-fill"></i></div><a href="#"
-        target="blank">&nbsp; ${x.name}</a>
-</div>`
-: fileType[0] === "text"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-dark text-muted rounded"><i class="ri-file-text-fill"></i></div><a href="#"
-        target="blank">&nbsp; ${x.name}</a>
-</div>`
-: fileType[1] === "pdf"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-danger text-danger rounded"><i class="ri-file-pdf-fill"></i></div><a href="#"
-        target="blank">&nbsp; ${x.name}</a>
-</div>`
-: fileType[1] === "zip"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-info text-info rounded"><i class="ri-file-zip-fill"></i></div><a href="#"
-        target="blank">&nbsp; ${x.name}</a>
-</div>`
-: fileType[1] === "vnd.ms-excel" || fileType[1] === "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-? `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-success text-success rounded"><i class="ri-file-excel-2-fill"></i></div><a
-        href="#" target="blank">&nbsp; ${x.name}</a>
-</div>`
-: `<div class="d-flex align-items-center fs-20">
-    <div class="file-output-icon bg-soft-success text-success rounded"><i class="ri-error-warning-fill"></i></div><a
-        href="#" target="blank">&nbsp; ${x.name}</a>
-</div>` -->

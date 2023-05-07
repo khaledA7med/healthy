@@ -8,8 +8,9 @@
             <div class="row mb-2">
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="clientType" class="asterisk-input">Client Type</label>
-                <ng-select id="clientType" class="is-invalid" [searchable]="false" formControlName="type"
-                  (change)="clientTypeToggler($event.name)" [ngClass]="{ 'is-submitted': submitted && f.type?.invalid }"
+                <ng-select id="clientType" class="is-invalid" [clearable]="false" [searchable]="false"
+                  formControlName="type" (change)="clientTypeToggler($event.name)"
+                  [ngClass]="{'is-submitted': submitted && f.type?.invalid }"
                   [items]="(formData | async)?.ClientTypes?.content!" [loading]="formData ? false : true"
                   bindLabel="name" bindValue="name">
                   <ng-template ng-option-tmp let-item="item">
@@ -41,7 +42,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Producer" class="asterisk-input">Producer (Salesman)</label>
-                <ng-select formControlName="producer" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="producer" [clearable]="false" class="is-invalid" [ngClass]="{
                     'is-submitted': (f.producer?.touched || submitted) && f.producer?.invalid
                   }" [items]="(formData | async)?.Producers?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -59,7 +60,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="relationshipStatus" class="asterisk-input">Relationship Status</label>
-                <ng-select formControlName="relationshipStatus" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="relationshipStatus" [clearable]="false" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.relationshipStatus?.invalid
                   }" [items]="(formData | async)?.RelationshipStatus?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -78,7 +79,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label class="asterisk-input">Business Type</label>
-                <ng-select formControlName="businessType" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="businessType" [clearable]="false" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.businessType?.invalid
                   }" [items]="(formData | async)?.BusinessType?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -97,7 +98,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Channel" class="asterisk-input">Channel</label>
-                <ng-select formControlName="channel" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="channel" [clearable]="false" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.channel?.invalid
                   }" [items]="(formData | async)?.Channels?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -115,7 +116,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Interface" class="asterisk-input">Interface</label>
-                <ng-select formControlName="interface" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="interface" [clearable]="false" class="is-invalid" [ngClass]="{
                     'is-submitted': submitted && f.interface?.invalid
                   }" [items]="(formData | async)?.Interface?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -132,21 +133,13 @@
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="Result" class="asterisk-input">Screening Result</label>
-                <ng-select formControlName="screeningResult" class="is-invalid" [ngClass]="{
-                    'is-submitted': submitted && f.screeningResult?.invalid
-                  }" [items]="(formData | async)?.ScreeningResult?.content!" bindLabel="name" bindValue="name"
-                  [loading]="formData ? false : true">
+                <label for="Result">Screening Result</label>
+                <ng-select formControlName="screeningResult" [items]="(formData | async)?.ScreeningResult?.content!"
+                  bindLabel="name" bindValue="name" [loading]="formData ? false : true">
                   <ng-template ng-option-tmp let-item="item">
                     <div>{{ item.name }}</div>
                   </ng-template>
                 </ng-select>
-                <div class="invalid-feedback fw-bold" *ngIf="
-                    (f.screeningResult?.touched || submitted) &&
-                    f.screeningResult?.invalid
-                  ">
-                  Required
-                </div>
               </div>
 
               <!--./col-->
@@ -171,14 +164,16 @@
                   <span class="ribbon ribbon-info round-shape"><span>Retail</span></span>
                   <div class="row mt-4">
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                      <label for="IDNo" class="asterisk-input">ID No</label>
-                      <input type="text" id="IDNo" formControlName="idNo" class="form-control form-control-sm"
-                        [ngClass]="{
+                      <label for="IDNo" class="asterisk-input">ID No.</label>
+                      <input type="text" id="IDNo" formControlName="idNo" OnlyNumbers
+                        class="form-control form-control-sm" [ngClass]="{
                           'is-invalid':
                             (retail.idNo?.touched || submitted) && retail.idNo?.invalid
                         }" />
                       <div class="invalid-feedback fw-bold">
-                        Required
+                        <div *ngIf="retail.idNo?.hasError('required')">Required</div>
+                        <div *ngIf="retail.idNo?.errors && retail.idNo?.dirty">
+                          Must be 10 digits </div>
                       </div>
                     </div>
                     <!--./col-->
@@ -192,7 +187,7 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="nationality" class="asterisk-input">Nationality</label>
-                      <ng-select formControlName="nationality" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="nationality" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && retail.nationality?.invalid
                         }" [items]="(formData | async)?.Nationalities?.content!" bindLabel="name" bindValue="name"
                         [loading]="formData ? false : true">
@@ -209,7 +204,7 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="sourceOfIncome" class="asterisk-input">Source of Income</label>
-                      <ng-select formControlName="sourceofIncome" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="sourceofIncome" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && retail.sourceofIncome?.invalid
                         }" [items]="(formData | async)?.SourceofIncome?.content!" bindLabel="name" bindValue="name"
                         [loading]="formData ? false : true">
@@ -240,7 +235,7 @@
                       <label for="registrationStatus" class="asterisk-input">
                         Registration Status
                       </label>
-                      <ng-select formControlName="registrationStatus" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="registrationStatus" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted':
                             submitted && corporate.registrationStatus?.invalid
                         }" [items]="
@@ -261,7 +256,7 @@
                       <label for="businessActivity" class="asterisk-input">
                         Business Activity
                       </label>
-                      <ng-select formControlName="businessActivity" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="businessActivity" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted':
                             submitted && corporate.businessActivity?.invalid
                         }" [items]="
@@ -284,7 +279,7 @@
                       <label for="marketSegment" class="asterisk-input">
                         Market Segment
                       </label>
-                      <ng-select formControlName="marketSegment" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="marketSegment" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && corporate.marketSegment?.invalid
                         }" [items]="(formData | async)?.MarketSegment?.content!" bindLabel="name" bindValue="name"
                         [loading]="formData ? false : true">
@@ -303,15 +298,17 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="CommericalNo" class="asterisk-input">
-                        Commercial RegistrationNo.
+                        Commercial Registration No.
                       </label>
-                      <input id="commericalNo" type="number" formControlName="commericalNo" [ngClass]="{
+                      <input id="commericalNo" type="text" formControlName="commericalNo" OnlyNumbers [ngClass]="{
                           'is-invalid':
                             (corporate.commericalNo?.touched || submitted) &&
                             corporate.commericalNo?.invalid
                         }" class="form-control form-control-sm" />
                       <div class="invalid-feedback fw-bold">
-                        Required
+                        <div *ngIf="corporate.commericalNo?.hasError('required')">Required</div>
+                        <div *ngIf="corporate.commericalNo?.errors && corporate.commericalNo?.dirty">
+                          Must be 10 digits </div>
                       </div>
                     </div>
                     <!--./col-->
@@ -359,7 +356,6 @@
                       <label for="CRExpiryDateHijri">
                         CR Expiry Date (Hijri)
                       </label>
-                      <!-- [model]="CRExpiryHijriDate"  -->
                       <app-hijri-picker [model]="corporate.expiryDateHijri?.value" (dateChange)="coExpiryDates($event)"
                         [required]="false" [submitted]="submitted"></app-hijri-picker>
                     </div>
@@ -367,14 +363,13 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="sponsorID">Sponsor ID</label>
-                      <input formControlName="sponsorID" id="sponsorID" type="text" class="form-control form-control-sm"
-                        [ngClass]="{
+                      <input formControlName="sponsorID" id="sponsorID" OnlyNumbers type="text"
+                        class="form-control form-control-sm" [ngClass]="{
                         'is-invalid': (corporate.sponsorID?.touched || submitted) &&
                           corporate.sponsorID?.invalid
                       }" />
                       <div class="invalid-feedback fw-bold">
-                        Invalid ID ( Min: 20 ) & ( Max: 20 ) Length
-                      </div>
+                        Must be 10 digits </div>
                     </div>
                     <!--./col-->
 
@@ -386,15 +381,14 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="VAT-No" class="asterisk-input">VAT No.</label>
-                      <input id="VAT-No" type="text" formControlName="vatNo" [ngClass]="{
+                      <input id="VAT-No" type="text" formControlName="vatNo" OnlyNumbers [ngClass]="{
                           'is-invalid':
                             (corporate.vatNo?.touched || corporate.vatNo?.dirty || submitted) && corporate.vatNo?.invalid
                         }" class="form-control form-control-sm" />
                       <div class="invalid-feedback fw-bold">
                         <div *ngIf="corporate.vatNo?.hasError('required')">Required</div>
                         <div *ngIf="corporate.vatNo?.errors && corporate.vatNo?.dirty">
-                          Invalid ID ( Min: 20 ) & ( Max: 20 ) Length
-                        </div>
+                          Must be 15 digits </div>
                       </div>
                     </div>
                     <!--./col-->
@@ -407,7 +401,7 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                       <label for="Premium" class="asterisk-input">Premium</label>
-                      <ng-select formControlName="premium" class="is-invalid" [ngClass]="{
+                      <ng-select formControlName="premium" [clearable]="false" class="is-invalid" [ngClass]="{
                           'is-submitted': submitted && corporate.premium?.invalid
                         }" [items]="(formData | async)?.Premium?.content!" bindLabel="name" bindValue="name"
                         [loading]="formData ? false : true">
@@ -452,7 +446,7 @@
               <!--./col-->
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                <label for="SecondaryNo">Secondary No</label>
+                <label for="SecondaryNo">Secondary No.</label>
                 <input id="SecondaryNo" formControlName="secondryNo" class="form-control form-control-sm" />
               </div>
               <!--./col-->
@@ -471,7 +465,7 @@
 
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="City" class="asterisk-input">City</label>
-                <ng-select formControlName="cityName" class="is-invalid" [ngClass]="{
+                <ng-select formControlName="cityName" [clearable]="false" class="is-invalid" [ngClass]="{
                   'is-submitted': submitted && f.cityName?.invalid
                 }" [items]="(formData | async)?.Cities?.content!" bindLabel="name" bindValue="name"
                   [loading]="formData ? false : true">
@@ -504,15 +498,11 @@
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Telephone" class="asterisk-input">Telephone</label>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-text">+966</span>
                   <input type="number" formControlName="tele" class="form-control" [ngClass]="{
                       'is-invalid':
                         (f.tele?.touched || submitted) && f.tele?.invalid
-                    }" pattern="[0-9]{9}" />
-                  <div class="invalid-feedback fw-bold" *ngIf="(f.tele?.touched || submitted) && f.tele?.invalid">
-                    Invalid Phone Number
-                  </div>
-                  <div class="invalid-feedback fw-bold" *ngIf="submitted && this.f.tele?.hasError('required')">
+                    }" />
+                  <div class="invalid-feedback fw-bold">
                     Required
                   </div>
                 </div>
@@ -522,13 +512,7 @@
               <div class="col-lg-3 col-md-6 col-sm-12 my-1">
                 <label for="Telephone2">Second Telephone</label>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-text">+966</span>
-                  <input id="Telephone2" type="number" formControlName="tele2" [ngClass]="{
-                      'is-invalid': submitted && this.f.tele2?.invalid
-                    }" class="form-control form-control-sm" />
-                  <div class="invalid-feedback fw-bold" *ngIf="submitted && this.f.tele2?.invalid">
-                    Invalid Phone Number
-                  </div>
+                  <input id="Telephone2" type="number" formControlName="tele2" class="form-control form-control-sm" />
                 </div>
               </div>
               <!--./col-->
@@ -622,29 +606,21 @@
 
                       <td>
                         <div class="input-group input-group-sm">
-                          <span class="input-group-text">+966</span>
                           <input type="number" formControlName="mobile" placeholder="Contact Phone" class="form-control"
                             [ngClass]="{
                               'is-invalid':
                                 submitted &&
                                 contactControls(i, 'mobile').invalid
                             }" />
-                          <div class="invalid-feedback fw-bold" *ngIf="contactControls(i, 'mobile').invalid">
-                            Invalid Phone Number
-                          </div>
                         </div>
                       </td>
                       <td>
                         <div class="input-group input-group-sm">
-                          <span class="input-group-text">+966</span>
                           <input type="number" formControlName="tele" placeholder="Contact Second Phone"
                             class="form-control" [ngClass]="{
                               'is-invalid':
                                 submitted && contactControls(i, 'tele').invalid
-                            }" pattern="[0-9]{9}" />
-                          <div class="invalid-feedback fw-bold" *ngIf="contactControls(i, 'tele').invalid">
-                            Invalid Phone Number
-                          </div>
+                            }" />
                         </div>
                       </td>
                       <td>
@@ -756,9 +732,10 @@
                             <div>{{ item.name }}</div>
                           </ng-template>
                         </ng-select>
-                        <div class="invalid-feedback fw-bold">
+                        <span class="invalid-feedback fw-bold"
+                          *ngIf="(bankControls(i, 'bankName').touched || submitted) && bankControls(i, 'bankName').invalid">
                           Required
-                        </div>
+                        </span>
                       </td>
                       <td scope="col">
                         <input type="text" class="form-control form-control-sm" placeholder="Bank Branch"

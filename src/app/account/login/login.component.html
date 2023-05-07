@@ -34,22 +34,23 @@
                                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete>
 
                                     <div class="mb-3">
-                                        <label for="dbname" class="form-label font-weight-bold">Version</label>
+                                        <label for="dbname" class="form-label font-weight-bold">Version:
+                                        </label>
                                         <ng-select [clearable]="false" [searchable]="false" id="dbname"
                                             formControlName="dbName" required>
                                             <ng-option *ngFor="let name of dbNames.db"
-                                                [value]="name.id||0">{{name.name}}
+                                                [value]="name.name||'Test'">{{name.name}}
                                             </ng-option>
                                         </ng-select>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label font-weight-bold" for="userName">User Name</label>
+                                        <label class="form-label font-weight-bold" for="userName">Username</label>
                                         <input type="userName" class="form-control" id="userName"
                                             formControlName="userName"
                                             [ngClass]="{ 'is-invalid': submitted && f['userName'].errors }"
-                                            placeholder="Enter User Name">
+                                            placeholder="Enter Username">
                                         <div *ngIf="submitted && f['userName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['userName'].errors['required']">User Name is required</div>
+                                            <div *ngIf="f['userName'].errors['required']">Username is required</div>
                                         </div>
                                     </div>
 
@@ -76,11 +77,14 @@
                                             id="auth-remember-check" formControlName="rememberMe">
                                         <label class="form-check-label" for="auth-remember-check">Remember me</label>
                                     </div>
-
                                     <div class="mt-4">
                                         <button class="btn btn-primary w-100" type="submit">Sign In</button>
                                     </div>
+
                                 </form>
+                            </div>
+                            <div class="fw-bolder text-center">
+                                Patch : <small>A: {{version}} | B: 2.0.1 | R: 3.3.0</small>
                             </div>
                         </div>
                         <!-- end card body -->
@@ -102,7 +106,9 @@
                 <div class="col-lg-12">
                     <div class="text-center">
                         <p class="mb-0 text-muted">&copy; {{year}} Oasis. Crafted with <i
-                                class="mdi mdi-heart text-danger"></i> by Oasis Team</p>
+                                class="mdi mdi-heart text-danger"></i> by <a target="_blank"
+                                href="https://oasisoft.net/">Oasis</a> Team
+                        </p>
                     </div>
                 </div>
             </div>
