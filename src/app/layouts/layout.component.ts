@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { EventService } from "../core/services/event.service";
-import { LAYOUT_VERTICAL } from "./layout.model";
+import { LAYOUT_HORIZONTAL, LAYOUT_VERTICAL } from "./layout.model";
 
 @Component({
   selector: "app-layout",
@@ -16,10 +16,14 @@ import { LAYOUT_VERTICAL } from "./layout.model";
  */
 export class LayoutComponent implements OnInit, OnDestroy {
   layoutType!: string;
+  layoutVars = {
+    HOR: LAYOUT_HORIZONTAL,
+    VER: LAYOUT_VERTICAL,
+  };
   subscribe: Subscription[] = [];
   constructor(private eventService: EventService) {}
   ngOnInit(): void {
-    this.layoutType = LAYOUT_VERTICAL;
+    this.layoutType = LAYOUT_HORIZONTAL;
 
     // listen to event and change the layout, theme, etc
     const sub = this.eventService.subscribe(

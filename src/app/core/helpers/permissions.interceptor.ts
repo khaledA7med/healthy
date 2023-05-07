@@ -66,9 +66,9 @@ export class PermissionsInterceptor implements HttpInterceptor {
             // server-side error
             errorMessage = error?.error?.message || errorMessage;
           }
-          this.eventService.broadcast(reserved.isLoading, false);
           this.message.popup("Oops!", errorMessage, "error");
         }
+        this.eventService.broadcast(reserved.isLoading, false);
         return throwError(error.message);
       })
     );
