@@ -64,6 +64,7 @@ export class ProductionDocumentsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: PoliciesListOfDocumentseCols,
     suppressCsvExport: true,
     context: { comp: this },

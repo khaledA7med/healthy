@@ -6,7 +6,7 @@ export const policyTypesCols: ColDef[] = [
     colId: "action",
     cellRenderer: PolicyTypesFromsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

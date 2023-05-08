@@ -8,7 +8,7 @@ export const businessDevelopmentCols: ColDef[] = [
 		colId: "action",
 		cellRenderer: BusinessDevelopmentControlsComponent,
 		pinned: "left",
-		maxWidth: 80,
+		maxWidth: 40,
 		sortable: false,
 	},
 	{

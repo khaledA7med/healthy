@@ -6,7 +6,7 @@ export const vehiclesTypesCols: ColDef[] = [
     colId: "action",
     cellRenderer: VehiclesTypesFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

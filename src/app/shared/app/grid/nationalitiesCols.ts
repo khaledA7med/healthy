@@ -6,7 +6,7 @@ export const nationalitiesCols: ColDef[] = [
     colId: "action",
     cellRenderer: NationalitiesFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

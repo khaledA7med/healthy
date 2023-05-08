@@ -6,7 +6,7 @@ export const lineOfBusinessCols: ColDef[] = [
     colId: "action",
     cellRenderer: LineOfBusinessFormComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

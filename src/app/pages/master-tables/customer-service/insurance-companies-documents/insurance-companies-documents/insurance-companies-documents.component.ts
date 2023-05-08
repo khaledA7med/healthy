@@ -75,6 +75,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: InsuranceCompaniesDocumentsCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -167,23 +168,25 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     this.documentsToUpload = evt;
   }
 
-  deleteFile(index: number, path: string) {
-    let data: IDocumentReq = {
+  deleteFile(path: string) {
+    let del: IDocumentReq = {
       module: " MasterTables",
-      path: "",
+      path: path,
       sno: 0,
     };
+    console.log("ddddddddddddddd", del);
     this.message
       .confirm(` Delete it !`, ` Delete it !`, "danger", "warning")
       .then((result: any) => {
         if (result.isConfirmed) {
           let sub = this.InsuranceCompaniesDocumentsService.deleteDocument(
-            data
+            del
           ).subscribe({
             next: (res) => {
+              console.log("resssssssssssssssssss", res);
               if (res.body?.status === true) {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.documentdetails.documents?.splice(index, 1);
+                // this.uiState.documentdetails.documents?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");
             },
           });

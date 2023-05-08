@@ -58,6 +58,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: insuranceBrokersCols,
     suppressCsvExport: true,
     context: { comp: this },

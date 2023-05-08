@@ -6,7 +6,7 @@ export const hospitalsCols: ColDef[] = [
     colId: "action",
     cellRenderer: HospitalsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

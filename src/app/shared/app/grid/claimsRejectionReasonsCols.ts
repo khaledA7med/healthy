@@ -6,7 +6,7 @@ export const claimsRejectionReasonsCols: ColDef[] = [
     colId: "action",
     cellRenderer: ClaimsRejectionReasonsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

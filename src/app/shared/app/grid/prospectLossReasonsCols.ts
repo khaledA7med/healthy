@@ -6,7 +6,7 @@ export const prospectLossReasonsCols: ColDef[] = [
     colId: "action",
     cellRenderer: ProspectLossReasonsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

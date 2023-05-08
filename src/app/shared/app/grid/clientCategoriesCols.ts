@@ -6,7 +6,7 @@ export const clientCategoriesCols: ColDef[] = [
     colId: "action",
     cellRenderer: ClientCategoriesFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

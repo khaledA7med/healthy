@@ -6,7 +6,7 @@ export const contactsListPositionCols: ColDef[] = [
     colId: "action",
     cellRenderer: ContactsListPositionFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

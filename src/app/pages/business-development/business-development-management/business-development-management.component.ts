@@ -449,7 +449,9 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 	}
 
 	openSalesLeadFollowUp(leadNo: string): void {
-		let sub = this.offcanvasService.open(this.FollowUpCanvas, { position: "end" });
+		let sub = this.offcanvasService.open(this.FollowUpCanvas, {
+			position: "end",
+		});
 		sub.dismissed.subscribe(() => {
 			this.followUpForm.reset();
 			this.followUpForm.markAsUntouched();

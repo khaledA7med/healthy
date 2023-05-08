@@ -6,7 +6,7 @@ export const carsMakeCols: ColDef[] = [
     colId: "action",
     cellRenderer: CarsMakeFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

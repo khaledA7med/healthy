@@ -31,17 +31,13 @@
                         <td scope="col">
                             <div *ngIf="item.type.startsWith('image')">
                                 <img id="file-preview" [src]="item.data" class="img-fluid rounded shadow-sm">
-                                <button (click)="openImage(item.data)" type="button" class="btn btn-link">&nbsp;
-                                    {{item.name}}
-                                </button>
+                                {{item.name}}
                             </div>
                             <div class="d-flex align-items-center fs-20" *ngIf="!item.type.startsWith('image')">
                                 <div class="file-output-icon rounded" [ngClass]="fileIcon(item.type).cls">
                                     <i [ngClass]="fileIcon(item.type).ico"></i>
                                 </div>
-                                <button (click)="openImage(item.data)" type="button" class="btn btn-link">&nbsp;
-                                    {{item.name}}
-                                </button>
+                                <span class="fs-6 p-3">&nbsp;{{item.name}}</span>
                             </div>
                         </td>
                         <td scope="col">
@@ -60,7 +56,7 @@
                         <td scope="col">
                             <div *ngIf="item.type.startsWith('image')">
                                 <img id="file-preview" [src]="item.data" class="img-fluid rounded shadow-sm">
-                                <button (click)="openImage(item.data)" type="button" class="btn btn-link">&nbsp;
+                                <button (click)="downloadFile(item.data)" type="button" class="btn btn-link">
                                     {{item.name}}
                                 </button>
                             </div>
@@ -68,7 +64,7 @@
                                 <div class="file-output-icon rounded" [ngClass]="fileIcon(item.type).cls">
                                     <i [ngClass]="fileIcon(item.type).ico"></i>
                                 </div>
-                                <button (click)="openImage(item.data)" type="button" class="btn btn-link">&nbsp;
+                                <button (click)="downloadFile(item.data)" type="button" class="btn btn-link">&nbsp;
                                     {{item.name}}
                                 </button>
                             </div>

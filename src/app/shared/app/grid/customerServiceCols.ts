@@ -139,3 +139,27 @@ export const customerServiceManageCols: ColDef[] = [
 		valueFormatter: GlobalCellRender.dateTimeFormater,
 	},
 ];
+
+export const columnsToExport = [
+	"endorsType",
+	"branch",
+	"status",
+	"duration",
+	"requestStatusNote",
+	"requestNo",
+	"clientId",
+	"clientName",
+	"policyNo",
+	"insurComp",
+	"classOfBusiness",
+	"netPremium",
+	"policyFees",
+	"totalPremium",
+	"savedBy",
+	"savedDate",
+	"notifyClient",
+	"notifyInsurer",
+	"cancelationReason",
+	"closedBy",
+	"closedOn",
+];
