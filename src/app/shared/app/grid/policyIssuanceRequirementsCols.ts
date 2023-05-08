@@ -7,7 +7,7 @@ export const policyIssuanceRequirementsCols: ColDef[] = [
     colId: "action",
     cellRenderer: PolicyIssuanceRequirementsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

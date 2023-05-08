@@ -6,7 +6,7 @@ export const tpaListCols: ColDef[] = [
     colId: "action",
     cellRenderer: TpaListFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

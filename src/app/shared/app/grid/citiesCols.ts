@@ -6,7 +6,7 @@ export const citiesCols: ColDef[] = [
     colId: "action",
     cellRenderer: CitiesFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

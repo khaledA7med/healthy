@@ -6,7 +6,7 @@ export const insuranceClassCols: ColDef[] = [
     colId: "action",
     cellRenderer: InsuranceClassesFormComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

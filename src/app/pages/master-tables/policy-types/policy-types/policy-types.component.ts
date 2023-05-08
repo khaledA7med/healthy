@@ -57,6 +57,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: policyTypesCols,
     suppressCsvExport: true,
     context: { comp: this },

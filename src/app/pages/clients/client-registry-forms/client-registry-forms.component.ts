@@ -157,7 +157,6 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
 
   //#region Client Details
   clientTypeToggler(e: string): void {
-    console.log(e);
     switch (e) {
       case this.uiState.clientDetails.clientType.Corporate:
         this.uiState.clientDetails.corporate = false;
@@ -522,7 +521,14 @@ export class ClientRegistryFormsComponent implements OnInit, OnDestroy {
   }
 
   validationChecker(): boolean {
-    if (this.formGroup.invalid) return false;
+    if (this.formGroup.invalid) {
+      this.message.popup(
+        "Attention!",
+        "Please Fill Required Inputs",
+        "warning"
+      );
+      return false;
+    }
     return true;
   }
 

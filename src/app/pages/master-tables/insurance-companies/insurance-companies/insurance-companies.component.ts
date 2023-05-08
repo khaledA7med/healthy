@@ -81,6 +81,7 @@ export class InsuranceCompaniesComponent implements OnInit {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: insuranceCompaniesCols,
     suppressCsvExport: true,
     context: { comp: this },

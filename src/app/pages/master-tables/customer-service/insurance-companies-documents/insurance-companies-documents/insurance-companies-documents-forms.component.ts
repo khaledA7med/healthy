@@ -53,6 +53,6 @@ export class InsuranceCompaniesDocumentsFormsComponent {
   }
 
   Delete() {
-    this.comp.deleteFile(this.params.data.index, this.params.data.path);
+    this.comp.deleteFile(this.params.data.data);
   }
 }

@@ -6,7 +6,7 @@ export const CustomerServiceRequirementsCols: ColDef[] = [
     colId: "action",
     cellRenderer: CustomerServiceRequirementsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

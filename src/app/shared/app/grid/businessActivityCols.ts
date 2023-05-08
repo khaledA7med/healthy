@@ -6,7 +6,7 @@ export const businessActivityCols: ColDef[] = [
     colId: "action",
     cellRenderer: BusinessActivityFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

@@ -7,7 +7,7 @@ export const quotingRequirementsCols: ColDef[] = [
     colId: "action",
     cellRenderer: QuotingRequirementsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

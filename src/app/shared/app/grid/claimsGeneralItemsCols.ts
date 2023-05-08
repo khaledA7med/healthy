@@ -7,7 +7,7 @@ export const claimsGeneralItemsCols: ColDef[] = [
     colId: "action",
     cellRenderer: ClaimsGeneralItemsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {
