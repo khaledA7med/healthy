@@ -1,9 +1,10 @@
+import { formatCurrency } from "@angular/common";
 import { HttpResponse } from "@angular/common/http";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NavigationEnd, NavigationStart, Router } from "@angular/router";
 import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, ProcessCellForExportParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -12,7 +13,7 @@ import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
-import { productionCols } from "src/app/shared/app/grid/productionCols";
+import { columnsToExport, productionCols } from "src/app/shared/app/grid/productionCols";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { IPolicy } from "src/app/shared/app/models/Production/i-policy";
 import { IProductionFilters, IProductionFiltersForm } from "src/app/shared/app/models/Production/iproduction-filters";
@@ -72,7 +73,7 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		editType: "fullRow",
 		animateRows: true,
 		columnDefs: productionCols,
-		suppressCsvExport: true,
+		suppressExcelExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
@@ -110,13 +111,6 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.getLookupData();
 		this.disableAmountFilter();
 
-		// let sub = this.router.events.subscribe((evt) => {
-		// 	if (evt instanceof NavigationEnd) {
-		// 		if (!evt.url.includes("details")) {
-		// 			if (this.router.getCurrentNavigation()?.extras.state!["updated"]) this.gridApi.setDatasource(this.dataSource);
-		// 		}
-		// 	}
-		// });
 		let sub2 = this.permissions$.subscribe((res: string[]) => {
 			if (!res.includes(this.uiState.privileges.ViewAllBranchs)) this.f.branch?.patchValue(this.auth.getUser().Branch!);
 			if (!res.includes(this.uiState.privileges.ChAccessAllProducersProduction)) this.f.producer?.patchValue(this.auth.getUser().name!);
@@ -136,21 +130,23 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.productionService.getAllPolicies(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
-				if (res.status) {
-					this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
-					this.uiState.policies.list = res.body?.data!;
-					params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
-					if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
-					else {
-						this.uiState.gridReady = true;
+			let sub = this.productionService
+				.getAllPolicies({ ...this.uiState.filters, branch: this.f.branch?.value })
+				.subscribe((res: HttpResponse<IBaseResponse<IPolicy[]>>) => {
+					if (res.status) {
+						this.uiState.policies.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+						this.uiState.policies.list = res.body?.data!;
+						params.successCallback(this.uiState.policies.list, this.uiState.policies.totalPages);
+						if (this.uiState.policies.list.length === 0) this.gridApi.showNoRowsOverlay();
+						else {
+							this.uiState.gridReady = true;
+							this.gridApi.hideOverlay();
+						}
+					} else {
+						this.message.popup("Oops!", res.body?.message!, "warning");
 						this.gridApi.hideOverlay();
 					}
-				} else {
-					this.message.popup("Oops!", res.body?.message!, "warning");
-					this.gridApi.hideOverlay();
-				}
-			});
+				});
 			this.subscribes.push(sub);
 		},
 	};
@@ -192,6 +188,47 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.gridApi.setDatasource(this.dataSource);
 		if ((this, this.uiState.policies.list.length > 0)) this.gridApi.sizeColumnsToFit();
 	}
+
+	exportExcelFile() {
+		this.gridApi.exportDataAsCsv({
+			fileName: "Production",
+			processCellCallback: (params: ProcessCellForExportParams) => this.editPrintedCells(params),
+			columnKeys: columnsToExport,
+		});
+	}
+
+	editPrintedCells(params: ProcessCellForExportParams) {
+		if (params.column.getColId() === "issueDate" || params.column.getColId() === "periodFrom" || params.column.getColId() === "periodTo")
+			return this.appUtils.formatDate(params.value);
+		else if (
+			params.column.getColId() === "savedDate" ||
+			params.column.getColId() === "approvedDate" ||
+			params.column.getColId() === "finApprovedDate" ||
+			params.column.getColId() === "finEntryDate" ||
+			params.column.getColId() === "finRejectOn" ||
+			params.column.getColId() === "deliveryUpdatedOn" ||
+			params.column.getColId() === "correctionOn"
+		)
+			return this.appUtils.formatDate(params.value, true);
+		else if (
+			params.column.getColId() === "sumInsur" ||
+			params.column.getColId() === "netPremium" ||
+			params.column.getColId() === "fees" ||
+			params.column.getColId() === "vatValue" ||
+			params.column.getColId() === "totalPremium" ||
+			params.column.getColId() === "paidPremium" ||
+			params.column.getColId() === "compComm" ||
+			params.column.getColId() === "compCommVat" ||
+			params.column.getColId() === "producerComm"
+		)
+			return formatCurrency(params.value, "en-US", "", "", "1.2-2");
+		else if (params.column.getColId() === "totalPremium")
+			return formatCurrency(+params.value - +params.node?.data.paidPremium, "en-US", "", "", "1.2-2");
+		else if (params.column.getColId() === "netPremium+fees")
+			return formatCurrency(+params.node?.data.netPremium + +params.node?.data.fees, "en-US", "", "", "1.2-2");
+		else return params.value;
+	}
+
 	//#region Filter INIT and Functions
 	openPoliciesFilter() {
 		this.offcanvasService.open(this.policiesFilter, { position: "end" });

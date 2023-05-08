@@ -123,7 +123,7 @@
 
                 <div class="mb-3">
                     <label for="InsuranceCompany" class="form-label text-muted fw-bold fs-13">Insurance
-                        Company :</label>
+                        Company</label>
                     <ng-select id="insuranceCompany" class="is-invalid" placeholder="Select Insurance Company"
                         [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" [multiple]="true"
@@ -133,7 +133,7 @@
 
                 <div class="mb-3">
                     <label for="PendingReason" class="form-label text-muted fw-bold fs-13">Pending
-                        Reason : </label>
+                        Reason</label>
                     <ng-select id="PendingReason" class="is-invalid" placeholder="Select Pending Reason"
                         [items]="(lookupData | async)?.PendingReason?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false"
@@ -143,7 +143,7 @@
 
                 <div class="mb-3">
                     <label for="ClassOfBusniess" class="form-label text-muted fw-bold fs-13">Class
-                        Of Busniess : </label>
+                        Of Busniess</label>
                     <ng-select id="ClassOfBusniess" class="is-invalid" placeholder="Select Class Of Busniess"
                         [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false"
@@ -154,7 +154,7 @@
 
                 <div class="mb-3">
                     <label for="LineofBuss" class="form-label text-muted fw-bold fs-13">Line
-                        Of Busniess : </label>
+                        Of Busniess</label>
                     <ng-select id="lineofBuss" class="is-invalid" placeholder="Select Class Of Busniess"
                         [items]="uiState.lineOfBusinessList" [loading]="lookupData ? false : true" [clearable]="true"
                         [searchable]="true" [multiple]="true" [closeOnSelect]="false" formControlName="lineOfBusiness"
@@ -164,7 +164,7 @@
 
                 <div class="mb-3">
                     <label for="CreatedBy" class="form-label text-muted fw-bold fs-13"> Created
-                        by: </label>
+                        by</label>
                     <ng-select id="CreatedBy" class="is-invalid" placeholder="Created By"
                         [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" formControlName="createdBy" bindLabel="name"
@@ -250,7 +250,7 @@
 
             <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp()">
                 <div class="col-12  my-2">
-                    <label class="form-label">Users:</label>
+                    <label class="form-label">Users</label>
                     <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" class="form-control-sm px-0 w-100" appendTo="body" [ngClass]="{
                     'is-invalid':

@@ -56,13 +56,13 @@
                 </div>
                 <!-- Our Ref -->
                 <div class="col-12 mb-3">
-                    <label for="ourRefInput" class="form-label">Our Ref:</label>
+                    <label for="ourRefInput" class="form-label">Our Ref</label>
                     <input type="text" class="form-control form-control-sm" id="ourRefInput" placeholder="Our Ref"
                         formControlName="ourRef" />
                 </div>
                 <!-- Client Name -->
                 <div class="col-12 mb-3">
-                    <label for="clientName" class="form-label">Client Name:</label>
+                    <label for="clientName" class="form-label">Client Name</label>
                     <ng-select [items]="(lookupData | async)?.ClientsList?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
                         bindValue="name" id="clientName" formControlName="clientName">
@@ -70,7 +70,7 @@
                 </div>
                 <!-- Producer -->
                 <div class="col-12 mb-3">
-                    <label for="producerName" class="form-label">Producer:</label>
+                    <label for="producerName" class="form-label">Producer</label>
                     <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
                         [closeOnSelect]="false" [hideSelected]="true" id="producerName" formControlName="producer"
@@ -79,7 +79,7 @@
                 </div>
                 <!-- Insurance Company -->
                 <div class="col-12 mb-3">
-                    <label for="insurCompany" class="form-label">Insurance Company:</label>
+                    <label for="insurCompany" class="form-label">Insurance Company</label>
                     <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" bindLabel="name"
                         bindValue="name" id="insurCompany" formControlName="insurCompany">
@@ -104,7 +104,7 @@
                 </div>
                 <!-- PolicyNo -->
                 <div class="col-12 mb-3">
-                    <label for="policyNoInput" class="form-label">Policy No:</label>
+                    <label for="policyNoInput" class="form-label">Policy No.</label>
                     <input type="text" class="form-control form-control-sm" id="policyNoInput" placeholder="Policy No"
                         formControlName="policyNo" />
                 </div>
@@ -119,12 +119,12 @@
                 </div>
                 <!-- Expiry Range -->
                 <div class="col-12 mb-3">
-                    <label for="user" class="form-label">Expiry Range:</label>
+                    <label for="user" class="form-label">Expiry Range</label>
                     <app-range-picker (dateChange)="setExpiryRangeFilter($event)"></app-range-picker>
                 </div>
                 <!-- Inception Range -->
                 <div class="col-12 mb-3">
-                    <label for="user" class="form-label">Inception Range:</label>
+                    <label for="user" class="form-label">Inception Range</label>
                     <app-range-picker (dateChange)="setInceptionRangeFilter($event)"></app-range-picker>
                 </div>
             </form>

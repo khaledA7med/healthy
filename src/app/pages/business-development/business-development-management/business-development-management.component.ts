@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
-import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams } from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, ProcessCellForExportParams } from "ag-grid-community";
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
@@ -10,7 +10,7 @@ import {
 	IBusinessDevelopmentFilters,
 	IBusinessDevelopmentFiltersForm,
 } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-filters";
-import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelopmentCols";
+import { businessDevelopmentCols, columnsToExport } from "src/app/shared/app/grid/businessDevelopmentCols";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -24,6 +24,7 @@ import { SweetAlertResult } from "sweetalert2";
 import { ISalesLeadFollowUps } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-followups";
 import { EventService } from "src/app/core/services/event.service";
 import { reserved } from "src/app/core/models/reservedWord";
+import { formatCurrency } from "@angular/common";
 
 @Component({
 	selector: "app-business-development-management",
@@ -95,7 +96,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		editType: "fullRow",
 		animateRows: true,
 		columnDefs: businessDevelopmentCols,
-		suppressCsvExport: true,
+		suppressExcelExport: true,
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
@@ -223,6 +224,35 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		this.gridApi = param.api;
 		this.gridApi.setDatasource(this.dataSource);
 		if ((this, this.uiState.salesLead.list.length > 0)) this.gridApi.sizeColumnsToFit();
+	}
+
+	exportExcelFile() {
+		this.gridApi.exportDataAsCsv({
+			fileName: "Business Development",
+			processCellCallback: (params: ProcessCellForExportParams) => this.editPrintedCells(params),
+			columnKeys: columnsToExport,
+		});
+	}
+
+	editPrintedCells(params: ProcessCellForExportParams) {
+		if (
+			params.column.getColId() === "deadline" ||
+			params.column.getColId() === "existingPolExpDate" ||
+			params.column.getColId() === "quoatationDate" ||
+			params.column.getColId() === "revisedQuoatationDate" ||
+			params.column.getColId() === "clientResultDate" ||
+			params.column.getColId() === "savedDate" ||
+			params.column.getColId() === "updatedOn"
+		)
+			return this.appUtils.formatDate(params.value);
+		else if (
+			params.column.getColId() === "quoatedPremium" ||
+			params.column.getColId() === "revisedQuoatationPremium" ||
+			params.column.getColId() === "clientResult" ||
+			params.column.getColId() === "clientResultPremium"
+		)
+			return formatCurrency(params.value, "en-US", "", "", "1.2-2");
+		else return params.value;
 	}
 
 	draggableHandler(): void {
