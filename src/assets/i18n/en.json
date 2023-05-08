@@ -102,8 +102,8 @@
       "TEXT": "Production",
       "LIST": {
         "MANAGEMENT": "Policies/Endorsements Management",
-        "ACTIVELISTMANAGEMENT": "Active Policies Management",
-        "EDITCOMMISSIONS": "Policies/Edit Commissions",
+        "ACTIVELISTMANAGEMENT": "Policies (Members/Vehicles) Management",
+        "EDITCOMMISSIONS": "Policies (Commissions) Management",
         "REPORTS": "Reports",
         "REPORTLIST": {
           "PRODUCTION": "Production",

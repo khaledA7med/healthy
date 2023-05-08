@@ -185,6 +185,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
             next: (res) => {
               console.log("resssssssssssssssssss", res);
               if (res.body?.status === true) {
+                this.gridApi.setDatasource(this.dataSource);
                 this.message.toast(res.body?.message!, "success");
                 // this.uiState.documentdetails.documents?.splice(index, 1);
               } else this.message.popup("Sorry", res.body?.message!, "warning");

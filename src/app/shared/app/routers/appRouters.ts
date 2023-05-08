@@ -98,11 +98,11 @@ export const AppRoutes = {
   },
   Production: {
     base: "production",
-    activeList: "active-policies-list",
+    activeList: "Policies-Members/Vehicles-Management",
     details: "policy",
     create: "production/create",
     edit: "production/update/",
-    editCommissions: "production/edit-commissions",
+    editCommissions: "Policies-Commissions-Management",
     makeInvoice: "production/invoice/",
     reports: {
       production: "production/production-report",
