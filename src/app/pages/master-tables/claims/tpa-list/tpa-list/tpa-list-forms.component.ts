@@ -7,11 +7,11 @@ import { SweetAlertResult } from "sweetalert2";
 @Component({
   selector: "app-tpa-list-forms",
   template: `
-    <div class="col">
+    <div class="col d-flex align-items-center justify-content-center">
       <div ngbDropdown class="d-inline-block">
         <button
           type="button"
-          class="btn btn-ghost-secondary waves-effect rounded-pill"
+          class="btn btn-ghost-secondary btn-sm waves-effect rounded-pill"
           id="actionDropdown"
           ngbDropdownToggle
         >
@@ -22,7 +22,12 @@ import { SweetAlertResult } from "sweetalert2";
           aria-labelledby="actionDropdown"
           class="dropdown-menu"
         >
-          <button ngbDropdownItem class="btn btn-sm" (click)="Delete()">
+          <button
+            type="button"
+            ngbDropdownItem
+            class="btn btn-sm"
+            (click)="Delete()"
+          >
             <i class="ri-delete-bin-line align-bottom me-2 text-muted"></i>
             Delete
           </button>
@@ -34,22 +39,6 @@ import { SweetAlertResult } from "sweetalert2";
     `
       #actionDropdown::after {
         display: none;
-      }
-      .dropdown-menu li {
-        position: relative;
-      }
-      .dropdown-menu .dropdown-submenu {
-        display: none;
-        position: absolute;
-        left: 100%;
-        top: -7px;
-      }
-      .dropdown-menu .dropdown-submenu-left {
-        right: 100%;
-        left: auto;
-      }
-      .dropdown-menu > li:hover > .dropdown-submenu {
-        display: block;
       }
     `,
   ],
@@ -67,10 +56,10 @@ export class TpaListFormsComponent {
 
   Delete() {
     this.message
-      .confirm("Sure!", "You Want To Delete?!", "primary", "question")
+      .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
-          this.comp.DeleteTpaList(this.params.data.sno);
+          this.comp.DeleteTpaList(this.params.data.tpaName);
         } else {
           return;
         }

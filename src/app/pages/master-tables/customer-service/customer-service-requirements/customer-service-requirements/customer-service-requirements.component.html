@@ -29,7 +29,7 @@
 
                             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label class="asterisk-input">Endors type
+                                    <label class="asterisk-input">Endors Type
                                     </label>
                                 </div>
                                 <ng-select [items]="(lookupData | async)?.PolicyEndorsTypes?.content!"
@@ -48,7 +48,7 @@
 
                             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label class="asterisk-input">Class Of Insurance
+                                    <label class="asterisk-input">Class of Insurance
                                     </label>
                                 </div>
                                 <ng-select id="classofInsurance" class="form-control-sm is-invalid"
@@ -69,11 +69,11 @@
 
                             <div class="col-lg-4 col-md-6 col-sm-12 my-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label class="asterisk-input">Line Of Business
+                                    <label class="asterisk-input">Line of Business
                                     </label>
                                 </div>
                                 <ng-select id="lineOfBusiness" class="form-control-sm is-invalid"
-                                    placeholder="Select Lien Of Business" formControlName="lineOfBusiness"
+                                    placeholder="Select Line of Business" formControlName="lineOfBusiness"
                                     bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                     [hideSelected]="true" (change)="filter($event)"
                                     [ngClass]="{'is-submitted': (f.lineOfBusiness?.touched || uiState.submitted) && f.lineOfBusiness?.invalid}"

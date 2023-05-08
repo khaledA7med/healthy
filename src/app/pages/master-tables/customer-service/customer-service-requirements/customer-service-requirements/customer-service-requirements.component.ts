@@ -63,6 +63,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: CustomerServiceRequirementsCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -73,7 +74,7 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -169,7 +170,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
 
   initCompanyRequirementsForm() {
     this.CompanyRequirementsForm = new FormGroup<IAddCompanyRequirements>({
-      sno: new FormControl(0),
       endorsType: new FormControl("", Validators.required),
       classofInsurance: new FormControl("", Validators.required),
       insuranceCompanyID: new FormControl(null, Validators.required),
@@ -211,9 +211,6 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     const data: IAddCompanyRequirementsData = {
-      sno: this.uiState.editCompanyRequirementsMode
-        ? this.uiState.editCompanyRequirementsData.sno
-        : 0,
       ...form.getRawValue(),
     };
     let sub = this.CompanyRequirementsService.saveCompanyRequirements(

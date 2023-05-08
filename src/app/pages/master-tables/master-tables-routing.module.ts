@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: AppRoutes.MasterTable.lineOfBusiness,
     data: {
-      title: "Line Of Business",
+      title: "Line of Business",
     },
     loadChildren: () =>
       import("./line-of-business/line-of-business.module").then(
@@ -348,9 +348,9 @@ const routes: Routes = [
       import("./production/production.module").then((m) => m.ProductionModule),
   },
   {
-    path: AppRoutes.MasterTable.claims.carsMake,
+    path: AppRoutes.MasterTable.claims.carsMaker,
     data: {
-      title: "Cars Make",
+      title: "Cars Maker",
     },
     loadChildren: () =>
       import("./claims/cars-make/cars-make.module").then(
@@ -519,7 +519,7 @@ const routes: Routes = [
   {
     path: AppRoutes.MasterTable.defaultEmails,
     data: {
-      title: "Default Settings",
+      title: "Default Emails",
     },
     loadChildren: () =>
       import("./default-emails/default-emails.module").then(

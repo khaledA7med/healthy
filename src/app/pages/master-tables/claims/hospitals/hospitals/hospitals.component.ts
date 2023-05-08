@@ -76,6 +76,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: hospitalsCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -86,7 +87,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -182,7 +183,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       sno: new FormControl(null),
       name: new FormControl("", Validators.required),
       city: new FormControl(""),
-      tele: new FormControl("", Validators.pattern("[0-9]{9}")),
+      tele: new FormControl(""),
       email: new FormControl("", Validators.email),
       fax: new FormControl(""),
       address: new FormControl(""),
@@ -264,10 +265,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
         Validators.email,
         Validators.required,
       ]),
-      phone: new FormControl(data?.phone || null, [
-        Validators.pattern("[0-9]{9}"),
-        Validators.required,
-      ]),
+      phone: new FormControl(data?.phone || null, Validators.required),
     });
 
     if (!data) contact.reset();

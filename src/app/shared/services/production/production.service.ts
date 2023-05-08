@@ -18,13 +18,13 @@ import { IDebitCreditNote } from "../../app/models/Production/iproduction-notes"
 import { IdebitCreditNoteFilter } from "../../app/models/Production/iproduction-notes-filters";
 import { productionReportReq } from "../../app/models/Production/iproduction-report";
 import {
-	DCNotesModel,
-	IFilterByRequest,
-	IPoliciesRef,
-	IPolicyClient,
-	IPolicyRequestResponse,
-	IPolicyRequests,
-	UploadActivePoliciesData,
+  DCNotesModel,
+  IFilterByRequest,
+  IPoliciesRef,
+  IPolicyClient,
+  IPolicyRequestResponse,
+  IPolicyRequests,
+  UploadActivePoliciesData,
 } from "../../app/models/Production/production-util";
 import { ApiRoutes } from "../../app/routers/ApiRoutes";
 import { IActiveListFilters } from "../../app/models/Production/i-active-list-filters";
@@ -33,179 +33,330 @@ import { IMotorData } from "../../app/models/Production/i-motor-active-list";
 import { IMedicalData } from "../../app/models/Production/i-medical-active-list";
 
 @Injectable({
-	providedIn: "root",
+  providedIn: "root",
 })
 export class ProductionService {
-	private readonly env: string = environment.baseURL;
-	constructor(private http: HttpClient) {}
+  private readonly env: string = environment.baseURL;
+  constructor(private http: HttpClient) {}
 
-	//#region  Form Services
-	getAllPolicies(filters: IProductionFilters): Observable<HttpResponse<IBaseResponse<IPolicy[]>>> {
-		return this.http.post<IBaseResponse<IPolicy[]>>(this.env + ApiRoutes.Production.search, filters, {
-			observe: "response",
-		});
-	}
+  //#region  Form Services
+  getAllPolicies(
+    filters: IProductionFilters
+  ): Observable<HttpResponse<IBaseResponse<IPolicy[]>>> {
+    return this.http.post<IBaseResponse<IPolicy[]>>(
+      this.env + ApiRoutes.Production.search,
+      filters,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	searchClientByRequest(body: IFilterByRequest): Observable<IBaseResponse<IPolicyRequests[]>> {
-		return this.http.post<IBaseResponse<IPolicyRequests[]>>(this.env + ApiRoutes.Production.clientByRequest, {
-			clientName: body.clientName,
-			periodFrom: new Date(body.dateFrom!),
-			periodTo: new Date(body.dateTo!),
-		});
-	}
+  searchClientByRequest(
+    body: IFilterByRequest
+  ): Observable<IBaseResponse<IPolicyRequests[]>> {
+    return this.http.post<IBaseResponse<IPolicyRequests[]>>(
+      this.env + ApiRoutes.Production.clientByRequest,
+      {
+        clientName: body.clientName,
+        periodFrom: new Date(body.dateFrom!),
+        periodTo: new Date(body.dateTo!),
+      }
+    );
+  }
 
-	searchForClient(body: any): Observable<IBaseResponse<IPolicyClient[]>> {
-		return this.http.post<IBaseResponse<IPolicyClient[]>>(this.env + ApiRoutes.Production.searchClient, {
-			sNo: +body.clientID,
-			fullName: body.clientName,
-		});
-	}
+  searchForClient(body: any): Observable<IBaseResponse<IPolicyClient[]>> {
+    return this.http.post<IBaseResponse<IPolicyClient[]>>(
+      this.env + ApiRoutes.Production.searchClient,
+      {
+        sNo: +body.clientID,
+        fullName: body.clientName,
+      }
+    );
+  }
 
-	searchForPolicy(body: any): Observable<IBaseResponse<IPoliciesRef[]>> {
-		return this.http.post<IBaseResponse<IPoliciesRef[]>>(this.env + ApiRoutes.Production.searchPolicies, {
-			clientNo: body.clientID,
-			clientName: body.clientName,
-			status: body.status,
-		});
-	}
+  searchForPolicy(body: any): Observable<IBaseResponse<IPoliciesRef[]>> {
+    return this.http.post<IBaseResponse<IPoliciesRef[]>>(
+      this.env + ApiRoutes.Production.searchPolicies,
+      {
+        clientNo: body.clientID,
+        clientName: body.clientName,
+        status: body.status,
+      }
+    );
+  }
 
-	fillRequestData(serial: string, policySNo: string): Observable<IBaseResponse<IPolicyRequestResponse>> {
-		return this.http.post<IBaseResponse<IPolicyRequestResponse>>(this.env + ApiRoutes.Production.fillRequestData, {
-			policySerial: serial,
-			clientPolicySNo: policySNo,
-		});
-	}
+  fillRequestData(
+    serial: string,
+    policySNo: string
+  ): Observable<IBaseResponse<IPolicyRequestResponse>> {
+    return this.http.post<IBaseResponse<IPolicyRequestResponse>>(
+      this.env + ApiRoutes.Production.fillRequestData,
+      {
+        policySerial: serial,
+        clientPolicySNo: policySNo,
+      }
+    );
+  }
 
-	loadPolicyData(policySno: string, polRef: string): Observable<IBaseResponse<IPolicyPreview>> {
-		return this.http.post<IBaseResponse<IPolicyPreview>>(
-			this.env + ApiRoutes.Production.loadPolicyData,
-			{},
-			{ params: { PolicySNo: policySno, polRef } }
-		);
-	}
+  loadPolicyData(
+    policySno: string,
+    polRef: string
+  ): Observable<IBaseResponse<IPolicyPreview>> {
+    return this.http.post<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.loadPolicyData,
+      {},
+      { params: { PolicySNo: policySno, polRef } }
+    );
+  }
 
-	savePolicy(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.save, body, { observe: "response" });
-	}
+  savePolicy(body: FormData): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.save,
+      body,
+      { observe: "response" }
+    );
+  }
 
-	getPolicy(id: string): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
-		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.edit, { params: { id }, observe: "response" });
-	}
+  getPolicy(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IPolicyPreview>>> {
+    return this.http.get<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.edit,
+      { params: { id }, observe: "response" }
+    );
+  }
 
-	checkEndorsNo(policy: string, endors: string): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(
-			this.env + ApiRoutes.Production.checkEndorsNo,
-			{},
-			{
-				params: { policyNo: policy, endorsNo: endors },
-				observe: "response",
-			}
-		);
-	}
+  checkEndorsNo(
+    policy: string,
+    endors: string
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.checkEndorsNo,
+      {},
+      {
+        params: { policyNo: policy, endorsNo: endors },
+        observe: "response",
+      }
+    );
+  }
 
-	//#endregion
+  //#endregion
 
-	getPolicyById(id: string): Observable<IBaseResponse<IPolicyPreview>> {
-		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.details, { params: { id } });
-	}
+  getPolicyById(id: string): Observable<IBaseResponse<IPolicyPreview>> {
+    return this.http.get<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.details,
+      { params: { id } }
+    );
+  }
 
-	changeStatus(data: IChangePolicyStatusRequest): Observable<HttpResponse<IBaseResponse<null>>> {
-		return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Production.changeStatus, data, {
-			observe: "response",
-		});
-	}
+  changeStatus(
+    data: IChangePolicyStatusRequest
+  ): Observable<HttpResponse<IBaseResponse<null>>> {
+    return this.http.post<IBaseResponse<null>>(
+      this.env + ApiRoutes.Production.changeStatus,
+      data,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	changeDeliveryStatus(data: { policyNo: string; deliveryStatus: string }): Observable<IBaseResponse<null>> {
-		// console.log("first");
-		return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.Production.changeDeliveryStatus, { ...data });
-	}
+  changeDeliveryStatus(data: {
+    policyNo: string;
+    deliveryStatus: string;
+  }): Observable<IBaseResponse<null>> {
+    // console.log("first");
+    return this.http.post<IBaseResponse<null>>(
+      this.env + ApiRoutes.Production.changeDeliveryStatus,
+      { ...data }
+    );
+  }
 
-	downloadDocument(data: IDocumentReq): Observable<HttpResponse<any>> {
-		return this.http.post(this.env + ApiRoutes.MasterMethods.downloadDocument, { path: data }, { observe: "response", responseType: "blob" });
-	}
+  downloadDocument(data: IDocumentReq): Observable<HttpResponse<any>> {
+    return this.http.post(
+      this.env + ApiRoutes.MasterMethods.downloadDocument,
+      { path: data },
+      { observe: "response", responseType: "blob" }
+    );
+  }
 
-	deleteDocument(data: IDocumentReq): Observable<HttpResponse<IBaseResponse<null>>> {
-		return this.http.post<IBaseResponse<null>>(this.env + ApiRoutes.MasterMethods.deleteDocument, { path: data }, { observe: "response" });
-	}
+  deleteDocument(
+    data: IDocumentReq
+  ): Observable<HttpResponse<IBaseResponse<null>>> {
+    return this.http.post<IBaseResponse<null>>(
+      this.env + ApiRoutes.MasterMethods.deleteDocument,
+      { path: data },
+      { observe: "response" }
+    );
+  }
 
-	getEditCommission(filters: IEditCommissionsFilter): Observable<HttpResponse<IBaseResponse<IEditCommissions[]>>> {
-		return this.http.post<IBaseResponse<IEditCommissions[]>>(this.env + ApiRoutes.Production.editCommissions, filters, {
-			observe: "response",
-		});
-	}
+  getEditCommission(
+    filters: IEditCommissionsFilter
+  ): Observable<HttpResponse<IBaseResponse<IEditCommissions[]>>> {
+    return this.http.post<IBaseResponse<IEditCommissions[]>>(
+      this.env + ApiRoutes.Production.editCommissions,
+      filters,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	getUserData(id: string): Observable<HttpResponse<IBaseResponse<IEditCommissionsPreview>>> {
-		return this.http.get<IBaseResponse<any>>(this.env + ApiRoutes.Production.editEditCommission, { params: { id }, observe: "response" });
-	}
+  getUserData(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IEditCommissionsPreview>>> {
+    return this.http.get<IBaseResponse<any>>(
+      this.env + ApiRoutes.Production.editEditCommission,
+      { params: { id }, observe: "response" }
+    );
+  }
 
-	UpdatePolicyComissions(data: FormData): Observable<HttpResponse<IBaseResponse<IEditCommissionsFormData>>> {
-		return this.http.post<IBaseResponse<any>>(this.env + ApiRoutes.Production.updatePolicyCommission, data, { observe: "response" });
-	}
+  UpdatePolicyComissions(
+    data: FormData
+  ): Observable<HttpResponse<IBaseResponse<IEditCommissionsFormData>>> {
+    return this.http.post<IBaseResponse<any>>(
+      this.env + ApiRoutes.Production.updatePolicyCommission,
+      data,
+      { observe: "response" }
+    );
+  }
 
-	getLinesOFBusinessByClassNames(body: string[]): Observable<HttpResponse<IBaseResponse<string[]>>> {
-		return this.http.post<IBaseResponse<string[]>>(this.env + ApiRoutes.MasterTable.Reports.lineOfBusinessByClassNames, body, {
-			observe: "response",
-		});
-	}
+  getLinesOFBusinessByClassNames(
+    body: string[]
+  ): Observable<HttpResponse<IBaseResponse<string[]>>> {
+    return this.http.post<IBaseResponse<string[]>>(
+      this.env + ApiRoutes.MasterTable.Reports.lineOfBusinessByClassNames,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	viewProductionReport(body: productionReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.productionReport, body, {
-			observe: "response",
-		});
-	}
+  viewProductionReport(
+    body: productionReportReq
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.productionReport,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	viewRenewalReport(body: IPolicyRenewalReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.renewalReport, body, {
-			observe: "response",
-		});
-	}
+  viewRenewalReport(
+    body: IPolicyRenewalReportReq
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.renewalReport,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	viewRenewalNoticeReport(body: IPolicyRenewalNoticeReportReq): Observable<HttpResponse<IBaseResponse<number>>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.renewalNoticeReports, body, {
-			observe: "response",
-		});
-	}
+  viewRenewalNoticeReport(
+    body: IPolicyRenewalNoticeReportReq
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.renewalNoticeReports,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	getAllArchiveNotes(filters: IdebitCreditNoteFilter): Observable<HttpResponse<IBaseResponse<IDebitCreditNote[]>>> {
-		return this.http.post<IBaseResponse<IDebitCreditNote[]>>(this.env + ApiRoutes.Production.archiveReport, filters, {
-			observe: "response",
-		});
-	}
+  getAllArchiveNotes(
+    filters: IdebitCreditNoteFilter
+  ): Observable<HttpResponse<IBaseResponse<IDebitCreditNote[]>>> {
+    return this.http.post<IBaseResponse<IDebitCreditNote[]>>(
+      this.env + ApiRoutes.Production.archiveReport,
+      filters,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	viewDebitCreditNoteReport(body: DCNotesModel): Observable<HttpResponse<IBaseResponse<string>>> {
-		return this.http.post<IBaseResponse<string>>(this.env + ApiRoutes.Production.debitcreditNoteReport, body, {
-			observe: "response",
-		});
-	}
+  viewDebitCreditNoteReport(
+    body: DCNotesModel
+  ): Observable<HttpResponse<IBaseResponse<string>>> {
+    return this.http.post<IBaseResponse<string>>(
+      this.env + ApiRoutes.Production.debitcreditNoteReport,
+      body,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	//#region Clients Active Policies Functions
-	getAllActivePolicies(filters: IActiveListFilters): Observable<HttpResponse<IBaseResponse<IActivePolicy[]>>> {
-		return this.http.post<IBaseResponse<IActivePolicy[]>>(this.env + ApiRoutes.Production.activeListSearch, filters, {
-			observe: "response",
-		});
-	}
+  //#region Clients Active Policies Functions
+  getAllActivePolicies(
+    filters: IActiveListFilters
+  ): Observable<HttpResponse<IBaseResponse<IActivePolicy[]>>> {
+    return this.http.post<IBaseResponse<IActivePolicy[]>>(
+      this.env + ApiRoutes.Production.activeListSearch,
+      filters,
+      {
+        observe: "response",
+      }
+    );
+  }
 
-	getActivePolicy(PoliciesSNo: string): Observable<IBaseResponse<IPolicyPreview>> {
-		return this.http.get<IBaseResponse<IPolicyPreview>>(this.env + ApiRoutes.Production.loadActivePolicyData, { params: { PoliciesSNo } });
-	}
+  getActivePolicy(
+    PoliciesSNo: string
+  ): Observable<IBaseResponse<IPolicyPreview>> {
+    return this.http.get<IBaseResponse<IPolicyPreview>>(
+      this.env + ApiRoutes.Production.loadActivePolicyData,
+      { params: { PoliciesSNo } }
+    );
+  }
 
-	getVehiclesData(PoliciesSNo: string): Observable<IBaseResponse<IMotorData[]>> {
-		return this.http.get<IBaseResponse<IMotorData[]>>(this.env + ApiRoutes.Production.getVehiclesData, { params: { PoliciesSNo } });
-	}
-	getMedicalsData(PoliciesSNo: string): Observable<IBaseResponse<IMedicalData[]>> {
-		return this.http.get<IBaseResponse<IMedicalData[]>>(this.env + ApiRoutes.Production.getMedicalsData, { params: { PoliciesSNo } });
-	}
+  getVehiclesData(
+    PoliciesSNo: string
+  ): Observable<IBaseResponse<IMotorData[]>> {
+    return this.http.get<IBaseResponse<IMotorData[]>>(
+      this.env + ApiRoutes.Production.getVehiclesData,
+      { params: { PoliciesSNo } }
+    );
+  }
+  getMedicalsData(
+    PoliciesSNo: string
+  ): Observable<IBaseResponse<IMedicalData[]>> {
+    return this.http.get<IBaseResponse<IMedicalData[]>>(
+      this.env + ApiRoutes.Production.getMedicalsData,
+      { params: { PoliciesSNo } }
+    );
+  }
 
-	getExcelTemplate(path: string): Observable<HttpResponse<any>> {
-		return this.http.post(this.env + ApiRoutes.Production.downloadExcelFiles, { path }, { observe: "response", responseType: "blob" });
-	}
+  getExcelTemplate(path: string): Observable<HttpResponse<any>> {
+    return this.http.post(
+      this.env + ApiRoutes.Production.downloadExcelFiles,
+      { path },
+      { observe: "response", responseType: "blob" }
+    );
+  }
 
-	saveMotorData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMotorData, body);
-	}
-	saveMedicalData(body: UploadActivePoliciesData): Observable<IBaseResponse<number>> {
-		return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.Production.saveMedicalData, body);
-	}
+  saveMotorData(
+    body: UploadActivePoliciesData
+  ): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.saveMotorData,
+      body
+    );
+  }
+  saveMedicalData(
+    body: UploadActivePoliciesData
+  ): Observable<IBaseResponse<number>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.Production.saveMedicalData,
+      body
+    );
+  }
 
-	//#endregion
+  //#endregion
 }

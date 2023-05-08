@@ -195,13 +195,13 @@
       <form class="row justify-content-center" [formGroup]="filterForm">
         <!-- clinet Name -->
         <div class="col-12 mb-2">
-          <label for="clientName" class="form-label">Client Name:</label>
+          <label for="clientName" class="form-label">Client Name</label>
           <input type="text" class="form-control form-control-sm" id="clientName" placeholder="Full Name"
             formControlName="clientName" />
         </div>
         <!-- Client Group -->
         <div class="col-12 mb-2">
-          <label for="clinetGroup" class="form-label">Client Group:</label>
+          <label for="clinetGroup" class="form-label">Client Group</label>
           <ng-select [items]="(lookupData | async)?.GroupsList?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="clinetGroup"
             formControlName="groupName" class="form-control-sm px-0">
@@ -209,7 +209,7 @@
         </div>
         <!-- Client Status -->
         <div class="col-12 mb-2">
-          <label for="salesleadStatus" class="form-label">Client Status:</label>
+          <label for="salesleadStatus" class="form-label">Client Status</label>
 
           <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
@@ -219,14 +219,14 @@
         </div>
         <!-- Lead Type -->
         <div class="col-12 mb-2">
-          <label for="leadType" class="form-label">Lead Type:</label>
+          <label for="leadType" class="form-label">Lead Type</label>
           <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
             bindLabel="name" bindValue="name" id="leadType" formControlName="leadType" class="form-control-sm px-0">
           </ng-select>
         </div>
         <!-- Branch -->
         <div class="col-12 mb-2">
-          <label for="branch" class="form-label">Branch:</label>
+          <label for="branch" class="form-label">Branch</label>
           <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
             formControlName="branch" class="form-control-sm px-0">
@@ -234,7 +234,7 @@
         </div>
         <!-- ClassOfBusiness -->
         <div class="col-12 mb-2">
-          <label for="classOfBusiness" class="form-label">Class Of Business:</label>
+          <label for="classOfBusiness" class="form-label">Class Of Business</label>
           <ng-select [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name"
             bindValue="name" id="classOfBusiness" formControlName="classOfBusiness" class="form-control-sm px-0"
@@ -259,7 +259,7 @@
         </div>
         <!-- User -->
         <div class="col-12 mb-2">
-          <label for="user" class="form-label">User:</label>
+          <label for="user" class="form-label">User</label>
           <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="user" formControlName="user"
             class="form-control-sm px-0">
@@ -267,18 +267,18 @@
         </div>
         <!-- DeadLine Range -->
         <div class="col-12 mb-2">
-          <label for="user" class="form-label">Deadline Range:</label>
+          <label for="user" class="form-label">Deadline Range</label>
           <app-range-picker (dateChange)="setDeadLineFilter($event)"></app-range-picker>
         </div>
         <!-- Saved On Range -->
 
         <div class="col-12 mb-2">
-          <label for="user" class="form-label">Saved On Range:</label>
+          <label for="user" class="form-label">Saved Date Range</label>
           <app-range-picker (dateChange)="setSavedOnFilter($event)"></app-range-picker>
         </div>
         <!-- Expires In Days -->
         <div class="col-12 mb-2">
-          <label for="expireIn" class="form-label">Expires In:</label>
+          <label for="expireIn" class="form-label">Expires In</label>
           <div class="input-group input-group-sm">
             <input type="text" type="number" class="form-control" id="expireIn" placeholder="Expires In"
               formControlName="expireIn" class="form-control form-control-sm" />
@@ -346,7 +346,7 @@
     <div class="offcanvas-footer border-top row mb-3 mx-1">
       <form [formGroup]="followUpForm" (ngSubmit)="sendFollowUp()">
         <div class="col-12  my-2">
-          <label class="form-label">Users:</label>
+          <label class="form-label">Users</label>
           <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" class="form-control-sm px-0 w-100" [ngClass]="{
               'is-invalid':

@@ -68,7 +68,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -91,7 +91,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
         (res: HttpResponse<IBaseResponse<IInsuranceBrokers[]>>) => {
           if (res.body?.status) {
             this.uiState.list = res.body?.data!;
-            params.successCallback(this.uiState.list);
+            params.successCallback(this.uiState.list, this.uiState.list.length);
             if (this.uiState.list.length === 0)
               this.gridApi.showNoRowsOverlay();
             else this.gridApi.hideOverlay();

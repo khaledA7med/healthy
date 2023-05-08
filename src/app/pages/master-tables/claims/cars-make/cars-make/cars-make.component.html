@@ -2,7 +2,7 @@
     <div class="col-12 d-flex justify-content-end">
 
         <a type="button" class="btn btn-sm btn-info mx-2  d-flex align-items-center" (click)="openCarsMakeDialoge()">
-            <i class="ri-add-line align-bottom me-1"></i> Add Cars Make
+            <i class="ri-add-line align-bottom me-1"></i> Add Cars Maker
         </a>
 
     </div>
@@ -15,8 +15,8 @@
 
 <ng-template #CarsMakeContent let-modal>
     <div class="modal-header mb-0">
-        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editCarsMakeMode">Add Cars Make</h4>
-        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editCarsMakeMode">Edit Cars Make</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!uiState.editCarsMakeMode">Add Cars Maker</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="uiState.editCarsMakeMode">Edit Cars Maker</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
 
@@ -26,7 +26,7 @@
                 <div class="col-12 row">
 
                     <div class="col-12 mb-2">
-                        <label for="carsMake" class="asterisk-input">Cars Make</label>
+                        <label for="carsMake" class="asterisk-input">Cars Maker</label>
                         <input id="carsMake" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.carsMake?.touched || uiState.submitted) && f.carsMake?.invalid}"
                             formControlName="carsMake" />

@@ -7,7 +7,7 @@ import { VehiclesColorsComponent } from "./vehicles-colors.component";
 @Component({
   selector: "app-vehicle-color-list-controls",
   template: `
-    <div class="col">
+    <div class="col d-flex align-items-center justify-content-center">
       <div ngbDropdown class="d-inline-block">
         <button
           type="button"
@@ -83,7 +83,7 @@ export class VehiclesColorListControlsComponent {
 
   Delete() {
     this.message
-      .confirm("Sure!", "You Want To Delete?!", "primary", "question")
+      .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
           this.comp.deleteItem(this.params.data.identity);
