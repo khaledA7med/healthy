@@ -65,6 +65,7 @@ export class ClaimsDocumentsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: ClaimsListOfDocumentseCols,
     suppressCsvExport: true,
     context: { comp: this },

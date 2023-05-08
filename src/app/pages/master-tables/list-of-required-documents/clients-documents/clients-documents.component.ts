@@ -56,6 +56,7 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: ClientsListOfDocumentseCols,
     suppressCsvExport: true,
     context: { comp: this },

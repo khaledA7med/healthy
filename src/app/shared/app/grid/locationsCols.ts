@@ -6,7 +6,7 @@ export const locationsCols: ColDef[] = [
     colId: "action",
     cellRenderer: LocationsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

@@ -57,6 +57,7 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: nationalitiesCols,
     suppressCsvExport: true,
     context: { comp: this },

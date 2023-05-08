@@ -64,6 +64,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: lineOfBusinessCols,
     suppressCsvExport: true,
     context: { comp: this },

@@ -6,7 +6,7 @@ export const legalStatusCols: ColDef[] = [
     colId: "action",
     cellRenderer: LegalStatusFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

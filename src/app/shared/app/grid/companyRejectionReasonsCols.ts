@@ -6,7 +6,7 @@ export const companyRejectionReasonsCols: ColDef[] = [
     colId: "action",
     cellRenderer: CompanyRejectionReasonsFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {

@@ -57,6 +57,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: legalStatusCols,
     suppressCsvExport: true,
     context: { comp: this },

@@ -6,7 +6,7 @@ export const complaintsSuspectiveCausesCols: ColDef[] = [
     colId: "action",
     cellRenderer: ComplaintsSuspectiveCausesFormsComponent,
     pinned: "left",
-    maxWidth: 80,
+    maxWidth: 40,
     sortable: false,
   },
   {
