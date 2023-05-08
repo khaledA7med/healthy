@@ -25,6 +25,10 @@ import { ISalesLeadFollowUps } from "src/app/shared/app/models/BusinessDevelopme
 import { EventService } from "src/app/core/services/event.service";
 import { reserved } from "src/app/core/models/reservedWord";
 import { formatCurrency } from "@angular/common";
+import { AuthenticationService } from "src/app/core/services/auth.service";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { BusinessDevelopmentPermissions } from "src/app/core/roles/business-development-permissions";
+import { Roles } from "src/app/core/roles/Roles";
 
 @Component({
 	selector: "app-business-development-management",
@@ -56,7 +60,9 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			leadNo: "",
 		},
 		lineOfBusinessList: [] as IGenericResponseType[],
+		privileges: BusinessDevelopmentPermissions,
 	};
+	permissions$!: Observable<string[]>;
 	isLoading: boolean = false;
 	cardLists = {
 		pending: [] as IBusinessDevelopment[],
@@ -97,6 +103,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		animateRows: true,
 		columnDefs: businessDevelopmentCols,
 		suppressExcelExport: true,
+
 		paginationPageSize: this.uiState.filters.pageSize,
 		cacheBlockSize: this.uiState.filters.pageSize,
 		context: { comp: this },
@@ -105,6 +112,7 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 			flex: 1,
 			minWidth: 100,
 			sortable: true,
+			resizable: true,
 		},
 		onGridReady: (e) => this.onGridReady(e),
 		onCellClicked: (e) => this.onCellClicked(e),
@@ -118,14 +126,26 @@ export class BusinessDevelopmentManagementComponent implements OnInit, OnDestroy
 		private offcanvasService: NgbOffcanvas,
 		private table: MasterTableService,
 		private appUtils: AppUtils,
-		private eventService: EventService
+		private eventService: EventService,
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
+		this.permissions$ = this.permission.getPrivileges(Roles.BusinessDevelopment);
+
 		this.initFilterForm();
 		this.initFollowUpForm();
 		this.getLookupData();
 		this.draggableHandler();
+
+		let sub = this.permissions$.subscribe((res: string[]) => {
+			if (!res.includes(this.uiState.privileges.ChAccessAllBranchBussiness)) this.f.branch?.patchValue(this.auth.getUser().Branch!);
+
+			if (!res.includes(this.uiState.privileges.ChAccessAllUsersSales)) this.f.user?.patchValue(this.auth.getUser().name!);
+
+			if (!res.includes(this.uiState.privileges.ChAccessAllProducersSales)) this.f.producer?.patchValue([this.auth.getUser().name!]);
+		});
 	}
 
 	dataSource: IDatasource = {

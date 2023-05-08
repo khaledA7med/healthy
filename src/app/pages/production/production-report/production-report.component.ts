@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -11,10 +10,8 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { ProductionService } from "src/app/shared/services/production/production.service";
 import { productionReportForm, productionReportReq } from "src/app/shared/app/models/Production/iproduction-report";
-import { NavigationStart, Router } from "@angular/router";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { ProductionPermissions } from "src/app/core/roles/production-permissions";
@@ -57,15 +54,13 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 		initLineOfBusinessFlag: false,
 	};
 	permissions$!: Observable<string[]>;
-	modalRef!: NgbModalRef;
+
 	constructor(
-		private modalService: NgbModal,
 		private productionService: ProductionService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -324,40 +319,7 @@ export class ProductionReportComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		// this.modalRef.componentInstance.data = {
-		// 	reportName: "Production(statistics) Report",
-		// 	url: data,
-		// };
-		const myWindow = window.open(data, "_blank", "fullscreen: true");
-		const content = `		
-						<!DOCTYPE html>
-						<html lang="en">
-							<head>
-								<title>Prospects Reports</title>
-								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-								<style>
-								body {height: 98vh;}
-								.myIFrame {
-								border: none;
-								}
-								</style>
-							</head>
-							<body>
-								<iframe
-								src="${data}"
-								class="myIFrame justify-content-center"
-								frameborder="5"
-								width="100%"
-								height="99%"
-								referrerpolicy="no-referrer-when-downgrade"
-								>
-								</iframe>
-							</body>
-						</html>
-
-		`;
-		myWindow?.document.write(content);
+		this.utils.reportViewer(data!, "Prospects Reports");
 	}
 
 	ngOnDestroy(): void {

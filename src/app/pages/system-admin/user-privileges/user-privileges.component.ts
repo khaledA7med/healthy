@@ -269,6 +269,7 @@ export class UserPrivilegesComponent implements OnInit {
 			chClientsRegistry: new FormControl(false),
 			chClientsGrouping: new FormControl(false),
 			chAccessAllClients: new FormControl(false),
+			chAccessAllBranchClients: new FormControl(false),
 			chAccessAllProducersClients: new FormControl(false),
 			chClientsRegistryAdministratorReadOnly: new FormControl(false),
 
@@ -682,6 +683,11 @@ export class UserPrivilegesComponent implements OnInit {
 					control: this.ff.chAccessAllClients!,
 					name: "chAccessAllClients",
 					label: "Access All Clients",
+				},
+				{
+					control: this.ff.chAccessAllBranchClients!,
+					name: "chAccessAllBranchClients",
+					label: "Access All Branches",
 				},
 				{
 					control: this.ff.chAccessAllProducersClients!,

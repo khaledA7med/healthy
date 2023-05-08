@@ -100,7 +100,7 @@ export const claimsManageCols: ColDef[] = [
 		minWidth: 150,
 	},
 	{
-		headerName: "Paid Amount ",
+		headerName: "Paid Amount",
 		field: "amountPaid",
 		valueFormatter: GlobalCellRender.currencyFormater,
 		minWidth: 150,
@@ -150,13 +150,13 @@ export const claimsManageCols: ColDef[] = [
 	{
 		headerName: "Notification Date",
 		field: "dateOfReceive",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
 		headerName: "Date Of Submission",
 		field: "dateOfSubmission",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
@@ -168,7 +168,7 @@ export const claimsManageCols: ColDef[] = [
 	{
 		headerName: "Approval Data",
 		field: "approvalDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
@@ -201,6 +201,7 @@ export const claimsManageCols: ColDef[] = [
 	{
 		headerName: "Created On",
 		field: "savedDate",
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 ];

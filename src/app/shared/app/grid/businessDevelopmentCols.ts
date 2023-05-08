@@ -72,7 +72,7 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Quoted Date",
 		field: "quoatationDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
@@ -82,7 +82,7 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Revised Quotation Date",
 		field: "revisedQuoatationDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 	},
 	{
 		headerName: "Revised Quotation Premium",
@@ -113,7 +113,7 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Created On",
 		field: "savedDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
@@ -124,7 +124,7 @@ export const businessDevelopmentCols: ColDef[] = [
 	{
 		headerName: "Updated On",
 		field: "updatedOn",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 ];

@@ -10,8 +10,6 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { IClientReportFiltersForm, IClientReportReq } from "src/app/shared/app/models/Clients/iclient-report";
 import AppUtils from "src/app/shared/app/util";
 import { NavigationStart, Router } from "@angular/router";
@@ -49,16 +47,12 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 		privileges: ClientsPermissions,
 	};
 	permissions$!: Observable<string[]>;
-
-	modalRef!: NgbModalRef;
 	constructor(
-		private modalService: NgbModal,
 		private ClientsService: ClientsService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -80,11 +74,7 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 			res.Producers?.content! ? (this.uiState.lists.producersList = [{ id: 0, name: "Select All" }, ...res.Producers?.content!]) : "";
 			res.ClientTypes?.content! ? (this.uiState.lists.typesList = [{ id: 0, name: "Select All" }, ...res.ClientTypes?.content!]) : "";
 		});
-		// let sub2 = this.router.events.subscribe((event) => {
-		// 	if (event instanceof NavigationStart) {
-		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-		// 	}
-		// });
+
 		this.subscribes.push(sub);
 
 		let date = new Date();
@@ -192,40 +182,7 @@ export class ClientReportsComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		// this.modalRef.componentInstance.data = {
-		// 	reportName: "Clients Reports",
-		// 	url: data,
-		// };
-		const myWindow = window.open(data, "_blank", "fullscreen: true");
-		const content = `		
-						<!DOCTYPE html>
-						<html lang="en">
-							<head>
-								<title>Clients Reports</title>
-								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-								<style>
-								body {height: 98vh;}
-								.myIFrame {
-								border: none;
-								}
-								</style>
-							</head>
-							<body>
-								<iframe
-								src="${data}"
-								class="myIFrame justify-content-center"
-								frameborder="5"
-								width="100%"
-								height="99%"
-								referrerpolicy="no-referrer-when-downgrade"
-								>
-								</iframe>
-							</body>
-						</html>
-
-		`;
-		myWindow?.document.write(content);
+		this.utils.reportViewer(data!, "Client Report");
 	}
 
 	ngOnDestroy(): void {

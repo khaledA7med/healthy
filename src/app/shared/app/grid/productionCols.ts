@@ -5,6 +5,7 @@ import GlobalCellRender from "./globalCellRender";
 import StatusCellRender from "./statusCellRender";
 import { CellEvent } from "ag-grid-community";
 import { formatCurrency } from "@angular/common";
+import { PoliciesPrintNoteComponent } from "src/app/pages/production/policies-management/policies-print-note.component";
 
 export const productionCols: ColDef[] = [
 	{
@@ -229,9 +230,8 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Saved On",
 		field: "savedDate",
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 120,
-
-		valueFormatter: GlobalCellRender.dateFormater,
 	},
 	{
 		headerName: "Prod. Approved By",
@@ -241,7 +241,7 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Prod. Approved On",
 		field: "approvedDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 120,
 	},
 	{
@@ -252,13 +252,13 @@ export const productionCols: ColDef[] = [
 	{
 		headerName: "Fin. Approved On",
 		field: "finApprovedDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 120,
 	},
 	{
 		headerName: "Fin. Entry Date",
 		field: "finEntryDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 120,
 	},
 	{
@@ -305,6 +305,24 @@ export const productionCols: ColDef[] = [
 	// 	cellRenderer: (e: CellEvent) => `<button class="p-0 btn btn-sm btn-success">View Active List</button>`,
 	// 	minWidth: 120,
 	// },
+	{
+		headerName: "Print Debit/Credit Note (Plain)",
+		field: "clientDncnno",
+		cellRenderer: PoliciesPrintNoteComponent,
+		cellRendererParams: {
+			plain: true,
+		},
+		minWidth: 200,
+	},
+	{
+		headerName: "Print Debit/Credit Note (Without Plain)",
+		field: "clientDncnno",
+		cellRenderer: PoliciesPrintNoteComponent,
+		cellRendererParams: {
+			plain: false,
+		},
+		minWidth: 250,
+	},
 ];
 
 export const columnsToExport = [

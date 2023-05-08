@@ -102,7 +102,7 @@ export const customerServiceManageCols: ColDef[] = [
 	{
 		headerName: "Saved On",
 		field: "savedDate",
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 		minWidth: 150,
 	},
 	{
@@ -136,6 +136,6 @@ export const customerServiceManageCols: ColDef[] = [
 		field: "closedOn",
 		sortable: false,
 		minWidth: 170,
-		valueFormatter: GlobalCellRender.dateFormater,
+		valueFormatter: GlobalCellRender.dateTimeFormater,
 	},
 ];

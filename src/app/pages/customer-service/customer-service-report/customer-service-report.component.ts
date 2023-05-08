@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -11,10 +10,8 @@ import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 import { csReportForm, csReportReq } from "src/app/shared/app/models/CustomerService/icustomer-service-report";
 import { CustomerServiceService } from "src/app/shared/services/customer-service/customer-service.service";
-import { NavigationStart, Router } from "@angular/router";
 import { CustomerServicePermissions } from "src/app/core/roles/customer-service-permissions";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { AuthenticationService } from "src/app/core/services/auth.service";
@@ -55,15 +52,12 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 		privileges: CustomerServicePermissions,
 	};
 	permissions$!: Observable<string[]>;
-	modalRef!: NgbModalRef;
 	constructor(
-		private modalService: NgbModal,
 		private csService: CustomerServiceService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -101,11 +95,7 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 				this.checkAllToggler(true, "status");
 			}
 		});
-		// let sub2 = this.router.events.subscribe((event) => {
-		// 	if (event instanceof NavigationStart) {
-		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-		// 	}
-		// });
+
 		let sub2 = this.permissions$.subscribe((res: string[]) => {
 			if (!res.includes(this.uiState.privileges.ChAccessAllBrancheCustomer)) {
 				this.f.branch?.disable();
@@ -244,40 +234,7 @@ export class CustomerServiceReportComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		// this.modalRef.componentInstance.data = {
-		// 	reportName: "CRM Reports",
-		// 	url: data,
-		// };
-		const myWindow = window.open(data, "_blank", "fullscreen: true");
-		const content = `		
-						<!DOCTYPE html>
-						<html lang="en">
-							<head>
-								<title>Prospects Reports</title>
-								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-								<style>
-								body {height: 98vh;}
-								.myIFrame {
-								border: none;
-								}
-								</style>
-							</head>
-							<body>
-								<iframe
-								src="${data}"
-								class="myIFrame justify-content-center"
-								frameborder="5"
-								width="100%"
-								height="99%"
-								referrerpolicy="no-referrer-when-downgrade"
-								>
-								</iframe>
-							</body>
-						</html>
-
-		`;
-		myWindow?.document.write(content);
+		this.utils.reportViewer(data!, "ٌCS Report");
 	}
 
 	ngOnDestroy(): void {

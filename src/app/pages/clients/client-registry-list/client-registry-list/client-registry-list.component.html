@@ -68,7 +68,8 @@
           <label for="branch" class="form-label">Branch</label>
           <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
             placeholder="Select Branch(es)" [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name"
-            id="branch" formControlName="branch">
+            id="branch" formControlName="branch"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBranchClients)!">
           </ng-select>
         </div>
         <!-- producer -->
