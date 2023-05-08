@@ -10,6 +10,12 @@ export const InsuranceCompaniesDocumentsCols: ColDef[] = [
     sortable: false,
   },
   {
+    headerName: "No.",
+    valueGetter: "node.rowIndex + 1",
+    minWidth: 70,
+    maxWidth: 300,
+  },
+  {
     headerName: "File Name",
     field: "name",
   },

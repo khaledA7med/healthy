@@ -64,6 +64,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: insuranceWorkshopDetailsCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -74,7 +75,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -203,7 +204,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
         workshopName: new FormControl("", Validators.required),
         city: new FormControl("", Validators.required),
         address: new FormControl(""),
-        telephone: new FormControl("", [Validators.pattern("[0-9]{9}")]),
+        telephone: new FormControl(""),
         email: new FormControl("", Validators.email),
       });
   }

@@ -67,6 +67,7 @@ export enum BaseData {
   CategoryOfDefaultEmail = "CategoryOfDefaultEmail",
   TasksTypes = "TasksTypes",
   IBSModules = "IBSModules",
+  GetStatusClientsPolicies = "GetStatusClientsPolicies",
 }
 
 export interface IBaseMasterTable {
@@ -138,6 +139,7 @@ export interface IBaseMasterTable {
   CategoryOfDefaultEmail?: Caching<IGenericResponseType[]>;
   TasksTypes?: Caching<IGenericResponseType[]>;
   IBSModules?: Caching<IGenericResponseType[]>;
+  GetStatusClientsPolicies?: Caching<IGenericResponseType[]>;
 }
 
 export interface Caching<T> {

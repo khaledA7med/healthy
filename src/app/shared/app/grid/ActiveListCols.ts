@@ -8,7 +8,7 @@ export const ActiveListCols: ColDef[] = [
 		colId: "action",
 		cellRenderer: ActiveListManagementControlsComponent,
 		pinned: "left",
-		maxWidth: 80,
+		maxWidth: 40,
 		sortable: false,
 	},
 	{

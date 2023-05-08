@@ -7,7 +7,7 @@ import { LifePlanComponent } from "./life-plan.component";
 @Component({
   selector: "app-life-plan-list-controls",
   template: `
-    <div class="col">
+    <div class="col d-flex align-items-center justify-content-center">
       <div ngbDropdown class="d-inline-block">
         <button
           type="button"

@@ -17,7 +17,9 @@ import { MedicalMembersListComponent } from "./medical-members-list.component";
 			<ag-grid-angular
 				class="gridScrollbar"
 				style="width: 100%;"
-				[ngStyle]="{ height: selectedPolicy.className === 'Motor' || selectedPolicy.className === 'Medical' ? '35vh' : '70vh' }"
+				[ngStyle]="{
+					height: selectedPolicy.className === 'Motor' || selectedPolicy.className === 'Medical' ? '35vh' : '70vh'
+				}"
 				[gridOptions]="gridOpts">
 			</ag-grid-angular>
 		</div>
@@ -45,7 +47,8 @@ export class ClaimsRequestListComponent implements OnDestroy {
 	dataEvent: EventEmitter<any> = new EventEmitter();
 
 	@ViewChild("vehiclesList") vehiclesList!: VehiclesListComponent;
-	@ViewChild("MedicalMembersList") MedicalMembersList!: MedicalMembersListComponent;
+	@ViewChild("MedicalMembersList")
+	MedicalMembersList!: MedicalMembersListComponent;
 	selectedPolicy = {
 		className: "" as String,
 		policiesSno: "" as any,

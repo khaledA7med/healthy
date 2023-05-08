@@ -6,7 +6,7 @@ export const emailCompanyContactsCols: ColDef[] = [
 		colId: "action",
 		cellRenderer: EmailContactListControlsComponent,
 		pinned: "left",
-		maxWidth: 80,
+		maxWidth: 40,
 		sortable: false,
 	},
 	{

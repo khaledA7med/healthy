@@ -1,6 +1,6 @@
 <div class="container-fluid offcanvas-body">
     <div class="form-group row align-items-center mb-2">
-        <label class="col-sm-1 col-form-label" for="pagingSizeSelect">Claim Type: </label>
+        <label class="col-sm-1 col-form-label" for="pagingSizeSelect">Claim Type</label>
         <div class="col-sm-3">
             <ng-select [hideSelected]="true" (change)="getSummaryData($event)" [closeOnSelect]="false" [multiple]="true"
                 [items]="uiState.claimTypeList" [searchable]="false" id="pagingSizeSelect"

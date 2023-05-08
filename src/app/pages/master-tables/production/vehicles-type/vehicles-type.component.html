@@ -8,9 +8,8 @@
                         Vehicle Make
                     </label>
                 </div>
-                <ng-select [items]="(lookupData | async)?.VehicleCarsMake?.content!"
-                    placeholder="Select Classes Of Business" [loading]="lookupData ? false : true" [hideSelected]="true"
-                    [clearable]="true" [searchable]="true"
+                <ng-select [items]="(lookupData | async)?.VehicleCarsMake?.content!" placeholder="Select Cars Make"
+                    [loading]="lookupData ? false : true" [hideSelected]="true" [clearable]="true" [searchable]="true"
                     [ngClass]="{'is-submitted': (f.make?.touched || uiState.submitted) && f.make?.invalid}"
                     bindLabel="name" bindValue="name" formControlName="make"
                     (change)="gridApi.setDatasource(dataSource)">
@@ -33,7 +32,7 @@
     </div>
     <ng-template #formDialoge let-modal>
         <div class="modal-header mb-0">
-            <h4 class="modal-title" id="modal-basic-title">Edit Item</h4>
+            <h4 class="modal-title" id="modal-basic-title">Edit Vehicle Type</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
 
@@ -42,7 +41,7 @@
                 <div class="row mb-2">
                     <!-- Type Name -->
                     <div class="col-12 my-1">
-                        <label for="item" class="asterisk-input">Type Name</label>
+                        <label for="item" class="asterisk-input">Vehicle Type</label>
                         <input id="item" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.type?.touched || uiState.submitted) && f.type?.invalid}"
                             formControlName="type" />

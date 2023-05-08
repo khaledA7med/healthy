@@ -6,7 +6,7 @@ export const userRolesCols: ColDef[] = [
 		colId: "action",
 		cellRenderer: UserRolesManagementControlsComponent,
 		pinned: "left",
-		maxWidth: 80,
+		maxWidth: 40,
 		sortable: false,
 	},
 	{

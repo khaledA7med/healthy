@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import {
   CellEvent,
@@ -32,6 +33,7 @@ import {
   selector: "app-tpa-list",
   templateUrl: "./tpa-list.component.html",
   styleUrls: ["./tpa-list.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TpaListComponent implements OnInit, OnDestroy {
   TpaListFormSubmitted = false as boolean;
@@ -53,6 +55,7 @@ export class TpaListComponent implements OnInit, OnDestroy {
     rowModelType: "infinite",
     editType: "fullRow",
     animateRows: true,
+    rowSelection: "single",
     columnDefs: tpaListCols,
     suppressCsvExport: true,
     context: { comp: this },
@@ -63,7 +66,7 @@ export class TpaListComponent implements OnInit, OnDestroy {
       resizable: true,
     },
     overlayNoRowsTemplate:
-      "<alert class='alert alert-secondary'>No Data To Show</alert>",
+      "<alert class='alert alert-secondary'>No data to show</alert>",
     onGridReady: (e) => this.onGridReady(e),
     onCellClicked: (e) => this.onCellClicked(e),
   };
@@ -137,7 +140,6 @@ export class TpaListComponent implements OnInit, OnDestroy {
 
   initTpaListForm() {
     this.TpaListForm = new FormGroup<ITpaList>({
-      sno: new FormControl(null),
       tpaName: new FormControl(null, Validators.required),
     });
   }
@@ -182,8 +184,8 @@ export class TpaListComponent implements OnInit, OnDestroy {
     this.TpaListForm.reset();
   }
 
-  DeleteTpaList(sno: number) {
-    let sub = this.TpaListService.DeleteTpaList(sno).subscribe(
+  DeleteTpaList(tpaName: string) {
+    let sub = this.TpaListService.DeleteTpaList(tpaName).subscribe(
       (res: HttpResponse<IBaseResponse<any>>) => {
         this.gridApi.setDatasource(this.dataSource);
         if (res.body?.status) this.message.toast(res.body!.message!, "success");

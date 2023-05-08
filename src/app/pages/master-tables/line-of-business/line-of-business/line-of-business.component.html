@@ -5,14 +5,15 @@
             <div class="col-12 mb-2 card-body">
                 <div class=" ribbon-box border shadow-none">
                     <div>
-                        <span class="ribbon ribbon-info round-shape"><span>Line Of Business
+                        <span class="ribbon ribbon-info round-shape"><span>Line of Business
                             </span></span>
                         <div class="row mt-5 mx-2">
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="className" class="asterisk-input">Class Of Insurance</label>
+                                <label for="className" class="asterisk-input">Class of Insurance</label>
                                 <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
                                     [items]="(lookupData | async)?.InsurClasses?.content!"
                                     [loading]="lookupData ? false : true" (change)="filter($event)"
+                                    [hideSelected]="true"
                                     [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                                     [clearable]="true" [searchable]="true" formControlName="className" bindLabel="name"
                                     bindValue="name">
@@ -22,7 +23,7 @@
                             </div>
 
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
+                                <label for="lineofBusiness" class="asterisk-input">Line of Business</label>
                                 <input id="lineofBusiness" class="form-control form-control-sm"
                                     [ngClass]="{'is-invalid': (f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid}"
                                     formControlName="lineofBusiness" />
@@ -32,7 +33,7 @@
                             </div>
 
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="lineofBusinessAr">Class Of Business (Ar)</label>
+                                <label for="lineofBusinessAr">Line of Business (Ar)</label>
                                 <input id="lineofBusinessAr" class="form-control form-control-sm"
                                     formControlName="lineofBusinessAr" />
                             </div>
@@ -76,7 +77,7 @@
 
 <ng-template #LineOfBussinessContent let-modal>
     <div class="modal-header mb-0">
-        <h4 class="modal-title" id="modal-basic-title">Edit Line Of Business</h4>
+        <h4 class="modal-title" id="modal-basic-title">Edit Line of Business</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
 
@@ -87,14 +88,15 @@
                     <div class="card ribbon-box border  shadow-none mb-lg-0 h-100">
                         <div class="card-body">
                             <span class="ribbon ribbon-info round-shape"><span>Line
-                                    Of Business</span></span>
+                                    of Business</span></span>
                             <div class="col-12 row mt-4">
 
                                 <div class="col-12 mb-2">
-                                    <label for="className" class="asterisk-input">Line Of Insurance</label>
+                                    <label for="className" class="asterisk-input">Line of Insurance</label>
                                     <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
                                         [items]="(lookupData | async)?.InsurClasses?.content!"
                                         [loading]="lookupData ? false : true" (change)="filter($event)"
+                                        [hideSelected]="true"
                                         [ngClass]="{'is-submitted': (f.className?.touched || uiState.submitted) && f.className?.invalid}"
                                         [clearable]="true" [searchable]="true" formControlName="className"
                                         bindLabel="name" bindValue="name">
@@ -113,7 +115,7 @@
                                 </div>
 
                                 <div class="col-12 mb-2">
-                                    <label for="lineofBusinessAr">Class Of Business (Ar)</label>
+                                    <label for="lineofBusinessAr">Class of Business (Ar)</label>
                                     <input id="lineofBusinessAr" class="form-control form-control-sm"
                                         formControlName="lineofBusinessAr" />
 

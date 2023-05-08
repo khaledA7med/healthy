@@ -1,10 +1,10 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { TpaListComponent } from "./tpa-list/tpa-list.component";
 import { TpaListFormsComponent } from "./tpa-list/tpa-list-forms.component";
 import { RouterModule, Routes } from "@angular/router";
-import { SharedModule } from "src/app/shared/shared.module";
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 import { AgGridModule } from "ag-grid-angular";
+import { SharedModule } from "src/app/shared/shared.module";
 
 export const routes: Routes = [{ path: "", component: TpaListComponent }];
 

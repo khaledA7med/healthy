@@ -399,8 +399,8 @@ export class MenuService {
             subItems: [
               {
                 id: 1014,
-                label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKE",
-                link: AppRoutes.MasterTable.claims.carsMake,
+                label: "MENUITEMS.MASTERTABLE.LIST.CLAIMS.CARSMAKER",
+                link: AppRoutes.MasterTable.claims.carsMaker,
                 parentId: 114,
                 auth: privileges.MasterTables?.includes(
                   MasterTablePermissions.ChClaimsModule

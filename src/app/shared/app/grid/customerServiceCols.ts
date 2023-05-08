@@ -8,7 +8,7 @@ export const customerServiceManageCols: ColDef[] = [
 		colId: "action",
 		cellRenderer: CustomerServiceListControlsComponent,
 		pinned: "left",
-		maxWidth: 80,
+		maxWidth: 40,
 		sortable: false,
 	},
 	{

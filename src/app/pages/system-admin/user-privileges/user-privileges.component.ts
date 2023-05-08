@@ -733,7 +733,7 @@ export class UserPrivilegesComponent implements OnInit {
 				{
 					control: this.ff.chProductionAccessAllUsers!,
 					name: "chProductionAccessAllUsers",
-					label: "Access All User",
+					label: "Access All Users",
 				},
 				{
 					control: this.ff.chUpdateClientDNCNCompCNDN!,
@@ -800,7 +800,7 @@ export class UserPrivilegesComponent implements OnInit {
 				{
 					control: this.ff.chAccessAllUsersCustomer!,
 					name: "chAccessAllUsersCustomer",
-					label: "Access All User",
+					label: "Access All Users",
 				},
 				{
 					control: this.ff.chAccessAllBrancheCustomer!,
