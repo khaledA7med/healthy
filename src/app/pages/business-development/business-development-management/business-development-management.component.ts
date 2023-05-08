@@ -25,7 +25,10 @@ import {
   IBusinessDevelopmentFiltersForm,
 } from "src/app/shared/app/models/BusinessDevelopment/ibusiness-development-filters";
 import { businessDevelopmentCols } from "src/app/shared/app/grid/businessDevelopmentCols";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import {
+  IBaseMasterTable,
+  IGenericResponseType,
+} from "src/app/core/models/masterTableModels";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { MODULES } from "src/app/core/models/MODULES";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -74,6 +77,7 @@ export class BusinessDevelopmentManagementComponent
       list: [] as ISalesLeadFollowUps[],
       leadNo: "",
     },
+    lineOfBusinessList: [] as IGenericResponseType[],
   };
   isLoading: boolean = false;
   cardLists = {
@@ -356,8 +360,9 @@ export class BusinessDevelopmentManagementComponent
       status: new FormControl([]),
       leadType: new FormControl(null),
       branch: new FormControl(null),
-      classOfBusiness: new FormControl(null),
-      producer: new FormControl(null),
+      classOfBusiness: new FormControl([]),
+      lineOfBusiness: new FormControl([]),
+      producer: new FormControl([]),
       user: new FormControl(null),
       deadlineFrom: new FormControl(null),
       deadlineTo: new FormControl(null),
@@ -373,6 +378,16 @@ export class BusinessDevelopmentManagementComponent
 
   getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.BusinessDevelopment);
+  }
+
+  getLineOfBusiness(e: any) {
+    let cls = e.map((el: any) => (el?.name ? el?.name : el));
+    let sub = this.businssDevelopmenService
+      .getLinesOFBusinessByClassNames(cls)
+      .subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+        this.uiState.lineOfBusinessList = res.body?.data!;
+      });
+    this.subscribes.push(sub);
   }
 
   modifyFilterReq() {

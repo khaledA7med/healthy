@@ -53,6 +53,7 @@ export const ApiRoutes = {
       CategoryOfDefaultEmail: LookUpTables + BaseData.CategoryOfDefaultEmail,
     },
     Client: {
+      AllClients: LookUpTables + BaseData.AllClients,
       clientType: LookUpTables + BaseData.ClientType,
       producers: LookUpTables + BaseData.Producers,
       relationshipStatus: LookUpTables + BaseData.RelationshipStatus,

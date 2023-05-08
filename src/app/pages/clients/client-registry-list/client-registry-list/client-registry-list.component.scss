@@ -10,22 +10,12 @@
   border: none !important;
   outline: none;
 }
-// ag-body-vertical-scroll
-// #gridScrollbar .ag-body-vertical-scroll-viewport,
-// #gridScrollbar .ag-body-horizontal-scroll-viewport {
-//   position: relative;
-//   overflow: hidden !important;
-// }
 
 .ps__rail-x,
 .ps__rail-y {
   opacity: 0.6;
 }
 
-.ng-select .ng-select-container {
-  min-height: 28px;
-  max-height: 28px;
-}
 .offcanvas-body {
   .form-control {
     max-height: 30px;

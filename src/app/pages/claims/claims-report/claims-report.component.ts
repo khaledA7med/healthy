@@ -15,6 +15,10 @@ import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer
 import { claimsReportForm, claimsReportReq } from "src/app/shared/app/models/Claims/iclaims-report";
 import { ClaimsService } from "src/app/shared/services/claims/claims.service";
 import { NavigationStart, Router } from "@angular/router";
+import { ClaimsPermissions } from "src/app/core/roles/claims-permissions";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { AuthenticationService } from "src/app/core/services/auth.service";
+import { Roles } from "src/app/core/roles/Roles";
 
 @Component({
 	selector: "app-claims-report",
@@ -50,7 +54,11 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		},
 		subStatus: [],
 		clientDataContorl: new FormControl("Select All"),
+		privileges: ClaimsPermissions,
+		initSubStatusFlag: false,
+		initLineOfBusinessFlag: false,
 	};
+	permissions$!: Observable<string[]>;
 	modalRef!: NgbModalRef;
 	constructor(
 		private modalService: NgbModal,
@@ -59,10 +67,14 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router
+		private router: Router,
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
+		this.eventService.broadcast(reserved.isLoading, true);
+		this.permissions$ = this.permission.getPrivileges(Roles.Claims);
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
 
@@ -74,13 +86,21 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			this.uiState.lists.insuranceCompanyControlLists = res.InsuranceCompanies?.content!;
 			this.uiState.lists.classOfBusinessLists = res.InsurClasses?.content!;
 			this.uiState.lists.statusList = res.ClaimStatus?.content!;
+
+			this.initSelectAllChecks();
+
+			let sub2 = this.permissions$.subscribe((res: string[]) => {
+				if (!res.includes(this.uiState.privileges.ChAccessAllBrancheClaim)) {
+					this.f.branch?.disable();
+					this.f.branch?.patchValue(this.auth.getUser().Branch!);
+				}
+
+				this.eventService.broadcast(reserved.isLoading, false);
+			});
+			this.subscribes.push(sub2);
 		});
-		let sub2 = this.router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {
-				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-			}
-		});
-		this.subscribes.push(sub, sub2);
+
+		this.subscribes.push(sub);
 
 		let date = new Date();
 		let todayDate = {
@@ -106,7 +126,7 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 			classOfBusiness: new FormControl([]),
 			lineOfBusiness: new FormControl([]),
 			reportType: new FormControl(1, Validators.required),
-			excludeZeroClaimAmount: new FormControl(false),
+			excludeZeroClaimAmount: new FormControl(true),
 			minDate: new FormControl(null, Validators.required),
 			maxDate: new FormControl(null, Validators.required),
 		});
@@ -126,7 +146,30 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				this.uiState.lists.subStatusList = [];
 			} else this.uiState.checkAllControls.allSubStatusControl.enable();
 		});
-		this.subscribes.push(sub!);
+		this.subscribes.push(sub!, sub2!);
+	}
+
+	initSelectAllChecks() {
+		if (this.uiState.lists.insuranceCompanyControlLists != undefined && this.uiState.lists.insuranceCompanyControlLists.length > 0) {
+			this.uiState.checkAllControls.allInsuranceCompanyControl.patchValue(true);
+			this.checkAllToggler(true, "insuranceCompany");
+		}
+
+		this.uiState.checkAllControls.allClassOfBusinessControl.patchValue(true);
+		this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(true);
+
+		if (this.uiState.lists.classOfBusinessLists != undefined && this.uiState.lists.classOfBusinessLists.length > 0) {
+			this.checkAllToggler(true, "classOfBusiness");
+			if (this.uiState.lists.linesOfBusinessLists.length > 0)
+				this.checkAllToggler(this.uiState.checkAllControls.allLineOfBusinessControl.value!, "lineOfBusiness");
+		}
+		this.uiState.checkAllControls.allStatusControl.patchValue(true);
+		this.uiState.checkAllControls.allSubStatusControl.patchValue(true);
+
+		if (this.uiState.lists.statusList != undefined && this.uiState.lists.statusList.length > 0) {
+			this.checkAllToggler(true, "status");
+			if (this.uiState.lists.subStatusList.length > 0) this.checkAllToggler(this.uiState.checkAllControls.allSubStatusControl.value!, "subStatus");
+		}
 	}
 
 	setClientData(e: any) {
@@ -135,23 +178,36 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 	}
 
 	getSubStatus() {
-		if (this.f.status?.value!.length == 0) {
-			this.uiState.subStatus = [];
-			this.f.subStatus?.reset();
-			return;
+		if (
+			(!this.uiState.initSubStatusFlag && this.uiState.lists.subStatusList.length == 0) ||
+			this.uiState.lists.statusList.length > this.f.status?.value?.length! ||
+			(!this.uiState.initSubStatusFlag && this.uiState.checkAllControls.allStatusControl.value && this.f.status?.value?.length! > 0)
+		) {
+			let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				this.uiState.lists.subStatusList = res.body?.data!;
+				this.checkAllToggler(this.uiState.checkAllControls.allSubStatusControl.value!, "subStatus");
+			});
+			this.subscribes.push(sub);
+			this.uiState.initSubStatusFlag = true;
 		}
-		let sub = this.claimService.getSubStatus(this.f.status?.value!).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.subStatusList = res.body?.data!;
-		});
-		this.subscribes.push(sub);
 	}
 
 	getLinesOfBusiness(classList: any) {
-		let cls = classList.map((el: any) => (el?.name ? el?.name : el));
-		let sub = this.claimService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
-			this.uiState.lists.linesOfBusinessLists = res.body?.data!;
-		});
-		this.subscribes.push(sub);
+		if (
+			(!this.uiState.initLineOfBusinessFlag && this.uiState.lists.linesOfBusinessLists.length == 0) ||
+			this.uiState.lists.classOfBusinessLists.length > this.f.classOfBusiness?.value?.length! ||
+			(!this.uiState.initLineOfBusinessFlag &&
+				this.uiState.checkAllControls.allClassOfBusinessControl.value &&
+				this.f.classOfBusiness?.value?.length! > 0)
+		) {
+			let cls = classList.map((el: any) => (el?.name ? el?.name : el));
+			let sub = this.claimService.getLinesOFBusinessByClassNames(cls).subscribe((res: HttpResponse<IBaseResponse<string[]>>) => {
+				this.uiState.lists.linesOfBusinessLists = res.body?.data!;
+				this.checkAllToggler(this.uiState.checkAllControls.allLineOfBusinessControl.value!, "lineOfBusiness");
+			});
+			this.subscribes.push(sub);
+			this.uiState.initLineOfBusinessFlag = true;
+		}
 	}
 
 	checkAllToggler(check: boolean, controlName: string) {
@@ -167,7 +223,9 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				} else {
 					this.f.classOfBusiness?.patchValue([]);
 					this.f.lineOfBusiness?.patchValue([]);
+					this.uiState.checkAllControls.allLineOfBusinessControl.patchValue(false);
 					this.uiState.lists.linesOfBusinessLists = [];
+					this.uiState.initLineOfBusinessFlag = false;
 				}
 				break;
 			case "lineOfBusiness":
@@ -181,7 +239,9 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 				} else {
 					this.f.status?.patchValue([]);
 					this.f.subStatus?.patchValue([]);
+					this.uiState.checkAllControls.allSubStatusControl.patchValue(false);
 					this.uiState.lists.subStatusList = [];
+					this.uiState.initSubStatusFlag = false;
 				}
 				break;
 			case "subStatus":
@@ -279,11 +339,40 @@ export class ClaimsReportComponent implements OnInit, OnDestroy {
 	}
 
 	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "Claims Reports",
-			url: data,
-		};
+		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
+		// this.modalRef.componentInstance.data = {
+		// 	reportName: "Claims Reports",
+		// 	url: data,
+		// };
+		const myWindow = window.open(data, "_blank", "fullscreen: true");
+		const content = `		
+						<!DOCTYPE html>
+						<html lang="en">
+							<head>
+								<title>Prospects Reports</title>
+								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+								<style>
+								body {height: 98vh;}
+								.myIFrame {
+								border: none;
+								}
+								</style>
+							</head>
+							<body>
+								<iframe
+								src="${data}"
+								class="myIFrame justify-content-center"
+								frameborder="5"
+								width="100%"
+								height="99%"
+								referrerpolicy="no-referrer-when-downgrade"
+								>
+								</iframe>
+							</body>
+						</html>
+
+		`;
+		myWindow?.document.write(content);
 	}
 
 	ngOnDestroy(): void {

@@ -4,44 +4,95 @@
             autocomplete="off">
             <ngb-accordion #acc="ngbAccordion" activeIds="1">
                 <!-- Client Details -->
-                <ngb-panel id="1" title="Filter Reports" cardClass="open my-4">
+                <ngb-panel id="1" title="Filters" cardClass="open my-4">
                     <ng-template ngbPanelContent="1">
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <div class=" ribbon-box border shadow-none mt-2">
                                         <div class="card-body">
-                                            <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
+                                            <span class="ribbon ribbon-info round-shape"><span>Parameters
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
                                                 <div class="col-12 row  my-2 pe-0">
-                                                    <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <!-- Report Type -->
+                                                    <div class="col-12 row pt-0 pb-4">
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client(s)
-                                                            </label>
+                                                            <label for="status">Report Type</label>
                                                         </div>
-                                                        <ng-select [items]="uiState.lists.clientsList"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" [formControl]="uiState.clientDataContorl"
-                                                            (change)="setClientData($event)">
-                                                        </ng-select>
+                                                        <span
+                                                            *ngFor="let item of (lookupData | async)?.ProductionReportType?.content!; index as i;"
+                                                            class="reportsRadioBtn my-1 col">
+                                                            <input type="radio" [value]="item.id"
+                                                                formControlName="reportType" [id]="item.name" />
+                                                            <label [for]="item.name" class="mx-2 my-0 py-0"
+                                                                style="cursor: pointer;">{{item.name}}</label>
+                                                        </span>
                                                     </div>
-                                                    <!-- Client Group(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client Group(s)
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.groupsLists"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="true" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" formControlName="clientGroup">
-                                                        </ng-select>
+                                                </div>
+                                                <!-- Client(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client(s)
+                                                        </label>
                                                     </div>
+                                                    <ng-select [items]="uiState.lists.clientsList"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" [formControl]="uiState.clientDataContorl"
+                                                        (change)="setClientData($event)">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Client Group(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client Group(s)
+                                                        </label>
+                                                    </div>
+                                                    <ng-select [items]="uiState.lists.groupsLists"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" formControlName="clientGroup">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Based On -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Based On</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportBasedOn?.content!"
+                                                        placeholder="Select Criteria" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="basedOn">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Status -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Status (Financial Approval)</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportStatus?.content!"
+                                                        placeholder="Select Status" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="status">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Capitive / Non - Capitive -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Capitive / Non - Capitive</label>
+                                                    </div>
+                                                    <ng-select
+                                                        [items]="(lookupData | async)?.ProductionReportCaptive?.content!"
+                                                        placeholder="Select Status" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id"
+                                                        formControlName="captive_NonPactive">
+                                                    </ng-select>
                                                 </div>
                                                 <!-- Branches -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
@@ -60,54 +111,9 @@
                                                         [loading]="lookupData ? false : true" [hideSelected]="true"
                                                         [clearable]="true" [searchable]="true" [multiple]="true"
                                                         [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ViewAllBranchs)!"
                                                         formControlName="branchs" (change)="ngSelectChange('branch')">
                                                     </ng-select>
-                                                </div>
-                                                <!-- Insurance Company -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Insurance Company
-                                                        </label>
-                                                        <div>
-                                                            <label for="checkall2" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall2"
-                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                                                        placeholder="Select Insurance Company(s)"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [clearable]="true" [searchable]="true" [multiple]="true"
-                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
-                                                        formControlName="insuranceCompany"
-                                                        (change)="ngSelectChange('insuranceCompany')">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Producers -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Producers</label>
-                                                        <div>
-                                                            <label for="checkall2" class="mx-2">Select All</label>
-                                                            <input type="checkbox" id="checkall2"
-                                                                [formControl]="	uiState.checkAllControls.allProducersControl"
-                                                                (change)="checkAllToggler(uiState.checkAllControls.allProducersControl.value!,'producers')">
-                                                        </div>
-                                                    </div>
-                                                    <ng-select [items]="(lookupData | async)?.Producers?.content!"
-                                                        placeholder="Select Producer"
-                                                        [ngClass]="{'is-submitted': (f.producers?.touched || submitted) && f.producers?.invalid}"
-                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                        [multiple]="true" [clearable]="true" [searchable]="true"
-                                                        bindLabel="name" bindValue="name" formControlName="producers"
-                                                        (change)="ngSelectChange('producers')">
-                                                    </ng-select>
-                                                    <div class="invalid-feedback d-inline-block fw-bold"
-                                                        *ngIf="(f.producers?.touched || submitted) && f.producers?.invalid">
-                                                        Required
-                                                    </div>
                                                 </div>
                                                 <!-- Transaction Type -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
@@ -172,60 +178,59 @@
                                                         (change)="ngSelectChange('lineOfBusiness')">
                                                     </ng-select>
                                                 </div>
-                                                <!-- Report Type -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                <!-- Producers -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Report Type</label>
+                                                        <label for="status">Producers</label>
+                                                        <div>
+                                                            <label for="checkall2" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall2"
+                                                                [formControl]="	uiState.checkAllControls.allProducersControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allProducersControl.value!,'producers')">
+                                                        </div>
+                                                    </div>
+                                                    <ng-select [items]="(lookupData | async)?.Producers?.content!"
+                                                        placeholder="Select Producer"
+                                                        [ngClass]="{'is-submitted': (f.producers?.touched || submitted) && f.producers?.invalid}"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [multiple]="true" [clearable]="true" [searchable]="true"
+                                                        bindLabel="name" bindValue="name" formControlName="producers"
+                                                        [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersProduction)!"
+                                                        (change)="ngSelectChange('producers')">
+                                                    </ng-select>
+                                                    <div class="invalid-feedback d-inline-block fw-bold"
+                                                        *ngIf="(f.producers?.touched || submitted) && f.producers?.invalid">
+                                                        Required
+                                                    </div>
+                                                </div>
+                                                <!-- Insurance Company -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Insurance Company
+                                                        </label>
+                                                        <div>
+                                                            <label for="checkall2" class="mx-2">Select All</label>
+                                                            <input type="checkbox" id="checkall2"
+                                                                [formControl]="	uiState.checkAllControls.allInsuranceCompanyControl"
+                                                                (change)="checkAllToggler(uiState.checkAllControls.allInsuranceCompanyControl.value!,'insuranceCompany')">
+                                                        </div>
                                                     </div>
                                                     <ng-select
-                                                        [items]="(lookupData | async)?.ProductionReportType?.content!"
-                                                        placeholder="Select Report Type" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id" formControlName="reportType">
+                                                        [items]="(lookupData | async)?.InsuranceCompanies?.content!"
+                                                        placeholder="Select Insurance Company(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="true" [searchable]="true" [multiple]="true"
+                                                        [closeOnSelect]="false" bindLabel="name" bindValue="name"
+                                                        formControlName="insuranceCompany"
+                                                        (change)="ngSelectChange('insuranceCompany')">
                                                     </ng-select>
                                                 </div>
-                                                <!-- Based On -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Based On</label>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.ProductionReportBasedOn?.content!"
-                                                        placeholder="Select Criteria" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id" formControlName="basedOn">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Status -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Status (Financial Approval)</label>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.ProductionReportStatus?.content!"
-                                                        placeholder="Select Status" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id" formControlName="status">
-                                                    </ng-select>
-                                                </div>
-                                                <!-- Capitive / Non - Capitive -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Capitive / Non - Capitive</label>
-                                                    </div>
-                                                    <ng-select
-                                                        [items]="(lookupData | async)?.ProductionReportCaptive?.content!"
-                                                        placeholder="Select Status" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id"
-                                                        formControlName="captive_NonPactive">
-                                                    </ng-select>
-                                                </div>
+
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -240,8 +245,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>

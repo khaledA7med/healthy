@@ -14,36 +14,35 @@
                                             <span class="ribbon ribbon-info round-shape"><span>Generate By Filter
                                                 </span></span>
                                             <div class="row mt-5 mx-2">
-                                                <div class="col-12 row  my-2 pe-0">
-                                                    <!-- Client(s) -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12  mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">Choose Client(s)
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.clientsLists"
-                                                            placeholder="Select Client(s)"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="false" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" [formControl]="uiState.clientDataContorl">
-                                                        </ng-select>
+                                                <!-- <div class="col-12 row  my-2 pe-0"> -->
+                                                <!-- Client(s) -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12  my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Choose Client(s)
+                                                        </label>
                                                     </div>
-                                                    <!-- User -->
-                                                    <div class="col-lg-3 col-md-4 col-sm-12  mb-2">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="status">User
-                                                            </label>
-                                                        </div>
-                                                        <ng-select [items]="uiState.lists.usersLists!"
-                                                            placeholder="Select User"
-                                                            [loading]="lookupData ? false : true" [hideSelected]="true"
-                                                            [clearable]="false" [searchable]="true" bindLabel="name"
-                                                            bindValue="name" formControlName="user">
-                                                        </ng-select>
-                                                    </div>
+                                                    <ng-select [items]="uiState.lists.clientsLists"
+                                                        placeholder="Select Client(s)"
+                                                        [loading]="lookupData ? false : true" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" bindLabel="name"
+                                                        bindValue="name" [formControl]="uiState.clientDataContorl">
+                                                    </ng-select>
                                                 </div>
+                                                <!-- User -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">User
+                                                        </label>
+                                                    </div>
+                                                    <ng-select [items]="uiState.lists.usersLists!"
+                                                        placeholder="Select User" [loading]="lookupData ? false : true"
+                                                        [hideSelected]="true" [clearable]="false" [searchable]="true"
+                                                        bindLabel="name" bindValue="name" formControlName="user">
+                                                    </ng-select>
+                                                </div>
+                                                <!-- </div> -->
                                                 <!-- Branches -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Branch
                                                         </label>
@@ -55,8 +54,19 @@
                                                         bindLabel="name" bindValue="name" formControlName="branch">
                                                     </ng-select>
                                                 </div>
+                                                <!-- Report Type -->
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="status">Report Type</label>
+                                                    </div>
+                                                    <ng-select [items]="(lookupData | async)?.CSReportType?.content!"
+                                                        placeholder="Select Report Type" [hideSelected]="true"
+                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
+                                                        bindLabel="name" bindValue="id" formControlName="reportType">
+                                                    </ng-select>
+                                                </div>
                                                 <!-- Insurance Company -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <label for="status">Insurance Company
                                                         </label>
@@ -116,17 +126,6 @@
                                                         formControlName="status" (change)="ngSelectChange('status')">
                                                     </ng-select>
                                                 </div>
-                                                <!-- Report Type -->
-                                                <div class="col-lg-3 col-md-4 col-sm-12 my-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="status">Report Type</label>
-                                                    </div>
-                                                    <ng-select [items]="(lookupData | async)?.CSReportType?.content!"
-                                                        placeholder="Select Report Type" [hideSelected]="true"
-                                                        [clearable]="false" [searchable]="true" [closeOnSelect]="false"
-                                                        bindLabel="name" bindValue="id" formControlName="reportType">
-                                                    </ng-select>
-                                                </div>
                                                 <!-- Current Status -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 my-2">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -141,8 +140,8 @@
                                                 <!-- minDate -->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="minDate" class="col-form-label asterisk-input">Min
-                                                            Date</label>
+                                                        <label for="minDate"
+                                                            class="col-form-label asterisk-input">Period From</label>
 
                                                         <app-gregorian-picker [model]="f.minDate?.value"
                                                             [required]="true" [submitted]="submitted"
@@ -157,8 +156,8 @@
                                                 <!-- Max Date-->
                                                 <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
                                                     <div class="accordion-info">
-                                                        <label for="maxDate" class="col-form-label asterisk-input">Max
-                                                            Date</label>
+                                                        <label for="maxDate"
+                                                            class="col-form-label asterisk-input">Period To</label>
                                                         <app-gregorian-picker [model]="f.maxDate?.value"
                                                             [required]="true" [submitted]="submitted"
                                                             (dateChange)="maxDate($event)"></app-gregorian-picker>

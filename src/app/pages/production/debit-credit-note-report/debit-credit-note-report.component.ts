@@ -3,7 +3,7 @@ import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
-import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from "ag-grid-community";
 
 import { MODULES } from "src/app/core/models/MODULES";
@@ -20,6 +20,10 @@ import { debitCreditNoteForm, IdebitCreditNoteFilter } from "src/app/shared/app/
 import { IDebitCreditNote } from "src/app/shared/app/models/Production/iproduction-notes";
 import { DCNotesModel } from "src/app/shared/app/models/Production/production-util";
 import { NavigationStart, Router } from "@angular/router";
+import { AuthenticationService } from "src/app/core/services/auth.service";
+import { PermissionsService } from "src/app/core/services/permissions.service";
+import { ProductionPermissions } from "src/app/core/roles/production-permissions";
+import { Roles } from "src/app/core/roles/Roles";
 @Component({
 	selector: "app-debit-credit-note-report",
 	templateUrl: "./debit-credit-note-report.component.html",
@@ -45,8 +49,13 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			list: [] as IDebitCreditNote[],
 			totalPages: 0,
 		},
+		lists: {
+			branchesLists: [] as IGenericResponseType[],
+		},
 		selectedNote: null,
+		privileges: ProductionPermissions,
 	};
+	permissions$!: Observable<string[]>;
 
 	modalRef!: NgbModalRef;
 	searchNotesModal!: NgbModalRef;
@@ -63,28 +72,30 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			minWidth: 100,
 			resizable: true,
 		},
+		rowSelection: "single",
 		overlayNoRowsTemplate: "<alert class='alert alert-secondary'>No Data To Show</alert>",
 		onGridReady: (e) => this.onGridReady(e),
 		onRowClicked: (e) => this.onRowClicked(e),
 	};
 	constructor(
-		private modalService: NgbModal,
 		private productionService: ProductionService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router
+		private permission: PermissionsService,
+		private auth: AuthenticationService
 	) {}
 
 	ngOnInit(): void {
 		this.initFilterForm();
 		this.lookupData = this.table.getBaseData(MODULES.Reports);
-		let sub = this.router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {
-				this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-			}
+		this.permissions$ = this.permission.getPrivileges(Roles.Production);
+
+		let sub = this.lookupData.subscribe((res) => {
+			res.Branch?.content! ? (this.uiState.lists.branchesLists = [{ id: 0, name: "Select All" }, ...res.Branch?.content!]) : "";
 		});
+
 		this.subscribes.push(sub);
 		let date = new Date();
 		let todayDate = {
@@ -123,10 +134,6 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 		},
 	};
 
-	setDataSource() {
-		this.gridApi.setDatasource(this.dataSource);
-	}
-
 	onRowClicked(e: RowClickedEvent) {
 		this.uiState.selectedNote = e.data;
 		this.eventService.broadcast(reserved.isLoading, true);
@@ -155,7 +162,7 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 
 	initFilterForm() {
 		this.filterForm = new FormGroup<debitCreditNoteForm>({
-			branchs: new FormControl(null),
+			branchs: new FormControl("Select All"),
 			// filter: new FormControl(""),
 			plain: new FormControl(true),
 			pram: new FormControl(1),
@@ -183,31 +190,62 @@ export class DebitCreditNoteReportComponent implements OnInit, OnDestroy {
 			...this.filterForm.value,
 			pram: +this.filterForm.value.pram!,
 			reportType: +this.filterForm.value.reportType!,
+			branchs: this.filterForm.getRawValue().branchs === "Select All" ? null : this.filterForm.getRawValue().branchs,
 			minDate: this.utils.dateFormater(this.filterForm.value.minDate) as any,
 			maxDate: this.utils.dateFormater(this.filterForm.value.maxDate) as any,
 		};
 	}
 
-	onSubmit(modal: any) {
+	onSubmit() {
 		this.submitted = true;
 		if (this.filterForm?.invalid) {
 			return;
 		}
 		this.modifyFilterReq();
-		this.searchNotesModal = this.modalService.open(modal, {
-			ariaLabelledBy: "modal-basic-title",
-			centered: true,
-			backdrop: "static",
-			size: "xl",
-		});
+		this.gridApi.setDatasource(this.dataSource);
+		// this.searchNotesModal = this.modalService.open(modal, {
+		// 	ariaLabelledBy: "modal-basic-title",
+		// 	centered: true,
+		// 	backdrop: "static",
+		// 	size: "xl",
+		// });
 	}
 
 	openReportsViewer(data?: string): void {
-		this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		this.modalRef.componentInstance.data = {
-			reportName: "Debite / Credit Notes (Clients Premium)",
-			url: data,
-		};
+		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
+		// this.modalRef.componentInstance.data = {
+		// 	reportName: "Debite / Credit Notes (Clients Premium)",
+		// 	url: data,
+		// };
+		const myWindow = window.open(data, "_blank", "fullscreen: true");
+		const content = `		
+						<!DOCTYPE html>
+						<html lang="en">
+							<head>
+								<title>Prospects Reports</title>
+								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+								<style>
+								body {height: 98vh;}
+								.myIFrame {
+								border: none;
+								}
+								</style>
+							</head>
+							<body>
+								<iframe
+								src="${data}"
+								class="myIFrame justify-content-center"
+								frameborder="5"
+								width="100%"
+								height="99%"
+								referrerpolicy="no-referrer-when-downgrade"
+								>
+								</iframe>
+							</body>
+						</html>
+
+		`;
+		myWindow?.document.write(content);
 	}
 
 	ngOnDestroy(): void {

@@ -12,9 +12,9 @@ import { PoliciesManagementComponent } from "./policies-management.component";
 @Component({
 	selector: "app-policies-management-controls",
 	template: `
-		<div class="col">
+		<div class="col d-flex align-items-center justify-content-center">
 			<div ngbDropdown class="d-inline-block">
-				<button type="button" class="btn btn-ghost-secondary waves-effect rounded-pill" id="actionDropdown" ngbDropdownToggle>
+				<button type="button" class="btn btn-sm btn-ghost-secondary waves-effect rounded-pill" id="actionDropdown" ngbDropdownToggle>
 					<i class="ri-more-2-fill"></i>
 				</button>
 				<div ngbDropdownMenu aria-labelledby="actionDropdown" class="dropdown-menu">

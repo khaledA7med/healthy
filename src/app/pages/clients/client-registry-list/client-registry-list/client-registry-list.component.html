@@ -46,7 +46,10 @@
         <!-- full Name -->
         <div class="col-12 mb-2">
           <label for="fullName" class="form-label">Full Name</label>
-          <input type="text" class="form-control" id="fullName" placeholder="Full Name" formControlName="fullName" />
+          <ng-select [items]="(lookupData | async)?.AllClients?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="fullName"
+            formControlName="fullName">
+          </ng-select>
         </div>
         <!-- Type -->
         <div class="col-12 mb-2">
@@ -55,20 +58,25 @@
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="type" formControlName="type">
           </ng-select>
         </div>
+        <!-- Sponsor ID -->
+        <div class="col-12 mb-2">
+          <label for="sponsorID" class="form-label">Sponsor ID</label>
+          <input type="text" class="form-control" id="sponsorID" placeholder="Sponsor ID" formControlName="sponsorID" />
+        </div>
         <!-- Branch -->
         <div class="col-12 mb-2">
           <label for="branch" class="form-label">Branch</label>
           <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
-            formControlName="branch">
+            placeholder="Select Branch(es)" [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name"
+            id="branch" formControlName="branch">
           </ng-select>
         </div>
         <!-- producer -->
         <div class="col-12 mb-2">
           <label for="producer" class="form-label">Producer</label>
           <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="producer"
-            formControlName="producer"
+            [clearable]="true" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" [searchable]="true"
+            bindLabel="name" bindValue="name" id="producer" formControlName="producer"
             [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersClients)">
           </ng-select>
         </div>
