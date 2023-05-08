@@ -94,7 +94,6 @@ export class DashboardClaimsComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
   constructor(
-    private tableRef: ElementRef,
     private claimsService: ClaimsService,
     private eventService: EventService
   ) {}
@@ -204,15 +203,7 @@ export class DashboardClaimsComponent implements OnInit, OnDestroy {
             color: "white",
             fontWeight: "bold",
           },
-          title: {
-            // text: "2018/19",
-          },
           innerLabels: [
-            {
-              text: "numFormatter.format(total)",
-              fontSize: 24,
-              fontWeight: "bold",
-            },
             {
               text: "Total",
               fontSize: 16,
