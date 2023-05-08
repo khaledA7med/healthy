@@ -498,7 +498,7 @@ export class CustomerServiceListComponent
       client: e.clientName,
       status: ["New Request", "Pending"],
       type: ["Medical", "Motor", "Life", "General"],
-      insuranceCompany: e.insurComp,
+      insuranceCompany: e.insurComp ? [e.insurComp] : [],
 
       requestNo: null,
       branch: null,

@@ -4,7 +4,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   Output,
 } from "@angular/core";
@@ -21,7 +20,7 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 export class DropzoneComponent implements OnDestroy {
   documentsToUpload: any[] = [];
   documentsToDisplay: any[] = [];
-  subscribes!: Subscription;
+  subscribes: Subscription[] = [];
 
   @Input() UploadedFiles: any[] = [];
 
@@ -56,13 +55,26 @@ export class DropzoneComponent implements OnDestroy {
     this.emitingFiles();
   }
 
-  openImage(img: string) {
-    var win = window.open("about:blank");
-    win?.document.write(
-      '<iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="' +
-        img +
-        '"></iframe>'
-    );
+  downloadFile(path: string) {
+    let sub = this.masterMethod.downloadFile(path).subscribe({
+      next: (res) => {
+        const downloadedFile = new Blob([res.body as BlobPart], {
+          type: res.body,
+        });
+        const a = document.createElement("a");
+        a.setAttribute("style", "display:none;");
+        document.body.appendChild(a);
+        a.download = path;
+        a.href = URL.createObjectURL(downloadedFile);
+        a.target = "_blank";
+        a.click();
+        document.body.removeChild(a);
+      },
+      error: (error) => {
+        this.message.popup("Oops!", error.message, "error");
+      },
+    });
+    this.subscribes.push(sub);
   }
 
   removeImage(item: any, isServer?: boolean) {
@@ -89,7 +101,7 @@ export class DropzoneComponent implements OnDestroy {
                 } else
                   this.message.popup("Oops!", res.body?.message!, "warning");
               });
-            this.subscribes = sub;
+            this.subscribes.push(sub);
           }
           this.emitingFiles();
         }
@@ -175,6 +187,6 @@ export class DropzoneComponent implements OnDestroy {
     this.files.emit(this.documentsToUpload);
   }
   ngOnDestroy() {
-    this.subscribes && this.subscribes.unsubscribe();
+    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
   }
 }

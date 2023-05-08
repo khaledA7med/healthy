@@ -460,7 +460,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
       clientName: e.clientName,
       status: [claimsStatus.active, claimsStatus.pending],
       claimType: e.claimType,
-      insurCompany: e.insuranceCompany,
+      insurCompany: e.insuranceCompany ? [e.insuranceCompany] : [],
       subStatus: [],
     });
     this.submitFilterForm();
