@@ -55,6 +55,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   QuotingRequirementsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: {
@@ -185,7 +186,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   }
 
   getQuotingRequirementsData(id: string) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.QuotingRequirementsService.getEditQuotingRequirements(
       id
     ).subscribe((res: IBaseResponse<IQuotingRequirementsData>) => {
@@ -203,7 +203,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
         this.f.lineOfBusiness?.disable();
         this.f.insuranceCopmany?.disable();
         this.openQuotingRequirementsDialoge();
-        this.eventService.broadcast(reserved.isLoading, false);
       } else this.message.toast(res.message!, "error");
     });
     this.subscribes.push(sub);
@@ -265,7 +264,6 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
         : 0,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
 
     let sub = this.QuotingRequirementsService.saveQuotingRequirements(
       data
@@ -273,13 +271,11 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
       if (res?.status) {
         if (this.uiState.editQuotingRequirementsMode) {
           this.QuotingRequirementsModal?.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
         } else this.resetQuotingRequirementsForm();
 
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res?.message!, "success");
       } else this.message.popup("Sorry!", res.message!, "warning");
-      this.eventService.broadcast(reserved.isLoading, false);
     });
     this.subscribes.push(sub);
   }

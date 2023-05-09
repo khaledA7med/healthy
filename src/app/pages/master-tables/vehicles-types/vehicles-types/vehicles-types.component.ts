@@ -42,6 +42,7 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
   @ViewChild("VehiclesTypesContent") VehiclesTypesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IVehiclesTypes[],
@@ -137,14 +138,12 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.VehiclesTypesService.getEditVehiclesTypes(id).subscribe(
         (res: HttpResponse<IBaseResponse<IVehiclesTypesData>>) => {
           if (res.body?.status) {
             this.uiState.editVehiclesTypesMode = true;
             this.uiState.editVehiclesTypesData = res.body?.data!;
             this.fillEditVehiclesTypesForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -194,12 +193,10 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
       abbreviation: formData.abbreviation,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.VehiclesTypesService.saveVehiclesTypes(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.VehiclesTypesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetVehiclesTypesForm();
           this.gridApi.setDatasource(this.dataSource);

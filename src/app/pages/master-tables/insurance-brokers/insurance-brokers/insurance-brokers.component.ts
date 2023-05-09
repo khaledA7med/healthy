@@ -43,6 +43,7 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
   @ViewChild("insuranceContent") insuranceContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IInsuranceBrokers[],
@@ -135,14 +136,12 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceBrokersService.getEditInsuranceData(id).subscribe(
         (res: HttpResponse<IBaseResponse<IInsuranceBrokersData>>) => {
           if (res.body?.status) {
             this.uiState.editInsuranceMode = true;
             this.uiState.editInsuranceData = res.body?.data!;
             this.fillEditInsuranceForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -198,12 +197,10 @@ export class InsuranceBrokersComponent implements OnInit, OnDestroy {
       address: formData.address,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceBrokersService.saveInsuranceBrokers(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.InsuranceModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetInsuranceForm();
           this.gridApi.setDatasource(this.dataSource);

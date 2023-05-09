@@ -55,6 +55,7 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
   PolicyIssuanceRequirementsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: {
@@ -195,7 +196,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
   }
 
   getPolicyIssuanceRequirementsData(id: string) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.PolicyIssuanceRequirementsService.getEditPolicyIssuanceRequirements(
         id
@@ -214,7 +214,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
           this.f.lineOfBusiness?.disable();
           this.f.insuranceCopmany?.disable();
           this.openPolicyIssuanceRequirementsDialoge();
-          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.message!, "error");
       });
     this.subscribes.push(sub);
@@ -284,7 +283,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
     };
 
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
 
     let sub =
       this.PolicyIssuanceRequirementsService.savePolicyIssuanceRequirements(
@@ -304,7 +302,6 @@ export class PolicyIssuanceRequirementsComponent implements OnInit, OnDestroy {
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
         } else this.message.popup("Sorry!", res.message!, "warning");
-        this.eventService.broadcast(reserved.isLoading, false);
       });
     this.subscribes.push(sub);
   }

@@ -42,6 +42,7 @@ export class CitiesComponent implements OnInit, OnDestroy {
   @ViewChild("CitiesContent") CitiesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ICities[],
@@ -134,14 +135,12 @@ export class CitiesComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CitiesService.getEditCities(id).subscribe(
         (res: HttpResponse<IBaseResponse<ICitiesData>>) => {
           if (res.body?.status) {
             this.uiState.editCitiesMode = true;
             this.uiState.editCitiesData = res.body?.data!;
             this.fillEditCitiesForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.popup("Sorry!", res.body?.message!, "warning");
         }
       );
@@ -186,12 +185,10 @@ export class CitiesComponent implements OnInit, OnDestroy {
       city: formData.city,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CitiesService.saveCities(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.CitiesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetCitiesForm();
           this.gridApi.setDatasource(this.dataSource);

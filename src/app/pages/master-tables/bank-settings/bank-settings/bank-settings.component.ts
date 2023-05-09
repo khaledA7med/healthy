@@ -42,6 +42,7 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
   @ViewChild("BankSettingsContent") BankSettingsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IBankSettings[],
@@ -134,13 +135,11 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.BankSettingsService.getEditBankSettings(id).subscribe(
         (res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
           this.uiState.editBankSettingsMode = true;
           this.uiState.editBankSettingsData = res.body?.data!;
           this.fillEditBankSettingsForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
         }
       );
       this.subscribes.push(sub);
@@ -189,11 +188,9 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       swift: formData.swift,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.BankSettingsService.saveBankSettings(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         this.BankSettingsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetBankSettingsForm();
         this.gridApi.setDatasource(this.dataSource);

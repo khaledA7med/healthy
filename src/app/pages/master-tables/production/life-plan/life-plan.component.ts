@@ -50,6 +50,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
   uiState = {
+    isLoading: false as boolean,
     submitted: false as Boolean,
     gridReady: false as Boolean,
     lists: {
@@ -203,7 +204,6 @@ export class LifePlanComponent implements OnInit, OnDestroy {
       return;
     }
     console.log(formGroup.getRawValue());
-    this.eventService.broadcast(reserved.isLoading, true);
     const data: ILifePlanReq = {
       ...formGroup.getRawValue(),
     };
@@ -212,12 +212,9 @@ export class LifePlanComponent implements OnInit, OnDestroy {
       .subscribe((res: IBaseResponse<any>) => {
         if (res.status) {
           this.modalRef.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
         } else this.message.popup("Sorry!", res.message!, "warning");
-        // Hide Loader
-        this.eventService.broadcast(reserved.isLoading, false);
       });
     this.subscribes.push(sub);
   }

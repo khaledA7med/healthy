@@ -42,6 +42,7 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
   @ViewChild("PolicyTypesContent") PolicyTypesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IPolicyTypes[],
@@ -134,14 +135,12 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.PolicyTypesService.getEditPolicyTypes(id).subscribe(
         (res: HttpResponse<IBaseResponse<IPolicyTypesData>>) => {
           if (res.body?.status) {
             this.uiState.editPolicyTypesMode = true;
             this.uiState.editPolicyTypesData = res.body?.data!;
             this.fillEditPolicyTypesForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -188,12 +187,10 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
       policyType: formData.policyType,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.PolicyTypesService.savePolicyTypes(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.PolicyTypesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetPolicyTypesForm();
           this.gridApi.setDatasource(this.dataSource);

@@ -43,6 +43,7 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
   ContactsListPositionContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IContactsListPosition[],
@@ -142,7 +143,6 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.ContactsListPositionService.getEditContactsListPosition(
         id
       ).subscribe(
@@ -151,7 +151,6 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
             this.uiState.editContactsListPositionMode = true;
             this.uiState.editContactsListPositionData = res.body?.data!;
             this.fillEditContactsListPositionForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -198,13 +197,11 @@ export class ContactsListPositionComponent implements OnInit, OnDestroy {
       position: formData.position,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ContactsListPositionService.saveContactsListPosition(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.ContactsListPositionModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetContactsListPositionForm();
         this.gridApi.setDatasource(this.dataSource);

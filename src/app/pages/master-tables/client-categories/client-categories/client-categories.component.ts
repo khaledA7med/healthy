@@ -43,6 +43,7 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
   ClientCategoriesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClientCategories[],
@@ -138,7 +139,6 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.ClientCategoriesService.getEditClientCategories(
         id
       ).subscribe((res: HttpResponse<IBaseResponse<IClientCategoriesData>>) => {
@@ -146,7 +146,6 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
           this.uiState.editClientCategoriesMode = true;
           this.uiState.editClientCategoriesData = res.body?.data!;
           this.fillEditClientCategoriesForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.body!.message!, "error");
       });
       this.subscribes.push(sub);
@@ -192,12 +191,10 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
       category: formData.category,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientCategoriesService.saveClientCategories(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.ClientCategoriesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetClientCategoriesForm();
           this.gridApi.setDatasource(this.dataSource);

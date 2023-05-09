@@ -43,6 +43,7 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
   ComplaintsTypesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IComplaintTypes[],
@@ -138,14 +139,12 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
       }
     );
     if (sno) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.ComplaintTypesService.getEditComplaintTypes(sno).subscribe(
         (res: HttpResponse<IBaseResponse<IComplaintTypesData>>) => {
           if (res.body?.status) {
             this.uiState.editComplaintsTypesMode = true;
             this.uiState.editComplaintsTypesData = res.body?.data!;
             this.fillEditComplaintsTypesForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -192,12 +191,10 @@ export class ComplaintsTypesComponent implements OnInit, OnDestroy {
       type: formData.type,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ComplaintTypesService.saveComplaintTypes(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.ComplaintsTypesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetComplaintsTypesForm();
           this.gridApi.setDatasource(this.dataSource);

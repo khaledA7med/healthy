@@ -49,6 +49,7 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
   InsuranceWorkshopDetailsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IInsuranceWorkshopDetailsFilter[],
@@ -181,7 +182,6 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
             });
             this.f.city?.disable();
             this.openInsuranceWorkshopDetailsDialoge();
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -254,13 +254,11 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
     const data: IInsuranceWorkshopDetailsData = {
       ...form.getRawValue(),
     };
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceWorkshopDetailsService.saveInsuranceWorkshopDetails(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.InsuranceWorkshopDetailsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetInsuranceWorkshopDetailsForm();
         this.gridApi.setDatasource(this.dataSource);

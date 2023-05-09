@@ -57,6 +57,7 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
   uiState = {
+    isLoading: false as boolean,
     submitted: false as Boolean,
     gridReady: false as Boolean,
     lists: {
@@ -192,7 +193,6 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.productionService.editItem(this.editURI, id).subscribe(
       (res: IBaseResponse<ILibrariesReq>) => {
         if (res?.status) {
@@ -208,7 +208,6 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
           this.f.lineOfBusiness?.disable();
 
           this.openEditItemDialoge();
-          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.message!, "error");
       },
       (err: HttpErrorResponse) => {
@@ -239,7 +238,6 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.eventService.broadcast(reserved.isLoading, true);
     const data: ILibrariesReq = {
       ...formGroup.getRawValue(),
       defaultTick: formGroup.getRawValue().defaultTick === true ? 1 : 0,
@@ -250,13 +248,10 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
         if (res.status) {
           if (this.uiState.editMode) {
             this.modalRef.dismiss();
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.resetForm();
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
         } else this.message.popup("Sorry!", res.message!, "warning");
-        // Hide Loader
-        this.eventService.broadcast(reserved.isLoading, false);
       });
     this.subscribes.push(sub);
   }

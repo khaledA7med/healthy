@@ -43,6 +43,7 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
   ComplaintsSuspectiveCausesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IComplaintSuspectiveCauses[],
@@ -142,7 +143,6 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
       }
     );
     if (sno) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub =
         this.ComplaintSuspectiveCausesService.getEditComplaintSuspectiveCauses(
           sno
@@ -154,7 +154,6 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
               this.uiState.editComplaintsSuspectiveCausesMode = true;
               this.uiState.editComplaintsSuspectiveCausesData = res.body?.data!;
               this.fillEditComplaintsSuspectiveCausesForm(res.body?.data!);
-              this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
         );
@@ -202,14 +201,12 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
       suspectiveCause: formData.suspectiveCause,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.ComplaintSuspectiveCausesService.saveComplaintSuspectiveCauses(
         data
       ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.ComplaintsSuspectiveCausesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetComplaintsSuspectiveCausesForm();
           this.gridApi.setDatasource(this.dataSource);

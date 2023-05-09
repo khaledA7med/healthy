@@ -42,6 +42,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
   @ViewChild("LocationsContent") LocationsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ILocations[],
@@ -134,14 +135,12 @@ export class LocationsComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.LocationsService.getEditLocations(id).subscribe(
         (res: HttpResponse<IBaseResponse<ILocationsData>>) => {
           if (res.body?.status) {
             this.uiState.editLocationsMode = true;
             this.uiState.editLocationsData = res.body?.data!;
             this.fillEditLocationsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -188,12 +187,10 @@ export class LocationsComponent implements OnInit, OnDestroy {
       locationName: formData.locationName,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LocationsService.saveLocations(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.LocationsModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetLocationsForm();
           this.gridApi.setDatasource(this.dataSource);

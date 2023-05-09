@@ -52,6 +52,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
   ClaimsRejectionReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClaimsRejectionReasons[],
@@ -157,7 +158,6 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
   }
 
   getClaimsRejectionReasonsData(sno: number) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.ClaimsRejectionReasonsService.getEditClaimsRejectionReasonsData(
         sno
@@ -167,7 +167,6 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
             this.uiState.editClaimsRejectionReasonsMode = true;
             this.uiState.editClaimsRejectionReasonsData = res.body?.data!;
             this.fillEditClaimsRejectionReasonsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -237,13 +236,11 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
       rejectionReason: formData.claimNotes,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsRejectionReasonsService.saveClaimsRejectionReasons(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.ClaimsRejectionReasonsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClaimsRejectionReasonsForm();
         this.gridApi.setDatasource(this.dataSource);

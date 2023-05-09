@@ -107,6 +107,7 @@
     </div>
 
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)">
+        <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="p-3">
                 <div class="row mb-2">

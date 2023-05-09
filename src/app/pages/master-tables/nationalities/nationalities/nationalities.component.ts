@@ -42,6 +42,7 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
   @ViewChild("NationalitiesContent") NationalitiesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as INationalties[],
@@ -137,14 +138,12 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.NationalitiesService.getEditNationalities(id).subscribe(
         (res: HttpResponse<IBaseResponse<INationaltiesData>>) => {
           if (res.body?.status) {
             this.uiState.editNationalitiesMode = true;
             this.uiState.editNationalitiesData = res.body?.data!;
             this.fillEditNationalitiesForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -191,12 +190,10 @@ export class NationalitiesComponent implements OnInit, OnDestroy {
       nationality: formData.nationality,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.NationalitiesService.saveNationalities(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.NationalitiesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetNationalitiesForm();
           this.gridApi.setDatasource(this.dataSource);

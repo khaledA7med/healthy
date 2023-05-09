@@ -68,6 +68,7 @@ export class InsuranceCompaniesComponent implements OnInit {
   @ViewChild("insuranceContent") insuranceContent!: ElementRef;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IInsuranceCompanies[],
@@ -180,7 +181,6 @@ export class InsuranceCompaniesComponent implements OnInit {
       size: "xl",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceCompaniesService.getEditInsuranceCompanies(
         id
       ).subscribe(
@@ -189,7 +189,6 @@ export class InsuranceCompaniesComponent implements OnInit {
             this.uiState.editInsuranceMode = true;
             this.uiState.editInsuranceData = res.body?.data!;
             this.fillEditInsuranceForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -376,14 +375,12 @@ export class InsuranceCompaniesComponent implements OnInit {
     }
 
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
 
     let sub = this.InsuranceCompaniesService.saveInsuranceCompanies(
       formData
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.InsuranceModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetInsuranceForm();
         this.gridApi.setDatasource(this.dataSource);

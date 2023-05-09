@@ -63,6 +63,7 @@ export class HospitalsComponent implements OnInit, OnDestroy {
   @ViewChild("HospitalsContent") HospitalsContent!: ElementRef;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IHospitals[],
@@ -158,13 +159,11 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       size: "xl",
     });
     if (sno) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.HospitalsService.getEditHospitalsData(sno).subscribe(
         (res: HttpResponse<IBaseResponse<IHospitalsPreview>>) => {
           if (res.body?.status) {
             this.uiState.editHospitalsMode = true;
             this.fillEditHospitalsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -314,8 +313,6 @@ export class HospitalsComponent implements OnInit, OnDestroy {
     this.f.fax?.disable();
     this.f.specialties?.disable();
     this.f.region?.disable();
-
-    this.eventService.broadcast(reserved.isLoading, false);
   }
 
   validationChecker(): boolean {
@@ -423,14 +420,12 @@ export class HospitalsComponent implements OnInit, OnDestroy {
       );
     }
 
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.HospitalsService.saveHospitals(formData).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.HospitalsModal.dismiss();
           this.message.toast(res.body?.message!, "success");
         } else this.message.popup("Sorry!", res.body?.message!, "warning");
-        this.eventService.broadcast(reserved.isLoading, false);
         this.gridApi.setDatasource(this.dataSource);
       }
     );

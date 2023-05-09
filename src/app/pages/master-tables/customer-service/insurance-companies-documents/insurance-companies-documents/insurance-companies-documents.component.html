@@ -60,6 +60,7 @@
 
     <form [formGroup]="InsuranceCompaniesDocumentsForm"
         (ngSubmit)="submitInsuranceCompaniesDocumentsData(InsuranceCompaniesDocumentsForm)">
+        <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
         <div class="modal-body p-1" style="overflow-y: unset !important;">
 
             <div class="container-fluid mb-3">

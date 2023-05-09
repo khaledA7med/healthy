@@ -55,6 +55,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
   ClaimsGeneralItemsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClaimsGeneralItems[],
@@ -180,7 +181,6 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
   }
 
   getClaimsGeneralItemsData(sno: number) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsGeneralItemsService.getEditClaimsGeneralItemsData(
       sno
     ).subscribe((res: HttpResponse<IBaseResponse<IClaimsGeneralItemsData>>) => {
@@ -188,7 +188,6 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
         this.uiState.editClaimsGeneralItemsMode = true;
         this.uiState.editClaimsGeneralItemsData = res.body?.data!;
         this.fillEditClaimsGeneralItemsForm(res.body?.data!);
-        this.eventService.broadcast(reserved.isLoading, false);
       } else this.message.toast(res.body!.message!, "error");
     });
     this.subscribes.push(sub);
@@ -268,13 +267,11 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
       mandatory: this.uiState.mandatory,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsGeneralItemsService.saveClaimsGeneralItems(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.ClaimsGeneralItemsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClaimsGeneralItemsForm();
         this.gridApi.setDatasource(this.dataSource);

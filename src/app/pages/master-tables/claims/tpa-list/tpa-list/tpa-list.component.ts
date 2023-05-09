@@ -42,6 +42,7 @@ export class TpaListComponent implements OnInit, OnDestroy {
   @ViewChild("TpaListContent") TpaListContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ITpaList[],

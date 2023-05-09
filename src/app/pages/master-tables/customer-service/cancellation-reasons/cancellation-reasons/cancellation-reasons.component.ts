@@ -43,6 +43,7 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
   CancellationReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ICancellationReasons[],
@@ -142,7 +143,6 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
       }
     );
     if (sno) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CancellationReasonsService.getEditCancellationReasons(
         sno
       ).subscribe(
@@ -151,7 +151,6 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
             this.uiState.editCancellationReasonsMode = true;
             this.uiState.editCancellationReasonsData = res.body?.data!;
             this.fillEditCancellationReasonsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -198,13 +197,11 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
       cancelReason: formData.cancelReason,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CancellationReasonsService.saveCancellationReasons(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.CancellationReasonsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetCancellationReasonsForm();
         this.gridApi.setDatasource(this.dataSource);

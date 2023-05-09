@@ -43,6 +43,7 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
   ClientRejectionReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClientRejectionReasons[],
@@ -142,7 +143,6 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub =
         this.ClientRejectionReasonsService.getEditClientRejectionReasons(
           id
@@ -152,7 +152,6 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
               this.uiState.editClientRejectionReasonsMode = true;
               this.uiState.editClientRejectionReasonsData = res.body?.data!;
               this.fillEditClientRejectionReasonsForm(res.body?.data!);
-              this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
         );
@@ -199,13 +198,11 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
       reason: formData.reason,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientRejectionReasonsService.saveClientRejectionReasons(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.ClientRejectionReasonsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClientRejectionReasonsForm();
         this.gridApi.setDatasource(this.dataSource);

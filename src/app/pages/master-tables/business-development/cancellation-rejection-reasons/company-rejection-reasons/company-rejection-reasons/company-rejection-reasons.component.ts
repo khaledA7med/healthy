@@ -43,6 +43,7 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
   CompanyRejectionReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ICompanyRejectionReasons[],
@@ -142,7 +143,6 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub =
         this.CompanyRejectionReasonsService.getEditCompanyRejectionReasons(
           id
@@ -152,7 +152,6 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
               this.uiState.editCompanyRejectionReasonsMode = true;
               this.uiState.editCompanyRejectionReasonsData = res.body?.data!;
               this.fillEditCompanyRejectionReasonsForm(res.body?.data!);
-              this.eventService.broadcast(reserved.isLoading, false);
             } else this.message.toast(res.body!.message!, "error");
           }
         );
@@ -199,13 +198,11 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
       reason: formData.reason,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CompanyRejectionReasonsService.saveCompanyRejectionReasons(
       data
     ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
       if (res.body?.status) {
         this.CompanyRejectionReasonsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetCompanyRejectionReasonsForm();
         this.gridApi.setDatasource(this.dataSource);

@@ -57,6 +57,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild("dropzone") dropzone!: any;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IInsuranceCompaniesDocuments[],
@@ -174,7 +175,6 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
       path: path,
       sno: 0,
     };
-    console.log("ddddddddddddddd", del);
     this.message
       .confirm(` Delete it !`, ` Delete it !`, "danger", "warning")
       .then((result: any) => {
@@ -183,7 +183,6 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
             del
           ).subscribe({
             next: (res) => {
-              console.log("resssssssssssssssssss", res);
               if (res.body?.status === true) {
                 this.gridApi.setDatasource(this.dataSource);
                 this.message.toast(res.body?.message!, "success");
@@ -282,7 +281,6 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     this.InsuranceCompaniesDocumentsFormSubmitted = true;
     if (!this.validationChecker()) return;
     // Display Submitting Loader
-    this.eventService.broadcast(reserved.isLoading, true);
     let val = InsuranceCompaniesDocumentsForm.getRawValue();
     const formData = new FormData();
 
@@ -296,7 +294,6 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
       ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.InsuranceCompaniesDocumentsModal?.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetInsuranceCompaniesDocumentsForm();
           this.gridApi.setDatasource(this.dataSource);

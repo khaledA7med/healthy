@@ -42,6 +42,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
   @ViewChild("CarsMakeContent") CarsMakeContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ICarsMake[],
@@ -134,14 +135,12 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (sno) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CarsMakeService.getEditCarsMake(sno).subscribe(
         (res: HttpResponse<IBaseResponse<ICarsMakeData>>) => {
           if (res.body?.status) {
             this.uiState.editCarsMakeMode = true;
             this.uiState.editCarsMakeData = res.body?.data!;
             this.fillEditCarsMakeForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -188,12 +187,10 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
       carsMake: formData.carsMake,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CarsMakeService.saveCarsMake(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.CarsMakeModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetCarsMakeForm();
           this.gridApi.setDatasource(this.dataSource);

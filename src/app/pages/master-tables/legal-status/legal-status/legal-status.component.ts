@@ -42,6 +42,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
   @ViewChild("LegalStatusContent") LegalStatusContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ILegalStatus[],
@@ -134,14 +135,12 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
-      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.LegalStatusService.getEditLegalStatus(id).subscribe(
         (res: HttpResponse<IBaseResponse<ILegalStatusData>>) => {
           if (res.body?.status) {
             this.uiState.editLegalStatusMode = true;
             this.uiState.editLegalStatusData = res.body?.data!;
             this.fillEditLegalStatusForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
           } else this.message.toast(res.body!.message!, "error");
         }
       );
@@ -188,12 +187,10 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
       legalStatus: formData.legalStatus,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LegalStatusService.saveLegalStatus(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.LegalStatusModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetLegalStatusForm();
           this.gridApi.setDatasource(this.dataSource);

@@ -51,6 +51,7 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
   @ViewChild("ClaimsStatusContent") ClaimsStatusContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClaimsStatus[],
@@ -153,14 +154,12 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
   }
 
   getClaimsStatusData(sno: number) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsStatusService.getEditClaimsStatusData(sno).subscribe(
       (res: HttpResponse<IBaseResponse<IClaimsStatusData>>) => {
         if (res.body?.status) {
           this.uiState.editClaimsStatusMode = true;
           this.uiState.editClaimsStatusData = res.body?.data!;
           this.fillEditClaimsStatusForm(res.body?.data!);
-          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.body!.message!, "error");
       }
     );
@@ -227,12 +226,10 @@ export class ClaimsStatusComponent implements OnInit, OnDestroy {
       claimNotes: formData.claimNotes,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsStatusService.saveClaimsStatus(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.ClaimsStatusModal?.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetClaimsStatusForm();
           this.gridApi.setDatasource(this.dataSource);

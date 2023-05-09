@@ -48,6 +48,7 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
   LineOfBussinessContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ILineOfBusiness[],
@@ -151,7 +152,6 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
   }
 
   getLineOfBusinessData(id: string) {
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LineOfBusinessService.getEditLineOfBusinessData(
       id
     ).subscribe((res: HttpResponse<IBaseResponse<ILineOfBusinessData>>) => {
@@ -159,7 +159,6 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
         this.uiState.editLineOfBusinessMode = true;
         this.uiState.editLineOfBusinessData = res.body?.data!;
         this.fillEditLineOfBusinessForm(res.body?.data!);
-        this.eventService.broadcast(reserved.isLoading, false);
       } else this.message.toast(res.body!.message!, "error");
     });
     this.subscribes.push(sub);
@@ -241,12 +240,10 @@ export class LineOfBusinessComponent implements OnInit, OnDestroy {
       abbreviation: formData.abbreviation,
     };
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LineOfBusinessService.saveLineOfBusiness(data).subscribe(
       (res: HttpResponse<IBaseResponse<number>>) => {
         if (res.body?.status) {
           this.LineOfBussinessModal?.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetLineOfBusinessForm();
           this.gridApi.setDatasource(this.dataSource);
