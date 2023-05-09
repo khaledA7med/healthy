@@ -200,7 +200,25 @@
     </div>
     <div class="offcanvas-body pb-1">
       <form class="row justify-content-center" [formGroup]="filterForm">
-        <!-- clinet Name -->
+        <!-- Client Status -->
+        <div class="col-12 mb-2">
+          <label for="salesleadStatus" class="form-label">Client Status</label>
+
+          <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
+            [closeOnSelect]="false" [hideSelected]="true" id="salesleadStatus" formControlName="status"
+            placeholder="Client Status" class="form-control-sm px-0">
+          </ng-select>
+        </div>
+        <!-- Lead Type -->
+        <div class="col-12 mb-2">
+          <label for="leadType" class="form-label">Lead Type</label>
+          <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
+            bindLabel="name" bindValue="name" id="leadType" formControlName="leadType" class="form-control-sm px-0"
+            placeholder="Lead Type">
+          </ng-select>
+        </div>
+        <!-- client Name -->
         <div class="col-12 mb-2">
           <label for="clientName" class="form-label">Client Name</label>
           <input type="text" class="form-control form-control-sm" id="clientName" placeholder="Full Name"
@@ -211,24 +229,34 @@
           <label for="clinetGroup" class="form-label">Client Group</label>
           <ng-select [items]="(lookupData | async)?.GroupsList?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="clinetGroup"
-            formControlName="groupName" class="form-control-sm px-0">
+            placeholder="Client Group" formControlName="groupName" class="form-control-sm px-0">
           </ng-select>
         </div>
-        <!-- Client Status -->
+        <!-- producer -->
         <div class="col-12 mb-2">
-          <label for="salesleadStatus" class="form-label">Client Status</label>
-
-          <ng-select [items]="(lookupData | async)?.SalesleadStatus?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" [multiple]="true"
-            [closeOnSelect]="false" [hideSelected]="true" id="salesleadStatus" formControlName="status"
-            class="form-control-sm px-0">
+          <label for="producer" class="form-label">Producer</label>
+          <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [searchable]="true" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
+            bindLabel="name" bindValue="name" id="producer" formControlName="producer" class="form-control-sm px-0"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersSales)!"
+            placeholder="Producer">
           </ng-select>
         </div>
-        <!-- Lead Type -->
+        <!-- ClassOfBusiness -->
         <div class="col-12 mb-2">
-          <label for="leadType" class="form-label">Lead Type</label>
-          <ng-select [items]="leadType" [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true"
-            bindLabel="name" bindValue="name" id="leadType" formControlName="leadType" class="form-control-sm px-0">
+          <label for="classOfBusiness" class="form-label">Class of Business</label>
+          <ng-select [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [searchable]="true" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
+            bindLabel="name" bindValue="name" id="classOfBusiness" formControlName="classOfBusiness"
+            placeholder="Class of Business" class="form-control-sm px-0" (change)="getLineOfBusiness($event)">
+          </ng-select>
+        </div>
+        <!-- LineOfBusiness -->
+        <div class=" col-12 mb-2">
+          <label for="lineofBuss" class="form-label">Line of Business</label>
+          <ng-select [items]="uiState.lineOfBusinessList" [clearable]="true" [searchable]="true" [multiple]="true"
+            [closeOnSelect]="false" bindLabel="name" [hideSelected]="true" bindValue="name" id="lineofBuss"
+            formControlName="lineOfBusiness " class="form-control-sm px-0" placeholder="Line of Business">
           </ng-select>
         </div>
         <!-- Branch -->
@@ -236,32 +264,8 @@
           <label for="branch" class="form-label">Branch</label>
           <ng-select [items]="(lookupData | async)?.Branch?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="branch"
-            formControlName="branch" class="form-control-sm px-0">
-          </ng-select>
-        </div>
-        <!-- ClassOfBusiness -->
-        <div class="col-12 mb-2">
-          <label for="classOfBusiness" class="form-label">Class Of Business</label>
-          <ng-select [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name"
-            bindValue="name" id="classOfBusiness" formControlName="classOfBusiness" class="form-control-sm px-0"
-            (change)="getLineOfBusiness($event)">
-          </ng-select>
-        </div>
-        <!-- LineOfBusiness -->
-        <div class=" col-12 mb-2">
-          <label for="lineofBuss" class="form-label">Line Of Business</label>
-          <ng-select [items]="uiState.lineOfBusinessList" [clearable]="true" [searchable]="true" [multiple]="true"
-            [closeOnSelect]="false" bindLabel="name" bindValue="name" id="lineofBuss" formControlName="lineOfBusiness "
-            class="form-control-sm px-0">
-          </ng-select>
-        </div>
-        <!-- producer -->
-        <div class="col-12 mb-2">
-          <label for="producer" class="form-label">Producer</label>
-          <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name"
-            bindValue="name" id="producer" formControlName="producer" class="form-control-sm px-0">
+            formControlName="branch" class="form-control-sm px-0" placeholder="Branch"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBranchBussiness)!">
           </ng-select>
         </div>
         <!-- User -->
@@ -269,7 +273,8 @@
           <label for="user" class="form-label">User</label>
           <ng-select [items]="(lookupData | async)?.AllUsers?.content!" [loading]="lookupData ? false : true"
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="user" formControlName="user"
-            class="form-control-sm px-0">
+            class="form-control-sm px-0" placeholder="User"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllUsersSales)!">
           </ng-select>
         </div>
         <!-- DeadLine Range -->
@@ -278,7 +283,6 @@
           <app-range-picker (dateChange)="setDeadLineFilter($event)"></app-range-picker>
         </div>
         <!-- Saved On Range -->
-
         <div class="col-12 mb-2">
           <label for="user" class="form-label">Saved Date Range</label>
           <app-range-picker (dateChange)="setSavedOnFilter($event)"></app-range-picker>

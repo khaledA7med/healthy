@@ -207,8 +207,9 @@
         <div class="co-12 mb-3">
           <label for="form-label">Insurance Company</label>
           <ng-select [loading]="formData ? false : true" [items]="(formData | async)?.InsuranceCompanies?.content!"
-            bindLabel="name" [multiple]="true" [closeOnSelect]="false" bindValue="name" class="form-control-sm p-0"
-            placeholder="Select Insurance Company" formControlName="insurCompany"></ng-select>
+            bindLabel="name" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false" bindValue="name"
+            class="form-control-sm p-0" placeholder="Select Insurance Company"
+            formControlName="insurCompany"></ng-select>
         </div>
         <!-- /col -->
         <!-- insurance company -->

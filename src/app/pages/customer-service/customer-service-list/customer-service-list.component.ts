@@ -58,7 +58,7 @@ import { PermissionsService } from "src/app/core/services/permissions.service";
 import { Roles } from "src/app/core/roles/Roles";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { EventService } from "src/app/core/services/event.service";
-import { reserved } from "src/app/core/models/reservedWord";
+
 RangePickerModule;
 
 @Component({

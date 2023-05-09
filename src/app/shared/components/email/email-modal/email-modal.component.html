@@ -41,8 +41,8 @@
                 </button>
               </div>
             </div>
-            <ng-select [addTag]="true" [items]="uiState.toList" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
-              placeholder="To" formControlName="MailToList" [ngClass]="{
+            <ng-select [addTag]="true" [items]="uiState.toList" [multiple]="true" [hideSelected]="true"
+              [selectOnTab]="true" [isOpen]="false" placeholder="To" formControlName="MailToList" [ngClass]="{
                     'is-submitted': (f.MailToList?.touched || uiState.submitted) && f.MailToList?.invalid
                   }">
             </ng-select>
@@ -54,14 +54,14 @@
           </div>
           <div class="col-12 mb-2 tra" *ngIf="uiState.isCc">
             <label for="cc" class="form-label"> Cc: </label>
-            <ng-select [items]="uiState.ccList" [addTag]="true" [multiple]="true" [selectOnTab]="true" [isOpen]="false"
-              placeholder="CC" formControlName="EmailCC">
+            <ng-select [items]="uiState.ccList" [addTag]="true" [multiple]="true" [hideSelected]="true"
+              [selectOnTab]="true" [isOpen]="false" placeholder="CC" formControlName="EmailCC">
             </ng-select>
           </div>
           <div class="col-12 mb-3" *ngIf="uiState.isBcc">
             <label for="bcc" class="form-label"> Bcc: </label>
-            <ng-select [items]="uiState.bccList" [addTag]="true" [multiple]="true" bindLabel="name" [selectOnTab]="true"
-              placeholder="BCC" [isOpen]="false" formControlName="EmailBCC">
+            <ng-select [items]="uiState.bccList" [addTag]="true" [multiple]="true" [hideSelected]="true"
+              bindLabel="name" [selectOnTab]="true" placeholder="BCC" [isOpen]="false" formControlName="EmailBCC">
             </ng-select>
           </div>
           <div class="col-12 mb-3">

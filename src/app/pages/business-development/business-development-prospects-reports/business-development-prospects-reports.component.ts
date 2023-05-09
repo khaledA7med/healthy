@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subscription } from "rxjs";
 import { IBaseMasterTable, IGenericResponseType } from "src/app/core/models/masterTableModels";
 import { MODULES } from "src/app/core/models/MODULES";
@@ -12,7 +11,6 @@ import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import AppUtils from "src/app/shared/app/util";
 import { BusinessDevelopmentService } from "src/app/shared/services/business-development/business-development.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { ReportsViewerComponent } from "src/app/shared/components/reports-viewer/reports-viewer.component";
 
 import {
 	IBusinessDevelopmentProspectsReportForm,
@@ -52,15 +50,12 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 		privileges: BusinessDevelopmentPermissions,
 	};
 	permissions$!: Observable<string[]>;
-	modalRef!: NgbModalRef;
 	constructor(
-		private modalService: NgbModal,
 		private BusinessDevelopmentService: BusinessDevelopmentService,
 		private message: MessagesService,
 		private table: MasterTableService,
 		private eventService: EventService,
 		private utils: AppUtils,
-		private router: Router,
 		private permission: PermissionsService,
 		private auth: AuthenticationService
 	) {}
@@ -100,11 +95,6 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 			});
 			this.subscribes.push(sub2);
 		});
-		// let sub2 = this.router.events.subscribe((event) => {
-		// 	if (event instanceof NavigationStart) {
-		// 		this.modalService.hasOpenModals() ? this.modalRef.close() : "";
-		// 	}
-		// });
 		this.subscribes.push(sub);
 
 		let date = new Date();
@@ -217,40 +207,7 @@ export class BusinessDevelopmentProspectsReportsComponent implements OnInit, OnD
 	}
 
 	openReportsViewer(data?: string): void {
-		// this.modalRef = this.modalService.open(ReportsViewerComponent, { fullscreen: true, scrollable: true });
-		// this.modalRef.componentInstance.data = {
-		// 	reportName: "Prospects Reports",
-		// 	url: data,
-		// };
-		const myWindow = window.open(data, "_blank", "fullscreen: true");
-		const content = `		
-						<!DOCTYPE html>
-						<html lang="en">
-							<head>
-								<title>Prospects Reports</title>
-								<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-								<style>
-								body {height: 98vh;}
-								.myIFrame {
-								border: none;
-								}
-								</style>
-							</head>
-							<body>
-								<iframe
-								src="${data}"
-								class="myIFrame justify-content-center"
-								frameborder="5"
-								width="100%"
-								height="99%"
-								referrerpolicy="no-referrer-when-downgrade"
-								>
-								</iframe>
-							</body>
-						</html>
-
-		`;
-		myWindow?.document.write(content);
+		this.utils.reportViewer(data!, "Prospects Reports");
 	}
 
 	ngOnDestroy(): void {

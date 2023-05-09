@@ -133,7 +133,8 @@
                     <ng-select id="insuranceCompany" class="is-invalid" placeholder="Select Insurance Company"
                         [items]="(lookupData | async)?.InsuranceCompanies?.content!"
                         [loading]="lookupData ? false : true" [clearable]="true" [searchable]="true" [multiple]="true"
-                        [closeOnSelect]="false" formControlName="insuranceCompany" bindLabel="name" bindValue="name">
+                        [hideSelected]="true" [closeOnSelect]="false" formControlName="insuranceCompany"
+                        bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
@@ -143,7 +144,7 @@
                     <ng-select id="PendingReason" class="is-invalid" placeholder="Select Pending Reason"
                         [items]="(lookupData | async)?.PendingReason?.content!" [loading]="lookupData ? false : true"
                         [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false"
-                        formControlName="pendingReason" bindLabel="name" bindValue="name">
+                        [hideSelected]="true" formControlName="pendingReason" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 
@@ -152,8 +153,8 @@
                         Of Busniess</label>
                     <ng-select id="ClassOfBusniess" class="is-invalid" placeholder="Select Class Of Busniess"
                         [items]="(lookupData | async)?.InsurClasses?.content!" [loading]="lookupData ? false : true"
-                        [clearable]="true" [searchable]="true" [multiple]="true" [closeOnSelect]="false"
-                        formControlName="classOfBusniess" bindLabel="name" bindValue="name"
+                        [clearable]="true" [searchable]="true" [multiple]="true" [hideSelected]="true"
+                        [closeOnSelect]="false" formControlName="classOfBusniess" bindLabel="name" bindValue="name"
                         (change)="getLineOfBusiness($event)">
                     </ng-select>
                 </div>
@@ -163,8 +164,8 @@
                         Of Busniess</label>
                     <ng-select id="lineofBuss" class="is-invalid" placeholder="Select Class Of Busniess"
                         [items]="uiState.lineOfBusinessList" [loading]="lookupData ? false : true" [clearable]="true"
-                        [searchable]="true" [multiple]="true" [closeOnSelect]="false" formControlName="lineOfBusiness"
-                        bindLabel="name" bindValue="name">
+                        [searchable]="true" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
+                        formControlName="lineOfBusiness" bindLabel="name" bindValue="name">
                     </ng-select>
                 </div>
 

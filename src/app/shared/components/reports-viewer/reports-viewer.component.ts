@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Subscription } from "rxjs";
+
+// We Don't Use this anymore
 @Component({
 	selector: "app-reports-viewer",
 	template: `
@@ -15,8 +17,7 @@ import { Subscription } from "rxjs";
 				frameborder="5"
 				width="100%"
 				height="99%"
-				referrerpolicy="no-referrer-when-downgrade"
-			></iframe>
+				referrerpolicy="no-referrer-when-downgrade"></iframe>
 		</div>
 		<div class="modal-footer py-0">
 			<button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.dismiss()">Close</button>
@@ -52,6 +53,7 @@ export class ReportsViewerComponent implements OnInit, OnDestroy {
 		reportName: string;
 		url: string;
 	};
+
 	subscribes: Subscription[] = [];
 
 	constructor(public modal: NgbActiveModal) {}

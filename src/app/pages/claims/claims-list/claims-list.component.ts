@@ -54,7 +54,6 @@ import { Roles } from "src/app/core/roles/Roles";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { EventService } from "src/app/core/services/event.service";
-import { reserved } from "src/app/core/models/reservedWord";
 
 @Component({
   selector: "app-claims-list",
