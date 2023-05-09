@@ -1,10 +1,10 @@
-import { HospitalsFormsComponent } from "./../../../pages/master-tables/claims/hospitals/hospitals/hospitals-forms.component";
 import { ColDef } from "ag-grid-community";
+import { HospitalsListControlsComponent } from "src/app/pages/master-tables/claims/hospitals/hospitals/hospitals-list-controls.component";
 
 export const hospitalsCols: ColDef[] = [
   {
     colId: "action",
-    cellRenderer: HospitalsFormsComponent,
+    cellRenderer: HospitalsListControlsComponent,
     pinned: "left",
     maxWidth: 40,
     sortable: false,

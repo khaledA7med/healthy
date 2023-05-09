@@ -1,40 +1,62 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import { HttpClient, HttpResponse } from "@angular/common/http";
-import { environment } from 'src/environments/environment';
-import { IBaseResponse } from 'src/app/shared/app/models/App/IBaseResponse';
-import { IInsuranceWorkshopDetails, IInsuranceWorkshopDetailsData } from 'src/app/shared/app/models/MasterTables/claims/i-insurance-workshop-details';
-import { ApiRoutes } from 'src/app/shared/app/routers/ApiRoutes';
-
+import { environment } from "src/environments/environment";
+import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import {
+  IInsuranceWorkshopDetails,
+  IInsuranceWorkshopDetailsData,
+  IInsuranceWorkshopDetailsFilter,
+} from "src/app/shared/app/models/MasterTables/claims/i-insurance-workshop-details";
+import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
+import { IClaimsDocumentReq } from "src/app/shared/app/models/MasterTables/list-of-required-documents/i-claims-documents";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-export class InsuranceWorkshopDetailsService
-{
-
+export class InsuranceWorkshopDetailsService {
   private readonly env = environment.baseURL;
 
-  constructor (private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getInsuranceWorkshopDetails (insuranceCompany: string): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetails[]>>>
-  {
-    return this.http.get<IBaseResponse<IInsuranceWorkshopDetails[]>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.search, { params: { insuranceCompany }, observe: "response" });
+  getInsuranceWorkshopDetails(data: {
+    insuranceCompany: string;
+  }): Observable<
+    HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsFilter[]>>
+  > {
+    return this.http.post<IBaseResponse<IInsuranceWorkshopDetailsFilter[]>>(
+      this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.search,
+      { ...data },
+      { observe: "response" }
+    );
   }
 
-  saveInsuranceWorkshopDetails (data: IInsuranceWorkshopDetailsData): Observable<HttpResponse<IBaseResponse<number>>>
-  {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.save, data, { observe: "response" });
+  saveInsuranceWorkshopDetails(
+    data: IClaimsDocumentReq
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.save,
+      data,
+      { observe: "response" }
+    );
   }
 
-
-  getEditInsuranceWorkshopDetailsData (sno: number): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>>
-  {
-    return this.http.get<IBaseResponse<IInsuranceWorkshopDetailsData>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.edit, { params: { sno }, observe: "response" });
+  getEditInsuranceWorkshopDetailsData(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>> {
+    return this.http.get<IBaseResponse<IInsuranceWorkshopDetailsData>>(
+      this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.edit,
+      { params: { id }, observe: "response" }
+    );
   }
 
-  DeleteInsuranceWorkshopDetails (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
-  {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.delete, {}, { params: { sno }, observe: "response" })
+  DeleteInsuranceWorkshopDetails(
+    id: string
+  ): Observable<HttpResponse<IBaseResponse<number>>> {
+    return this.http.post<IBaseResponse<number>>(
+      this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.delete,
+      {},
+      { params: { id }, observe: "response" }
+    );
   }
 }
