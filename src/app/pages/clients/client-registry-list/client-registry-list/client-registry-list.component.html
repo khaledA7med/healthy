@@ -43,6 +43,16 @@
     </div>
     <div class="offcanvas-body">
       <form class="row justify-content-center" [formGroup]="filterForm">
+
+        <!-- Status -->
+        <div class="col-12 mb-2">
+          <label class="form-label" for="status">Status</label>
+          <ng-select [items]="(lookupData | async)?.ClientStatus?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [searchable]="true" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
+            bindLabel="name" bindValue="name" formControlName="status">
+          </ng-select>
+        </div>
+
         <!-- full Name -->
         <div class="col-12 mb-2">
           <label for="fullName" class="form-label">Full Name</label>
@@ -51,6 +61,7 @@
             formControlName="fullName">
           </ng-select>
         </div>
+
         <!-- Type -->
         <div class="col-12 mb-2">
           <label for="type" class="form-label">Type</label>
@@ -58,11 +69,17 @@
             [clearable]="true" [searchable]="true" bindLabel="name" bindValue="name" id="type" formControlName="type">
           </ng-select>
         </div>
-        <!-- Sponsor ID -->
+
+        <!-- Producer -->
         <div class="col-12 mb-2">
-          <label for="sponsorID" class="form-label">Sponsor ID</label>
-          <input type="text" class="form-control" id="sponsorID" placeholder="Sponsor ID" formControlName="sponsorID" />
+          <label for="producer" class="form-label">Producer</label>
+          <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
+            [clearable]="true" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" [searchable]="true"
+            bindLabel="name" bindValue="name" id="producer" formControlName="producer"
+            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersClients)">
+          </ng-select>
         </div>
+
         <!-- Branch -->
         <div class="col-12 mb-2">
           <label for="branch" class="form-label">Branch</label>
@@ -72,14 +89,11 @@
             [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllBranchClients)!">
           </ng-select>
         </div>
-        <!-- producer -->
+
+        <!-- Sponsor ID -->
         <div class="col-12 mb-2">
-          <label for="producer" class="form-label">Producer</label>
-          <ng-select [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" [searchable]="true"
-            bindLabel="name" bindValue="name" id="producer" formControlName="producer"
-            [readonly]="!(permissions$ | async)?.includes(uiState.privileges.ChAccessAllProducersClients)">
-          </ng-select>
+          <label for="sponsorID" class="form-label">Sponsor ID</label>
+          <input type="text" class="form-control" id="sponsorID" placeholder="Sponsor ID" formControlName="sponsorID" />
         </div>
 
         <!-- Commercial No -->
@@ -90,16 +104,7 @@
             formControlName="commericalNo">
           </ng-select>
         </div>
-        <!-- Status -->
 
-        <div class="col-12 mb-2">
-          <label class="form-label" for="status">Status</label>
-
-          <ng-select [items]="(lookupData | async)?.ClientStatus?.content!" [loading]="lookupData ? false : true"
-            [clearable]="true" [searchable]="true" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
-            bindLabel="name" bindValue="name" formControlName="status">
-          </ng-select>
-        </div>
       </form>
     </div>
     <!-- submit and clear btn -->

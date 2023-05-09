@@ -40,7 +40,7 @@ export class RangePickerComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.selected.from && this.selected.to) {
+    if (this.selected?.from && this.selected?.to) {
       let from = this.selected.from,
         to = this.selected.to;
 

@@ -57,8 +57,8 @@
                                         class="form-control form-control-sm"
                                         [ngClass]="{'is-invalid' : uiState.submitted && f.policyNo?.invalid}"
                                         placeholder="Policy No.">
-                                    <button class="btn btn-info btn-sm d-flex align-items-center" (click)="viewPolicy()"
-                                        type="button">
+                                    <button class="btn btn-info btn-sm d-flex align-items-center"
+                                        [disabled]="f.policyNo?.invalid" (click)="viewPolicy()" type="button">
                                         <i class="ri-search-line mx-1"></i>
                                         View
                                     </button>
