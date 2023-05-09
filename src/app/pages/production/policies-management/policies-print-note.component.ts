@@ -20,8 +20,8 @@ import { reserved } from "src/app/core/models/reservedWord";
 	selector: "app-policies-print-note",
 	template: `
 		<div class="col d-flex align-items-center justify-content-center">
-			<button ngbDropdownItem (click)="print()" class="btn btn-sm btn-success" *ngIf="params.plain">Print Debit/Credit Note (Plain)</button>
-			<button ngbDropdownItem (click)="print()" class="btn btn-sm btn-info" *ngIf="!params.plain">Print Debit/Credit Note (Without Plain)</button>
+			<button ngbDropdownItem (click)="print()" class="btn btn-sm" *ngIf="params.plain">Print Debit/Credit Note (Plain)</button>
+			<button ngbDropdownItem (click)="print()" class="btn btn-sm" *ngIf="!params.plain">Print Debit/Credit Note (Without Plain)</button>
 		</div>
 	`,
 	styles: ["#actionDropdown::after {display: none}"],
@@ -48,15 +48,17 @@ export class PoliciesPrintNoteComponent {
 
 	print() {
 		let newData: DCNotesModel = {
-			docSNo: this.params.data.clientDncnno,
+			docSNo: this.params.data.debitCreditNoteDocSNo,
 			clientName: this.params.data.clientName,
 			type: this.params.data.endorsType,
 			source: "Production",
 			plain: this.params.plain,
 			userFullName: this.params.data.approvedUser,
-			pram: this.params.data.pram,
-			reportType: this.params.data.reportType,
+			pram: 1,
+			reportType: this.params.data.transactionType === "Debit Note" ? 1 : 2,
 		};
+		console.log(newData);
+		console.log(this.params.data);
 
 		let sub = this.productionService.viewDebitCreditNoteReport(newData).subscribe((res: HttpResponse<IBaseResponse<string>>) => {
 			if (res.ok) {
