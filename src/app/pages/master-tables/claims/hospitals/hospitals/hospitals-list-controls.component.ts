@@ -53,7 +53,7 @@ import { HospitalsComponent } from "./hospitals.component";
 })
 export class HospitalsListControlsComponent {
   private params!: ICellRendererParams;
-  private comp!: HospitalsComponent;
+  public comp!: HospitalsComponent;
 
   constructor(private message: MessagesService) {}
 
