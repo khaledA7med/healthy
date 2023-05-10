@@ -358,6 +358,8 @@ export class PoliciesManagementComponent implements OnInit, OnDestroy {
 		this.modalRef.componentInstance.data = {
 			id,
 		};
+
+		this.modalRef.closed.subscribe(() => this.gridApi.purgeInfiniteCache());
 	}
 
 	onPolicyFilters(): void {
