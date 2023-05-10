@@ -33,8 +33,6 @@ import { MasterMethodsService } from "../../services/master-methods.service";
 import { PermissionsService } from "src/app/core/services/permissions.service";
 import { Roles } from "src/app/core/roles/Roles";
 import { ClientsPermissions } from "src/app/core/roles/clients-permissions";
-import { reserved } from "src/app/core/models/reservedWord";
-import { EventService } from "src/app/core/services/event.service";
 
 @Component({
   selector: "app-modal-for-details",
@@ -69,7 +67,6 @@ export class ClientPreviewComponent implements OnInit, OnDestroy {
     private masterMethod: MasterMethodsService,
     public util: AppUtils,
     public modal: NgbActiveModal,
-    private eventService: EventService,
     private permission: PermissionsService
   ) {}
   ngOnInit(): void {
@@ -175,7 +172,6 @@ export class ClientPreviewComponent implements OnInit, OnDestroy {
             let sub = this.clientService.changeStatus(reqBody).subscribe({
               next: (res: HttpResponse<IBaseResponse<null>>) => {
                 this.message.toast(res.body?.message!, "success");
-                this.uiState.updatedState = true;
                 this.backToMainRoute();
               },
             });
@@ -216,7 +212,6 @@ export class ClientPreviewComponent implements OnInit, OnDestroy {
         let sub = this.clientService.changeStatus(reqBody).subscribe({
           next: (res: HttpResponse<IBaseResponse<null>>) => {
             this.message.toast(res.body?.message!, "success");
-            this.uiState.updatedState = true;
             this.backToMainRoute();
           },
         });
@@ -266,7 +261,6 @@ export class ClientPreviewComponent implements OnInit, OnDestroy {
         next: (res: HttpResponse<IBaseResponse<null>>) => {
           if (res.body?.status) {
             this.message.toast(res.body?.message!, "success");
-            this.uiState.updatedState = true;
             this.addToGroupModalRef.close();
             this.backToMainRoute();
           } else this.message.popup("Sorry", res.body?.message!, "warning");
@@ -279,7 +273,7 @@ export class ClientPreviewComponent implements OnInit, OnDestroy {
 
   // To Do back to main route when close modal
   backToMainRoute() {
-    this.modalService.dismissAll();
+    this.modal.close();
   }
 
   ngOnDestroy() {

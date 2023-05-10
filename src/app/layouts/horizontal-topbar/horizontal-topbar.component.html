@@ -35,7 +35,7 @@
                     <li class="menu-title" *ngIf="item.isTitle"><span data-key="t-menu">{{ item.label | translate
                             }}</span></li>
 
-                    <li class="nav-item" *ngIf="!item.isTitle && !item.isLayout">
+                    <li class="nav-item" [ngClass]="{'pe-none': !item.auth}" *ngIf="!item.isTitle && !item.isLayout">
                         <a *ngIf="hasItems(item)" href="javascript:void(0);" class="is-parent nav-link menu-link"
                             [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge, 'disabled': !item.auth}"
                             data-bs-toggle="collapse" aria-expanded="false" (click)="toggleItem($event)">
@@ -54,7 +54,8 @@
                         </a>
                         <div class="collapse menu-dropdown" id="sidebarDashboards" *ngIf="hasItems(item)">
                             <ul *ngIf="hasItems(item)" class="nav nav-sm flex-column" aria-expanded="false">
-                                <li *ngFor="let subitem of item.subItems" class="nav-item">
+                                <li *ngFor="let subitem of item.subItems" [ngClass]="{'pe-none': !subitem.auth}"
+                                    class="nav-item">
                                     <a [routerLink]="subitem.link" *ngIf="!hasItems(subitem)" class="nav-link"
                                         [ngClass]="{'disabled': !subitem.auth}" [attr.data-parent]="subitem.parentId"
                                         (click)="updateActive($event)">
@@ -70,7 +71,8 @@
                                     </a>
                                     <div class="collapse menu-dropdown" *ngIf="hasItems(subitem)">
                                         <ul class="nav nav-sm flex-column" aria-expanded="false">
-                                            <li *ngFor="let subSubitem of subitem.subItems" class="nav-item">
+                                            <li *ngFor="let subSubitem of subitem.subItems"
+                                                [ngClass]="{'pe-none': !subitem.auth}" class="nav-item">
                                                 <a [attr.data-parent]="subSubitem.parentId"
                                                     [ngClass]="{'disabled': !subSubitem.auth}"
                                                     [routerLink]="subSubitem.link" *ngIf="!subSubitem.subItems"
@@ -89,7 +91,7 @@
                                                 <div class="collapse menu-dropdown" *ngIf="subSubitem.subItems">
                                                     <ul class="nav nav-sm flex-column" aria-expanded="false">
                                                         <li *ngFor="let subChilditem of subSubitem.subItems"
-                                                            class="nav-item">
+                                                            class="nav-item" [ngClass]="{'pe-none': !subitem.auth}">
                                                             <a [attr.data-parent]="subSubitem.parentId"
                                                                 [ngClass]="{'disabled': !subSubitem.auth}"
                                                                 [routerLink]="subChilditem.link" class="nav-link"
