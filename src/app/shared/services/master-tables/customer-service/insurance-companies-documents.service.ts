@@ -31,15 +31,12 @@ export class InsuranceCompaniesDocumentsService {
 
   uploadInsuranceCompaniesDocuments(
     data: FormData
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  ): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env +
         ApiRoutes.masterTables.customerService.InsuranceCompaniesDocuments
           .upload,
-      data,
-      {
-        observe: "response",
-      }
+      data
     );
   }
 

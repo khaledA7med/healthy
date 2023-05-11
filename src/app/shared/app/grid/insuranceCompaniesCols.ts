@@ -21,7 +21,7 @@ export const insuranceCompaniesCols: ColDef[] = [
     minWidth: 320,
   },
   {
-    headerName: "Company Name(Ar)",
+    headerName: "Company Name (Ar)",
     field: "companyNameAr",
     minWidth: 250,
   },
@@ -41,7 +41,7 @@ export const insuranceCompaniesCols: ColDef[] = [
     minWidth: 130,
   },
   {
-    headerName: "Tel",
+    headerName: "Tele",
     field: "tele1",
   },
   {

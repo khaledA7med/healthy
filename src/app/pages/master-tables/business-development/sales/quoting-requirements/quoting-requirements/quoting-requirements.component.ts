@@ -175,17 +175,21 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
   }
 
   DeleteQuotingRequirements(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.QuotingRequirementsService.DeleteQuotingRequirements(
       id
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
 
   getQuotingRequirementsData(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.QuotingRequirementsService.getEditQuotingRequirements(
       id
     ).subscribe((res: IBaseResponse<IQuotingRequirementsData>) => {
@@ -203,7 +207,8 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
         this.f.lineOfBusiness?.disable();
         this.f.insuranceCopmany?.disable();
         this.openQuotingRequirementsDialoge();
-      } else this.message.toast(res.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
     });
     this.subscribes.push(sub);
   }
@@ -264,6 +269,7 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
         : 0,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
 
     let sub = this.QuotingRequirementsService.saveQuotingRequirements(
       data
@@ -273,9 +279,10 @@ export class QuotingRequirementsComponent implements OnInit, OnDestroy {
           this.QuotingRequirementsModal?.dismiss();
         } else this.resetQuotingRequirementsForm();
 
+        this.eventService.broadcast(reserved.isLoading, true);
         this.gridApi.setDatasource(this.dataSource);
         this.message.toast(res?.message!, "success");
-      } else this.message.popup("Sorry!", res.message!, "warning");
+      }
     });
     this.subscribes.push(sub);
   }

@@ -15,6 +15,8 @@ import {
 import { Observable, Subscription } from "rxjs";
 import { MODULES } from "src/app/core/models/MODULES";
 import { IBaseMasterTable } from "src/app/core/models/masterTableModels";
+import { reserved } from "src/app/core/models/reservedWord";
+import { EventService } from "src/app/core/services/event.service";
 import { MasterTableService } from "src/app/core/services/master-table.service";
 import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import {
@@ -62,7 +64,8 @@ export class HospitalFormsComponent implements OnInit, OnDestroy {
     private HospitalsService: HospitalsService,
     public modal: NgbActiveModal,
     private modalService: NgbModal,
-    private table: MasterTableService
+    private table: MasterTableService,
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void {
@@ -77,12 +80,14 @@ export class HospitalFormsComponent implements OnInit, OnDestroy {
 
   getHospitalData(sno: number) {
     if (sno) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.HospitalsService.getEditHospitalsData(sno).subscribe(
-        (res: HttpResponse<IBaseResponse<IHospitalsPreview>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<IHospitalsPreview>) => {
+          if (res?.status) {
             this.uiState.editHospitalsMode = true;
-            this.fillEditHospitalsForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+            this.fillEditHospitalsForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -94,7 +99,7 @@ export class HospitalFormsComponent implements OnInit, OnDestroy {
       sno: new FormControl(null),
       name: new FormControl("", Validators.required),
       city: new FormControl(""),
-      tele: new FormControl(""),
+      tele: new FormControl("", Validators.required),
       email: new FormControl("", Validators.email),
       fax: new FormControl(""),
       address: new FormControl(""),
@@ -243,6 +248,7 @@ export class HospitalFormsComponent implements OnInit, OnDestroy {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
 
+    this.eventService.broadcast(reserved.isLoading, true);
     let val = HospitalsForm.getRawValue();
     const formData = new FormData();
 
@@ -333,12 +339,13 @@ export class HospitalFormsComponent implements OnInit, OnDestroy {
     }
 
     let sub = this.HospitalsService.saveHospitals(formData).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
-          this.message.toast(res.body?.message!, "success");
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
           this.modal.dismiss();
           this.backToMainRoute();
-        } else this.message.popup("Sorry!", res.body?.message!, "warning");
+        }
       }
     );
     this.subscribes.push(sub);

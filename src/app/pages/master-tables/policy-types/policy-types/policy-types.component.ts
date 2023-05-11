@@ -135,13 +135,15 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.PolicyTypesService.getEditPolicyTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IPolicyTypesData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<IPolicyTypesData>) => {
+          if (res?.status) {
             this.uiState.editPolicyTypesMode = true;
-            this.uiState.editPolicyTypesData = res.body?.data!;
-            this.fillEditPolicyTypesForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+            this.uiState.editPolicyTypesData = res?.data!;
+            this.fillEditPolicyTypesForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -187,15 +189,17 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
       policyType: formData.policyType,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.PolicyTypesService.savePolicyTypes(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.PolicyTypesModal.dismiss();
           this.uiState.submitted = false;
           this.resetPolicyTypesForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -206,11 +210,14 @@ export class PolicyTypesComponent implements OnInit, OnDestroy {
   }
 
   DeletePolicyTypes(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.PolicyTypesService.DeletePolicyTypes(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res!.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

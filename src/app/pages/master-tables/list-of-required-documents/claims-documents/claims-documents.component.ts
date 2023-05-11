@@ -180,8 +180,10 @@ export class ClaimsDocumentsComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.listOfDocumentsService.editClaimsDocuments(id).subscribe(
-      (res: IBaseResponse<IClaimsDocumentReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .editClaimsDocuments(id)
+      .subscribe((res: IBaseResponse<IClaimsDocumentReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -189,38 +191,39 @@ export class ClaimsDocumentsComponent implements OnInit, OnDestroy {
             sNo: this.uiState.editItemData.sNo!,
             docName: this.uiState.editItemData.docName!,
           });
-
-          console.log(this.formGroup.getRawValue());
           this.openformDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.listOfDocumentsService.deleteClaimsDocuments(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .deleteClaimsDocuments(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
           this.gridApi.setDatasource(this.dataSource);
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<IClaimsDocumentForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const data: IClaimsDocumentReq = {
       ...formGroup.getRawValue(),
     };
@@ -229,9 +232,10 @@ export class ClaimsDocumentsComponent implements OnInit, OnDestroy {
       .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
           this.modalRef.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
+        }
       });
     this.subscribes.push(sub);
   }

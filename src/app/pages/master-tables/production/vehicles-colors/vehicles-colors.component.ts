@@ -147,8 +147,10 @@ export class VehiclesColorsComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.productionService.editVehicleColor(id).subscribe(
-      (res: IBaseResponse<IVehicleColorReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .editVehicleColor(id)
+      .subscribe((res: IBaseResponse<IVehicleColorReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -157,35 +159,38 @@ export class VehiclesColorsComponent implements OnInit, OnDestroy {
             color: this.uiState.editItemData.color!,
           });
           this.openformDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.productionService.deleteVehicleColor(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .deleteVehicleColor(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<IVehicleColorForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const data: IVehicleColorReq = {
       ...formGroup.getRawValue(),
     };
@@ -194,9 +199,10 @@ export class VehiclesColorsComponent implements OnInit, OnDestroy {
       .subscribe((res: IBaseResponse<any>) => {
         if (res.status) {
           this.modalRef.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
+        }
       });
     this.subscribes.push(sub);
   }

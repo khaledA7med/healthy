@@ -135,13 +135,15 @@ export class CitiesComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CitiesService.getEditCities(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ICitiesData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<ICitiesData>) => {
+          if (res?.status) {
             this.uiState.editCitiesMode = true;
-            this.uiState.editCitiesData = res.body?.data!;
-            this.fillEditCitiesForm(res.body?.data!);
-          } else this.message.popup("Sorry!", res.body?.message!, "warning");
+            this.uiState.editCitiesData = res?.data!;
+            this.fillEditCitiesForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -185,15 +187,17 @@ export class CitiesComponent implements OnInit, OnDestroy {
       city: formData.city,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CitiesService.saveCities(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.CitiesModal.dismiss();
           this.uiState.submitted = false;
           this.resetCitiesForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.popup("Sorry!", res.body?.message!, "warning");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -204,11 +208,14 @@ export class CitiesComponent implements OnInit, OnDestroy {
   }
 
   DeleteCities(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CitiesService.DeleteCities(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

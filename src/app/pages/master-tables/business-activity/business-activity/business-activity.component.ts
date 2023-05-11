@@ -139,6 +139,7 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.BusinessActivityService.getEditBusinessActivity(
         id
       ).subscribe((res: HttpResponse<IBaseResponse<IBusinessActivityData>>) => {
@@ -146,7 +147,11 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
           this.uiState.editBusinessActivityMode = true;
           this.uiState.editBusinessActivityData = res.body?.data!;
           this.fillEditBusinessActivityForm(res.body?.data!);
-        } else this.message.toast(res.body!.message!, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
+        } else {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res.body!.message!, "error");
+        }
       });
       this.subscribes.push(sub);
     }
@@ -191,15 +196,17 @@ export class BusinessActivityComponent implements OnInit, OnDestroy {
       businessActivity: formData.businessActivity,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.BusinessActivityService.saveBusinessActivity(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.BusinessActivityModal.dismiss();
           this.uiState.submitted = false;
           this.resetBusinessActivityForm();
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

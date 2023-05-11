@@ -11,14 +11,11 @@ export const ClaimsListOfDocumentseCols: ColDef[] = [
   },
   {
     headerName: "No.",
-    field: "sNo",
-    valueFormatter: (e: ValueFormatterParams) => {
-      return (e.node?.rowIndex! + 1).toString();
-    },
+    valueGetter: "node.rowIndex + 1",
     minWidth: 100,
   },
   {
-    headerName: "Doc. Name",
+    headerName: "Document Name",
     field: "docName",
   },
 ];

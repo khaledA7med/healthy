@@ -138,13 +138,15 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.VehiclesTypesService.getEditVehiclesTypes(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IVehiclesTypesData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<IVehiclesTypesData>) => {
+          if (res?.status) {
             this.uiState.editVehiclesTypesMode = true;
-            this.uiState.editVehiclesTypesData = res.body?.data!;
-            this.fillEditVehiclesTypesForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+            this.uiState.editVehiclesTypesData = res?.data!;
+            this.fillEditVehiclesTypesForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -193,15 +195,17 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
       abbreviation: formData.abbreviation,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.VehiclesTypesService.saveVehiclesTypes(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.VehiclesTypesModal.dismiss();
           this.uiState.submitted = false;
           this.resetVehiclesTypesForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -212,11 +216,14 @@ export class VehiclesTypesComponent implements OnInit, OnDestroy {
   }
 
   DeleteVehiclesTypes(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.VehiclesTypesService.DeleteVehiclesTypes(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res!.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

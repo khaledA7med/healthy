@@ -5,7 +5,6 @@
 </div>
 
 <form [formGroup]="HospitalsForm" (ngSubmit)="submitHospitalsData(HospitalsForm)">
-    <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
     <div class="modal-body p-1" style="overflow-y: unset !important;">
         <div class="row p-3">
             <div class="my-3 h-100">
@@ -31,7 +30,11 @@
 
                             <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                 <label for="tele" class="asterisk-input">Tele</label>
-                                <input id="abbreviation" class="form-control form-control-sm" formControlName="tele" />
+                                <input id="tele" class="form-control form-control-sm"
+                                    [ngClass]="{'is-invalid': (f.tele?.touched || uiState.submitted) && f.tele?.invalid}"
+                                    formControlName="tele" />
+                                <span *ngIf="(f.tele?.touched || uiState.submitted) && f.tele?.invalid"
+                                    class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                             </div>
 
                             <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
@@ -42,7 +45,7 @@
                             <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
                                 <label for="email">Email</label>
                                 <div class="input-group input-group-sm"></div>
-                                <input id="email" class="form-control form-control-sm"
+                                <input id="email" class="form-control form-control-sm" placeholder="name@mail.com"
                                     [ngClass]="{'is-invalid': (f.email?.touched || uiState.submitted) && f.email?.invalid}"
                                     formControlName="email" />
                                 <span class="invalid-feedback fw-bold"

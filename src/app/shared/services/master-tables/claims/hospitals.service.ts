@@ -26,32 +26,27 @@ export class HospitalsService {
     );
   }
 
-  saveHospitals(
-    data: FormData
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  saveHospitals(data: FormData): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.hospitals.save,
-      data,
-      { observe: "response" }
+      data
     );
   }
 
   getEditHospitalsData(
     sno: number
-  ): Observable<HttpResponse<IBaseResponse<IHospitalsPreview>>> {
+  ): Observable<IBaseResponse<IHospitalsPreview>> {
     return this.http.get<IBaseResponse<IHospitalsPreview>>(
       this.env + ApiRoutes.masterTables.Claims.hospitals.edit,
-      { params: { sno }, observe: "response" }
+      { params: { sno } }
     );
   }
 
-  DeleteHospitals(
-    sno: number
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  DeleteHospitals(sno: number): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.hospitals.delete,
       {},
-      { params: { sno }, observe: "response" }
+      { params: { sno } }
     );
   }
 }

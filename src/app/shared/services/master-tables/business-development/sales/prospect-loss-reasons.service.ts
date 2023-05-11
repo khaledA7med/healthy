@@ -33,36 +33,33 @@ export class ProspectLossReasonsService {
 
   saveProspectLossReasons(
     data: IProspectLossReasonsData
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  ): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales.ProspectsLossReasons
           .save,
-      data,
-      { observe: "response" }
+      data
     );
   }
 
   getEditProspectLossReasons(
     id: string
-  ): Observable<HttpResponse<IBaseResponse<IProspectLossReasonsData>>> {
+  ): Observable<IBaseResponse<IProspectLossReasonsData>> {
     return this.http.get<IBaseResponse<IProspectLossReasonsData>>(
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales.ProspectsLossReasons
           .edit,
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 
-  DeleteProspectLossReasons(
-    id: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  DeleteProspectLossReasons(id: string): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<any>>(
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales.ProspectsLossReasons
           .delete,
       {},
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 }

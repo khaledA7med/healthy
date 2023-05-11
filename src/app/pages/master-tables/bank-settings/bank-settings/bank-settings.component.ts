@@ -135,11 +135,13 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.BankSettingsService.getEditBankSettings(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IBankSettingsData>>) => {
+        (res: IBaseResponse<IBankSettingsData>) => {
           this.uiState.editBankSettingsMode = true;
-          this.uiState.editBankSettingsData = res.body?.data!;
-          this.fillEditBankSettingsForm(res.body?.data!);
+          this.uiState.editBankSettingsData = res?.data!;
+          this.fillEditBankSettingsForm(res?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
         }
       );
       this.subscribes.push(sub);
@@ -188,13 +190,15 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
       swift: formData.swift,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.BankSettingsService.saveBankSettings(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
+      (res: IBaseResponse<number>) => {
         this.BankSettingsModal.dismiss();
         this.uiState.submitted = false;
         this.resetBankSettingsForm();
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
       }
     );
     this.subscribes.push(sub);
@@ -206,10 +210,9 @@ export class BankSettingsComponent implements OnInit, OnDestroy {
 
   DeleteBankSettings(id: string) {
     let sub = this.BankSettingsService.DeleteBankSettings(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) this.message.toast(res!.message!, "success");
       }
     );
     this.subscribes.push(sub);

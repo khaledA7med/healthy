@@ -28,32 +28,27 @@ export class InsuranceCompaniesService {
     );
   }
 
-  saveInsuranceCompanies(
-    data: FormData
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  saveInsuranceCompanies(data: FormData): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.insuranceCompanies.save,
-      data,
-      { observe: "response" }
+      data
     );
   }
 
   getEditInsuranceCompanies(
     id: string
-  ): Observable<HttpResponse<IBaseResponse<IInsuranceCompaniesPreview>>> {
+  ): Observable<IBaseResponse<IInsuranceCompaniesPreview>> {
     return this.http.get<IBaseResponse<IInsuranceCompaniesPreview>>(
       this.env + ApiRoutes.masterTables.insuranceCompanies.edit,
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 
-  DeleteInsuranceCompanies(
-    id: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  DeleteInsuranceCompanies(id: string): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.insuranceCompanies.delete,
       {},
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 }

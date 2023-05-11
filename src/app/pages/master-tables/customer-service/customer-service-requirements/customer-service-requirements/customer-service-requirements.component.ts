@@ -217,13 +217,11 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
       data
     ).subscribe((res: IBaseResponse<any>) => {
       if (res?.status) {
+        this.resetCompanyRequirementsForm();
         this.eventService.broadcast(reserved.isLoading, false);
         this.message.toast(res.message!, "success");
-        this.resetCompanyRequirementsForm();
         this.gridApi.setDatasource(this.dataSource);
-      } else this.message.popup("Sorry!", res.message!, "warning");
-      // Hide Loader
-      this.eventService.broadcast(reserved.isLoading, false);
+      }
     });
     this.subscribes.push(sub);
   }
@@ -235,12 +233,15 @@ export class CustomerServiceRequirementsComponent implements OnInit, OnDestroy {
   }
 
   DeleteCompanyRequirements(sno: number) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CompanyRequirementsService.DeleteCompanyRequirements(
       sno
     ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.status) this.message.toast(res.message!, "success");
-      else this.message.toast(res.message!, "error");
+      if (res.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

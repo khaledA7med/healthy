@@ -143,18 +143,18 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
       }
     );
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub =
         this.CompanyRejectionReasonsService.getEditCompanyRejectionReasons(
           id
-        ).subscribe(
-          (res: HttpResponse<IBaseResponse<ICompanyRejectionReasonsData>>) => {
-            if (res.body?.status) {
-              this.uiState.editCompanyRejectionReasonsMode = true;
-              this.uiState.editCompanyRejectionReasonsData = res.body?.data!;
-              this.fillEditCompanyRejectionReasonsForm(res.body?.data!);
-            } else this.message.toast(res.body!.message!, "error");
+        ).subscribe((res: IBaseResponse<ICompanyRejectionReasonsData>) => {
+          if (res?.status) {
+            this.uiState.editCompanyRejectionReasonsMode = true;
+            this.uiState.editCompanyRejectionReasonsData = res?.data!;
+            this.fillEditCompanyRejectionReasonsForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
           }
-        );
+        });
       this.subscribes.push(sub);
     }
 
@@ -198,16 +198,18 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
       reason: formData.reason,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CompanyRejectionReasonsService.saveCompanyRejectionReasons(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.CompanyRejectionReasonsModal.dismiss();
         this.uiState.submitted = false;
         this.resetCompanyRejectionReasonsForm();
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -217,12 +219,15 @@ export class CompanyRejectionReasonsComponent implements OnInit, OnDestroy {
   }
 
   DeleteCompanyRejectionReasons(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CompanyRejectionReasonsService.DeleteCompanyRejectionReasons(
       id
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.message.toast(res?.message!, "success");
+        this.eventService.broadcast(reserved.isLoading, false);
+      }
     });
     this.subscribes.push(sub);
   }

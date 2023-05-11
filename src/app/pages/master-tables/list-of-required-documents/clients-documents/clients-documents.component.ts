@@ -77,26 +77,25 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
 
-      let sub = this.listOfDocumentsService.getClientsDocuments().subscribe(
-        (res: HttpResponse<IBaseResponse<IClientDocumentFilter[]>>) => {
-          if (res.body?.status) {
-            this.uiState.lists.itemsList = res.body?.data!;
-            params.successCallback(
-              this.uiState.lists.itemsList,
-              this.uiState.lists.itemsList.length
-            );
-            if (this.uiState.lists.itemsList.length === 0)
-              this.gridApi.showNoRowsOverlay();
-            else this.gridApi.hideOverlay();
-          } else {
-            this.uiState.gridReady = true;
-            this.gridApi.hideOverlay();
+      let sub = this.listOfDocumentsService
+        .getClientsDocuments()
+        .subscribe(
+          (res: HttpResponse<IBaseResponse<IClientDocumentFilter[]>>) => {
+            if (res.body?.status) {
+              this.uiState.lists.itemsList = res.body?.data!;
+              params.successCallback(
+                this.uiState.lists.itemsList,
+                this.uiState.lists.itemsList.length
+              );
+              if (this.uiState.lists.itemsList.length === 0)
+                this.gridApi.showNoRowsOverlay();
+              else this.gridApi.hideOverlay();
+            } else {
+              this.uiState.gridReady = true;
+              this.gridApi.hideOverlay();
+            }
           }
-        },
-        (err: HttpErrorResponse) => {
-          this.message.popup("Oops!", err.message, "error");
-        }
-      );
+        );
       this.subscribes.push(sub);
     },
   };
@@ -147,8 +146,10 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.listOfDocumentsService.editClientsDocuments(id).subscribe(
-      (res: IBaseResponse<IClientDocumentReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .editClientsDocuments(id)
+      .subscribe((res: IBaseResponse<IClientDocumentReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -156,38 +157,38 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
             sNo: this.uiState.editItemData.sNo!,
             docName: this.uiState.editItemData.docName!,
           });
-
-          console.log(this.formGroup.getRawValue());
           this.openformDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.listOfDocumentsService.deleteClientsDocuments(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .deleteClientsDocuments(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<IClientDocumentForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const data: IClientDocumentReq = {
       ...formGroup.getRawValue(),
     };
@@ -196,9 +197,10 @@ export class ClientsDocumentsComponent implements OnInit, OnDestroy {
       .subscribe((res: IBaseResponse<any>) => {
         if (res.status) {
           this.modalRef.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
+        }
       });
     this.subscribes.push(sub);
   }

@@ -166,8 +166,10 @@ export class VehiclesTypeComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.productionService.editVehicleType(id).subscribe(
-      (res: IBaseResponse<IVehicleTypeReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .editVehicleType(id)
+      .subscribe((res: IBaseResponse<IVehicleTypeReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -179,36 +181,38 @@ export class VehiclesTypeComponent implements OnInit, OnDestroy {
 
           console.log(this.formGroup.getRawValue());
           this.openformDialoge();
+          this.eventService.broadcast(reserved.isLoading, false);
         } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.productionService.deleteVehicleType(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .deleteVehicleType(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<IVehicleTypeForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
-    console.log(formGroup.getRawValue());
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const data: IVehicleTypeReq = {
       ...formGroup.getRawValue(),
     };
@@ -217,9 +221,10 @@ export class VehiclesTypeComponent implements OnInit, OnDestroy {
       .subscribe((res: IBaseResponse<any>) => {
         if (res.status) {
           this.modalRef.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
+        }
       });
     this.subscribes.push(sub);
   }

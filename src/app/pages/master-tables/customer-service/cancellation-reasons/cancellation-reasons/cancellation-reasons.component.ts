@@ -143,17 +143,17 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
       }
     );
     if (sno) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CancellationReasonsService.getEditCancellationReasons(
         sno
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<ICancellationReasonsData>>) => {
-          if (res.body?.status) {
-            this.uiState.editCancellationReasonsMode = true;
-            this.uiState.editCancellationReasonsData = res.body?.data!;
-            this.fillEditCancellationReasonsForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+      ).subscribe((res: IBaseResponse<ICancellationReasonsData>) => {
+        if (res?.status) {
+          this.uiState.editCancellationReasonsMode = true;
+          this.uiState.editCancellationReasonsData = res?.data!;
+          this.fillEditCancellationReasonsForm(res?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
         }
-      );
+      });
       this.subscribes.push(sub);
     }
 
@@ -197,16 +197,18 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
       cancelReason: formData.cancelReason,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CancellationReasonsService.saveCancellationReasons(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.CancellationReasonsModal.dismiss();
         this.uiState.submitted = false;
         this.resetCancellationReasonsForm();
+        this.eventService.broadcast(reserved.isLoading, false);
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -216,12 +218,15 @@ export class CancellationReasonsComponent implements OnInit, OnDestroy {
   }
 
   DeleteCancellationReasons(sno: number) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CancellationReasonsService.DeleteCancellationReasons(
       sno
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

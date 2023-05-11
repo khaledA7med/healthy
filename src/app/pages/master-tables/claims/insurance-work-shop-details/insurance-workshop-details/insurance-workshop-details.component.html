@@ -1,5 +1,4 @@
 <form [formGroup]="InsuranceWorkshopDetailsForm">
-    <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
     <div class="card">
         <div class="row card-body pt-1">
             <!-- Class Of Business -->
@@ -76,7 +75,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                         <label for="email">Email</label>
                                         <input id="email" class="form-control form-control-sm"
-                                            formControlName="email" />
+                                            placeholder="name@mail.com" formControlName="email" />
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12 my-1">
                                         <label for="address">Address</label>

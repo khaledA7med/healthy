@@ -59,13 +59,13 @@ export class PolicyIssuanceRequirementsService {
 
   DeletePolicyIssuanceRequirements(
     id: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  ): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales
           .PolicyIssuanceRequirements.delete,
       {},
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 }

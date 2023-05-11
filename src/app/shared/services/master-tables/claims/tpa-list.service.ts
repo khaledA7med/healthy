@@ -26,23 +26,18 @@ export class TpaListService {
     );
   }
 
-  saveTpaList(
-    data: ITpaListData
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  saveTpaList(data: ITpaListData): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.tpaList.save,
-      data,
-      { observe: "response" }
+      data
     );
   }
 
-  DeleteTpaList(
-    tpaName: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  DeleteTpaList(tpaName: string): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.tpaList.delete,
       {},
-      { params: { tpaName }, observe: "response" }
+      { params: { tpaName } }
     );
   }
 }

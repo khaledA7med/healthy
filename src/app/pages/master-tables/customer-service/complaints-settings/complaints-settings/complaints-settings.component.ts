@@ -73,8 +73,8 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy {
           this.ComplaintsSettingsForm.patchValue({
             ...this.uiState.complaintSettingsData,
           });
-        } else this.message.toast(res.message!, "error");
-        this.eventService.broadcast(reserved.isLoading, false);
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
       }
     );
     this.subscribes.push(sub);
@@ -91,9 +91,9 @@ export class ComplaintsSettingsComponent implements OnInit, OnDestroy {
       data
     ).subscribe((res: IBaseResponse<any>) => {
       if (res.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
         this.message.toast(res.message!, "success");
-      } else this.message.popup("Sorry!", res.message!, "warning");
-      this.eventService.broadcast(reserved.isLoading, false);
+      }
     });
     this.subscribes.push(sub);
   }

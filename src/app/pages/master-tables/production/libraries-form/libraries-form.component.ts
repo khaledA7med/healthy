@@ -193,8 +193,10 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.productionService.editItem(this.editURI, id).subscribe(
-      (res: IBaseResponse<ILibrariesReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .editItem(this.editURI, id)
+      .subscribe((res: IBaseResponse<ILibrariesReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -208,35 +210,38 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
           this.f.lineOfBusiness?.disable();
 
           this.openEditItemDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.productionService.deleteItem(this.deleteURI, id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .deleteItem(this.deleteURI, id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<ILibrariesForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
+    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
 
     const data: ILibrariesReq = {
       ...formGroup.getRawValue(),
@@ -248,10 +253,12 @@ export class LibrariesFormComponent implements OnInit, OnDestroy {
         if (res.status) {
           if (this.uiState.editMode) {
             this.modalRef.dismiss();
+            this.eventService.broadcast(reserved.isLoading, false);
           } else this.resetForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
+        }
       });
     this.subscribes.push(sub);
   }

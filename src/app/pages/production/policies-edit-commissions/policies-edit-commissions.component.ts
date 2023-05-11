@@ -512,13 +512,25 @@ export class PoliciesEditCommissionsComponent implements OnInit, OnDestroy {
     let sub = this.productionService
       .UpdatePolicyComissions(formData)
       .subscribe((res: HttpResponse<IBaseResponse<any>>) => {
-        this.editUserModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
-        this.uiState.submitted = false;
-        this.resetEditForm();
-        this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
+        if (
+          +this.uiState.producerCommission.commissionTotals.percentage >=
+          +this.ff.producerCommPerc?.value!
+        ) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.popup(
+            "Warning",
+            "Total percentage is more than prodcers commission percentage"
+          );
+        } else {
+          this.editUserModal.dismiss();
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.uiState.submitted = false;
+          this.resetEditForm();
+          this.gridApi.setDatasource(this.dataSource);
+          this.message.toast(res.body?.message!, "success");
+        }
       });
+
     this.subscribes.push(sub);
   }
 

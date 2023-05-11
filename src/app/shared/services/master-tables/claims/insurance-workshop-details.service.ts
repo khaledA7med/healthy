@@ -33,30 +33,29 @@ export class InsuranceWorkshopDetailsService {
 
   saveInsuranceWorkshopDetails(
     data: IClaimsDocumentReq
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  ): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.save,
-      data,
-      { observe: "response" }
+      data
     );
   }
 
   getEditInsuranceWorkshopDetailsData(
     id: string
-  ): Observable<HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>> {
+  ): Observable<IBaseResponse<IInsuranceWorkshopDetailsData>> {
     return this.http.get<IBaseResponse<IInsuranceWorkshopDetailsData>>(
       this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.edit,
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 
   DeleteInsuranceWorkshopDetails(
     id: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  ): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env + ApiRoutes.masterTables.Claims.insuranceWorkshopDetails.delete,
       {},
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 }

@@ -16,7 +16,7 @@ export const lineOfBusinessCols: ColDef[] = [
     maxWidth: 300,
   },
   {
-    headerName: "Class of Insurance",
+    headerName: "Insurance Class",
     field: "className",
   },
   {
@@ -24,7 +24,7 @@ export const lineOfBusinessCols: ColDef[] = [
     field: "lineofBusiness",
   },
   {
-    headerName: "Line of Business(Ar)",
+    headerName: "Line of Business (Ar)",
     field: "lineofBusinessAr",
   },
   {

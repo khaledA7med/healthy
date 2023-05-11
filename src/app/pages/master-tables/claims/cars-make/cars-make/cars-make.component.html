@@ -21,7 +21,6 @@
     </div>
 
     <form [formGroup]="CarsMakeForm" (ngSubmit)="submitCarsMakeData(CarsMakeForm)">
-        <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
                 <div class="col-12 row">

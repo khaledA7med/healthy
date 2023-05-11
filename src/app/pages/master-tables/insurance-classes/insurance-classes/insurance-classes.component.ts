@@ -135,13 +135,15 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceClassesService.getEditInsuranceData(id).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceClassData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<IInsuranceClassData>) => {
+          if (res?.status) {
             this.uiState.editInsuranceMode = true;
-            this.uiState.editInsuranceData = res.body?.data!;
-            this.fillEditInsuranceForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+            this.uiState.editInsuranceData = res?.data!;
+            this.fillEditInsuranceForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -192,6 +194,7 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
 
   submitInsuranceData(form: FormGroup) {
     this.uiState.submitted = true;
+    if (!this.validationChecker()) return;
     const formData = form.getRawValue();
     const data: IInsuranceClassData = {
       sNo: this.uiState.editInsuranceMode
@@ -201,16 +204,17 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
       classNameAr: formData.classNameAr,
       abbreviation: formData.abbreviation,
     };
-    if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceClassesService.saveInsuranceClass(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.InsuranceModal.dismiss();
           this.uiState.submitted = false;
           this.resetInsuranceForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -223,13 +227,16 @@ export class InsuranceClassesComponent implements OnInit, OnDestroy {
   }
 
   DeleteInsurance(id: string, ClassName: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceClassesService.DeleteInsurance(
       id,
       ClassName
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

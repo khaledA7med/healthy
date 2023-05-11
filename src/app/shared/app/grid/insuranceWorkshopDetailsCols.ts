@@ -16,7 +16,7 @@ export const insuranceWorkshopDetailsCols: ColDef[] = [
     maxWidth: 300,
   },
   {
-    headerName: "Insurance Company Name",
+    headerName: "Insurance Company",
     field: "insuranceCompany",
     minWidth: 320,
   },

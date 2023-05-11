@@ -135,13 +135,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
       size: "md",
     });
     if (id) {
+      this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.LocationsService.getEditLocations(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ILocationsData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<ILocationsData>) => {
+          if (res?.status) {
             this.uiState.editLocationsMode = true;
-            this.uiState.editLocationsData = res.body?.data!;
-            this.fillEditLocationsForm(res.body?.data!);
-          } else this.message.toast(res.body!.message!, "error");
+            this.uiState.editLocationsData = res?.data!;
+            this.fillEditLocationsForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
+          }
         }
       );
       this.subscribes.push(sub);
@@ -187,15 +189,17 @@ export class LocationsComponent implements OnInit, OnDestroy {
       locationName: formData.locationName,
     };
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LocationsService.saveLocations(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.LocationsModal.dismiss();
           this.uiState.submitted = false;
           this.resetLocationsForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -206,11 +210,14 @@ export class LocationsComponent implements OnInit, OnDestroy {
   }
 
   DeleteLocations(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LocationsService.DeleteLocations(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

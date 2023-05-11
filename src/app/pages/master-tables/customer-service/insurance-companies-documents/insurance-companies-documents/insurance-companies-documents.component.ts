@@ -281,6 +281,7 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     this.InsuranceCompaniesDocumentsFormSubmitted = true;
     if (!this.validationChecker()) return;
     // Display Submitting Loader
+    this.eventService.broadcast(reserved.isLoading, true);
     let val = InsuranceCompaniesDocumentsForm.getRawValue();
     const formData = new FormData();
 
@@ -291,14 +292,15 @@ export class InsuranceCompaniesDocumentsComponent implements OnInit, OnDestroy {
     let sub =
       this.InsuranceCompaniesDocumentsService.uploadInsuranceCompaniesDocuments(
         formData
-      ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      ).subscribe((res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.InsuranceCompaniesDocumentsModal?.dismiss();
           this.uiState.submitted = false;
           this.resetInsuranceCompaniesDocumentsForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       });
     this.subscribes.push(sub);
   }

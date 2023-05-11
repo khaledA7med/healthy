@@ -8,9 +8,9 @@
                 </div>
                 <div class="row my-4">
                     <div class="col-lg-4 col-md-6 col-sm-12 my-1">
-                        <label for="classOfInsurance" class="asterisk-input">Class of Insurance</label>
+                        <label for="classOfInsurance" class="asterisk-input">Insurance Class</label>
                         <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
-                            placeholder="Select Class of Insurance" formControlName="classOfInsurance" bindValue="name"
+                            placeholder="Select Insurance Class" formControlName="classOfInsurance" bindValue="name"
                             bindLabel="name" [loading]="lookupData ? false : true"
                             [items]="(lookupData | async)?.InsurClasses?.content!" (change)="changeClass($event)"
                             (change)="getLineOfBusiness($event?.name)">
@@ -80,7 +80,6 @@
     </div>
 
     <form [formGroup]="ClaimsGeneralItemsForm" (ngSubmit)="submitClaimsGeneralItemsData(ClaimsGeneralItemsForm)">
-        <app-sub-loader *ngIf="uiState.isLoading"></app-sub-loader>
         <div class="modal-body p-1" style="overflow-y: unset !important;">
             <div class="row p-3">
                 <div class="mt-3 h-100">
@@ -91,9 +90,9 @@
                             <div class="col-12 row mt-4">
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 my-1">
-                                    <label for="classOfInsurance" class="asterisk-input">Class of Insurance</label>
+                                    <label for="classOfInsurance" class="asterisk-input">Insurance Class</label>
                                     <ng-select id="classOfInsurance" class="form-control-sm is-invalid"
-                                        placeholder="Select Class of Insurance" formControlName="classOfInsurance"
+                                        placeholder="Select Insurance Class" formControlName="classOfInsurance"
                                         bindValue="name" bindLabel="name" [loading]="lookupData ? false : true"
                                         [items]="(lookupData | async)?.InsurClasses?.content!"
                                         (change)="changeClass($event)" (change)="getLineOfBusiness($event?.name)">
