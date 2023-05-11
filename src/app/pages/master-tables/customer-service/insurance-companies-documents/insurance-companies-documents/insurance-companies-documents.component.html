@@ -29,8 +29,8 @@
                                 class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 my-1 mb-5">
-                            <label for="type" class="asterisk-input">Class of Insurance</label>
-                            <ng-select id="type" class="is-invalid" placeholder="Select Class of Insurance"
+                            <label for="type" class="asterisk-input">Insurance Class</label>
+                            <ng-select id="type" class="is-invalid" placeholder="Select Insurance Class"
                                 [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
                                 [loading]="lookupData ? false : true" (change)="filterByType($event)"
                                 [ngClass]="{'is-submitted': (f.type?.touched || uiState.submitted) && f.type?.invalid}"
@@ -82,8 +82,8 @@
                                     class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 my-1">
-                                <label for="type" class="asterisk-input">Class of Insurance</label>
-                                <ng-select id="type" class="is-invalid" placeholder="Select Class of Insurance"
+                                <label for="type" class="asterisk-input">Insurance Class</label>
+                                <ng-select id="type" class="is-invalid" placeholder="Select Insurance Class"
                                     [items]="(lookupData | async)?.TypeOfCustomerServices?.content!"
                                     [loading]="lookupData ? false : true"
                                     [ngClass]="{'is-submitted': (f.type?.touched || uiState.submitted) && f.type?.invalid}"

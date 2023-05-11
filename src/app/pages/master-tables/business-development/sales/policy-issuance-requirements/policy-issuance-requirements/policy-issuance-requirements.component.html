@@ -12,11 +12,11 @@
                             <!-- Class Of Business -->
                             <div class="col-lg-4 col-md-4 col-sm-12  my-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <label class="asterisk-input">Class of Business
+                                    <label class="asterisk-input">Issuance Class
                                     </label>
                                 </div>
                                 <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                                    placeholder="Select Class of Business" [loading]="lookupData ? false : true"
+                                    placeholder="Select Issuance Class" [loading]="lookupData ? false : true"
                                     [hideSelected]="true" [clearable]="true" [searchable]="true"
                                     class="form-control-sm is-invalid"
                                     [ngClass]="{'is-submitted': (f.class?.touched || uiState.submitted) && f.class?.invalid}"

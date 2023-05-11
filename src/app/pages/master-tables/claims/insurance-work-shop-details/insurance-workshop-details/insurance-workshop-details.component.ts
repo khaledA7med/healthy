@@ -30,6 +30,7 @@ import { insuranceWorkshopDetailsCols } from "src/app/shared/app/grid/insuranceW
 import {
   IInsuranceWorkshopDetails,
   IInsuranceWorkshopDetailsData,
+  IInsuranceWorkshopDetailsFilter,
 } from "src/app/shared/app/models/MasterTables/claims/i-insurance-workshop-details";
 
 @Component({
@@ -48,9 +49,10 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
   InsuranceWorkshopDetailsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
-    list: [] as IInsuranceWorkshopDetails[],
+    list: [] as IInsuranceWorkshopDetailsFilter[],
     totalPages: 0,
     editInsuranceWorkshopDetailsMode: false as Boolean,
     editInsuranceWorkshopDetailsData: {} as IInsuranceWorkshopDetailsData,
@@ -84,10 +86,12 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
     getRows: (params: IGetRowsParams) => {
       this.gridApi.showLoadingOverlay();
       let sub =
-        this.InsuranceWorkshopDetailsService.getInsuranceWorkshopDetails(
-          this.uiState.insuranceCompany
-        ).subscribe(
-          (res: HttpResponse<IBaseResponse<IInsuranceWorkshopDetails[]>>) => {
+        this.InsuranceWorkshopDetailsService.getInsuranceWorkshopDetails({
+          insuranceCompany: this.f.insuranceCompany?.value!,
+        }).subscribe(
+          (
+            res: HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsFilter[]>>
+          ) => {
             if (res.body?.status) {
               this.uiState.list = res.body?.data!;
               params.successCallback(
@@ -138,68 +142,76 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initInsuranceWorkshopDetailsForm();
     this.getLookupData();
-    this.f.insuranceCompany?.patchValue(this.uiState.insuranceCompany);
+    // this.f.insuranceCompany?.patchValue(this.uiState.insuranceCompany);
   }
 
   getLookupData() {
     this.lookupData = this.table.getBaseData(MODULES.InsuranceWorkshopDetails);
   }
 
-  DeleteInsuranceWorkshopDetails(sno: number) {
+  DeleteInsuranceWorkshopDetails(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.InsuranceWorkshopDetailsService.DeleteInsuranceWorkshopDetails(
-        sno
-      ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+        id
+      ).subscribe((res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       });
     this.subscribes.push(sub);
   }
 
-  getInsuranceWorkshopDetailsData(sno: number) {
+  getInsuranceWorkshopDetailsData(id: string) {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.InsuranceWorkshopDetailsService.getEditInsuranceWorkshopDetailsData(
-        sno
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceWorkshopDetailsData>>) => {
-          if (res.body?.status) {
-            this.uiState.editInsuranceWorkshopDetailsMode = true;
-            this.uiState.editInsuranceWorkshopDetailsData = res.body?.data!;
-            this.fillEditInsuranceWorkshopDetailsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
-          } else this.message.toast(res.body!.message!, "error");
+        id
+      ).subscribe((res: IBaseResponse<IInsuranceWorkshopDetailsData>) => {
+        if (res?.status) {
+          this.uiState.editInsuranceWorkshopDetailsMode = true;
+          this.uiState.editInsuranceWorkshopDetailsData = res?.data!;
+          this.InsuranceWorkshopDetailsForm.patchValue({
+            sno: this.uiState.editInsuranceWorkshopDetailsData.sno!,
+            city: this.uiState.editInsuranceWorkshopDetailsData.city!,
+            workshopName:
+              this.uiState.editInsuranceWorkshopDetailsData.workshopName!,
+            address: this.uiState.editInsuranceWorkshopDetailsData.address!,
+            telephone: this.uiState.editInsuranceWorkshopDetailsData.telephone!,
+            email: this.uiState.editInsuranceWorkshopDetailsData.email!,
+          });
+          this.f.city?.disable();
+          this.openInsuranceWorkshopDetailsDialoge();
+          this.eventService.broadcast(reserved.isLoading, true);
         }
-      );
+      });
     this.subscribes.push(sub);
   }
 
-  openInsuranceWorkshopDetailsDialoge(sno: number) {
-    this.resetInsuranceWorkshopDetailsForm();
-    this.InsuranceWorkshopDetailsModal = this.modalService.open(
-      this.InsuranceWorkshopDetailsContent,
-      {
-        ariaLabelledBy: "modal-basic-title",
-        centered: true,
-        backdrop: "static",
-        size: "lg",
-      }
-    );
+  openInsuranceWorkshopDetailsDialoge() {
+    if (this.f.insuranceCompany?.valid) {
+      this.InsuranceWorkshopDetailsModal = this.modalService.open(
+        this.InsuranceWorkshopDetailsContent,
+        {
+          ariaLabelledBy: "modal-basic-title",
+          centered: true,
+          backdrop: "static",
+          size: "lg",
+        }
+      );
 
-    this.getInsuranceWorkshopDetailsData(sno);
-
-    this.InsuranceWorkshopDetailsModal.hidden.subscribe(() => {
-      this.resetInsuranceWorkshopDetailsForm();
-      this.InsuranceWorkshopDetailsFormSubmitted = false;
-      this.uiState.editInsuranceWorkshopDetailsMode = false;
-    });
+      this.InsuranceWorkshopDetailsModal.hidden.subscribe(() => {
+        this.resetInsuranceWorkshopDetailsForm();
+      });
+    } else this.uiState.submitted = true;
   }
 
   initInsuranceWorkshopDetailsForm() {
     this.InsuranceWorkshopDetailsForm =
       new FormGroup<IInsuranceWorkshopDetails>({
-        sno: new FormControl(null),
+        sno: new FormControl(0),
         insuranceCompany: new FormControl("", Validators.required),
         workshopName: new FormControl("", Validators.required),
         city: new FormControl("", Validators.required),
@@ -211,15 +223,6 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
 
   get f() {
     return this.InsuranceWorkshopDetailsForm.controls;
-  }
-
-  fillAddInsuranceWorkshopDetailsForm(data: IInsuranceWorkshopDetailsData) {
-    this.f.insuranceCompany?.patchValue(data.insuranceCompany!);
-    this.f.workshopName?.patchValue(data.workshopName!);
-    this.f.city?.patchValue(data.city!);
-    this.f.address?.patchValue(data.address!);
-    this.f.telephone?.patchValue(data.telephone!);
-    this.f.email?.patchValue(data.email!);
   }
 
   fillEditInsuranceWorkshopDetailsForm(data: IInsuranceWorkshopDetailsData) {
@@ -245,38 +248,26 @@ export class InsuranceWorkshopDetailsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  filter(e: any) {
-    this.uiState.insuranceCompany = e?.name;
-    this.gridApi.setDatasource(this.dataSource);
-  }
-
-  submitInsuranceWorkshopDetailsData(form: FormGroup) {
+  submitInsuranceWorkshopDetailsData(
+    form: FormGroup<IInsuranceWorkshopDetails>
+  ) {
     this.uiState.submitted = true;
-    const formData = form.getRawValue();
-    const data: IInsuranceWorkshopDetailsData = {
-      sno: this.uiState.editInsuranceWorkshopDetailsMode
-        ? this.uiState.editInsuranceWorkshopDetailsData.sno
-        : 0,
-      insuranceCompany: formData.insuranceCompany,
-      workshopName: formData.workshopName,
-      city: formData.city,
-      address: formData.address,
-      telephone: formData.telephone,
-      email: formData.email,
-    };
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
+    const data: IInsuranceWorkshopDetailsData = {
+      ...form.getRawValue(),
+    };
     let sub = this.InsuranceWorkshopDetailsService.saveInsuranceWorkshopDetails(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.InsuranceWorkshopDetailsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetInsuranceWorkshopDetailsForm();
+        this.eventService.broadcast(reserved.isLoading, false);
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body?.message!, "error");
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

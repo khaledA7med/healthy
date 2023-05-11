@@ -56,15 +56,13 @@ export class QuotingRequirementsService {
     );
   }
 
-  DeleteQuotingRequirements(
-    id: string
-  ): Observable<HttpResponse<IBaseResponse<number>>> {
+  DeleteQuotingRequirements(id: string): Observable<IBaseResponse<number>> {
     return this.http.post<IBaseResponse<number>>(
       this.env +
         ApiRoutes.masterTables.BusinessDevelopment.Sales.QuotingRequirements
           .delete,
       {},
-      { params: { id }, observe: "response" }
+      { params: { id } }
     );
   }
 }

@@ -52,6 +52,7 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
   ClaimsRejectionReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClaimsRejectionReasons[],
@@ -146,12 +147,15 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
   }
 
   DeleteClaimsRejectionReasons(sno: number) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsRejectionReasonsService.DeleteClaimsRejectionReasons(
       sno
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -161,16 +165,14 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
     let sub =
       this.ClaimsRejectionReasonsService.getEditClaimsRejectionReasonsData(
         sno
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<IClaimsRejectionReasonsData>>) => {
-          if (res.body?.status) {
-            this.uiState.editClaimsRejectionReasonsMode = true;
-            this.uiState.editClaimsRejectionReasonsData = res.body?.data!;
-            this.fillEditClaimsRejectionReasonsForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
-          } else this.message.toast(res.body!.message!, "error");
+      ).subscribe((res: IBaseResponse<IClaimsRejectionReasonsData>) => {
+        if (res?.status) {
+          this.uiState.editClaimsRejectionReasonsMode = true;
+          this.uiState.editClaimsRejectionReasonsData = res?.data!;
+          this.fillEditClaimsRejectionReasonsForm(res?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
         }
-      );
+      });
     this.subscribes.push(sub);
   }
 
@@ -240,15 +242,15 @@ export class ClaimsRejectionReasonsComponent implements OnInit, OnDestroy {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsRejectionReasonsService.saveClaimsRejectionReasons(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.ClaimsRejectionReasonsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClaimsRejectionReasonsForm();
+        this.eventService.broadcast(reserved.isLoading, false);
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

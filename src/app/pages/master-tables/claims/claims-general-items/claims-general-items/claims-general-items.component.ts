@@ -55,6 +55,7 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
   ClaimsGeneralItemsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClaimsGeneralItems[],
@@ -165,12 +166,15 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
   }
 
   DeleteClaimsGeneralItems(sno: number) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsGeneralItemsService.DeleteClaimsGeneralItems(
       sno
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -183,13 +187,13 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsGeneralItemsService.getEditClaimsGeneralItemsData(
       sno
-    ).subscribe((res: HttpResponse<IBaseResponse<IClaimsGeneralItemsData>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<IClaimsGeneralItemsData>) => {
+      if (res?.status) {
         this.uiState.editClaimsGeneralItemsMode = true;
-        this.uiState.editClaimsGeneralItemsData = res.body?.data!;
-        this.fillEditClaimsGeneralItemsForm(res.body?.data!);
+        this.uiState.editClaimsGeneralItemsData = res?.data!;
+        this.fillEditClaimsGeneralItemsForm(res?.data!);
         this.eventService.broadcast(reserved.isLoading, false);
-      } else this.message.toast(res.body!.message!, "error");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -271,15 +275,15 @@ export class ClaimsGeneralItemsComponent implements OnInit, OnDestroy {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClaimsGeneralItemsService.saveClaimsGeneralItems(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.ClaimsGeneralItemsModal?.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClaimsGeneralItemsForm();
+        this.eventService.broadcast(reserved.isLoading, false);
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

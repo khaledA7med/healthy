@@ -16,11 +16,11 @@ export const insuranceClassCols: ColDef[] = [
     maxWidth: 300,
   },
   {
-    headerName: "Class of Insurance",
+    headerName: "Insurance Class",
     field: "className",
   },
   {
-    headerName: "Class of Insurance(Ar)",
+    headerName: "Insurance Class (Ar)",
     field: "classNameAr",
   },
   {

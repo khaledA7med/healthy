@@ -370,7 +370,7 @@ const routes: Routes = [
       title: "Hospitals",
     },
     loadChildren: () =>
-      import("./claims/hospitals/hospitals.module").then(
+      import("./claims/hospitals/hospitals/hospitals.module").then(
         (m) => m.HospitalsModule
       ),
     canActivate: [

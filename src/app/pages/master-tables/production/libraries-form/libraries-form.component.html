@@ -11,11 +11,11 @@
                         <!-- Class Of Business -->
                         <div class="col-lg-3 col-md-4 col-sm-12  my-2">
                             <div class="d-flex justify-content-between align-items-center">
-                                <label for="status">Class of Business
+                                <label for="status">Insurance Class
                                 </label>
                             </div>
                             <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                                placeholder="Select Class of Business" [loading]="lookupData ? false : true"
+                                placeholder="Select Insurance Class" [loading]="lookupData ? false : true"
                                 [hideSelected]="true" [clearable]="true" [searchable]="true"
                                 [ngClass]="{'is-submitted': (f.class?.touched || uiState.submitted) && f.class?.invalid}"
                                 bindLabel="name" bindValue="name" formControlName="class"
@@ -114,11 +114,11 @@
                     <!-- Class Of Business -->
                     <div class="col-lg-6 col-md-6 col-sm-12  my-2">
                         <div class="d-flex justify-content-between align-items-center">
-                            <label for="status">Class of Business
+                            <label for="status">Insurance Class
                             </label>
                         </div>
                         <ng-select [items]="(lookupData | async)?.InsurClasses?.content!"
-                            placeholder="Select Class of Business" [loading]="lookupData ? false : true"
+                            placeholder="Select Insurance Class" [loading]="lookupData ? false : true"
                             [hideSelected]="true" [clearable]="true" [searchable]="true"
                             [ngClass]="{'is-submitted': (f.class?.touched || uiState.submitted) && f.class?.invalid}"
                             bindLabel="name" bindValue="name" formControlName="class"

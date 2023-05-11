@@ -43,6 +43,7 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
   ClientCategoriesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClientCategories[],
@@ -141,13 +142,13 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.ClientCategoriesService.getEditClientCategories(
         id
-      ).subscribe((res: HttpResponse<IBaseResponse<IClientCategoriesData>>) => {
-        if (res.body?.status) {
+      ).subscribe((res: IBaseResponse<IClientCategoriesData>) => {
+        if (res?.status) {
           this.uiState.editClientCategoriesMode = true;
-          this.uiState.editClientCategoriesData = res.body?.data!;
-          this.fillEditClientCategoriesForm(res.body?.data!);
+          this.uiState.editClientCategoriesData = res?.data!;
+          this.fillEditClientCategoriesForm(res?.data!);
           this.eventService.broadcast(reserved.isLoading, false);
-        } else this.message.toast(res.body!.message!, "error");
+        }
       });
       this.subscribes.push(sub);
     }
@@ -194,15 +195,15 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientCategoriesService.saveClientCategories(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.ClientCategoriesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetClientCategoriesForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -213,11 +214,14 @@ export class ClientCategoriesComponent implements OnInit, OnDestroy {
   }
 
   DeleteClientCategories(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientCategoriesService.DeleteClientCategories(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

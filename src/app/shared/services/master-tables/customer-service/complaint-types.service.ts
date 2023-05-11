@@ -23,19 +23,19 @@ export class ComplaintTypesService
     });
   }
 
-  saveComplaintTypes (data: IComplaintTypesData): Observable<HttpResponse<IBaseResponse<number>>>
+  saveComplaintTypes (data: IComplaintTypesData): Observable<IBaseResponse<number>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.save, data, { observe: "response" });
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.save, data);
   }
 
 
-  getEditComplaintTypes (sno: number): Observable<HttpResponse<IBaseResponse<IComplaintTypesData>>>
+  getEditComplaintTypes (sno: number): Observable<IBaseResponse<IComplaintTypesData>>
   {
-    return this.http.get<IBaseResponse<IComplaintTypesData>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.edit, { params: { sno }, observe: "response" });
+    return this.http.get<IBaseResponse<IComplaintTypesData>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.edit, { params: { sno } });
   }
 
-  DeleteComplaintTypes (sno: number): Observable<HttpResponse<IBaseResponse<number>>>
+  DeleteComplaintTypes (sno: number): Observable<IBaseResponse<number>>
   {
-    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.delete, {}, { params: { sno }, observe: "response" })
+    return this.http.post<IBaseResponse<number>>(this.env + ApiRoutes.masterTables.customerService.complaintsTypes.delete, {}, { params: { sno } })
   }
 }

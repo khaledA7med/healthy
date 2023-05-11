@@ -42,6 +42,7 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
   @ViewChild("LegalStatusContent") LegalStatusContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ILegalStatus[],
@@ -136,13 +137,13 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
     if (id) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.LegalStatusService.getEditLegalStatus(id).subscribe(
-        (res: HttpResponse<IBaseResponse<ILegalStatusData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<ILegalStatusData>) => {
+          if (res?.status) {
             this.uiState.editLegalStatusMode = true;
-            this.uiState.editLegalStatusData = res.body?.data!;
-            this.fillEditLegalStatusForm(res.body?.data!);
+            this.uiState.editLegalStatusData = res?.data!;
+            this.fillEditLegalStatusForm(res?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -190,15 +191,15 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LegalStatusService.saveLegalStatus(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.LegalStatusModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetLegalStatusForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -209,11 +210,14 @@ export class LegalStatusComponent implements OnInit, OnDestroy {
   }
 
   DeleteLegalStatus(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.LegalStatusService.DeleteLegalStatus(id).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res!.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

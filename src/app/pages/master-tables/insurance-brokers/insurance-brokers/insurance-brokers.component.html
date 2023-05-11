@@ -51,7 +51,7 @@
 
                                 <div class="col-12 mb-2">
                                     <label for="email" class="asterisk-input">Email</label>
-                                    <input id="email" class="form-control form-control-sm"
+                                    <input id="email" class="form-control form-control-sm" placeholder="name@mail.com"
                                         [ngClass]="{'is-invalid': (f.email?.touched || uiState.submitted) && f.email?.invalid}"
                                         formControlName="email" />
                                     <span *ngIf="(f.email?.touched || uiState.submitted) && f.email?.invalid"

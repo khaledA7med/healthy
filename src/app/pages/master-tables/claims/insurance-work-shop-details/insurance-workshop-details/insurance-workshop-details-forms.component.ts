@@ -62,7 +62,7 @@ export class InsuranceWorkshopDetailsFormsComponent {
   }
 
   Edit() {
-    this.comp.openInsuranceWorkshopDetailsDialoge(this.params.data.sno);
+    this.comp.getInsuranceWorkshopDetailsData(this.params.data.identity);
   }
 
   Delete() {
@@ -70,7 +70,7 @@ export class InsuranceWorkshopDetailsFormsComponent {
       .confirm("Sure!", "delete?", "primary", "question")
       .then((result: SweetAlertResult) => {
         if (result.isConfirmed) {
-          this.comp.DeleteInsuranceWorkshopDetails(this.params.data.sno);
+          this.comp.DeleteInsuranceWorkshopDetails(this.params.data.identity);
         } else {
           return;
         }

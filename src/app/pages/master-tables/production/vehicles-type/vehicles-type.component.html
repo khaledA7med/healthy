@@ -8,7 +8,7 @@
                         Vehicle Make
                     </label>
                 </div>
-                <ng-select [items]="(lookupData | async)?.VehicleCarsMake?.content!" placeholder="Select Cars Make"
+                <ng-select [items]="(lookupData | async)?.VehicleCarsMake?.content!" placeholder="Select Vehicle Maker"
                     [loading]="lookupData ? false : true" [hideSelected]="true" [clearable]="true" [searchable]="true"
                     [ngClass]="{'is-submitted': (f.make?.touched || uiState.submitted) && f.make?.invalid}"
                     bindLabel="name" bindValue="name" formControlName="make"

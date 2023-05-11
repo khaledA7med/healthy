@@ -50,6 +50,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
   uiState = {
+    isLoading: false as boolean,
     submitted: false as Boolean,
     gridReady: false as Boolean,
     lists: {
@@ -160,8 +161,10 @@ export class LifePlanComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.productionService.editLifePlan(id).subscribe(
-      (res: IBaseResponse<ILifePlanReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .editLifePlan(id)
+      .subscribe((res: IBaseResponse<ILifePlanReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -173,37 +176,39 @@ export class LifePlanComponent implements OnInit, OnDestroy {
 
           console.log(this.formGroup.getRawValue());
           this.openformDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.productionService.deleteLifePlan(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.productionService
+      .deleteLifePlan(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<ILifePlanForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
-    console.log(formGroup.getRawValue());
+    if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
+    console.log(formGroup.getRawValue());
     const data: ILifePlanReq = {
       ...formGroup.getRawValue(),
     };
@@ -215,9 +220,7 @@ export class LifePlanComponent implements OnInit, OnDestroy {
           this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
-        // Hide Loader
-        this.eventService.broadcast(reserved.isLoading, false);
+        }
       });
     this.subscribes.push(sub);
   }

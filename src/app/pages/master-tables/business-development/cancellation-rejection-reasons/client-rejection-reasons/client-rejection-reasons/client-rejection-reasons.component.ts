@@ -43,6 +43,7 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
   ClientRejectionReasonsContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IClientRejectionReasons[],
@@ -146,16 +147,14 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
       let sub =
         this.ClientRejectionReasonsService.getEditClientRejectionReasons(
           id
-        ).subscribe(
-          (res: HttpResponse<IBaseResponse<IClientRejectionReasonsData>>) => {
-            if (res.body?.status) {
-              this.uiState.editClientRejectionReasonsMode = true;
-              this.uiState.editClientRejectionReasonsData = res.body?.data!;
-              this.fillEditClientRejectionReasonsForm(res.body?.data!);
-              this.eventService.broadcast(reserved.isLoading, false);
-            } else this.message.toast(res.body!.message!, "error");
+        ).subscribe((res: IBaseResponse<IClientRejectionReasonsData>) => {
+          if (res?.status) {
+            this.uiState.editClientRejectionReasonsMode = true;
+            this.uiState.editClientRejectionReasonsData = res?.data!;
+            this.fillEditClientRejectionReasonsForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
           }
-        );
+        });
       this.subscribes.push(sub);
     }
 
@@ -202,15 +201,15 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientRejectionReasonsService.saveClientRejectionReasons(
       data
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.ClientRejectionReasonsModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
         this.resetClientRejectionReasonsForm();
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -220,12 +219,15 @@ export class ClientRejectionReasonsComponent implements OnInit, OnDestroy {
   }
 
   DeleteClientRejectionReasons(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.ClientRejectionReasonsService.DeleteClientRejectionReasons(
       id
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+    ).subscribe((res: IBaseResponse<any>) => {
       this.gridApi.setDatasource(this.dataSource);
-      if (res.body?.status) this.message.toast(res.body!.message!, "success");
-      else this.message.toast(res.body!.message!, "error");
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res!.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

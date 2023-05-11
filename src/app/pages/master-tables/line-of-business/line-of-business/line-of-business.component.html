@@ -9,8 +9,8 @@
                             </span></span>
                         <div class="row mt-5 mx-2">
                             <div class="col-lg-3 col-md-6 col-sm-12 my-1">
-                                <label for="className" class="asterisk-input">Class of Insurance</label>
-                                <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
+                                <label for="className" class="asterisk-input">Insurance Class</label>
+                                <ng-select id="className" class="is-invalid" placeholder="Select insurance class"
                                     [items]="(lookupData | async)?.InsurClasses?.content!"
                                     [loading]="lookupData ? false : true" (change)="filter($event)"
                                     [hideSelected]="true"
@@ -92,8 +92,8 @@
                             <div class="col-12 row mt-4">
 
                                 <div class="col-12 mb-2">
-                                    <label for="className" class="asterisk-input">Line of Insurance</label>
-                                    <ng-select id="className" class="is-invalid" placeholder="Select Class Of Insurance"
+                                    <label for="className" class="asterisk-input">Insurance Class</label>
+                                    <ng-select id="className" class="is-invalid" placeholder="Select insurance class"
                                         [items]="(lookupData | async)?.InsurClasses?.content!"
                                         [loading]="lookupData ? false : true" (change)="filter($event)"
                                         [hideSelected]="true"
@@ -105,7 +105,7 @@
                                         class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
                                 </div>
                                 <div class="col-12 mb-2">
-                                    <label for="lineofBusiness" class="asterisk-input">Line Of Business</label>
+                                    <label for="lineofBusiness" class="asterisk-input">Line of Business</label>
                                     <input id="lineofBusiness" class="form-control form-control-sm"
                                         [ngClass]="{'is-invalid': (f.lineofBusiness?.touched || uiState.submitted) && f.lineofBusiness?.invalid}"
                                         formControlName="lineofBusiness" />

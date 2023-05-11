@@ -1,11 +1,11 @@
-import { HospitalsComponent } from "./hospitals.component";
 import { Component } from "@angular/core";
 import { ICellRendererParams } from "ag-grid-community";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { SweetAlertResult } from "sweetalert2";
+import { HospitalsComponent } from "./hospitals.component";
 
 @Component({
-  selector: "app-hospitals-forms",
+  selector: "app-hospitals-list-controls",
   template: `
     <div class="col d-flex align-items-center justify-content-center">
       <div ngbDropdown class="d-inline-block">
@@ -51,9 +51,9 @@ import { SweetAlertResult } from "sweetalert2";
     `,
   ],
 })
-export class HospitalsFormsComponent {
+export class HospitalsListControlsComponent {
   private params!: ICellRendererParams;
-  private comp!: HospitalsComponent;
+  public comp!: HospitalsComponent;
 
   constructor(private message: MessagesService) {}
 

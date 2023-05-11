@@ -101,6 +101,7 @@ export class DefaultEmailsComponent implements OnInit, OnDestroy {
   submitDefaultEmailsData(form: FormGroup<IDefaultEmails>) {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
     const data: IDefaultEmailsData = {
       ...form.getRawValue(),
     };

@@ -42,6 +42,7 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
   @ViewChild("CarsMakeContent") CarsMakeContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ICarsMake[],
@@ -136,13 +137,13 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
     if (sno) {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.CarsMakeService.getEditCarsMake(sno).subscribe(
-        (res: HttpResponse<IBaseResponse<ICarsMakeData>>) => {
-          if (res.body?.status) {
+        (res: IBaseResponse<ICarsMakeData>) => {
+          if (res?.status) {
             this.uiState.editCarsMakeMode = true;
-            this.uiState.editCarsMakeData = res.body?.data!;
-            this.fillEditCarsMakeForm(res.body?.data!);
+            this.uiState.editCarsMakeData = res?.data!;
+            this.fillEditCarsMakeForm(res?.data!);
             this.eventService.broadcast(reserved.isLoading, false);
-          } else this.message.toast(res.body!.message!, "error");
+          }
         }
       );
       this.subscribes.push(sub);
@@ -190,15 +191,15 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.CarsMakeService.saveCarsMake(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.CarsMakeModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetCarsMakeForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -210,10 +211,12 @@ export class CarsMakeComponent implements OnInit, OnDestroy {
 
   DeleteCarsMake(sno: number) {
     let sub = this.CarsMakeService.DeleteCarsMake(sno).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

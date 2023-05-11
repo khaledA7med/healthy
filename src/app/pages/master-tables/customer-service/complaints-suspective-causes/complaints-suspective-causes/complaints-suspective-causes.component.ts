@@ -43,6 +43,7 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
   ComplaintsSuspectiveCausesContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IComplaintSuspectiveCauses[],
@@ -146,18 +147,14 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
       let sub =
         this.ComplaintSuspectiveCausesService.getEditComplaintSuspectiveCauses(
           sno
-        ).subscribe(
-          (
-            res: HttpResponse<IBaseResponse<IComplaintSuspectiveCausesData>>
-          ) => {
-            if (res.body?.status) {
-              this.uiState.editComplaintsSuspectiveCausesMode = true;
-              this.uiState.editComplaintsSuspectiveCausesData = res.body?.data!;
-              this.fillEditComplaintsSuspectiveCausesForm(res.body?.data!);
-              this.eventService.broadcast(reserved.isLoading, false);
-            } else this.message.toast(res.body!.message!, "error");
+        ).subscribe((res: IBaseResponse<IComplaintSuspectiveCausesData>) => {
+          if (res?.status) {
+            this.uiState.editComplaintsSuspectiveCausesMode = true;
+            this.uiState.editComplaintsSuspectiveCausesData = res?.data!;
+            this.fillEditComplaintsSuspectiveCausesForm(res?.data!);
+            this.eventService.broadcast(reserved.isLoading, false);
           }
-        );
+        });
       this.subscribes.push(sub);
     }
 
@@ -206,15 +203,15 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
     let sub =
       this.ComplaintSuspectiveCausesService.saveComplaintSuspectiveCauses(
         data
-      ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      ).subscribe((res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.ComplaintsSuspectiveCausesModal.dismiss();
-          this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetComplaintsSuspectiveCausesForm();
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       });
     this.subscribes.push(sub);
   }
@@ -224,13 +221,16 @@ export class ComplaintsSuspectiveCausesComponent implements OnInit, OnDestroy {
   }
 
   DeleteComplaintsSuspectiveCauses(sno: number) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub =
       this.ComplaintSuspectiveCausesService.DeleteComplaintSuspectiveCauses(
         sno
-      ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
+      ).subscribe((res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       });
     this.subscribes.push(sub);
   }

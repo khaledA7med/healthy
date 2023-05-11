@@ -14,7 +14,7 @@
     <ng-template #formDialoge let-modal>
         <div class="modal-header mb-0">
             <h4 class="modal-title" id="modal-basic-title">{{uiState.editMode == false ? 'Add'
-                : 'Edit'}} Item</h4>
+                : 'Edit'}} Client Document</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
 
@@ -23,7 +23,7 @@
                 <div class="row mb-2">
                     <!-- Doc Name -->
                     <div class="col-12 my-1">
-                        <label for="item" class="asterisk-input">Name</label>
+                        <label for="item" class="asterisk-input">Document Name</label>
                         <input id="item" class="form-control form-control-sm"
                             [ngClass]="{'is-invalid': (f.docName?.touched || uiState.submitted) && f.docName?.invalid}"
                             formControlName="docName" />

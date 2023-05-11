@@ -41,7 +41,7 @@
                 <!-- Producer -->
                 <div class="mb-3">
                     <label for="CliProducerent" class="form-label text-muted fw-bold fs-13">
-                        Producer:
+                        Producer
                     </label>
                     <ng-select id="producer" class="is-invalid" placeholder="Select Producer"
                         [items]="(lookupData | async)?.Producers?.content!" [loading]="lookupData ? false : true"
@@ -52,7 +52,7 @@
                 <!-- Client Name -->
                 <div class="mb-3">
                     <label for="Client" class="form-label text-muted fw-bold fs-13">
-                        Client Name:
+                        Client Name
                     </label>
                     <ng-select id="clientName" class="is-invalid" placeholder="Select Client" [hideSelected]="true"
                         [items]="(lookupData | async)?.ClientsList?.content!" [loading]="lookupData ? false : true"
@@ -63,7 +63,7 @@
                 <!-- Client ID -->
                 <div class="mb-3">
                     <label for="policyNumber" class="form-label text-muted fw-bold fs-13">
-                        Policy Number:
+                        Policy No.
                     </label>
                     <input id="policyNumber" type="text" class="form-control" placeholder="Policy Number"
                         formControlName="policyNumber">

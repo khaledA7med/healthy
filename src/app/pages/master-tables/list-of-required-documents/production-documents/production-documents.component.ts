@@ -50,6 +50,7 @@ export class ProductionDocumentsComponent implements OnInit, OnDestroy {
 
   subscribes: Subscription[] = [];
   uiState = {
+    isLoading: false as boolean,
     submitted: false as Boolean,
     gridReady: false as Boolean,
     lists: {
@@ -165,8 +166,10 @@ export class ProductionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   getEditItemData(id: string) {
-    let sub = this.listOfDocumentsService.editPoliciesDocuments(id).subscribe(
-      (res: IBaseResponse<IPoliciesDocumentReq>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .editPoliciesDocuments(id)
+      .subscribe((res: IBaseResponse<IPoliciesDocumentReq>) => {
         if (res?.status) {
           this.uiState.editMode = true;
           this.uiState.editItemData = res.data!;
@@ -174,38 +177,37 @@ export class ProductionDocumentsComponent implements OnInit, OnDestroy {
             sNo: this.uiState.editItemData.sNo!,
             docName: this.uiState.editItemData.docName!,
           });
-
-          console.log(this.formGroup.getRawValue());
           this.openformDialoge();
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+          this.eventService.broadcast(reserved.isLoading, false);
+        }
+      });
     this.subscribes.push(sub);
   }
 
   deleteItem(id: string) {
-    let sub = this.listOfDocumentsService.deletePoliciesDocuments(id).subscribe(
-      (res: IBaseResponse<any>) => {
+    this.eventService.broadcast(reserved.isLoading, true);
+    let sub = this.listOfDocumentsService
+      .deletePoliciesDocuments(id)
+      .subscribe((res: IBaseResponse<any>) => {
         if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
           this.gridApi.setDatasource(this.dataSource);
           this.message.toast(res.message!, "success");
-        } else this.message.toast(res.message!, "error");
-      },
-      (err: HttpErrorResponse) => {
-        this.message.popup("Oops!", err.message, "error");
-      }
-    );
+        }
+      });
     this.subscribes.push(sub);
+  }
+  validationChecker(): boolean {
+    if (this.formGroup.invalid) {
+      this.message.toast("Please Fill Required Inputs");
+      return false;
+    }
+    return true;
   }
 
   onSubmit(formGroup: FormGroup<IPoliciesDocumentForm>) {
     this.uiState.submitted = true;
-    if (this.formGroup?.invalid) {
-      return;
-    }
+    if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     const data: IPoliciesDocumentReq = {
       ...formGroup.getRawValue(),
@@ -218,9 +220,7 @@ export class ProductionDocumentsComponent implements OnInit, OnDestroy {
           this.eventService.broadcast(reserved.isLoading, false);
           this.message.toast(res.message!, "success");
           this.gridApi.setDatasource(this.dataSource);
-        } else this.message.popup("Sorry!", res.message!, "warning");
-        // Hide Loader
-        this.eventService.broadcast(reserved.isLoading, false);
+        }
       });
     this.subscribes.push(sub);
   }

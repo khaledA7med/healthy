@@ -68,6 +68,7 @@ export class InsuranceCompaniesComponent implements OnInit {
   @ViewChild("insuranceContent") insuranceContent!: ElementRef;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as IInsuranceCompanies[],
@@ -183,16 +184,14 @@ export class InsuranceCompaniesComponent implements OnInit {
       this.eventService.broadcast(reserved.isLoading, true);
       let sub = this.InsuranceCompaniesService.getEditInsuranceCompanies(
         id
-      ).subscribe(
-        (res: HttpResponse<IBaseResponse<IInsuranceCompaniesPreview>>) => {
-          if (res.body?.status) {
-            this.uiState.editInsuranceMode = true;
-            this.uiState.editInsuranceData = res.body?.data!;
-            this.fillEditInsuranceForm(res.body?.data!);
-            this.eventService.broadcast(reserved.isLoading, false);
-          } else this.message.toast(res.body!.message!, "error");
+      ).subscribe((res: IBaseResponse<IInsuranceCompaniesPreview>) => {
+        if (res?.status) {
+          this.uiState.editInsuranceMode = true;
+          this.uiState.editInsuranceData = res?.data!;
+          this.fillEditInsuranceForm(res?.data!);
+          this.eventService.broadcast(reserved.isLoading, false);
         }
-      );
+      });
       this.subscribes.push(sub);
     }
 
@@ -341,6 +340,7 @@ export class InsuranceCompaniesComponent implements OnInit {
   submitInsuranceData(InsuranceForm: FormGroup<IInsuranceCompanies>) {
     this.uiState.submitted = true;
     if (!this.validationChecker()) return;
+    this.eventService.broadcast(reserved.isLoading, true);
 
     const formData = new FormData();
     let val = InsuranceForm.getRawValue();
@@ -376,19 +376,18 @@ export class InsuranceCompaniesComponent implements OnInit {
     }
 
     if (!this.validationChecker()) return;
-    this.eventService.broadcast(reserved.isLoading, true);
 
     let sub = this.InsuranceCompaniesService.saveInsuranceCompanies(
       formData
-    ).subscribe((res: HttpResponse<IBaseResponse<number>>) => {
-      if (res.body?.status) {
+    ).subscribe((res: IBaseResponse<number>) => {
+      if (res?.status) {
         this.InsuranceModal.dismiss();
-        this.eventService.broadcast(reserved.isLoading, false);
         this.uiState.submitted = false;
+        this.eventService.broadcast(reserved.isLoading, false);
         this.resetInsuranceForm();
         this.gridApi.setDatasource(this.dataSource);
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.toast(res.body!.message!, "error");
+        this.message.toast(res?.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }
@@ -400,14 +399,15 @@ export class InsuranceCompaniesComponent implements OnInit {
   }
 
   DeleteInsurance(id: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.InsuranceCompaniesService.DeleteInsuranceCompanies(
       id
-    ).subscribe((res: HttpResponse<IBaseResponse<any>>) => {
-      if (res.body?.status) {
-        this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
-      } else this.message.toast(res.body!.message!, "error");
+    ).subscribe((res: IBaseResponse<any>) => {
+      this.gridApi.setDatasource(this.dataSource);
+      if (res?.status) {
+        this.eventService.broadcast(reserved.isLoading, false);
+        this.message.toast(res!.message!, "success");
+      }
     });
     this.subscribes.push(sub);
   }

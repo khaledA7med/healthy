@@ -42,6 +42,7 @@ export class TpaListComponent implements OnInit, OnDestroy {
   @ViewChild("TpaListContent") TpaListContent!: TemplateRef<any>;
 
   uiState = {
+    isLoading: false as boolean,
     gridReady: false,
     submitted: false,
     list: [] as ITpaList[],
@@ -166,15 +167,15 @@ export class TpaListComponent implements OnInit, OnDestroy {
     if (!this.validationChecker()) return;
     this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.TpaListService.saveTpaList(data).subscribe(
-      (res: HttpResponse<IBaseResponse<number>>) => {
-        if (res.body?.status) {
+      (res: IBaseResponse<number>) => {
+        if (res?.status) {
           this.TpaListModal.dismiss();
           this.eventService.broadcast(reserved.isLoading, false);
           this.uiState.submitted = false;
           this.resetTpaListForm();
           this.gridApi.setDatasource(this.dataSource);
-          this.message.toast(res.body?.message!, "success");
-        } else this.message.toast(res.body!.message!, "error");
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);
@@ -185,11 +186,14 @@ export class TpaListComponent implements OnInit, OnDestroy {
   }
 
   DeleteTpaList(tpaName: string) {
+    this.eventService.broadcast(reserved.isLoading, true);
     let sub = this.TpaListService.DeleteTpaList(tpaName).subscribe(
-      (res: HttpResponse<IBaseResponse<any>>) => {
+      (res: IBaseResponse<any>) => {
         this.gridApi.setDatasource(this.dataSource);
-        if (res.body?.status) this.message.toast(res.body!.message!, "success");
-        else this.message.toast(res.body!.message!, "error");
+        if (res?.status) {
+          this.eventService.broadcast(reserved.isLoading, false);
+          this.message.toast(res?.message!, "success");
+        }
       }
     );
     this.subscribes.push(sub);

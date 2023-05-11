@@ -8,7 +8,7 @@
                     </label>
                 </div>
                 <ng-select [items]="(lookupData | async)?.InsuranceCompanies?.content!"
-                    placeholder="Select Classes Of Business" [loading]="lookupData ? false : true" [hideSelected]="true"
+                    placeholder="Select insurance company" [loading]="lookupData ? false : true" [hideSelected]="true"
                     [clearable]="true" [searchable]="true"
                     [ngClass]="{'is-submitted': (f.insuranceCompany?.touched || uiState.submitted) && f.insuranceCompany?.invalid}"
                     bindLabel="name" bindValue="name" formControlName="insuranceCompany"
@@ -32,7 +32,7 @@
     </div>
     <ng-template #formDialoge let-modal>
         <div class="modal-header mb-0">
-            <h4 class="modal-title" id="modal-basic-title">Edit Item</h4>
+            <h4 class="modal-title" id="modal-basic-title">Edit Life Plan</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
 
