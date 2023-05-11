@@ -1,32 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormControl, FormGroup } from "@angular/forms";
-import {
-  CellEvent,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
-  ProcessCellForExportParams,
-} from "ag-grid-community";
+import { CellEvent, GridApi, GridOptions, GridReadyEvent, IDatasource, IGetRowsParams, ProcessCellForExportParams } from "ag-grid-community";
 import { Observable, Subscription } from "rxjs";
-import {
-  NgbModal,
-  NgbModalRef,
-  NgbOffcanvas,
-} from "@ng-bootstrap/ng-bootstrap";
-import {
-  clientManageCols,
-  columnsToExport,
-} from "src/app/shared/app/grid/clientCols";
+import { NgbModal, NgbModalRef, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { clientManageCols, columnsToExport } from "src/app/shared/app/grid/clientCols";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { ClientsService } from "src/app/shared/services/clients/clients.service";
 import { IClient } from "src/app/shared/app/models/Clients/iclient";
@@ -44,227 +22,209 @@ import { ClientPreviewComponent } from "src/app/shared/components/client-preview
 import AppUtils from "src/app/shared/app/util";
 
 @Component({
-  selector: "app-client-registry-list",
-  templateUrl: "./client-registry-list.component.html",
-  styleUrls: ["./client-registry-list.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+	selector: "app-client-registry-list",
+	templateUrl: "./client-registry-list.component.html",
+	styleUrls: ["./client-registry-list.component.scss"],
+	encapsulation: ViewEncapsulation.None,
 })
 export class ClientRegistryListComponent implements OnInit, OnDestroy {
-  @ViewChild("filter") clintFilter!: ElementRef;
-  modalRef!: NgbModalRef;
-  uiState = {
-    routerLink: { forms: AppRoutes.Client.clientForms },
-    gridReady: false,
-    submitted: false,
-    filters: {
-      pageNumber: 1,
-      pageSize: 50,
-      orderBy: "sNo",
-      orderDir: "asc",
-    } as IClientFilters,
-    clients: {
-      list: [] as IClient[],
-      totalPages: 0,
-    },
-    privileges: ClientsPermissions,
-  };
+	@ViewChild("filter") clintFilter!: ElementRef;
+	modalRef!: NgbModalRef;
+	uiState = {
+		routerLink: { forms: AppRoutes.Client.clientForms },
+		gridReady: false,
+		submitted: false,
+		filters: {
+			pageNumber: 1,
+			pageSize: 50,
+			orderBy: "sNo",
+			orderDir: "asc",
+		} as IClientFilters,
+		clients: {
+			list: [] as IClient[],
+			totalPages: 0,
+		},
+		privileges: ClientsPermissions,
+	};
 
-  permissions$!: Observable<string[]>;
+	permissions$!: Observable<string[]>;
 
-  // filter form
-  filterForm!: FormGroup;
-  lookupData!: Observable<IBaseMasterTable>;
-  // to unSubscribe
-  subscribes: Subscription[] = [];
+	// filter form
+	filterForm!: FormGroup;
+	lookupData!: Observable<IBaseMasterTable>;
+	// to unSubscribe
+	subscribes: Subscription[] = [];
 
-  // Grid Definitions
-  gridApi: GridApi = <GridApi>{};
-  gridOpts: GridOptions = {
-    pagination: true,
-    rowModelType: "infinite",
-    editType: "fullRow",
-    animateRows: true,
-    columnDefs: clientManageCols,
-    suppressExcelExport: true,
-    paginationPageSize: this.uiState.filters.pageSize,
-    cacheBlockSize: this.uiState.filters.pageSize,
-    context: { comp: this },
-    rowSelection: "single",
-    defaultColDef: {
-      flex: 1,
-      minWidth: 100,
-      sortable: true,
-      resizable: true,
-    },
-    onGridReady: (e) => this.onGridReady(e),
-    onCellClicked: (e) => this.onCellClicked(e),
-    onSortChanged: (e) => this.onSort(e),
-    onPaginationChanged: (e) => this.onPageChange(e),
-  };
+	// Grid Definitions
+	gridApi: GridApi = <GridApi>{};
+	gridOpts: GridOptions = {
+		pagination: true,
+		rowModelType: "infinite",
+		editType: "fullRow",
+		animateRows: true,
+		columnDefs: clientManageCols,
+		suppressExcelExport: true,
+		paginationPageSize: this.uiState.filters.pageSize,
+		cacheBlockSize: this.uiState.filters.pageSize,
+		context: { comp: this },
+		rowSelection: "single",
+		defaultColDef: {
+			flex: 1,
+			minWidth: 100,
+			sortable: true,
+			resizable: true,
+		},
+		onGridReady: (e) => this.onGridReady(e),
+		onCellClicked: (e) => this.onCellClicked(e),
+		onSortChanged: (e) => this.onSort(e),
+		onPaginationChanged: (e) => this.onPageChange(e),
+	};
 
-  constructor(
-    private clientService: ClientsService,
-    private message: MessagesService,
-    private offcanvasService: NgbOffcanvas,
-    private table: MasterTableService,
-    private permission: PermissionsService,
-    private modalService: NgbModal,
-    private auth: AuthenticationService,
-    private util: AppUtils
-  ) {}
+	constructor(
+		private clientService: ClientsService,
+		private message: MessagesService,
+		private offcanvasService: NgbOffcanvas,
+		private table: MasterTableService,
+		private permission: PermissionsService,
+		private modalService: NgbModal,
+		private auth: AuthenticationService,
+		private util: AppUtils
+	) {}
 
-  ngOnInit(): void {
-    this.permissions$ = this.permission.getPrivileges(Roles.Clients);
+	ngOnInit(): void {
+		this.permissions$ = this.permission.getPrivileges(Roles.Clients);
 
-    this.initFilterForm();
-    this.getLookupData();
+		this.initFilterForm();
+		this.getLookupData();
 
-    let sub = this.permissions$.subscribe((res: string[]) => {
-      if (!res.includes(this.uiState.privileges.ChAccessAllProducersClients))
-        this.filterForm.controls["producer"].patchValue(
-          this.auth.getUser().name
-        );
+		let sub = this.permissions$.subscribe((res: string[]) => {
+			if (!res.includes(this.uiState.privileges.ChAccessAllProducersClients))
+				this.filterForm.controls["producer"].patchValue(this.auth.getUser().name);
 
-      if (!res.includes(this.uiState.privileges.ChAccessAllBranchClients))
-        this.filterForm.controls["branch"].patchValue(
-          this.auth.getUser().Branch
-        );
-    });
-    this.subscribes.push(sub);
-  }
+			if (!res.includes(this.uiState.privileges.ChAccessAllBranchClients)) this.filterForm.controls["branch"].patchValue(this.auth.getUser().Branch);
+		});
+		this.subscribes.push(sub);
+	}
 
-  // Table Section
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      this.gridApi.showLoadingOverlay();
-      let sub = this.clientService
-        .getAllClients(this.uiState.filters)
-        .subscribe((res: HttpResponse<IBaseResponse<IClient[]>>) => {
-          if (res.body?.status) {
-            this.uiState.clients.totalPages = JSON.parse(
-              res.headers.get("x-pagination")!
-            ).TotalCount;
+	// Table Section
+	dataSource: IDatasource = {
+		getRows: (params: IGetRowsParams) => {
+			this.gridApi.showLoadingOverlay();
+			let sub = this.clientService.getAllClients(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IClient[]>>) => {
+				if (res.body?.status) {
+					this.uiState.clients.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
-            this.uiState.clients.list = res.body?.data!;
+					this.uiState.clients.list = res.body?.data!;
 
-            params.successCallback(
-              this.uiState.clients.list,
-              this.uiState.clients.totalPages
-            );
-            this.uiState.gridReady = true;
-          } else this.message.popup("Oops!", res.body?.message!, "error");
-          this.gridApi.hideOverlay();
-        });
-      this.subscribes.push(sub);
-      //   }
-    },
-  };
+					params.successCallback(this.uiState.clients.list, this.uiState.clients.totalPages);
+					this.uiState.gridReady = true;
+				} else this.message.popup("Oops!", res.body?.message!, "error");
+				this.gridApi.hideOverlay();
+			});
+			this.subscribes.push(sub);
+			//   }
+		},
+	};
 
-  onSort(e: GridReadyEvent) {
-    let colState = e.columnApi.getColumnState();
-    colState.forEach((el) => {
-      if (el.sort) {
-        this.uiState.filters.orderBy = el.colId!;
-        this.uiState.filters.orderDir = el.sort!;
-      }
-    });
-  }
+	onSort(e: GridReadyEvent) {
+		let colState = e.columnApi.getColumnState();
+		colState.forEach((el) => {
+			if (el.sort) {
+				this.uiState.filters.orderBy = el.colId!;
+				this.uiState.filters.orderDir = el.sort!;
+			}
+		});
+	}
 
-  onCellClicked(params: CellEvent) {
-    if (params.column.getColId() == "action") {
-      params.api.getCellRendererInstances({
-        rowNodes: [params.node],
-        columns: [params.column],
-      });
-    }
-  }
+	onCellClicked(params: CellEvent) {
+		if (params.column.getColId() == "action") {
+			params.api.getCellRendererInstances({
+				rowNodes: [params.node],
+				columns: [params.column],
+			});
+		}
+	}
 
-  onPageSizeChange() {
-    this.gridApi.paginationSetPageSize(+this.uiState.filters.pageSize);
-    this.gridOpts.cacheBlockSize = +this.uiState.filters.pageSize;
-    this.gridApi.showLoadingOverlay();
-    this.gridApi.setDatasource(this.dataSource);
-  }
+	onPageSizeChange() {
+		this.gridApi.paginationSetPageSize(+this.uiState.filters.pageSize);
+		this.gridOpts.cacheBlockSize = +this.uiState.filters.pageSize;
+		this.gridApi.showLoadingOverlay();
+		this.gridApi.setDatasource(this.dataSource);
+	}
 
-  onPageChange(params: GridReadyEvent) {
-    if (this.uiState.gridReady) {
-      this.uiState.filters.pageNumber =
-        this.gridApi.paginationGetCurrentPage() + 1;
-    }
-  }
+	onPageChange(params: GridReadyEvent) {
+		if (this.uiState.gridReady) {
+			this.uiState.filters.pageNumber = this.gridApi.paginationGetCurrentPage() + 1;
+		}
+	}
 
-  onGridReady(param: GridReadyEvent) {
-    this.gridApi = param.api;
-    this.gridApi.setDatasource(this.dataSource);
-    this.gridApi.sizeColumnsToFit();
-  }
+	onGridReady(param: GridReadyEvent) {
+		this.gridApi = param.api;
+		this.gridApi.setDatasource(this.dataSource);
+		this.gridApi.sizeColumnsToFit();
+	}
 
-  exportExcelFile() {
-    this.gridApi.exportDataAsCsv({
-      fileName: "Clients",
-      processCellCallback: (params: ProcessCellForExportParams) =>
-        this.editPrintedCells(params),
-      columnKeys: columnsToExport,
-    });
-  }
+	exportExcelFile() {
+		this.gridApi.exportDataAsCsv({
+			fileName: "Clients",
+			processCellCallback: (params: ProcessCellForExportParams) => this.editPrintedCells(params),
+			columnKeys: columnsToExport,
+		});
+	}
 
-  editPrintedCells(params: ProcessCellForExportParams) {
-    if (
-      params.column.getColId() === "approvedDate" ||
-      params.column.getColId() === "rejectionDate" ||
-      params.column.getColId() === "createdOn"
-    )
-      return this.util.formatDate(params.value, true);
-    else return params.value;
-  }
+	editPrintedCells(params: ProcessCellForExportParams) {
+		if (params.column.getColId() === "approvedDate" || params.column.getColId() === "rejectionDate" || params.column.getColId() === "createdOn")
+			return this.util.formatDate(params.value, true);
+		else return params.value;
+	}
 
-  //  filter Section
-  openFilterOffcanvas(): void {
-    this.offcanvasService.open(this.clintFilter, { position: "end" });
-  }
-  private initFilterForm(): void {
-    this.filterForm = new FormGroup({
-      fullName: new FormControl(null),
-      type: new FormControl(null),
-      sponsorID: new FormControl(null),
-      branch: new FormControl(null),
-      producer: new FormControl(null),
-      commericalNo: new FormControl(null),
-      status: new FormControl([]),
-    });
-  }
-  getLookupData() {
-    this.lookupData = this.table.getBaseData(MODULES.Client);
-  }
-  modifyFilterReq() {
-    this.uiState.filters = {
-      ...this.uiState.filters,
-      ...this.filterForm.value,
-    };
-  }
+	//  filter Section
+	openFilterOffcanvas(): void {
+		this.offcanvasService.open(this.clintFilter, { position: "end" });
+	}
+	private initFilterForm(): void {
+		this.filterForm = new FormGroup({
+			fullName: new FormControl(null),
+			type: new FormControl(null),
+			sponsorID: new FormControl(null),
+			branch: new FormControl(null),
+			producer: new FormControl(null),
+			commericalNo: new FormControl(null),
+			status: new FormControl(["Active", "Pending Activation", "Prospect"]),
+		});
+	}
+	getLookupData() {
+		this.lookupData = this.table.getBaseData(MODULES.Client);
+	}
+	modifyFilterReq() {
+		this.uiState.filters = {
+			...this.uiState.filters,
+			...this.filterForm.value,
+		};
+	}
 
-  openClientPreview(id: string) {
-    this.modalRef = this.modalService.open(ClientPreviewComponent, {
-      fullscreen: true,
-      scrollable: true,
-    });
-    this.modalRef.componentInstance.data = {
-      id,
-    };
+	openClientPreview(id: string) {
+		this.modalRef = this.modalService.open(ClientPreviewComponent, {
+			fullscreen: true,
+			scrollable: true,
+		});
+		this.modalRef.componentInstance.data = {
+			id,
+		};
 
-    this.modalRef.closed.subscribe(() => this.gridApi.purgeInfiniteCache());
-  }
+		this.modalRef.closed.subscribe(() => this.gridApi.purgeInfiniteCache());
+	}
 
-  onClientFilters(): void {
-    this.modifyFilterReq();
-    this.gridApi.setDatasource(this.dataSource);
-  }
+	onClientFilters(): void {
+		this.modifyFilterReq();
+		this.gridApi.setDatasource(this.dataSource);
+	}
 
-  clearFilter() {
-    this.filterForm.reset();
-  }
+	clearFilter() {
+		this.filterForm.reset();
+	}
 
-  ngOnDestroy(): void {
-    this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
-  }
+	ngOnDestroy(): void {
+		this.subscribes && this.subscribes.forEach((s) => s.unsubscribe());
+	}
 }
