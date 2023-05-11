@@ -110,17 +110,19 @@ export class ClientRegistryListComponent implements OnInit, OnDestroy {
 	dataSource: IDatasource = {
 		getRows: (params: IGetRowsParams) => {
 			this.gridApi.showLoadingOverlay();
-			let sub = this.clientService.getAllClients(this.uiState.filters).subscribe((res: HttpResponse<IBaseResponse<IClient[]>>) => {
-				if (res.body?.status) {
-					this.uiState.clients.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
+			let sub = this.clientService
+				.getAllClients({ ...this.uiState.filters, status: this.filterForm.controls["status"].value })
+				.subscribe((res: HttpResponse<IBaseResponse<IClient[]>>) => {
+					if (res.body?.status) {
+						this.uiState.clients.totalPages = JSON.parse(res.headers.get("x-pagination")!).TotalCount;
 
-					this.uiState.clients.list = res.body?.data!;
+						this.uiState.clients.list = res.body?.data!;
 
-					params.successCallback(this.uiState.clients.list, this.uiState.clients.totalPages);
-					this.uiState.gridReady = true;
-				} else this.message.popup("Oops!", res.body?.message!, "error");
-				this.gridApi.hideOverlay();
-			});
+						params.successCallback(this.uiState.clients.list, this.uiState.clients.totalPages);
+						this.uiState.gridReady = true;
+					} else this.message.popup("Oops!", res.body?.message!, "error");
+					this.gridApi.hideOverlay();
+				});
 			this.subscribes.push(sub);
 			//   }
 		},
