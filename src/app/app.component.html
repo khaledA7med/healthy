@@ -1,1 +1,10 @@
 <router-outlet></router-outlet>
+<ngb-toast *ngIf="!networkStatus" [autohide]="false" [class.bg-warning]="!networkStatus" (hidden)="checkConnection()">
+    <ng-template ngbToastHeader>
+        <div class="me-auto d-flex justify-content-center align-items-center">
+            <i class="ri-wifi-off-line"></i>
+            <strong class="mx-1">Network</strong>
+        </div>
+    </ng-template>
+    Check your internet connection
+</ngb-toast>

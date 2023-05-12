@@ -57,8 +57,12 @@ export class PermissionsInterceptor implements HttpInterceptor {
         if (error && error.status === Errors.TokenExpired)
           return this.handle701Error(request, next);
         else if (this.errors.includes(error.status)) this.reusableMessage();
+        else if (error.status === Errors.Error500)
+          this.message.errMsgAndEmailSender(error);
         else {
+          this.message.errMsgAndEmailSender(error);
           let errorMessage = "An unknown error occurred.";
+
           if (error.error instanceof ErrorEvent) {
             // client-side error
             errorMessage = `Error: ${error.error.message}`;
@@ -66,7 +70,7 @@ export class PermissionsInterceptor implements HttpInterceptor {
             // server-side error
             errorMessage = error?.error?.message || errorMessage;
           }
-          this.message.popup("Oops!", errorMessage, "error");
+          // this.message.popup("Oops!", errorMessage, "error");
         }
         this.eventService.broadcast(reserved.isLoading, false);
         return throwError(error.message);

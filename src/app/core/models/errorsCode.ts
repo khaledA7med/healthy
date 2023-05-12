@@ -1,4 +1,6 @@
 export enum Errors {
+  Error500 = 500,
+
   TokenExpired = 701,
   ForbiddenError = 703,
   InvalidRefresh = 805,
