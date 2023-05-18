@@ -41,11 +41,11 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     // Menu Items
-    this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
-      this.privileges = res;
-      this.menuItems = this.menu.getMenu(this.privileges);
-      // this.modifyMenuAuth();
-    });
+    // this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
+    //   this.privileges = res;
+    //   this.menuItems = this.menu.getMenu(this.privileges);
+    // this.modifyMenuAuth();
+    // });
   }
 
   /***

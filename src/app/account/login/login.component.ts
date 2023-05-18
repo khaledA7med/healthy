@@ -7,9 +7,14 @@ import { AuthenticationService } from "../../core/services/auth.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
 import { IUser, LoginResponse } from "src/app/core/models/iuser";
 import { Subscription } from "rxjs";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import {
+  IBaseResponse,
+  IBaseResponse2,
+} from "src/app/shared/app/models/App/IBaseResponse";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { environment } from "src/environments/environment";
+import { reserved } from "src/app/core/models/reservedWord";
+import { EventService } from "src/app/core/services/event.service";
 
 @Component({
   selector: "app-login",
@@ -44,7 +49,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private auth: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router,
-    public message: MessagesService
+    public message: MessagesService,
+    private EventService: EventService
   ) {}
 
   ngOnInit(): void {
@@ -52,8 +58,8 @@ export class LoginComponent implements OnInit, OnDestroy {
      * Form Validatyion
      */
     this.loginForm = this.formBuilder.group({
-      dbName: ["Test", [Validators.required]],
-      userName: ["", [Validators.required]],
+      // dbName: ["Test", [Validators.required]],
+      email: ["", [Validators.email, Validators.required]],
       password: ["", [Validators.required]],
       rememberMe: [false],
     });
@@ -73,24 +79,24 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
     let data: IUser = {
-      db: this.loginForm.controls["dbName"].value,
-      userName: this.loginForm.controls["userName"].value,
+      // db: this.loginForm.controls["dbName"].value,
+      email: this.loginForm.controls["email"].value,
       password: this.loginForm.controls["password"].value,
     };
-    if (!this.loginForm.valid) return;
-    else {
+    if (!this.loginForm.valid) {
+      this.EventService.broadcast(reserved.isLoading, true);
+      return;
+    } else {
       let sub = this.auth
         .login(data)
-        .subscribe((res: IBaseResponse<LoginResponse>) => {
-          if (res.status) {
-            localStorage.setItem(localStorageKeys.JWT, res.data?.accessToken!);
-            localStorage.setItem(
-              localStorageKeys.Refresh,
-              res.data?.refreshToken!
-            );
+        .subscribe((res: IBaseResponse2<LoginResponse>) => {
+          if (res.statusCode) {
+            localStorage.setItem(localStorageKeys.JWT, res?.accessToken!);
+            localStorage.setItem(localStorageKeys.Refresh, res?.refreshToken!);
+            this.EventService.broadcast(reserved.isLoading, false);
             this.message.toast("Logged In Successfully", "success");
             this.router.navigate([this.returnUrl]);
-          } else this.message.toast(res.message!, "error");
+          } else this.message.toast(res.responseMessage!, "error");
         });
       this.subsribes.push(sub);
     }

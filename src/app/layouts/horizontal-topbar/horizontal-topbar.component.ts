@@ -70,12 +70,13 @@ export class HorizontalTopbarComponent implements OnInit {
     this.changeMode(this.mode);
 
     // Menu Items
-    this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
-      this.privileges = res;
-      this.menuItems = this.menu.getMenu(this.privileges);
-      // this.modifyMenuAuth();
-    });
+    // this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
+    //   this.privileges = res;
+    //   this.menuItems = this.menu.getMenu(this.privileges);
+    // this.modifyMenuAuth();
+    // });
 
+    this.menuItems = this.menu.getMenu();
     this.subscribeToRouteChangeEvents();
   }
 

@@ -4,11 +4,11 @@
 
 export const environment = {
   appVersion: require("../../package.json").version + "-dev",
-  coName: "Oasis",
+  coName: "CityBrokers",
   supportEmail: "Support@oasisoft.net",
   production: false,
   // baseURL: "https://localhost:7233/api/v1",
-  baseURL: "https://localhost:44376/api/v1",
+  baseURL: "https://localhost:44379/api",
   // baseURL: "https://ibs-api.oasisoft.net/api/v1",
   // baseURL: "https://localhost:44376/api",
 };

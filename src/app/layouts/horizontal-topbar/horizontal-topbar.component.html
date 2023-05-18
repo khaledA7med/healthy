@@ -34,19 +34,20 @@
                 <ng-container *ngFor="let item of menuItems">
                     <li class="menu-title" *ngIf="item.isTitle"><span data-key="t-menu">{{ item.label | translate
                             }}</span></li>
-
-                    <li class="nav-item" [ngClass]="{'pe-none': !item.auth}" *ngIf="!item.isTitle && !item.isLayout">
+                    <!-- [ngClass]="{'pe-none': !item.auth}" -->
+                    <li class="nav-item" *ngIf="!item.isTitle && !item.isLayout">
                         <a *ngIf="hasItems(item)" href="javascript:void(0);" class="is-parent nav-link menu-link"
-                            [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge, 'disabled': !item.auth}"
-                            data-bs-toggle="collapse" aria-expanded="false" (click)="toggleItem($event)">
+                            [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge}" data-bs-toggle="collapse"
+                            aria-expanded="false" (click)="toggleItem($event)">
                             <i class="{{ item.icon }} icon nav-icon" class=""></i>
                             <span class=""> {{ item.label | translate }}</span>
                             <span class="badge badge-pill {{item.badge.variant}}" *ngIf="item.badge">{{item.badge.text
                                 | translate}}</span>
                         </a>
 
-                        <a [routerLink]="item.link" *ngIf="!hasItems(item)" class="side-nav-link-ref nav-link menu-link"
-                            [ngClass]="{'disabled': !item.auth}">
+                        <!-- [ngClass]="{'disabled': !item.auth}" -->
+                        <a [routerLink]="item.link" *ngIf="!hasItems(item)"
+                            class="side-nav-link-ref nav-link menu-link">
                             <i class="bx {{ item.icon }} icon nav-icon" *ngIf="item.icon" class=""></i>
                             <span class=""> {{ item.label | translate }}</span>
                             <span class="badge {{item.badge.variant}} float-end" *ngIf="item.badge">{{item.badge.text |
@@ -54,18 +55,18 @@
                         </a>
                         <div class="collapse menu-dropdown" id="sidebarDashboards" *ngIf="hasItems(item)">
                             <ul *ngIf="hasItems(item)" class="nav nav-sm flex-column" aria-expanded="false">
-                                <li *ngFor="let subitem of item.subItems" [ngClass]="{'pe-none': !subitem.auth}"
-                                    class="nav-item">
+                                <!-- [ngClass]="{'pe-none': !subitem.auth}" -->
+                                <li *ngFor="let subitem of item.subItems" class="nav-item">
+                                    <!-- [ngClass]="{'disabled': !subitem.auth}" -->
                                     <a [routerLink]="subitem.link" *ngIf="!hasItems(subitem)" class="nav-link"
-                                        [ngClass]="{'disabled': !subitem.auth}" [attr.data-parent]="subitem.parentId"
-                                        (click)="updateActive($event)">
+                                        [attr.data-parent]="subitem.parentId" (click)="updateActive($event)">
                                         <i class="bx {{ subitem.icon }} icon nav-icon" *ngIf="subitem.icon"
                                             class=""></i>{{ subitem.label | translate}}
                                     </a>
+                                    <!-- [ngClass]="{'disabled': !subitem.auth}" -->
                                     <a *ngIf="hasItems(subitem)" class="nav-link" href="javascript:void(0);"
                                         [attr.data-parent]="subitem.parentId" data-bs-toggle="collapse"
-                                        [ngClass]="{'disabled': !subitem.auth}" aria-expanded="false"
-                                        (click)="toggleSubItem($event)">
+                                        aria-expanded="false" (click)="toggleSubItem($event)">
                                         <i class="bx {{ subitem.icon }} icon nav-icon" *ngIf="subitem.icon"
                                             class=""></i>{{ subitem.label | translate}}
                                     </a>

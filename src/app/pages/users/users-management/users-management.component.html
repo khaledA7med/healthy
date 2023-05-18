@@ -1,0 +1,220 @@
+<div class="row justify-content-between align-items-center mb-3">
+  <div class="col-lg-2 col-md-3 col-sm-6 form-group row align-items-center">
+    <label class="col-sm-4 col-form-label" for="pagingSizeSelect">Show: </label>
+
+    <div class="col-sm-8">
+      <ng-select (change)="onPageSizeChange()" [clearable]="false" [searchable]="false" id="pagingSizeSelect"
+        [(ngModel)]="uiState.filters.pageSize">
+        <ng-option [value]="25">25</ng-option>
+        <ng-option [value]="50">50</ng-option>
+        <ng-option [value]="100">100</ng-option>
+        <ng-option [value]="150">150</ng-option>
+        <ng-option [value]="200">200</ng-option>
+      </ng-select>
+
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-end">
+
+    <a type="button" class="btn btn-sm btn-info mx-2 d-flex align-items-center" (click)="openUsersFilter()">
+      <i class="ri-filter-3-line align-bottom me-1"></i>
+      Filters
+    </a>
+    <a type="button" class="btn btn-sm btn-success mx-2  d-flex align-items-center" (click)="openUsersDialoge()">
+      <i class="ri-add-line align-bottom me-1"></i> Add User
+    </a>
+  </div>
+</div>
+
+<div class="ag-theme-alpine" appTableView>
+  <ag-grid-angular class="gridScrollbar" style="width: 100%; height: 75vh" [gridOptions]="gridOpts">
+  </ag-grid-angular>
+</div>
+
+<!--------------------------------------------------------
+                        Client Filter
+  -------------------------------------------------------->
+<div>
+  <ng-template #filter let-offcanvas>
+    <div class="offcanvas-header">
+      <h4 class="offcanvas-title fs-4">Filters</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form class="row justify-content-center" [formGroup]="filterForm">
+
+        <div class="mb-3">
+          <label for="status" class="form-label text-muted fw-bold fs-13">Status</label>
+          <input name="status" type="text" class="form-control" formControlName="status" placeholder="status">
+          <!-- <ng-select id="Status" class="is-invalid" placeholder="Select Status"
+                        [items]="(lookupData | async)?.StatusOfUsers?.content!" [loading]="lookupData ? false : true"
+                        [clearable]="true" [searchable]="true" formControlName="status" bindLabel="name"
+                        bindValue="name">
+                    </ng-select> -->
+        </div>
+
+        <div class="mb-3">
+          <label for="userType" class="form-label text-muted fw-bold fs-13">
+            User Type
+          </label>
+          <input name="userType" type="text" class="form-control" formControlName="userType" id="userType"
+            placeholder="User Type">
+        </div>
+
+        <div class="mb-3">
+          <label for="clientName" class="form-label text-muted fw-bold fs-13">Client Name</label>
+          <input name="clientName" type="text" class="form-control" formControlName="clientName" id="clientName"
+            placeholder="Client Name">
+        </div>
+
+        <div class="col-12 mh-100"></div>
+      </form>
+    </div>
+    <!-- submit and clear btn -->
+    <div class="offcanvas-footer border-top row mb-3 mx-1">
+      <div class="col-6 mt-2">
+        <button class="btn btn-light btn-sm w-100" (click)="clearFilter();">
+          Clear Filter
+        </button>
+      </div>
+      <div class="col-6 mt-2">
+        <button class="btn btn-success btn-sm w-100" (click)="onUsersFilter()">
+          Apply
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<!--------------------------------------------------------
+                        Add Users Modal
+  -------------------------------------------------------->
+
+<ng-template #usersContent let-modal>
+  <div class="modal-header mb-0">
+    <h4 class="modal-title" id="modal-basic-title">Add User Account</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <form [formGroup]="userForm" (ngSubmit)="submitUser(userForm)">
+    <div class="modal-body p-1" style="overflow-y: unset !important;">
+      <div class="row p-3">
+        <!-- AS Form Array-->
+        <!-- <div class="d-flex flex-column">
+                    <button type="button" (click)="addUser()"
+                      class="ms-auto btn btn-sm btn-soft-primary mb-3 bg-gradient waves-effect waves-light">
+                      <i class="ri-user-add-line"></i> Add User
+                    </button>
+                    <div class="table-responsive">
+                      <table class="table table-nowrap mb-0">
+                        <thead class="table-light">
+                          <tr>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody formArrayName="Users">
+                          <tr *ngFor="let c of usersControlArray.controls; index as i">
+                            <ng-container [formGroupName]="i">
+                              <td>
+                                <div class="asterisk-div">
+                                  <input type="text" class="form-control form-control-sm" formControlName="firstName"
+                                    placeholder="First Name" [ngClass]="{
+                                      'is-invalid':
+                                        (usersControls(i, 'firstName').touched ||
+                                          submitted) &&
+                                          usersControls(i, 'firstName').invalid
+                                    }" />
+                                  <div class="invalid-feedback fw-bold">
+                                    Required
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td>
+                                <div class="asterisk-div">
+                                  <input type="text" class="form-control form-control-sm" formControlName="surname"
+                                    placeholder="Last Name" [ngClass]="{
+                                      'is-invalid':
+                                        (usersControls(i, 'surname').touched ||
+                                          submitted) &&
+                                          usersControls(i, 'surname').invalid
+                                    }" />
+                                  <div class="invalid-feedback fw-bold">
+                                    Required
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td>
+                                <div class="asterisk-div">
+                                  <input type="text" class="form-control form-control-sm" placeholder="Email"
+                                    formControlName="email" [ngClass]="{
+                                      'is-invalid':
+                                        (contactControls(i, 'email').touched ||
+                                          submitted) &&
+                                        contactControls(i, 'email').invalid
+                                    }" />
+                                  <div class="invalid-feedback fw-bold" *ngIf="
+                                      (contactControls(i, 'email').touched ||
+                                        submitted) &&
+                                      contactControls(i, 'email').invalid
+                                    ">
+                                    Required
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td>
+                                <button type="button" class="btn btn-sm btn-soft-danger" (click)="remove(i, 'user')">
+                                  <i class="ri-delete-bin-2-line"></i>
+                                </button>
+                              </td>
+                            </ng-container>
+                          </tr>
+                          <tr *ngIf="contactControlArray.controls.length === 0"
+                            class="my-1 text-center text-dark fw-bold no-item-contact">
+                            <td colspan="100">No items show</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> -->
+
+        <div class="col-12 row">
+
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+            <label for="firstName">First Name</label>
+            <input id="firstName" class="form-control form-control-sm" formControlName="firstName"
+              [ngClass]="{'is-invalid': (ff.firstName?.touched || uiState.submitted) && ff.firstName?.invalid}" />
+            <span *ngIf="(ff.firstName?.touched || uiState.submitted) && ff.firstName?.invalid"
+              class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+            <label for="surName">Last Name</label>
+            <input id="surname" class="form-control form-control-sm" formControlName="surname"
+              [ngClass]="{'is-invalid': (ff.surname?.touched || uiState.submitted) && ff.surname?.invalid}" />
+            <span *ngIf="(ff.surname?.touched || uiState.submitted) && ff.surname?.invalid"
+              class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+            <label for="email">Email</label>
+            <input id="email" class="form-control form-control-sm" formControlName="email"
+              [ngClass]="{'is-invalid': (ff.email?.touched || uiState.submitted) && ff.email?.invalid}" />
+            <span *ngIf="(ff.email?.touched || uiState.submitted) && ff.email?.invalid"
+              class="invalid-feedback fw-bold mt-0 d-inline-block">Required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-sm btn-success mx-2 d-flex align-items-center"><i
+          class="ri-add-line mx-1"></i>Add</button>
+      <button type="button" class="btn btn-outline-danger btn-sm" (click)="modal.close()">Close</button>
+    </div>
+  </form>
+</ng-template>

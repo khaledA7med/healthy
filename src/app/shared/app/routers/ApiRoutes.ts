@@ -176,6 +176,14 @@ export const ApiRoutes = {
     deleteDocument: "/Documents/Delete",
     lineOfBusiness: LookUpTables + "LineOfBusiness",
   },
+
+  UsersAccounts: {
+    search: "/account/search",
+    save: "/account/create",
+    resetPassword: "/account/resetpassword",
+    changeStatus: "/account/changestatus",
+  },
+
   masterTables: {
     inuranceClasses: {
       search: "/MasterTables/InsurranceClass/Search",

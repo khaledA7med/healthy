@@ -5,7 +5,7 @@ export interface DataBaseNames {
 
 export interface IUser {
   db?: { id: number; name: string }[];
-  userName?: string;
+  email?: string;
   password?: string;
   roles?: string;
   branch?: string;

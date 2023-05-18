@@ -5,6 +5,18 @@
     }
   },
   "MENUITEMS": {
+    "HOME": {
+      "TEXT": "Home"
+    },
+    "INSURANCEPOLICY": {
+      "TEXT": "Insurance Policy"
+    },
+    "REQUESTS": {
+      "TEXT": "Requests"
+    },
+    "USERACCOUNTS": {
+      "TEXT": "User Accounts"
+    },
     "MASTERTABLE": {
       "TEXT": "Master Table",
       "LIST": {

@@ -1,0 +1,45 @@
+[col-id="action"] {
+  overflow: visible !important;
+}
+
+.ag-row.ag-row-focus {
+  z-index: 1 !important;
+}
+
+.ag-cell:focus {
+  border: none !important;
+  outline: none;
+}
+
+#gridScrollbar .ag-body-viewport,
+#gridScrollbar .ag-body-horizontal-scroll-viewport {
+  position: relative;
+  overflow: hidden !important;
+}
+
+.ps__rail-x,
+.ps__rail-y {
+  opacity: 0.6;
+}
+
+.ng-select .ng-select-container {
+  min-height: 28px !important;
+  height: fit-content !important;
+  max-height: fit-content !important;
+}
+.offcanvas-body {
+  .form-control {
+    max-height: 30px;
+  }
+  .form-control.text-area {
+    max-height: unset;
+  }
+}
+
+.SCSelect.ng-select .ng-select-container {
+  border-radius: 4px 0px 0px 4px !important;
+  -webkit-border-radius: 4px 0px 0px 4px !important;
+  -moz-border-radius: 4px 0px 0px 4px !important;
+  -ms-border-radius: 4px 0px 0px 4px !important;
+  -o-border-radius: 4px 0px 0px 4px !important;
+}

@@ -20,10 +20,11 @@
 
                         <div class="card-body p-4">
                             <div class="text-center mt-2">
-                                <div class="text-center mt-sm-5 mb-4 text-white-50">
+                                <div class="text-center mt-sm-5 mb-5 text-white-50">
                                     <div>
                                         <a href="index.html" class="d-inline-block auth-logo">
-                                            <img src="assets/images/favicon.ico" alt="" height="110" width="130">
+                                            <img src="assets/images/companies/City-Brokers-Logo.png" alt="" height="50"
+                                                width="250">
                                         </a>
                                     </div>
                                 </div>
@@ -33,7 +34,7 @@
                             <div class="p-2 mt-4">
                                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete>
 
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="dbname" class="form-label font-weight-bold">Version:
                                         </label>
                                         <ng-select [clearable]="false" [searchable]="false" id="dbname"
@@ -42,15 +43,14 @@
                                                 [value]="name.name||'Test'">{{name.name}}
                                             </ng-option>
                                         </ng-select>
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3">
-                                        <label class="form-label font-weight-bold" for="userName">Username</label>
-                                        <input type="userName" class="form-control" id="userName"
-                                            formControlName="userName"
-                                            [ngClass]="{ 'is-invalid': submitted && f['userName'].errors }"
-                                            placeholder="Enter Username">
-                                        <div *ngIf="submitted && f['userName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['userName'].errors['required']">Username is required</div>
+                                        <label class="form-label font-weight-bold" for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" formControlName="email"
+                                            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+                                            placeholder="Enter email">
+                                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                                            <div *ngIf="f['email'].errors['required']">email is required</div>
                                         </div>
                                     </div>
 
@@ -78,14 +78,14 @@
                                         <label class="form-check-label" for="auth-remember-check">Remember me</label>
                                     </div>
                                     <div class="mt-4">
-                                        <button class="btn btn-primary w-100" type="submit">Sign In</button>
+                                        <button class="btn btn-dark w-100" type="submit">Sign In</button>
                                     </div>
 
                                 </form>
                             </div>
-                            <div class="fw-bolder text-center">
+                            <!-- <div class="fw-bolder text-center">
                                 Patch : <small>A: {{version}} | B: 2.0.1 | R: 3.3.0</small>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- end card body -->
                     </div>
