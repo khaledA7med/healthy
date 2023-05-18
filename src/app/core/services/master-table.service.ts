@@ -684,89 +684,8 @@ export class MasterTableService {
     };
 
     switch (module) {
-      case MODULES.Client:
-        this.dataSrc = data.Client;
-        break;
-      case MODULES.ClientForm:
-        this.dataSrc = data.ClientForm;
-        break;
-      case MODULES.BusinessDevelopment:
-        this.dataSrc = data.BusinessDevelopment;
-        break;
-      case MODULES.BusinessDevelopmentForm:
-        this.dataSrc = data.BusinessDevelopmentForm;
-        break;
-      case MODULES.ProductionForm:
-        this.dataSrc = data.ProductionForm;
-        break;
-      case MODULES.Production:
-        this.dataSrc = data.Production;
-        break;
-      case MODULES.EditCommission:
-        this.dataSrc = data.EditCommision;
-        break;
-      case MODULES.CustomerService:
-        this.dataSrc = data.CustomerService;
-        break;
-      case MODULES.CustomerServiceForm:
-        this.dataSrc = data.CustomerServiceForm;
-        break;
-      case MODULES.Claims:
-        this.dataSrc = data.Claims;
-        break;
-      case MODULES.ClaimsForm:
-        this.dataSrc = data.ClaimsForm;
-        break;
       case MODULES.SystemAdmin:
         this.dataSrc = data.SystemAdmin;
-        break;
-      case MODULES.LineOfBusiness:
-        this.dataSrc = data.LineOfBusiness;
-        break;
-      case MODULES.InsuranceCompanies:
-        this.dataSrc = data.InsuranceCompanies;
-        break;
-      case MODULES.QuotingRequirements:
-        this.dataSrc = data.QuotingRequirements;
-        break;
-      case MODULES.PolicyIssuanceRequirements:
-        this.dataSrc = data.PolicyIssuanceRequirements;
-        break;
-      case MODULES.InsuranceCompaniesDocuments:
-        this.dataSrc = data.CustomerServiceDocuments;
-        break;
-      case MODULES.CustomerServiceCompanyRequirements:
-        this.dataSrc = data.CustomerServiceRequirements;
-        break;
-      case MODULES.MasterTableProductionLibraries:
-        this.dataSrc = data.MasterTableProductionLibraries;
-        break;
-      case MODULES.MasterTableListOfRequiredDocuments:
-        this.dataSrc = data.MasterTableListOfRequiredDocuments;
-        break;
-      case MODULES.Hospitals:
-        this.dataSrc = data.Hospitals;
-        break;
-      case MODULES.InsuranceWorkshopDetails:
-        this.dataSrc = data.InsuranceWorkshopDetails;
-        break;
-      case MODULES.ClaimsGeneralItems:
-        this.dataSrc = data.ClaimsGeneralItems;
-        break;
-      case MODULES.ClaimsStatus:
-        this.dataSrc = data.ClaimsStatus;
-        break;
-      case MODULES.ClaimsRejectionReasons:
-        this.dataSrc = data.ClaimsRejectionReasons;
-        break;
-      case MODULES.DefaultEmails:
-        this.dataSrc = data.DefaultEmails;
-        break;
-      case MODULES.Reports:
-        this.dataSrc = data.Reports;
-        break;
-      case MODULES.Activities:
-        this.dataSrc = data.Activities;
         break;
       case MODULES.Emails:
         this.dataSrc = data.Emails;
