@@ -10,8 +10,6 @@ import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { IPrivileges } from "src/app/core/models/iuser";
-import { Roles } from "src/app/core/roles/Roles";
-import { PermissionsService } from "src/app/core/services/permissions.service";
 import { MenuService } from "src/app/shared/services/menu.service";
 
 import { MenuItem } from "./menu.model";
@@ -31,11 +29,7 @@ export class SidebarComponent implements OnInit {
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   subscribe!: Subscription;
-  constructor(
-    public translate: TranslateService,
-    private menu: MenuService,
-    private permission: PermissionsService
-  ) {
+  constructor(public translate: TranslateService, private menu: MenuService) {
     translate.setDefaultLang("en");
   }
 

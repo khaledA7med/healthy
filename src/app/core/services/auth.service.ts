@@ -3,11 +3,10 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
-import { IUser, LoginResponse, UserAccess } from "../models/iuser";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
+import { IUser, UserAccess } from "../models/iuser";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { PermissionsService } from "./permissions.service";
+import { IRegister } from "src/app/shared/app/models/App/Auth/register";
 
 @Injectable({ providedIn: "root" })
 
@@ -18,13 +17,14 @@ export class AuthenticationService {
   private readonly env: string = environment.baseURL;
   jwtHelper = new JwtHelperService();
 
-  constructor(private http: HttpClient, private perm: PermissionsService) {}
+  constructor(private http: HttpClient) {}
 
-  login(data: IUser): Observable<IBaseResponse<LoginResponse>> {
-    return this.http.post<IBaseResponse<LoginResponse>>(
-      this.env + ApiRoutes.Users.login,
-      data
-    );
+  login(data: IUser): Observable<any> {
+    return this.http.post<any>(this.env + ApiRoutes.Users.login, data);
+  }
+
+  register(data: FormData): Observable<any> {
+    return this.http.post<any>(this.env + ApiRoutes.Users.register, data);
   }
   /**
    * Logout the user
@@ -32,8 +32,6 @@ export class AuthenticationService {
   logout() {
     // logout the user
     localStorage.removeItem(localStorageKeys.JWT);
-    localStorage.removeItem(localStorageKeys.Refresh);
-    this.perm.clearPermissions();
   }
 
   get currentToken(): string {

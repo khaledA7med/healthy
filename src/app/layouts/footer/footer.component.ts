@@ -9,7 +9,6 @@ import { environment } from "src/environments/environment";
 export class FooterComponent implements OnInit {
   // set the currenr year
   year: number = new Date().getFullYear();
-  version: string = environment.appVersion;
   constructor() {}
 
   ngOnInit(): void {}

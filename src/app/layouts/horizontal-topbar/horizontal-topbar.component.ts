@@ -25,7 +25,6 @@ import { reserved } from "src/app/core/models/reservedWord";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
 import { filter, map, mergeMap } from "rxjs/operators";
 import { MenuService } from "src/app/shared/services/menu.service";
-import { PermissionsService } from "src/app/core/services/permissions.service";
 
 @Component({
   selector: "app-horizontal-topbar",
@@ -58,8 +57,7 @@ export class HorizontalTopbarComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
-    private menu: MenuService,
-    private permission: PermissionsService
+    private menu: MenuService
   ) {}
   ngOnInit(): void {
     this.userData = this.authService.getUser();

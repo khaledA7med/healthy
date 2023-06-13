@@ -14,7 +14,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 // Language
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { interceptorProviders } from "./core/helpers";
 import { NgbToastModule } from "@ng-bootstrap/ng-bootstrap";
 
 export function createTranslateLoader(http: HttpClient): any {
@@ -40,7 +39,7 @@ export function createTranslateLoader(http: HttpClient): any {
     PagesModule,
     NgbToastModule,
   ],
-  providers: [interceptorProviders],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

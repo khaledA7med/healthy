@@ -14,24 +14,6 @@ export class MenuService {
         icon: "ri-home-4-line",
         link: AppRoutes.Home.base,
       },
-      {
-        id: 1,
-        label: "MENUITEMS.INSURANCEPOLICY.TEXT",
-        icon: "ri-file-list-3-line",
-        link: AppRoutes.InsurancePolicy.base,
-      },
-      {
-        id: 1,
-        label: "MENUITEMS.REQUESTS.TEXT",
-        icon: "ri-customer-service-2-line",
-        link: AppRoutes.Requests.base,
-      },
-      {
-        id: 1,
-        label: "MENUITEMS.USERACCOUNTS.TEXT",
-        icon: "ri-team-line",
-        link: AppRoutes.UserAccounts.base,
-      },
     ];
   }
 }

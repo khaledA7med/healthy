@@ -13,9 +13,7 @@ export interface IUser {
 }
 
 export interface LoginResponse {
-  accessToken?: string;
-  accessTokenExpiry?: number;
-  refreshToken?: string;
+  token?: string;
 }
 
 export interface UserAccess {

@@ -5,15 +5,6 @@ export const AppRoutes = {
   Home: {
     base: "home",
   },
-  InsurancePolicy: {
-    base: "insurance-policy",
-  },
-  Requests: {
-    base: "requests",
-  },
-  UserAccounts: {
-    base: "user-accounts",
-  },
   grid: {
     index: "igrid",
   },
@@ -22,13 +13,5 @@ export const AppRoutes = {
     comingSoon: "pages/coming-soon",
     notFound: "pages/404",
     notAuth: "pages/401",
-  },
-  SystemAdmin: {
-    base: "system-admin",
-    create: "system-admin/create",
-    privileges: "system-admin/privileges",
-  },
-  Email: {
-    base: "emails",
   },
 };
