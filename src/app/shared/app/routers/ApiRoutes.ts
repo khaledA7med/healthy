@@ -1,7 +1,7 @@
 export const ApiRoutes = {
   Users: {
-    login: "/Account/login",
-    register: "/Account/register",
+    login: "patient/login",
+    register: "patient/register",
     refesh: "/Account/RefreshToken",
   },
   UsersAccounts: {

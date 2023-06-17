@@ -16,13 +16,11 @@ import { MessagesService } from "src/app/shared/services/messages.service";
 import { reserved } from "../models/reservedWord";
 import { NgbModal, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { EventService } from "../services/event.service";
-import { PermissionsService } from "../services/permissions.service";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private auth: AuthenticationService,
-    private perm: PermissionsService,
     private router: Router,
     private message: MessagesService,
     private modalService: NgbModal,
@@ -63,26 +61,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.eventService.broadcast(reserved.isLoading, false);
 
         return throwError(err);
-      }),
-      retryWhen((errors) =>
-        errors.pipe(
-          mergeMap((error, i) => {
-            if (i >= this.maxRetryAttempts - 1) {
-              return throwError(error);
-            }
-            if (error.status === Errors.TokenExpired)
-              return this.perm.refreshToken().pipe(
-                take(1),
-                catchError((refreshError) => {
-                  this.reusableMessage();
-                  return throwError(refreshError);
-                })
-              );
-            return throwError(error);
-          }),
-          take(this.maxRetryAttempts)
-        )
-      )
+      })
     );
   }
 

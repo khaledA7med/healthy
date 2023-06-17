@@ -9,7 +9,6 @@ import {
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
-import { IPrivileges } from "src/app/core/models/iuser";
 import { MenuService } from "src/app/shared/services/menu.service";
 
 import { MenuItem } from "./menu.model";
@@ -22,8 +21,6 @@ import { MenuItem } from "./menu.model";
 export class SidebarComponent implements OnInit {
   toggle: any = true;
   menuItems: MenuItem[] = [];
-
-  privileges!: IPrivileges;
 
   @ViewChild("sideMenu") sideMenu!: ElementRef;
   @Output() mobileMenuButtonClicked = new EventEmitter();

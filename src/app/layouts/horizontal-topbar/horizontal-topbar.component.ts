@@ -19,7 +19,7 @@ import { DOCUMENT } from "@angular/common";
 import { EventService } from "src/app/core/services/event.service";
 import { AuthenticationService } from "src/app/core/services/auth.service";
 import { Title } from "@angular/platform-browser";
-import { IPrivileges, UserAccess } from "src/app/core/models/iuser";
+import { UserAccess } from "src/app/core/models/iuser";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { AppRoutes } from "src/app/shared/app/routers/appRouters";
@@ -45,8 +45,6 @@ export class HorizontalTopbarComponent implements OnInit {
     dark: reserved.darkMode,
     light: reserved.lightMode,
   };
-
-  privileges!: IPrivileges;
 
   userData!: UserAccess;
 

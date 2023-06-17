@@ -17,11 +17,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 // Login Auth
 import { AuthenticationService } from "../../core/services/auth.service";
 import { MessagesService } from "src/app/shared/services/messages.service";
-import { IUser, LoginResponse } from "src/app/core/models/iuser";
+import { IUser } from "src/app/core/models/iuser";
 import { Subscription } from "rxjs";
-import { IBaseResponse } from "src/app/shared/app/models/App/IBaseResponse";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
-import { environment } from "src/environments/environment";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -52,8 +50,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   RegisterFormSubmitted = false as boolean;
   RegisterModal!: NgbModalRef;
+  VerifyModal!: NgbModalRef;
   RegisterForm!: FormGroup<IRegister>;
   @ViewChild("registerContent") registerContent!: TemplateRef<any>;
+  @ViewChild("verifyContent") verifyContent!: TemplateRef<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -102,11 +102,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     } else {
       let sub = this.auth.login(data).subscribe((res) => {
         if (res) {
+          console.log(data);
           localStorage.setItem(localStorageKeys.JWT, res.data?.token!);
           this.EventService.broadcast(reserved.isLoading, false);
           this.message.toast("Logged In Successfully", "success");
           this.router.navigate([this.returnUrl]);
-        } else this.message.toast(res, "error");
+        } else this.message.toast(res.error, "error");
       });
       this.subsribes.push(sub);
     }
@@ -124,7 +125,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       ariaLabelledBy: "modal-basic-title",
       centered: true,
       backdrop: "static",
-      size: "md",
+      size: "lg",
     });
     this.RegisterModal.hidden.subscribe(() => {
       this.resetRegisterForm();
@@ -132,18 +133,26 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  openVerifyDialoge() {
+    this.VerifyModal = this.modalService.open(this.verifyContent, {
+      ariaLabelledBy: "modal-basic-title",
+      centered: true,
+      backdrop: "static",
+      size: "sm",
+    });
+  }
+
   initRegisterForm() {
     this.RegisterForm = new FormGroup<IRegister>({
       name: new FormControl(null, Validators.required),
-      name_ar: new FormControl(null, Validators.required),
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, Validators.required),
       password_confirmation: new FormControl(null, Validators.required),
       phone: new FormControl(null),
       address: new FormControl(null),
-      address_ar: new FormControl(null),
       gender: new FormControl(null),
       date_of_birth: new FormControl(null),
+      img: new FormControl(null),
     });
   }
 
@@ -159,29 +168,30 @@ export class LoginComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  submitRegisterData(form: FormGroup<IRegister>) {
+  submitRegisterData(form: FormGroup) {
+    console.log("00000", form);
     this.RegisterFormSubmitted = true;
     let val = form.getRawValue();
     const formData = new FormData();
 
     formData.append("name", val.name!);
-    formData.append("name_ar", val.name_ar! ?? "");
     formData.append("password", val.password! ?? "");
     formData.append("email", val.email!);
     formData.append("password_confirmation", val.password_confirmation!);
     formData.append("address", val.address! ?? "");
-    formData.append("address_ar", val.address_ar! ?? "");
     formData.append("gender", val.gender! ?? "");
     formData.append("phone", val.phone! ?? "");
+    formData.append("date_of_birth", val.date_of_birth! ?? "");
+    formData.append("img", val.img! ?? "");
 
     this.EventService.broadcast(reserved.isLoading, true);
     let sub = this.auth.register(formData).subscribe((res) => {
-      if (res.body?.status) {
+      if (res.status === "true") {
         this.RegisterModal.dismiss();
-        this.message.toast(res.body?.message!, "success");
-      } else this.message.popup("Sorry!", res.body?.message!, "warning");
+        this.message.toast(res.msg!, "success");
+      } else this.message.popup("Sorry!", res.msg!, "warning");
       this.EventService.broadcast(reserved.isLoading, false);
-      window.location.reload();
+      // window.location.reload();
     });
     this.subsribes.push(sub);
   }
