@@ -27,6 +27,7 @@ import {
   IRegister,
   IRegisterData,
 } from "src/app/shared/app/models/App/Auth/register";
+import { IVerify } from "src/app/shared/app/models/App/Auth/verify";
 
 @Component({
   selector: "app-login",
@@ -49,9 +50,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   year: number = new Date().getFullYear();
 
   RegisterFormSubmitted = false as boolean;
+  VerifyFormSubmitted = false as boolean;
   RegisterModal!: NgbModalRef;
   VerifyModal!: NgbModalRef;
   RegisterForm!: FormGroup<IRegister>;
+  VerifyForm!: FormGroup<IVerify>;
   @ViewChild("registerContent") registerContent!: TemplateRef<any>;
   @ViewChild("verifyContent") verifyContent!: TemplateRef<any>;
 
@@ -140,6 +143,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       backdrop: "static",
       size: "sm",
     });
+    this.VerifyModal.hidden.subscribe(() => {
+      this.resetVerifyForm();
+      this.VerifyFormSubmitted = false;
+    });
   }
 
   initRegisterForm() {
@@ -168,6 +175,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  // submitVerify(){
+  //   this.VerifyFormSubmitted = true
+
+  // }
   submitRegisterData(form: FormGroup) {
     console.log("00000", form);
     this.RegisterFormSubmitted = true;
@@ -198,6 +209,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   resetRegisterForm() {
     this.RegisterForm.reset();
+  }
+  resetVerifyForm() {
+    this.VerifyForm.reset();
   }
   ngOnDestroy(): void {
     this.subsribes && this.subsribes.forEach((s) => s.unsubscribe());
