@@ -1,5 +1,4 @@
 import { Subscription } from "rxjs";
-import { MasterMethodsService } from "src/app/shared/services/master-methods.service";
 import {
   Component,
   EventEmitter,
@@ -26,11 +25,7 @@ export class DropzoneComponent implements OnDestroy {
 
   @Output() files: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(
-    private message: MessagesService,
-    public util: AppUtils,
-    private masterMethod: MasterMethodsService
-  ) {}
+  constructor(private message: MessagesService, public util: AppUtils) {}
 
   onSelectFiles(e: Event) {
     const elem = e.target as HTMLInputElement;
@@ -53,59 +48,6 @@ export class DropzoneComponent implements OnDestroy {
       reader.readAsDataURL(files[i]);
     }
     this.emitingFiles();
-  }
-
-  downloadFile(path: string) {
-    let sub = this.masterMethod.downloadFile(path).subscribe({
-      next: (res) => {
-        const downloadedFile = new Blob([res.body as BlobPart], {
-          type: res.body,
-        });
-        const a = document.createElement("a");
-        a.setAttribute("style", "display:none;");
-        document.body.appendChild(a);
-        a.download = path;
-        a.href = URL.createObjectURL(downloadedFile);
-        a.target = "_blank";
-        a.click();
-        document.body.removeChild(a);
-      },
-      error: (error) => {
-        this.message.popup("Oops!", error.message, "error");
-      },
-    });
-    this.subscribes.push(sub);
-  }
-
-  removeImage(item: any, isServer?: boolean) {
-    this.message
-      .confirm("Sure!", "delete this file?!", "danger", "question")
-      .then((res: any) => {
-        if (res.isConfirmed) {
-          this.documentsToDisplay = this.documentsToDisplay.filter(
-            (doc) => doc.name !== item.name
-          );
-          this.documentsToUpload = this.documentsToUpload.filter(
-            (doc) => doc.name !== item.name
-          );
-          if (isServer) {
-            let sub = this.masterMethod
-              .deleteFile(item.data)
-              .subscribe((res: HttpResponse<IBaseResponse<boolean>>) => {
-                if (res.body?.status) {
-                  this.message.toast("Deleted!", "info");
-                  this.emitingFiles();
-                  this.UploadedFiles = this.UploadedFiles.filter(
-                    (el) => el.name !== item.name
-                  );
-                } else
-                  this.message.popup("Oops!", res.body?.message!, "warning");
-              });
-            this.subscribes.push(sub);
-          }
-          this.emitingFiles();
-        }
-      });
   }
 
   onFileDropped(e: any) {

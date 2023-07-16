@@ -4,6 +4,8 @@ export const AppRoutes = {
   },
   Home: {
     base: "home",
+    getAllShipments: "home/get-all-shipments",
+    about: "home/about",
   },
   grid: {
     index: "igrid",

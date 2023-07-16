@@ -4,12 +4,8 @@ export interface DataBaseNames {
 }
 
 export interface IUser {
-  db?: { id: number; name: string }[];
   email?: string;
   password?: string;
-  roles?: string;
-  branch?: string;
-  connectTo?: string;
 }
 
 export interface LoginResponse {
@@ -20,8 +16,4 @@ export interface UserAccess {
   token?: string;
   email?: string;
   name?: string;
-  Branch?: string;
-  UserId?: string;
-  Role?: string[];
-  DbConnection?: string;
 }

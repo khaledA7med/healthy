@@ -1,10 +1,5 @@
 import { NgModule } from "@angular/core";
-import {
-  PreloadAllModules,
-  PreloadingStrategy,
-  RouterModule,
-  Routes,
-} from "@angular/router";
+import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 
 import { LayoutComponent } from "./layouts/layout.component";
 
@@ -20,13 +15,13 @@ const routes: Routes = [
     component: LayoutComponent,
     loadChildren: () =>
       import("./pages/pages.module").then((m) => m.PagesModule),
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: AppRoutes.Auth.login,
     loadChildren: () =>
       import("./account/account.module").then((m) => m.AccountModule),
-    canActivate: [UnAuthGuard],
+    // canActivate: [UnAuthGuard],
   },
   {
     path: "",
@@ -34,7 +29,7 @@ const routes: Routes = [
       import("./extraspages/extraspages.module").then(
         (m) => m.ExtraspagesModule
       ),
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: "",

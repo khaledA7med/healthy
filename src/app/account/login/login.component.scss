@@ -1,3 +1,26 @@
 .auth-one-bg .bg-overlay {
-  background: linear-gradient(to right, #3d3a3a, #323030) !important;
+  background: linear-gradient(to bottom, #d5d3d3, #e7e7e7) !important;
+}
+
+.auth-page-wrapper {
+  background-image: url(../../../assets/images/global/login-background.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+}
+
+.pt-5 {
+  padding-top: 150px !important;
+}
+
+.save {
+  background-color: #1f3864;
+  color: #fff;
+}
+
+.save:hover {
+  color: #fff !important;
+  background-color: #112038 !important;
 }

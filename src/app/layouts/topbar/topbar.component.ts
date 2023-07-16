@@ -55,7 +55,7 @@ export class TopbarComponent implements OnInit {
   private setTitleFromRouteData(routeData: any) {
     if (routeData && routeData["title"]) this.title = routeData["title"];
     else this.title = "";
-    this.titleService.setTitle(this.title + " | Oasis - Computer Systems");
+    this.titleService.setTitle(this.title);
   }
 
   private getLatestChild(route: any) {

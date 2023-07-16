@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-footer",
@@ -7,8 +6,6 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./footer.component.scss"],
 })
 export class FooterComponent implements OnInit {
-  // set the currenr year
-  year: number = new Date().getFullYear();
   constructor() {}
 
   ngOnInit(): void {}

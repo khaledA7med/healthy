@@ -6,7 +6,6 @@ import { ApiRoutes } from "src/app/shared/app/routers/ApiRoutes";
 import { IUser, UserAccess } from "../models/iuser";
 import { localStorageKeys } from "../models/localStorageKeys";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { IRegister } from "src/app/shared/app/models/App/Auth/register";
 
 @Injectable({ providedIn: "root" })
 
@@ -23,9 +22,6 @@ export class AuthenticationService {
     return this.http.post<any>(this.env + ApiRoutes.Users.login, data);
   }
 
-  register(data: FormData): Observable<any> {
-    return this.http.post<any>(this.env + ApiRoutes.Users.register, data);
-  }
   /**
    * Logout the user
    */

@@ -12,7 +12,20 @@ export class MenuService {
         id: 1,
         label: "MENUITEMS.HOME.TEXT",
         icon: "ri-home-4-line",
-        link: AppRoutes.Home.base,
+        subItems: [
+          {
+            id: 101,
+            label: "MENUITEMS.HOME.LIST.GETALLSHIPMENTS",
+            link: AppRoutes.Home.getAllShipments,
+            parentId: 1,
+          },
+          {
+            id: 102,
+            label: "MENUITEMS.HOME.LIST.ABOUT",
+            link: AppRoutes.Home.about,
+            parentId: 1,
+          },
+        ],
       },
     ];
   }

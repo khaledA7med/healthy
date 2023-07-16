@@ -1,6 +1,5 @@
 import { formatCurrency } from "@angular/common";
 import { CellEvent, ValueFormatterParams } from "ag-grid-community";
-import { CustomerServiceStatus } from "../models/CustomerService/icustomer-service-utils";
 
 export default class GlobalCellRender {
   public static dateFormater(e: ValueFormatterParams) {
@@ -92,36 +91,6 @@ export default class GlobalCellRender {
       return `<div class="text-primary fs-20 text-center"><i class="ri-checkbox-fill"></i></div>`;
     } else {
       return `<div class="fs-20 text-center"><i class="ri-checkbox-blank-line"></i></div>`;
-    }
-  }
-
-  public static CSCanceledFormater(e: CellEvent): string {
-    if (e.value == 1) {
-      return `<span class='badge bg-success text-dark'>Yes</span>`;
-    } else {
-      return `<span class='badge bg-danger text-dark'>No</span>`;
-    }
-  }
-
-  public static CSDurationChecker(e: CellEvent): string {
-    if (
-      e?.data?.status! === CustomerServiceStatus.Pending &&
-      +e.value > 3 &&
-      +e.value < 30
-    ) {
-      return `<span class='badge bg-danger text-bg-light'>${e.value}</span>`;
-    } else if (
-      e?.data?.status! === CustomerServiceStatus.Pending &&
-      +e.value > 30
-    ) {
-      return `<span class='badge bg-red text-bg-light'>${e.value}</span>`;
-    } else if (
-      e?.data?.status! === CustomerServiceStatus.Pending &&
-      +e.value <= 3
-    ) {
-      return `<span class='badge bg-soft-yellow text-bg-light'>${e.value}</span>`;
-    } else {
-      return `<span>${e.value}</span>`;
     }
   }
 }

@@ -18,7 +18,7 @@ import { map } from "rxjs/operators";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-  title = "Oasis";
+  title = "Global";
   networkStatus: boolean = false;
   networkStatus$: Subscription = Subscription.EMPTY;
   constructor(private router: Router, private eventService: EventService) {

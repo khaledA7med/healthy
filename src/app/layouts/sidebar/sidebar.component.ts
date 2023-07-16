@@ -5,6 +5,7 @@ import {
   Output,
   ViewChild,
   ElementRef,
+  Inject,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -12,6 +13,10 @@ import { Subscription } from "rxjs";
 import { MenuService } from "src/app/shared/services/menu.service";
 
 import { MenuItem } from "./menu.model";
+import { reserved } from "src/app/core/models/reservedWord";
+import { EventService } from "src/app/core/services/event.service";
+import { localStorageKeys } from "src/app/core/models/localStorageKeys";
+import { DOCUMENT } from "@angular/common";
 
 @Component({
   selector: "app-sidebar",
@@ -19,24 +24,32 @@ import { MenuItem } from "./menu.model";
   styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
+  element: any;
   toggle: any = true;
   menuItems: MenuItem[] = [];
+  mode: string | undefined;
+  title: string = "";
+
+  modeKey: { light: string; dark: string } = {
+    dark: reserved.darkMode,
+    light: reserved.lightMode,
+  };
 
   @ViewChild("sideMenu") sideMenu!: ElementRef;
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   subscribe!: Subscription;
-  constructor(public translate: TranslateService, private menu: MenuService) {
+  constructor(
+    @Inject(DOCUMENT) private document: any,
+    public translate: TranslateService,
+    private menu: MenuService,
+    private eventService: EventService
+  ) {
     translate.setDefaultLang("en");
   }
 
   ngOnInit(): void {
-    // Menu Items
-    // this.permission.getAccessRoles().subscribe((res: IPrivileges) => {
-    //   this.privileges = res;
-    //   this.menuItems = this.menu.getMenu(this.privileges);
-    // this.modifyMenuAuth();
-    // });
+    this.menuItems = this.menu.getMenu();
   }
 
   /***
@@ -243,16 +256,4 @@ export class SidebarComponent implements OnInit {
   SidebarHide() {
     document.body.classList.remove("vertical-sidebar-enable");
   }
-
-  // modifyMenuAuth() {
-  //   const filterItems = (items: any) => {
-  //     return items.filter((item: any) => {
-  //       if (item.auth) {
-  //         if (item.subItems) item.subItems = filterItems(item.subItems);
-  //         return true;
-  //       } else return false;
-  //     });
-  //   };
-  //   this.menuItems = filterItems(this.menuItems);
-  // }
 }

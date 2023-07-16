@@ -1,17 +1,5 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewEncapsulation,
-  TemplateRef,
-  ViewChild,
-} from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
 // Login Auth
@@ -22,12 +10,6 @@ import { Subscription } from "rxjs";
 import { localStorageKeys } from "src/app/core/models/localStorageKeys";
 import { reserved } from "src/app/core/models/reservedWord";
 import { EventService } from "src/app/core/services/event.service";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import {
-  IRegister,
-  IRegisterData,
-} from "src/app/shared/app/models/App/Auth/register";
-import { IVerify } from "src/app/shared/app/models/App/Auth/verify";
 
 @Component({
   selector: "app-login",
@@ -47,30 +29,16 @@ export class LoginComponent implements OnInit, OnDestroy {
   returnUrl!: string;
   subsribes: Subscription[] = [];
   // set the current year
-  year: number = new Date().getFullYear();
-
-  RegisterFormSubmitted = false as boolean;
-  VerifyFormSubmitted = false as boolean;
-  RegisterModal!: NgbModalRef;
-  VerifyModal!: NgbModalRef;
-  RegisterForm!: FormGroup<IRegister>;
-  VerifyForm!: FormGroup<IVerify>;
-  @ViewChild("registerContent") registerContent!: TemplateRef<any>;
-  @ViewChild("verifyContent") verifyContent!: TemplateRef<any>;
-
   constructor(
     private formBuilder: FormBuilder,
     private auth: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router,
     public message: MessagesService,
-    private EventService: EventService,
-    private modalService: NgbModal
+    private EventService: EventService
   ) {}
 
   ngOnInit(): void {
-    this.initRegisterForm();
-
     /**
      * Form Validatyion
      */
@@ -95,7 +63,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
     let data: IUser = {
-      // db: this.loginForm.controls["dbName"].value,
       email: this.loginForm.controls["email"].value,
       password: this.loginForm.controls["password"].value,
     };
@@ -123,96 +90,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.fieldTextType = !this.fieldTextType;
   }
 
-  openRegisterDialoge() {
-    this.RegisterModal = this.modalService.open(this.registerContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "lg",
-    });
-    this.RegisterModal.hidden.subscribe(() => {
-      this.resetRegisterForm();
-      this.RegisterFormSubmitted = false;
-    });
-  }
-
-  openVerifyDialoge() {
-    this.VerifyModal = this.modalService.open(this.verifyContent, {
-      ariaLabelledBy: "modal-basic-title",
-      centered: true,
-      backdrop: "static",
-      size: "sm",
-    });
-    this.VerifyModal.hidden.subscribe(() => {
-      this.resetVerifyForm();
-      this.VerifyFormSubmitted = false;
-    });
-  }
-
-  initRegisterForm() {
-    this.RegisterForm = new FormGroup<IRegister>({
-      name: new FormControl(null, Validators.required),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, Validators.required),
-      password_confirmation: new FormControl(null, Validators.required),
-      phone: new FormControl(null),
-      address: new FormControl(null),
-      gender: new FormControl(null),
-      date_of_birth: new FormControl(null),
-      img: new FormControl(null),
-    });
-  }
-
-  get ff() {
-    return this.RegisterForm.controls;
-  }
-
-  validationChecker(): boolean {
-    if (this.RegisterForm.invalid) {
-      this.message.toast("Please Fill Required Inputs");
-      return false;
-    }
-    return true;
-  }
-
-  // submitVerify(){
-  //   this.VerifyFormSubmitted = true
-
-  // }
-  submitRegisterData(form: FormGroup) {
-    console.log("00000", form);
-    this.RegisterFormSubmitted = true;
-    let val = form.getRawValue();
-    const formData = new FormData();
-
-    formData.append("name", val.name!);
-    formData.append("password", val.password! ?? "");
-    formData.append("email", val.email!);
-    formData.append("password_confirmation", val.password_confirmation!);
-    formData.append("address", val.address! ?? "");
-    formData.append("gender", val.gender! ?? "");
-    formData.append("phone", val.phone! ?? "");
-    formData.append("date_of_birth", val.date_of_birth! ?? "");
-    formData.append("img", val.img! ?? "");
-
-    this.EventService.broadcast(reserved.isLoading, true);
-    let sub = this.auth.register(formData).subscribe((res) => {
-      if (res.status === "true") {
-        this.RegisterModal.dismiss();
-        this.message.toast(res.msg!, "success");
-      } else this.message.popup("Sorry!", res.msg!, "warning");
-      this.EventService.broadcast(reserved.isLoading, false);
-      // window.location.reload();
-    });
-    this.subsribes.push(sub);
-  }
-
-  resetRegisterForm() {
-    this.RegisterForm.reset();
-  }
-  resetVerifyForm() {
-    this.VerifyForm.reset();
-  }
   ngOnDestroy(): void {
     this.subsribes && this.subsribes.forEach((s) => s.unsubscribe());
   }
